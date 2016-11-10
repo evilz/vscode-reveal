@@ -4,6 +4,10 @@
   "description": "Show markdown as revealJs presentation",
   "version": "0.0.1",
   "publisher": "evilz",
+  "author": "Vincent Bourdon",
+  "license": "MIT",
+  "icon":"images/logo.png",
+  "preview":true,
   "engines": {
     "vscode": "^1.5.0"
   },
@@ -11,7 +15,9 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.showRevealJS"
+    "onLanguage:markdown",
+    "onCommand:extension.showRevealJS",
+    "onCommand:extension.showRevealJSInBrowser"
   ],
   "main": "./out/src/extension",
   "contributes": {
