@@ -82,6 +82,12 @@
     "compile": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
+  "dependencies":{
+    "express": "^4.14.0",
+    "highlight.js": "^9.8.0",
+    "open": "0.0.5",
+    "reveal.js": "^3.3.0"
+    },
   "devDependencies": {
     "@types/express": "^4.0.33",
     "@types/glob": "^5.0.30",
@@ -89,12 +95,7 @@
     "@types/mustache": "^0.8.29",
     "@types/node": "^6.0.40",
     "@types/open": "0.0.29",
-    "express": "^4.14.0",
-    "highlight.js": "^9.8.0",
     "mocha": "^2.3.3",
-    "open": "0.0.5",
-    "path": "^0.12.7",
-    "reveal.js": "^3.3.0",
     "typescript": "^2.0.3",
     "vscode": "^1.0.0",
     "yaml-front-matter": "^3.4.0"
