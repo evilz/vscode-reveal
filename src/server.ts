@@ -1,7 +1,8 @@
 import {RevealServerState, SlidifyOptions, RevealJsOptions} from './models'
 import {Template} from './template'
+import {Configuration} from './Configuration'
 
-import * as vscode from 'vscode'
+import {TextEditor, Uri} from 'vscode'
 import * as path from 'path';
 import * as url from 'url';
 import * as http from 'http';
@@ -15,28 +16,43 @@ export class RevealServer {
     private _server: http.Server;
     private _staticDir = express.static;
     private _host:string = 'localhost';
-    private _state = RevealServerState.Stopped;
+    private _configuation:Configuration;
 
-    private _title: string;
-    
+    private _editor:TextEditor
 
-    public Start(): string {
+    state = RevealServerState.Stopped;
+    uri:Uri;
 
-        if (this._state == RevealServerState.Stopped) {
-            this._server = this._app.listen(0);
-            this._state = RevealServerState.Started;
-            console.log(`Reveal-server started, opening at http://${this._host}:${this._server.address().port}`);
-        }
-
-        let initialFilePath = `http://${this._host}:${this._server.address().port}/`
-
-       // open(initialFilePath);
-    
-        return initialFilePath;
+    get title():string {
+        return `RevealJS : ${this._editor.document.fileName}`
     }
 
-    constructor(public document: vscode.TextDocument) {
-        this._title = `RevealJS : ${document.fileName}`
+    private get _text():string{
+        return this._editor.document.getText();
+    }
+    
+    public stop(){
+        if (this.state == RevealServerState.Started) {
+            this._server.close();
+            this.state = RevealServerState.Stopped;
+            console.log(`Reveal-server Stopped`);
+        }
+
+    }
+
+    public start() {
+
+        if (this.state == RevealServerState.Stopped) {
+            this._server = this._app.listen(0);
+            this.state = RevealServerState.Started;
+            console.log(`Reveal-server started, opening at http://${this._host}:${this._server.address().port}`);
+        }
+        this.uri = Uri.parse(`http://${this._host}:${this._server.address().port}/`);
+    }
+
+    constructor(public editor: TextEditor, configuration:Configuration ) {
+        this._configuation = configuration;
+        this._editor = editor;
         this.initExpressServer();
     }
 
@@ -49,8 +65,8 @@ export class RevealServer {
         }
 
         let highlightPath = path.resolve(require.resolve('highlight.js'), '..', '..');
-        this._app.use(`/lib/css/${this.revealjsOptions.highlightTheme}.css`,
-            this._staticDir(path.join(highlightPath, 'styles', this.revealjsOptions.highlightTheme + '.css')));
+        this._app.use(`/lib/css/${this._configuation.revealJsOptions.highlightTheme}.css`,
+            this._staticDir(path.join(highlightPath, 'styles', this._configuation.revealJsOptions.highlightTheme + '.css')));
 
         this._app.get('/', this.renderMarkdownAsSlides);
     }
@@ -62,21 +78,12 @@ export class RevealServer {
         //    req.url = req.url.replace('?print-pdf', '');
         //}
 
-        let markdown = this.document.getText();
-        this.render(res, markdown);
+        this.render(res, this._text);
     };
 
-    get revealjsOptions(): RevealJsOptions {
-        return <any>vscode.workspace.getConfiguration('revealjs') as RevealJsOptions;
-    }
-
-    get slidifyOptions(): SlidifyOptions {
-        return <any>vscode.workspace.getConfiguration('revealjs') as SlidifyOptions;
-    }
-
     render = (res, markdown) => {
-        let slides = md.slidify(markdown, this.slidifyOptions);
-        let result = Template.Render(this._title,this.revealjsOptions,slides);
+        let slides = md.slidify(markdown, this._configuation.slidifyOptions);
+        let result = Template.Render(this.title,this._configuation.revealJsOptions,slides);
         res.send(result);
     };
 }

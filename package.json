@@ -2,7 +2,7 @@
   "name": "vscode-reveal",
   "displayName": "vscode-reveal",
   "description": "Show markdown as revealJs presentation",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
@@ -18,20 +18,23 @@
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "markdown","reveal js","slide","presenttion"
+  ],
   "activationEvents": [
     "onLanguage:markdown",
-    "onCommand:extension.showRevealJS",
-    "onCommand:extension.showRevealJSInBrowser"
+    "onCommand:vscode-revealjs.showRevealJS",
+    "onCommand:vscode-revealjs.showRevealJSInBrowser"
   ],
   "main": "./out/src/extension",
   "contributes": {
     "commands": [
       {
-        "command": "extension.showRevealJS",
+        "command": "vscode-revealjs.showRevealJS",
         "title": "Revealjs: Show presentation by side"
       },
       {
-        "command": "extension.showRevealJSInBrowser",
+        "command": "vscode-revealjs.showRevealJSInBrowser",
         "title": "Revealjs: Open presentation in browser"
       }
     ],
@@ -54,6 +57,7 @@
            "default": "^(\r\n?|\n)--(\r\n?|\n)$",
            "description": "Revealjs markdown vertical separator"
          },
+         
          "revealjs.theme":{
            "type": "string",
            "default": "black",
@@ -71,8 +75,133 @@
           },
           "revealjs.slideNumber": {
             "type": "boolean",
-            "default": "false",
+            "default": false,
             "description": "Display the page number of the current slide"
+          },
+          "revealjs.history": {
+            "type": "boolean",
+            "default": false,
+            "description": "Push each slide change to the browser history"
+          },
+          "revealjs.keyboard": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable keyboard shortcuts for navigation"
+          },
+          "revealjs.overview": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable the slide overview mode"
+          },
+          "revealjs.center": {
+            "type": "boolean",
+            "default": true,
+            "description": "Vertical centering of slides"
+          },
+          "revealjs.touch": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enables touch navigation on devices with touch input"
+          },
+          "revealjs.loop": {
+            "type": "boolean",
+            "default": false,
+            "description": "Loop the presentation"
+          },
+          "revealjs.rtl": {
+            "type": "boolean",
+            "default": false,
+            "description": "Change the presentation direction to be RTL"
+          },
+          "revealjs.shuffle": {
+            "type": "boolean",
+            "default": false,
+            "description": "Randomizes the order of slides each time the presentation loads"
+          },
+          "revealjs.fragments": {
+            "type": "boolean",
+            "default": true,
+            "description": "Turns fragments on and off globally"
+          },
+          "revealjs.embedded": {
+            "type": "boolean",
+            "default": false,
+            "description": "Flags if the presentation is running in an embedded mode, i.e. contained within a limited portion of the screen"
+          },
+          "revealjs.help": {
+            "type": "boolean",
+            "default": true,
+            "description": "Flags if we should show a help overlay when the questionmark key is pressed"
+          },
+          "revealjs.showNotes": {
+            "type": "boolean",
+            "default": false,
+            "description": "Flags if speaker notes should be visible to all viewers"
+          },
+          "revealjs.autoSlide": {
+            "type": "number",
+            "default": 0,
+            "description": "Number of milliseconds between automatically proceeding to the next slide, disabled when set to 0, this value can be overwritten by using a data-autoslide attribute on your slides"
+          },
+          "revealjs.autoSlideStoppable": {
+            "type": "boolean",
+            "default": true,
+            "description": "Stop auto-sliding after user input"
+          },
+          "revealjs.mouseWheel": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable slide navigation via mouse wheel"
+          },
+          "revealjs.hideAddressBar": {
+            "type": "boolean",
+            "default": true,
+            "description": "Hides the address bar on mobile devices"
+          },
+          "revealjs.previewLinks": {
+            "type": "boolean",
+            "default": false,
+            "description": "Opens links in an iframe preview overlay"
+          },
+          "revealjs.transition": {
+            "type": "string",
+            "default": "default",
+            "description": "Transition style (none/fade/slide/convex/concave/zoom)"
+          },
+          "revealjs.transitionSpeed": {
+            "type": "string",
+            "default": "default",
+            "description": "Transition speed (default/fast/slow)"
+          },
+          "revealjs.backgroundTransition": {
+            "type": "string",
+            "default": "default",
+            "description": "Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom)"
+          },
+          "revealjs.viewDistance": {
+            "type": "number",
+            "default": 3,
+            "description": "Number of slides away from the current that are visible"
+          },
+          "revealjs.parallaxBackgroundImage": {
+            "type": "string",
+            "default": "",
+            "description": "Parallax background image"
+          },
+          "revealjs.parallaxBackgroundSize": {
+            "type": "string",
+            "default": "",
+            "description": "Parallax background size (CSS syntax, e.g. 2100px 900px)"
+          },
+          "revealjs.parallaxBackgroundHorizontal": {
+            "type": "number",
+            "default": null,
+            "description": "Number of pixels to move the parallax background per slide"
+          },
+          "revealjs.parallaxBackgroundVertical": {
+            "type": "number",
+            "default": null,
+            "description": "Number of pixels to move the parallax background per slide"
           }
        }
     }

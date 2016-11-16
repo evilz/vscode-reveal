@@ -6,9 +6,7 @@ export default class BrowserContentProvider implements vscode.TextDocumentConten
 
 
         provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): string {
-            return `<style>
-            html, body, iframe { height: 100% }
-            </style>
+            return `<style>html, body, iframe { height: 100% }</style>
             <iframe src="${uri}" frameBorder="0" style="width: 100%; height: 100%" />`;
         }
 

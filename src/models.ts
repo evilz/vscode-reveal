@@ -4,13 +4,16 @@ export enum RevealServerState {
     Started
 }
 
+export interface ExtensionOptions{
+    slidifyOptions:SlidifyOptions,
+    revealJsOptions:RevealJsOptions
+}
 
 export interface SlidifyOptions {
     separator: string;
     verticalSeparator: string,
     notesSeparator: string;
 }
-
 
 export interface RevealJsOptions {
 

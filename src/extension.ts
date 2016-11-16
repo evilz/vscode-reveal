@@ -2,84 +2,105 @@
 import * as vscode from 'vscode';
 import { RevealServer } from "./server";
 import BrowserContentProvider from './BrowserContentProvider';
+import { StatusBarController } from './StatusBarController';
+import { Configuration } from './Configuration';
+import { DocumentContext, DocumentContexts } from './DocumentContext';
+import { RevealServerState, SlidifyOptions, RevealJsOptions } from './models';
+import * as helpers from './helpers'
 
 var open = require('open');
 
 export function activate(context: vscode.ExtensionContext) {
 
-    let serverByFiles = new Map<vscode.TextDocument, RevealServer>();
+    let configuration = new Configuration();
+    let documentContexts = new DocumentContexts(configuration);
+    let statusBarController = new StatusBarController(configuration.slidifyOptions);
     let provider = new BrowserContentProvider();
     let registrationHTTP = vscode.workspace.registerTextDocumentContentProvider('http', provider);
 
+    let currentTab: vscode.TextEditor;
+
     console.log('Congratulations, your extension "vscode-reveal" is now active!');
 
-    let createServer = (document: vscode.TextDocument): RevealServer => {
-        return new RevealServer(document);
-    };
-
-    let findOrCreateServer = (document: vscode.TextDocument): RevealServer => {
-
-        if (serverByFiles.has(document)) {
-            return serverByFiles.get(document);
+    let showRevealJS = () => {
+        if (currentTab.document.languageId !== "markdown") {
+            vscode.window.showInformationMessage("revealjs presentation can only be markdown file");
+            return null;
         }
-
-        let newServer = createServer(document);
-        serverByFiles.set(document, newServer);
-        return newServer;
-    };
-
-    let isMarkdown = ():boolean => {
-        return (vscode.window.activeTextEditor.document.languageId == 'markdown')
+        let context = getContext();
+        context.server.start();
+        return context.server.uri;
     }
 
-    // showRevealJSInBrowser
-    // if (openWebBrowser) {
-    //     open(initialFilePath);
-    // }
+    let getContext = () => {
+        return documentContexts.GetDocumentContext(currentTab);
+    }
 
     // COMMAND : showRevealJS
-    let disposable = vscode.commands.registerCommand('extension.showRevealJS', () => {
-        if(!isMarkdown()) return  vscode.window.showInformationMessage("revealjs presentation can only be markdown file");
-        
-        var server = findOrCreateServer(vscode.window.activeTextEditor.document);
-       let startPage = server.Start();
-        let uri = vscode.Uri.parse(startPage);
-
-        return vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, 'Reveal JS presentation')
-            .then((success) => { }, (error) => {
-                vscode.window.showErrorMessage(error);
-            });
-    });
-    context.subscriptions.push(disposable);
+    context.subscriptions.push(vscode.commands.registerCommand('vscode-revealjs.showRevealJS', () => {
+        if (currentTab == null) { currentTab = vscode.window.activeTextEditor; }
+        let uri = showRevealJS();
+        if (uri) {
+            return vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, 'Reveal JS presentation')
+                .then(
+                (success) => { },
+                (error) => { vscode.window.showErrorMessage(error); }
+                );
+        }
+        else { return null };
+    }));
 
     // COMMAND : showRevealJSInBrowser
-    let disposable2 = vscode.commands.registerCommand('extension.showRevealJSInBrowser', () => {
+    context.subscriptions.push(
+        vscode.commands.registerCommand('vscode-revealjs.showRevealJSInBrowser', () => {
+            if (currentTab == null) { currentTab = vscode.window.activeTextEditor; }
+            let uri = showRevealJS();
+            return open(uri.toString());
+
+        })
+    );
+
+    // COMMAND : KillRevealJSServer
+    context.subscriptions.push(
+        vscode.commands.registerCommand('vscode-revealjs.KillRevealJSServer', () => {
+            let context = getContext();
+            context.server.stop();
+            statusBarController.update(context);
+        }));
+
+
+        vscode.workspace.onDidCloseTextDocument((e:vscode.TextDocument)=>{
+            vscode.window.showInformationMessage(`${e.fileName} closed`);
+        });
+
+        // vscode.workspace.onDidChangeConfiguration((e:void)=>{
+        //     let context = getContext();
+        //     statusBarController.update(context);
+        //     provider.update(context.server.uri);
         
-        if(!isMarkdown()) return  vscode.window.showInformationMessage("revealjs presentation can only be markdown file");
-                
-        var server = findOrCreateServer(vscode.window.activeTextEditor.document);
-        let startPage = server.Start();
-        return open(startPage);
-        
-    });
-    context.subscriptions.push(disposable2);
+        // });
 
-
-
-
-    // ON CHANGE
-    vscode.workspace.onDidChangeTextDocument((e: vscode.TextDocumentChangeEvent) => {
-       // nothing
+    // ON TAB CHANGE
+    vscode.window.onDidChangeActiveTextEditor((e: vscode.TextEditor) => {
+        if(e)
+        {
+            currentTab = e;
+            statusBarController.update(getContext());
+        }
     });
 
+    // ON CHANGE TEXT
+    vscode.workspace.onDidChangeTextDocument((_) => {
+        statusBarController.update(getContext());
+    }
+    );
 
     // ON SAVE
     vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
-         if (document === vscode.window.activeTextEditor.document) {
-            var server = findOrCreateServer(vscode.window.activeTextEditor.document);
-            let startPage = server.Start();
-            let uri = vscode.Uri.parse(startPage);
-            provider.update(uri);
+        if (document === vscode.window.activeTextEditor.document) {
+            let context = getContext();
+            statusBarController.update(context);
+            provider.update(context.server.uri);
         }
     });
 
