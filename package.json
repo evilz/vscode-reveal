@@ -2,7 +2,7 @@
   "name": "vscode-reveal",
   "displayName": "vscode-reveal",
   "description": "Show markdown as revealJs presentation",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
