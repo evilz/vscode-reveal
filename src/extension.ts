@@ -68,18 +68,6 @@ export function activate(context: vscode.ExtensionContext) {
             statusBarController.update(context);
         }));
 
-
-        vscode.workspace.onDidCloseTextDocument((e:vscode.TextDocument)=>{
-            vscode.window.showInformationMessage(`${e.fileName} closed`);
-        });
-
-        // vscode.workspace.onDidChangeConfiguration((e:void)=>{
-        //     let context = getContext();
-        //     statusBarController.update(context);
-        //     provider.update(context.server.uri);
-        
-        // });
-
     // ON TAB CHANGE
     vscode.window.onDidChangeActiveTextEditor((e: vscode.TextEditor) => {
         if(e)

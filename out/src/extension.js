@@ -54,14 +54,6 @@ function activate(context) {
         context.server.stop();
         statusBarController.update(context);
     }));
-    vscode.workspace.onDidCloseTextDocument((e) => {
-        vscode.window.showInformationMessage(`${e.fileName} closed`);
-    });
-    // vscode.workspace.onDidChangeConfiguration((e:void)=>{
-    //     let context = getContext();
-    //     statusBarController.update(context);
-    //     provider.update(context.server.uri);
-    // });
     // ON TAB CHANGE
     vscode.window.onDidChangeActiveTextEditor((e) => {
         if (e) {

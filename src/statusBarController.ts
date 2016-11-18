@@ -20,6 +20,7 @@ export class StatusBarController {
 
         if (context.server.state === RevealServerState.Started) {
             this._addressItem.text = `$(server) ${context.server.uri}`;
+            this._addressItem.command = "vscode-revealjs.showRevealJSInBrowser";
             this._addressItem.show();
         } else {
             this._addressItem.hide();
@@ -58,6 +59,7 @@ export class StatusBarController {
         }
         else {
             this._countItem.text = `$(note) ${slidecount} Slides`;
+            this._countItem.command = "vscode-revealjs.showRevealJS";
             this._countItem.show();
         }
     }
