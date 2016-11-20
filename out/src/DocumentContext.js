@@ -1,5 +1,5 @@
 "use strict";
-const server_1 = require('./server');
+const Server_1 = require('./Server');
 // TODO REMOVE ! clean 
 class DocumentContexts {
     constructor(configuration) {
@@ -15,7 +15,7 @@ class DocumentContexts {
         }
         let context = {
             editor: editor,
-            server: new server_1.RevealServer(editor, this._configuation),
+            server: new Server_1.RevealServer(editor, this._configuation),
         };
         this._map.set(editor, context);
         return context;

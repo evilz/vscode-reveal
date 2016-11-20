@@ -1,6 +1,6 @@
 "use strict";
-const models_1 = require('./models');
-const template_1 = require('./template');
+const Models_1 = require('./Models');
+const Template_1 = require('./Template');
 const vscode_1 = require('vscode');
 const path = require('path');
 const express = require('express');
@@ -11,7 +11,7 @@ class RevealServer {
         this._app = express();
         this._staticDir = express.static;
         this._host = 'localhost';
-        this.state = models_1.RevealServerState.Stopped;
+        this.state = Models_1.RevealServerState.Stopped;
         this.initExpressServer = () => {
             let revealBasePath = path.resolve(require.resolve('reveal.js'), '..', '..');
             let staticDirs = ['css', 'js', 'images', 'plugin', 'lib'];
@@ -31,7 +31,7 @@ class RevealServer {
         };
         this.render = (res, markdown) => {
             let slides = md.slidify(markdown, this._configuation.slidifyOptions);
-            let result = template_1.Template.Render(this.title, this._configuation.revealJsOptions, slides);
+            let result = Template_1.Template.Render(this.title, this._configuation.revealJsOptions, slides);
             res.send(result);
         };
         this._configuation = configuration;
@@ -45,20 +45,20 @@ class RevealServer {
         return this._editor.document.getText();
     }
     stop() {
-        if (this.state == models_1.RevealServerState.Started) {
+        if (this.state == Models_1.RevealServerState.Started) {
             this._server.close();
-            this.state = models_1.RevealServerState.Stopped;
+            this.state = Models_1.RevealServerState.Stopped;
             console.log(`Reveal-server Stopped`);
         }
     }
     start() {
-        if (this.state == models_1.RevealServerState.Stopped) {
+        if (this.state == Models_1.RevealServerState.Stopped) {
             this._server = this._app.listen(0);
-            this.state = models_1.RevealServerState.Started;
+            this.state = Models_1.RevealServerState.Started;
             console.log(`Reveal-server started, opening at http://${this._host}:${this._server.address().port}`);
         }
         this.uri = vscode_1.Uri.parse(`http://${this._host}:${this._server.address().port}/`);
     }
 }
 exports.RevealServer = RevealServer;
-//# sourceMappingURL=server.js.map
+//# sourceMappingURL=Server.js.map

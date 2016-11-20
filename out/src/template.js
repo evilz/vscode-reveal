@@ -68,4 +68,4 @@ class Template {
     }
 }
 exports.Template = Template;
-//# sourceMappingURL=template.js.map
+//# sourceMappingURL=Template.js.map

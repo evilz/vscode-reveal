@@ -1,6 +1,6 @@
 "use strict";
 const vscode_1 = require('vscode');
-const models_1 = require('./models');
+const Models_1 = require('./Models');
 class StatusBarController {
     constructor(slidifyOptions) {
         this._slidifyOptions = slidifyOptions;
@@ -9,7 +9,7 @@ class StatusBarController {
         if (!this._addressItem) {
             this._addressItem = vscode_1.window.createStatusBarItem(vscode_1.StatusBarAlignment.Right, 100);
         }
-        if (context.server.state === models_1.RevealServerState.Started) {
+        if (context.server.state === Models_1.RevealServerState.Started) {
             this._addressItem.text = `$(server) ${context.server.uri}`;
             this._addressItem.command = "vscode-revealjs.showRevealJSInBrowser";
             this._addressItem.show();
@@ -25,7 +25,7 @@ class StatusBarController {
         this._stopItem.text = `$(primitive-square)`;
         this._stopItem.color = 'red';
         this._stopItem.command = "vscode-revealjs.KillRevealJSServer";
-        if (context.server.state === models_1.RevealServerState.Started) {
+        if (context.server.state === Models_1.RevealServerState.Started) {
             this._stopItem.show();
         }
         else {
