@@ -76,6 +76,10 @@ Please add issues on github.
 
 ## Release Notes
 
+### 0.0.6
+
+- fix linux/mac issues due to filename :(
+
 ### 0.0.5
 
 - fix issues
