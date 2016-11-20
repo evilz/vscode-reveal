@@ -1,5 +1,5 @@
 import { TextEditor } from 'vscode';
-import { RevealServer } from './server';
+import { RevealServer } from './Server';
 import { Configuration } from './Configuration';
 
 

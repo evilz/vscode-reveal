@@ -1,5 +1,5 @@
 import { window, StatusBarAlignment, StatusBarItem, TextEditor, TextDocument } from 'vscode';
-import { RevealServerState, SlidifyOptions, RevealJsOptions } from './models'
+import { RevealServerState, SlidifyOptions, RevealJsOptions } from './Models'
 import { Configuration } from './Configuration'
 import { DocumentContext, DocumentContexts } from './DocumentContext';
 

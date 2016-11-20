@@ -1,4 +1,4 @@
-import { RevealJsOptions} from './models'
+import { RevealJsOptions} from './Models'
 
 export class Template {
 

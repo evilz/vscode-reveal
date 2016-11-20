@@ -1,12 +1,11 @@
 'use strict';
 import * as vscode from 'vscode';
-import { RevealServer } from "./server";
+import { RevealServer } from "./Server";
 import BrowserContentProvider from './BrowserContentProvider';
 import { StatusBarController } from './StatusBarController';
 import { Configuration } from './Configuration';
 import { DocumentContext, DocumentContexts } from './DocumentContext';
-import { RevealServerState, SlidifyOptions, RevealJsOptions } from './models';
-import * as helpers from './helpers'
+import { RevealServerState, SlidifyOptions, RevealJsOptions } from './Models';
 
 var open = require('open');
 

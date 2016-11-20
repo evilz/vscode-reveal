@@ -1,5 +1,5 @@
-import {RevealServerState, SlidifyOptions, RevealJsOptions} from './models'
-import {Template} from './template'
+import {RevealServerState, SlidifyOptions, RevealJsOptions} from './Models'
+import {Template} from './Template'
 import {Configuration} from './Configuration'
 
 import {TextEditor, Uri} from 'vscode'
