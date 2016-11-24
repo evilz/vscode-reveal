@@ -18,11 +18,11 @@ Note: test note
 ---
 
 Bar
-```csharp
+\```csharp
 public void AwesomeFunc(){
     Show.Me.Your.Best();
 }
-```
+\```
 
 ----
 
