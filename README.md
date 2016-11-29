@@ -38,6 +38,8 @@ The End.
 Call the command `Revealjs: Show presentation by side` to see your presentation next to your file.
 Call the command `Revealjs: Open presentation in browser` to see it in default browser.
 
+On save the current editing slide will be show !
+
 ### status bar
 
 If your markdown file has more that one slide, status bar will display the slide count on right.
@@ -46,6 +48,8 @@ If you now click on it it will directly on RevealJS presentation next to the fil
 Once you have at least show the presentation once, it will also display the http address that you can use directly in your browser. When you click on it, browser will open.
 
 > Note : First time windows will ask you about firewall. If you open the port for the application, you can see your prensentation remotly.
+
+### 
 
 ### Future :
 - Create PDF from presentation
@@ -75,6 +79,11 @@ You can customise many setting on for your revealjs presentation.
 Please add issues on github.
 
 ## Release Notes
+
+### 0.0.7
+
+- Show current slide on save
+- Can use local image in markdow 
 
 ### 0.0.6
 

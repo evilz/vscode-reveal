@@ -6,6 +6,7 @@ import { StatusBarController } from './StatusBarController';
 import { Configuration } from './Configuration';
 import { DocumentContext, DocumentContexts } from './DocumentContext';
 import { RevealServerState, SlidifyOptions, RevealJsOptions } from './Models';
+import { Helpers } from './Helpers';
 
 var open = require('open');
 
@@ -14,7 +15,8 @@ export function activate(context: vscode.ExtensionContext) {
     let configuration = new Configuration();
     let documentContexts = new DocumentContexts(configuration);
     let statusBarController = new StatusBarController(configuration.slidifyOptions);
-    let provider = new BrowserContentProvider();
+    let helpers = new Helpers(configuration);
+    let provider = new BrowserContentProvider(documentContexts, helpers);
     let registrationHTTP = vscode.workspace.registerTextDocumentContentProvider('http', provider);
 
     let currentTab: vscode.TextEditor;
@@ -32,7 +34,12 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     let getContext = () => {
-        return documentContexts.GetDocumentContext(currentTab);
+        let context = documentContexts.GetDocumentContext(currentTab);
+        if (!context) {
+            context = documentContexts.createContext(currentTab);
+        }
+
+        return context
     }
 
     // COMMAND : showRevealJS
@@ -68,28 +75,30 @@ export function activate(context: vscode.ExtensionContext) {
         }));
 
     // ON TAB CHANGE
-    vscode.window.onDidChangeActiveTextEditor((e: vscode.TextEditor) => {
-        if(e)
-        {
-            currentTab = e;
-            statusBarController.update(getContext());
-        }
-    });
+    context.subscriptions.push(
+        vscode.window.onDidChangeActiveTextEditor((e: vscode.TextEditor) => {
+            if (e) {
+                currentTab = e;
+                statusBarController.update(getContext());
+            }
+        }));
 
     // ON CHANGE TEXT
-    vscode.workspace.onDidChangeTextDocument((_) => {
-        statusBarController.update(getContext());
-    }
-    );
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeTextDocument((_) => {
+            statusBarController.update(getContext());
+        }
+        ));
 
     // ON SAVE
-    vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
-        if (document === vscode.window.activeTextEditor.document) {
-            let context = getContext();
-            statusBarController.update(context);
-            provider.update(context.server.uri);
-        }
-    });
+    context.subscriptions.push(
+        vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
+            if (document === vscode.window.activeTextEditor.document) {
+                let context = getContext();
+                statusBarController.update(context);
+                provider.update(context.server.uri);
+            }
+        }));
 
 
 }

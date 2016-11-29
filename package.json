@@ -2,7 +2,7 @@
   "name": "vscode-reveal",
   "displayName": "vscode-reveal",
   "description": "Show markdown as revealJs presentation",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
@@ -49,12 +49,12 @@
          },
          "revealjs.separator":{
            "type": "string",
-           "default": "^(\r\n?|\n)---(\r\n?|\n)$",
+           "default": "^[\r\n?|\n]---[\r\n?|\n]$",
            "description": "Revealjs markdown slide separator"
          },
          "revealjs.verticalSeparator":{
            "type": "string",
-           "default": "^(\r\n?|\n)--(\r\n?|\n)$",
+           "default": "^[\r\n?|\n]--[\r\n?|\n]$",
            "description": "Revealjs markdown vertical separator"
          },
          

@@ -4,12 +4,14 @@ const BrowserContentProvider_1 = require('./BrowserContentProvider');
 const StatusBarController_1 = require('./StatusBarController');
 const Configuration_1 = require('./Configuration');
 const DocumentContext_1 = require('./DocumentContext');
+const Helpers_1 = require('./Helpers');
 var open = require('open');
 function activate(context) {
     let configuration = new Configuration_1.Configuration();
     let documentContexts = new DocumentContext_1.DocumentContexts(configuration);
     let statusBarController = new StatusBarController_1.StatusBarController(configuration.slidifyOptions);
-    let provider = new BrowserContentProvider_1.default();
+    let helpers = new Helpers_1.Helpers(configuration);
+    let provider = new BrowserContentProvider_1.default(documentContexts, helpers);
     let registrationHTTP = vscode.workspace.registerTextDocumentContentProvider('http', provider);
     let currentTab;
     console.log('Congratulations, your extension "vscode-reveal" is now active!');
@@ -23,7 +25,11 @@ function activate(context) {
         return context.server.uri;
     };
     let getContext = () => {
-        return documentContexts.GetDocumentContext(currentTab);
+        let context = documentContexts.GetDocumentContext(currentTab);
+        if (!context) {
+            context = documentContexts.createContext(currentTab);
+        }
+        return context;
     };
     // COMMAND : showRevealJS
     context.subscriptions.push(vscode.commands.registerCommand('vscode-revealjs.showRevealJS', () => {
@@ -55,24 +61,24 @@ function activate(context) {
         statusBarController.update(context);
     }));
     // ON TAB CHANGE
-    vscode.window.onDidChangeActiveTextEditor((e) => {
+    context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor((e) => {
         if (e) {
             currentTab = e;
             statusBarController.update(getContext());
         }
-    });
+    }));
     // ON CHANGE TEXT
-    vscode.workspace.onDidChangeTextDocument((_) => {
+    context.subscriptions.push(vscode.workspace.onDidChangeTextDocument((_) => {
         statusBarController.update(getContext());
-    });
+    }));
     // ON SAVE
-    vscode.workspace.onDidSaveTextDocument((document) => {
+    context.subscriptions.push(vscode.workspace.onDidSaveTextDocument((document) => {
         if (document === vscode.window.activeTextEditor.document) {
             let context = getContext();
             statusBarController.update(context);
             provider.update(context.server.uri);
         }
-    });
+    }));
 }
 exports.activate = activate;
 // this method is called when your extension is deactivated

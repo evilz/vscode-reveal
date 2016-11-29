@@ -1,4 +1,9 @@
-import { TextEditor } from 'vscode';
+import { create } from 'domain';
+import * as net from 'net';
+import { createCipher } from 'crypto';
+import * as console from 'console';
+import { log } from 'util';
+import { TextEditor, Uri } from 'vscode';
 import { RevealServer } from './Server';
 import { Configuration } from './Configuration';
 
@@ -8,31 +13,35 @@ export interface DocumentContext {
     server: RevealServer;
 }
 
-// TODO REMOVE ! clean 
-export class DocumentContexts {
-    private _map = new Map<TextEditor, DocumentContext>();
-    private _configuation: Configuration;
+export class DocumentContexts{
+
+    private innerArray = new Array<DocumentContext>();
+    private configuation: Configuration;
 
     constructor(configuration: Configuration) {
-        this._configuation = configuration;
-    }
-
-    public HasDocumentContext(editor: TextEditor):boolean{
-        return this._map.has(editor);
+        this.configuation = configuration;
     }
 
     public GetDocumentContext(editor: TextEditor) {
-        if (this._map.has(editor)) {
-            return this._map.get(editor);
-        }
+        return this.innerArray.find( (c) => c.editor == editor );
+    };
 
-        let context = {
+    public createContext(editor: TextEditor){
+         let context = {
             editor: editor,
-            server: new RevealServer(editor, this._configuation),
+            server: new RevealServer(editor, this.configuation),
         } as DocumentContext;
 
-        this._map.set(editor, context);
+        this.innerArray.push(context);
         return context;
-    };
+    }
+
+    public GetDocumentContextByUri(uri: Uri) {
+        return this.innerArray.find(
+            (c) => {
+                return c.server && c.server.uri && c.server.uri.toString() === uri.toString();
+            }
+        )
+    }
 }
 
