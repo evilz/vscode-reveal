@@ -11,6 +11,10 @@ This extension let you display a reveal js presentation directly from an opened 
 Sample of markdown : 
 
 ```
+---
+theme : "white"
+transition: "zoom"
+---
 Foo
 
 Note: test note
@@ -49,7 +53,16 @@ Once you have at least show the presentation once, it will also display the http
 
 > Note : First time windows will ask you about firewall. If you open the port for the application, you can see your prensentation remotly.
 
-### 
+### Front Matter !
+
+You can change settings directly in your markdown file using front matter style. You can change all extention settings like this :
+
+```
+---
+theme : "white"
+transition: "zoom"
+---
+```
 
 ### Future :
 - Create PDF from presentation
@@ -79,6 +92,10 @@ You can customise many setting on for your revealjs presentation.
 Please add issues on github.
 
 ## Release Notes
+
+### 0.0.8
+
+- Front matter !
 
 ### 0.0.7
 

@@ -1,37 +1,39 @@
-import {RevealServerState, SlidifyOptions, RevealJsOptions} from './Models'
-import {Template} from './Template'
-import {Configuration} from './Configuration'
+import { RevealServerState, SlidifyOptions, RevealJsOptions } from './Models'
+import { Template } from './Template'
+import { Configuration } from './Configuration'
 
-import {TextEditor, Uri} from 'vscode'
+import { TextEditor, Uri } from 'vscode'
 import * as path from 'path';
 import * as url from 'url';
 import * as http from 'http';
 import * as express from 'express';
 
+
 var md = require('reveal.js/plugin/markdown/markdown');
+var front = require('yaml-front-matter');
 
 export class RevealServer {
 
     private app = express();
     private server: http.Server;
     private staticDir = express.static;
-    private host:string = 'localhost';
-    private configuation:Configuration;
+    private host: string = 'localhost';
+    private configuation: Configuration;
 
-    private editor:TextEditor
+    private editor: TextEditor
 
     state = RevealServerState.Stopped;
-    uri:Uri;
+    uri: Uri;
 
-    get title():string {
+    get title(): string {
         return `RevealJS : ${this.editor.document.fileName}`
     }
 
-    private get _text():string{
+    private get _text(): string {
         return this.editor.document.getText();
     }
-    
-    public stop(){
+
+    public stop() {
         if (this.state == RevealServerState.Started) {
             this.server.close();
             this.state = RevealServerState.Stopped;
@@ -50,7 +52,7 @@ export class RevealServer {
         this.uri = Uri.parse(`http://${this.host}:${this.server.address().port}/`);
     }
 
-    constructor(editor: TextEditor, configuration:Configuration ) {
+    constructor(editor: TextEditor, configuration: Configuration) {
         this.configuation = configuration;
         this.editor = editor;
         this.initExpressServer();
@@ -64,7 +66,7 @@ export class RevealServer {
             this.app.use('/' + dir, this.staticDir(path.join(revealBasePath, dir)));
         }
 
-        this.app.use('/',this.staticDir(path.dirname(this.editor.document.fileName)));
+        this.app.use('/', this.staticDir(path.dirname(this.editor.document.fileName)));
 
         let highlightPath = path.resolve(require.resolve('highlight.js'), '..', '..');
         this.app.use(`/lib/css/${this.configuation.revealJsOptions.highlightTheme}.css`,
@@ -73,7 +75,7 @@ export class RevealServer {
         this.app.get('/', this.renderMarkdownAsSlides);
     }
 
-    renderMarkdownAsSlides = (req, res) => {
+    renderMarkdownAsSlides:express.RequestHandler = (req, res) => {
 
         // Look for print-pdf option
         //if (~req.url.indexOf('?print-pdf')) {
@@ -83,9 +85,30 @@ export class RevealServer {
         this.render(res, this._text);
     };
 
-    render = (res, markdown) => {
-        let slides = md.slidify(markdown, this.configuation.slidifyOptions);
-        let result = Template.Render(this.title,this.configuation.revealJsOptions,slides);
+    render = (res:express.Response, markdown) => {
+
+        var frontConfig = front.loadFront(markdown);
+        let content = frontConfig.__content;
+
+        let slidifyOptions = this.slidifyOptionsWithFront(frontConfig);
+        let revealJsOptions = this.revealJsOptionsWithFront(frontConfig);
+
+        let slides = md.slidify(content, slidifyOptions);
+        let result = Template.Render(this.title, revealJsOptions, slides);
         res.send(result);
     };
+
+    slidifyOptionsWithFront = (frontConfig) => {
+        var options = {};
+        Object.assign(options, this.configuation.slidifyOptions);
+        Object.assign(options, frontConfig);
+        return options as SlidifyOptions;
+    }
+
+    revealJsOptionsWithFront = (frontConfig) => {
+        var options = {};
+        Object.assign(options, this.configuation.revealJsOptions);
+        Object.assign(options, frontConfig);
+        return options as RevealJsOptions;
+    }
 }

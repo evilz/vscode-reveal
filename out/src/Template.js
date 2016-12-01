@@ -58,7 +58,7 @@ class Template {
             };
             // options from URL query string
             var queryOptions = Reveal.getQueryHash() || {};
-            var options = '${revealOptions}';
+            var options = ${JSON.stringify(revealOptions, null, 2)};
             options = extend(defaultOptions, options, queryOptions);
             Reveal.initialize(options);
         </script>

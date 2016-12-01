@@ -5,6 +5,7 @@ const vscode_1 = require('vscode');
 const path = require('path');
 const express = require('express');
 var md = require('reveal.js/plugin/markdown/markdown');
+var front = require('yaml-front-matter');
 class RevealServer {
     constructor(editor, configuration) {
         this.app = express();
@@ -30,9 +31,25 @@ class RevealServer {
             this.render(res, this._text);
         };
         this.render = (res, markdown) => {
-            let slides = md.slidify(markdown, this.configuation.slidifyOptions);
-            let result = Template_1.Template.Render(this.title, this.configuation.revealJsOptions, slides);
+            var frontConfig = front.loadFront(markdown);
+            let content = frontConfig.__content;
+            let slidifyOptions = this.slidifyOptionsWithFront(frontConfig);
+            let revealJsOptions = this.revealJsOptionsWithFront(frontConfig);
+            let slides = md.slidify(content, slidifyOptions);
+            let result = Template_1.Template.Render(this.title, revealJsOptions, slides);
             res.send(result);
+        };
+        this.slidifyOptionsWithFront = (frontConfig) => {
+            var options = {};
+            Object.assign(options, this.configuation.slidifyOptions);
+            Object.assign(options, frontConfig);
+            return options;
+        };
+        this.revealJsOptionsWithFront = (frontConfig) => {
+            var options = {};
+            Object.assign(options, this.configuation.revealJsOptions);
+            Object.assign(options, frontConfig);
+            return options;
         };
         this.configuation = configuration;
         this.editor = editor;
