@@ -1,6 +1,7 @@
 import { should } from 'chai';
 import { Helpers } from "../src/Helpers";
 import { Configuration } from "../src//Configuration";
+import * as vscode from 'vscode';
 
 should();
 
