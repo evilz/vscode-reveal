@@ -36,7 +36,7 @@ class StatusBarController {
         if (!this._countItem) {
             this._countItem = vscode_1.window.createStatusBarItem(vscode_1.StatusBarAlignment.Right, 102);
         }
-        if (!context.editor || context.editor.document.languageId != 'markdown') {
+        if (!context.editor || context.editor.document.languageId !== 'markdown') {
             this._countItem.hide();
             return;
         }

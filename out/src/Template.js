@@ -8,8 +8,10 @@ class Template {
         <title>${title}</title>
         <link rel="stylesheet" href="css/reveal.css">
         <link rel="stylesheet" href="css/theme/${revealOptions.theme}.css" id="theme">
+        <link rel="stylesheet" href="${revealOptions.customTheme}.css" id="theme">
         <!-- For syntax highlighting -->
         <link rel="stylesheet" href="lib/css/${revealOptions.highlightTheme}.css">
+        <link rel="stylesheet" href="lib/css/${revealOptions.customHighlightTheme}.css">
 
         <!-- If the query includes 'print-pdf', use the PDF print sheet -->
         <script>

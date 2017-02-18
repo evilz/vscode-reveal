@@ -6,8 +6,8 @@
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
-  "icon":"images/logo.png",
-  "preview":true,
+  "icon": "images/logo.png",
+  "preview": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/evilz/vscode-reveal"
@@ -19,7 +19,10 @@
     "Other"
   ],
   "keywords": [
-    "markdown","reveal js","slide","presenttion"
+    "markdown",
+    "reveal js",
+    "slide",
+    "presenttion"
   ],
   "activationEvents": [
     "onLanguage:markdown",
@@ -39,176 +42,175 @@
       }
     ],
     "configuration": {
-       "type": "object",
-       "title": "Reveal JS Option Configuration",
-       "properties": {
-           "revealjs.notesSeparator":{
-           "type": "string",
-           "default": "note:",
-           "description": "Revealjs markdown note delimiter"
-         },
-         "revealjs.separator":{
-           "type": "string",
-           "default": "^[\r\n?|\n]---[\r\n?|\n]$",
-           "description": "Revealjs markdown slide separator"
-         },
-         "revealjs.verticalSeparator":{
-           "type": "string",
-           "default": "^[\r\n?|\n]--[\r\n?|\n]$",
-           "description": "Revealjs markdown vertical separator"
-         },
-         
-         "revealjs.theme":{
-           "type": "string",
-           "default": "black",
-           "description": "Revealjs Theme (black, white, league, beige, sky, night, serif, simple, solarized"
-         },
-          "revealjs.highlightTheme":{
-           "type": "string",
-           "default": "Zenburn",
-           "description": "highlight.js Theme (Default, Agate, Androidstudio, Arduino Light, Arta, Ascetic, Atelier Cave Dark, Atelier Cave Light, Atelier Dune Dark, Atelier Dune Light, Atelier Estuary Dark, Atelier Estuary Light, Atelier Forest Dark, Atelier Forest Light, Atelier Heath Dark, Atelier Heath Light, Atelier Lakeside Dark, Atelier Lakeside Light, Atelier Plateau Dark, Atelier Plateau Light, Atelier Savanna Dark, Atelier Savanna Light, Atelier Seaside Dark, Atelier Seaside Light, Atelier Sulphurpool Dark, Atelier Sulphurpool Light, Atom One Dark, Atom One Light,Brown Paper, Codepen Embed, Color Brewer, Darcula, Dark, Darkula, Docco, Dracula, Far, Foundation, Github Gist, Github, Googlecode, Grayscale, Gruvbox Dark, Gruvbox Light, Hopscotch, Hybrid, Idea, Ir Black, Kimbie Dark, Kimbie Light, Magula, Mono Blue, Monokai Sublime, Monokai, Obsidian,Ocean, Paraiso Dark, Paraiso Light, Pojoaque, Purebasic, Qtcreator Dark, Qtcreator Light, Railscasts, Rainbow, School Book, Solarized Dark, Solarized Light, Sunburst, Tomorrow Night Blue, Tomorrow Night Bright, Tomorrow Night Eighties, Tomorrow Night, Tomorrow, Vs, Xcode, Xt 256, Zenburn"
-         },
-         "revealjs.controls": {
-           "type": "boolean",
-           "default": true,
-           "description": "Display controls in the bottom right corner"
-          },
-          "revealjs.progress": {
-            "type": "boolean",
-            "default": true,
-            "description": "Display a presentation progress bar"
-          },
-          "revealjs.slideNumber": {
-            "type": "boolean",
-            "default": false,
-            "description": "Display the page number of the current slide"
-          },
-          "revealjs.history": {
-            "type": "boolean",
-            "default": false,
-            "description": "Push each slide change to the browser history"
-          },
-          "revealjs.keyboard": {
-            "type": "boolean",
-            "default": true,
-            "description": "Enable keyboard shortcuts for navigation"
-          },
-          "revealjs.overview": {
-            "type": "boolean",
-            "default": true,
-            "description": "Enable the slide overview mode"
-          },
-          "revealjs.center": {
-            "type": "boolean",
-            "default": true,
-            "description": "Vertical centering of slides"
-          },
-          "revealjs.touch": {
-            "type": "boolean",
-            "default": true,
-            "description": "Enables touch navigation on devices with touch input"
-          },
-          "revealjs.loop": {
-            "type": "boolean",
-            "default": false,
-            "description": "Loop the presentation"
-          },
-          "revealjs.rtl": {
-            "type": "boolean",
-            "default": false,
-            "description": "Change the presentation direction to be RTL"
-          },
-          "revealjs.shuffle": {
-            "type": "boolean",
-            "default": false,
-            "description": "Randomizes the order of slides each time the presentation loads"
-          },
-          "revealjs.fragments": {
-            "type": "boolean",
-            "default": true,
-            "description": "Turns fragments on and off globally"
-          },
-          "revealjs.embedded": {
-            "type": "boolean",
-            "default": false,
-            "description": "Flags if the presentation is running in an embedded mode, i.e. contained within a limited portion of the screen"
-          },
-          "revealjs.help": {
-            "type": "boolean",
-            "default": true,
-            "description": "Flags if we should show a help overlay when the questionmark key is pressed"
-          },
-          "revealjs.showNotes": {
-            "type": "boolean",
-            "default": false,
-            "description": "Flags if speaker notes should be visible to all viewers"
-          },
-          "revealjs.autoSlide": {
-            "type": "number",
-            "default": 0,
-            "description": "Number of milliseconds between automatically proceeding to the next slide, disabled when set to 0, this value can be overwritten by using a data-autoslide attribute on your slides"
-          },
-          "revealjs.autoSlideStoppable": {
-            "type": "boolean",
-            "default": true,
-            "description": "Stop auto-sliding after user input"
-          },
-          "revealjs.mouseWheel": {
-            "type": "boolean",
-            "default": false,
-            "description": "Enable slide navigation via mouse wheel"
-          },
-          "revealjs.hideAddressBar": {
-            "type": "boolean",
-            "default": true,
-            "description": "Hides the address bar on mobile devices"
-          },
-          "revealjs.previewLinks": {
-            "type": "boolean",
-            "default": false,
-            "description": "Opens links in an iframe preview overlay"
-          },
-          "revealjs.transition": {
-            "type": "string",
-            "default": "default",
-            "description": "Transition style (none/fade/slide/convex/concave/zoom)"
-          },
-          "revealjs.transitionSpeed": {
-            "type": "string",
-            "default": "default",
-            "description": "Transition speed (default/fast/slow)"
-          },
-          "revealjs.backgroundTransition": {
-            "type": "string",
-            "default": "default",
-            "description": "Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom)"
-          },
-          "revealjs.viewDistance": {
-            "type": "number",
-            "default": 3,
-            "description": "Number of slides away from the current that are visible"
-          },
-          "revealjs.parallaxBackgroundImage": {
-            "type": "string",
-            "default": "",
-            "description": "Parallax background image"
-          },
-          "revealjs.parallaxBackgroundSize": {
-            "type": "string",
-            "default": "",
-            "description": "Parallax background size (CSS syntax, e.g. 2100px 900px)"
-          },
-          "revealjs.parallaxBackgroundHorizontal": {
-            "type": "number",
-            "default": null,
-            "description": "Number of pixels to move the parallax background per slide"
-          },
-          "revealjs.parallaxBackgroundVertical": {
-            "type": "number",
-            "default": null,
-            "description": "Number of pixels to move the parallax background per slide"
-          }
-       }
+      "type": "object",
+      "title": "Reveal JS Option Configuration",
+      "properties": {
+        "revealjs.notesSeparator": {
+          "type": "string",
+          "default": "note:",
+          "description": "Revealjs markdown note delimiter"
+        },
+        "revealjs.separator": {
+          "type": "string",
+          "default": "^[\r\n?|\n]---[\r\n?|\n]$",
+          "description": "Revealjs markdown slide separator"
+        },
+        "revealjs.verticalSeparator": {
+          "type": "string",
+          "default": "^[\r\n?|\n]--[\r\n?|\n]$",
+          "description": "Revealjs markdown vertical separator"
+        },
+        "revealjs.theme": {
+          "type": "string",
+          "default": "black",
+          "description": "Revealjs Theme (black, white, league, beige, sky, night, serif, simple, solarized"
+        },
+        "revealjs.highlightTheme": {
+          "type": "string",
+          "default": "Zenburn",
+          "description": "highlight.js Theme (Default, Agate, Androidstudio, Arduino Light, Arta, Ascetic, Atelier Cave Dark, Atelier Cave Light, Atelier Dune Dark, Atelier Dune Light, Atelier Estuary Dark, Atelier Estuary Light, Atelier Forest Dark, Atelier Forest Light, Atelier Heath Dark, Atelier Heath Light, Atelier Lakeside Dark, Atelier Lakeside Light, Atelier Plateau Dark, Atelier Plateau Light, Atelier Savanna Dark, Atelier Savanna Light, Atelier Seaside Dark, Atelier Seaside Light, Atelier Sulphurpool Dark, Atelier Sulphurpool Light, Atom One Dark, Atom One Light,Brown Paper, Codepen Embed, Color Brewer, Darcula, Dark, Darkula, Docco, Dracula, Far, Foundation, Github Gist, Github, Googlecode, Grayscale, Gruvbox Dark, Gruvbox Light, Hopscotch, Hybrid, Idea, Ir Black, Kimbie Dark, Kimbie Light, Magula, Mono Blue, Monokai Sublime, Monokai, Obsidian,Ocean, Paraiso Dark, Paraiso Light, Pojoaque, Purebasic, Qtcreator Dark, Qtcreator Light, Railscasts, Rainbow, School Book, Solarized Dark, Solarized Light, Sunburst, Tomorrow Night Blue, Tomorrow Night Bright, Tomorrow Night Eighties, Tomorrow Night, Tomorrow, Vs, Xcode, Xt 256, Zenburn"
+        },
+        "revealjs.controls": {
+          "type": "boolean",
+          "default": true,
+          "description": "Display controls in the bottom right corner"
+        },
+        "revealjs.progress": {
+          "type": "boolean",
+          "default": true,
+          "description": "Display a presentation progress bar"
+        },
+        "revealjs.slideNumber": {
+          "type": "boolean",
+          "default": false,
+          "description": "Display the page number of the current slide"
+        },
+        "revealjs.history": {
+          "type": "boolean",
+          "default": false,
+          "description": "Push each slide change to the browser history"
+        },
+        "revealjs.keyboard": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable keyboard shortcuts for navigation"
+        },
+        "revealjs.overview": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the slide overview mode"
+        },
+        "revealjs.center": {
+          "type": "boolean",
+          "default": true,
+          "description": "Vertical centering of slides"
+        },
+        "revealjs.touch": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enables touch navigation on devices with touch input"
+        },
+        "revealjs.loop": {
+          "type": "boolean",
+          "default": false,
+          "description": "Loop the presentation"
+        },
+        "revealjs.rtl": {
+          "type": "boolean",
+          "default": false,
+          "description": "Change the presentation direction to be RTL"
+        },
+        "revealjs.shuffle": {
+          "type": "boolean",
+          "default": false,
+          "description": "Randomizes the order of slides each time the presentation loads"
+        },
+        "revealjs.fragments": {
+          "type": "boolean",
+          "default": true,
+          "description": "Turns fragments on and off globally"
+        },
+        "revealjs.embedded": {
+          "type": "boolean",
+          "default": false,
+          "description": "Flags if the presentation is running in an embedded mode, i.e. contained within a limited portion of the screen"
+        },
+        "revealjs.help": {
+          "type": "boolean",
+          "default": true,
+          "description": "Flags if we should show a help overlay when the questionmark key is pressed"
+        },
+        "revealjs.showNotes": {
+          "type": "boolean",
+          "default": false,
+          "description": "Flags if speaker notes should be visible to all viewers"
+        },
+        "revealjs.autoSlide": {
+          "type": "number",
+          "default": 0,
+          "description": "Number of milliseconds between automatically proceeding to the next slide, disabled when set to 0, this value can be overwritten by using a data-autoslide attribute on your slides"
+        },
+        "revealjs.autoSlideStoppable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Stop auto-sliding after user input"
+        },
+        "revealjs.mouseWheel": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable slide navigation via mouse wheel"
+        },
+        "revealjs.hideAddressBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Hides the address bar on mobile devices"
+        },
+        "revealjs.previewLinks": {
+          "type": "boolean",
+          "default": false,
+          "description": "Opens links in an iframe preview overlay"
+        },
+        "revealjs.transition": {
+          "type": "string",
+          "default": "default",
+          "description": "Transition style (none/fade/slide/convex/concave/zoom)"
+        },
+        "revealjs.transitionSpeed": {
+          "type": "string",
+          "default": "default",
+          "description": "Transition speed (default/fast/slow)"
+        },
+        "revealjs.backgroundTransition": {
+          "type": "string",
+          "default": "default",
+          "description": "Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom)"
+        },
+        "revealjs.viewDistance": {
+          "type": "number",
+          "default": 3,
+          "description": "Number of slides away from the current that are visible"
+        },
+        "revealjs.parallaxBackgroundImage": {
+          "type": "string",
+          "default": "",
+          "description": "Parallax background image"
+        },
+        "revealjs.parallaxBackgroundSize": {
+          "type": "string",
+          "default": "",
+          "description": "Parallax background size (CSS syntax, e.g. 2100px 900px)"
+        },
+        "revealjs.parallaxBackgroundHorizontal": {
+          "type": "number",
+          "default": null,
+          "description": "Number of pixels to move the parallax background per slide"
+        },
+        "revealjs.parallaxBackgroundVertical": {
+          "type": "number",
+          "default": null,
+          "description": "Number of pixels to move the parallax background per slide"
+        }
+      }
     }
   },
   "scripts": {
@@ -216,20 +218,22 @@
     "compile": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
-  "dependencies":{
+  "dependencies": {
     "express": "^4.14.0",
     "highlight.js": "^9.8.0",
     "open": "0.0.5",
     "reveal.js": "^3.3.0",
     "yaml-front-matter": "^3.4.0"
-    },
+  },
   "devDependencies": {
+    "@types/chai": "^3.4.35",
     "@types/express": "^4.0.33",
     "@types/glob": "^5.0.30",
     "@types/mocha": "^2.2.32",
     "@types/mustache": "^0.8.29",
     "@types/node": "^6.0.40",
     "@types/open": "0.0.29",
+    "chai": "^3.5.0",
     "mocha": "^2.3.3",
     "typescript": "^2.0.3",
     "vscode": "^1.0.0"

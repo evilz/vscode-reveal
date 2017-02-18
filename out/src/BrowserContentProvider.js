@@ -1,5 +1,5 @@
 "use strict";
-const vscode = require('vscode');
+const vscode = require("vscode");
 class BrowserContentProvider {
     constructor(documentContexts, helpers) {
         this._onDidChange = new vscode.EventEmitter();

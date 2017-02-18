@@ -1,7 +1,6 @@
-import { window, StatusBarAlignment, StatusBarItem, TextEditor, TextDocument } from 'vscode';
-import { RevealServerState, SlidifyOptions, RevealJsOptions } from './Models'
-import { Configuration } from './Configuration'
-import { DocumentContext, DocumentContexts } from './DocumentContext';
+import { window, StatusBarAlignment, StatusBarItem, TextDocument } from 'vscode';
+import { RevealServerState, SlidifyOptions } from './Models';
+import { DocumentContext } from './DocumentContext';
 
 
 export class StatusBarController {
@@ -48,7 +47,7 @@ export class StatusBarController {
 
         if (!this._countItem) { this._countItem = window.createStatusBarItem(StatusBarAlignment.Right, 102); }
 
-        if (!context.editor || context.editor.document.languageId != 'markdown') {
+        if (!context.editor || context.editor.document.languageId !== 'markdown') {
             this._countItem.hide();
             return;
         }

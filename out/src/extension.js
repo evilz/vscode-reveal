@@ -12,7 +12,7 @@ function activate(context) {
     let statusBarController = new StatusBarController_1.StatusBarController(configuration.slidifyOptions);
     let helpers = new Helpers_1.Helpers(configuration);
     let provider = new BrowserContentProvider_1.default(documentContexts, helpers);
-    let registrationHTTP = vscode.workspace.registerTextDocumentContentProvider('http', provider);
+    vscode.workspace.registerTextDocumentContentProvider('http', provider);
     let currentTab;
     console.log('Congratulations, your extension "vscode-reveal" is now active!');
     let showRevealJS = () => {
@@ -31,9 +31,11 @@ function activate(context) {
         }
         return context;
     };
+    currentTab = vscode.window.activeTextEditor;
+    statusBarController.update(getContext());
     // COMMAND : showRevealJS
     context.subscriptions.push(vscode.commands.registerCommand('vscode-revealjs.showRevealJS', () => {
-        if (currentTab == null) {
+        if (currentTab === null) {
             currentTab = vscode.window.activeTextEditor;
         }
         let uri = showRevealJS();
@@ -44,11 +46,10 @@ function activate(context) {
         else {
             return null;
         }
-        ;
     }));
     // COMMAND : showRevealJSInBrowser
     context.subscriptions.push(vscode.commands.registerCommand('vscode-revealjs.showRevealJSInBrowser', () => {
-        if (currentTab == null) {
+        if (currentTab === null) {
             currentTab = vscode.window.activeTextEditor;
         }
         let uri = showRevealJS();

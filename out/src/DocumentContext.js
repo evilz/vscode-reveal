@@ -6,7 +6,7 @@ class DocumentContexts {
         this.configuation = configuration;
     }
     GetDocumentContext(editor) {
-        return this.innerArray.find((c) => c.editor == editor);
+        return this.innerArray.find((c) => c.editor === editor);
     }
     ;
     createContext(editor) {

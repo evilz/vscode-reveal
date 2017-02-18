@@ -1,6 +1,6 @@
 "use strict";
-const Models_1 = require('./Models');
-const Template_1 = require('./Template');
+const Models_1 = require("./Models");
+const Template_1 = require("./Template");
 const vscode_1 = require('vscode');
 const path = require('path');
 const express = require('express');
@@ -20,7 +20,7 @@ class RevealServer {
             }
             this.app.use('/', this.staticDir(path.dirname(this.editor.document.fileName)));
             let highlightPath = path.resolve(require.resolve('highlight.js'), '..', '..');
-            this.app.use(`/lib/css/${this.configuation.revealJsOptions.highlightTheme}.css`, this.staticDir(path.join(highlightPath, 'styles', this.configuation.revealJsOptions.highlightTheme + '.css')));
+            this.app.use(`/lib/css/`, this.staticDir(path.join(highlightPath, 'styles')));
             this.app.get('/', this.renderMarkdownAsSlides);
         };
         this.renderMarkdownAsSlides = (req, res) => {
@@ -62,14 +62,14 @@ class RevealServer {
         return this.editor.document.getText();
     }
     stop() {
-        if (this.state == Models_1.RevealServerState.Started) {
+        if (this.state === Models_1.RevealServerState.Started) {
             this.server.close();
             this.state = Models_1.RevealServerState.Stopped;
             console.log(`Reveal-server Stopped`);
         }
     }
     start() {
-        if (this.state == Models_1.RevealServerState.Stopped) {
+        if (this.state === Models_1.RevealServerState.Stopped) {
             this.server = this.app.listen(0);
             this.state = Models_1.RevealServerState.Started;
             console.log(`Reveal-server started, opening at http://${this.host}:${this.server.address().port}`);

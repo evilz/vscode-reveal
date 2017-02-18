@@ -1,8 +1,3 @@
-import { create } from 'domain';
-import * as net from 'net';
-import { createCipher } from 'crypto';
-import * as console from 'console';
-import { log } from 'util';
 import { TextEditor, Uri } from 'vscode';
 import { RevealServer } from './Server';
 import { Configuration } from './Configuration';
@@ -23,7 +18,7 @@ export class DocumentContexts{
     }
 
     public GetDocumentContext(editor: TextEditor) {
-        return this.innerArray.find( (c) => c.editor == editor );
+        return this.innerArray.find( (c) => c.editor === editor );
     };
 
     public createContext(editor: TextEditor){
@@ -41,7 +36,7 @@ export class DocumentContexts{
             (c) => {
                 return c.server && c.server.uri && c.server.uri.toString() === uri.toString();
             }
-        )
+        );
     }
 }
 

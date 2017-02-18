@@ -1,11 +1,9 @@
 'use strict';
 import * as vscode from 'vscode';
-import { RevealServer } from "./Server";
 import BrowserContentProvider from './BrowserContentProvider';
 import { StatusBarController } from './StatusBarController';
 import { Configuration } from './Configuration';
-import { DocumentContext, DocumentContexts } from './DocumentContext';
-import { RevealServerState, SlidifyOptions, RevealJsOptions } from './Models';
+import { DocumentContexts } from './DocumentContext';
 import { Helpers } from './Helpers';
 
 var open = require('open');
@@ -17,9 +15,11 @@ export function activate(context: vscode.ExtensionContext) {
     let statusBarController = new StatusBarController(configuration.slidifyOptions);
     let helpers = new Helpers(configuration);
     let provider = new BrowserContentProvider(documentContexts, helpers);
-    let registrationHTTP = vscode.workspace.registerTextDocumentContentProvider('http', provider);
+    vscode.workspace.registerTextDocumentContentProvider('http', provider);
 
     let currentTab: vscode.TextEditor;
+
+     
 
     console.log('Congratulations, your extension "vscode-reveal" is now active!');
 
@@ -31,7 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
         let context = getContext();
         context.server.start();
         return context.server.uri;
-    }
+    };
 
     let getContext = () => {
         let context = documentContexts.GetDocumentContext(currentTab);
@@ -39,12 +39,15 @@ export function activate(context: vscode.ExtensionContext) {
             context = documentContexts.createContext(currentTab);
         }
 
-        return context
-    }
+        return context;
+    };
+
+    currentTab = vscode.window.activeTextEditor;
+    statusBarController.update(getContext());
 
     // COMMAND : showRevealJS
     context.subscriptions.push(vscode.commands.registerCommand('vscode-revealjs.showRevealJS', () => {
-        if (currentTab == null) { currentTab = vscode.window.activeTextEditor; }
+        if (currentTab === null) { currentTab = vscode.window.activeTextEditor; }
         let uri = showRevealJS();
         if (uri) {
             return vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, 'Reveal JS presentation')
@@ -53,13 +56,13 @@ export function activate(context: vscode.ExtensionContext) {
                 (error) => { vscode.window.showErrorMessage(error); }
                 );
         }
-        else { return null };
+        else { return null; }
     }));
 
     // COMMAND : showRevealJSInBrowser
     context.subscriptions.push(
         vscode.commands.registerCommand('vscode-revealjs.showRevealJSInBrowser', () => {
-            if (currentTab == null) { currentTab = vscode.window.activeTextEditor; }
+            if (currentTab === null) { currentTab = vscode.window.activeTextEditor; }
             let uri = showRevealJS();
             return open(uri.toString());
 
@@ -72,8 +75,9 @@ export function activate(context: vscode.ExtensionContext) {
             let context = getContext();
             context.server.stop();
             statusBarController.update(context);
-        }));
-
+        })
+    );
+    
     // ON TAB CHANGE
     context.subscriptions.push(
         vscode.window.onDidChangeActiveTextEditor((e: vscode.TextEditor) => {
@@ -81,14 +85,15 @@ export function activate(context: vscode.ExtensionContext) {
                 currentTab = e;
                 statusBarController.update(getContext());
             }
-        }));
+        })
+    );
 
     // ON CHANGE TEXT
     context.subscriptions.push(
         vscode.workspace.onDidChangeTextDocument((_) => {
             statusBarController.update(getContext());
-        }
-        ));
+        })
+    );
 
     // ON SAVE
     context.subscriptions.push(

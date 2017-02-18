@@ -1,6 +1,6 @@
-import { DocumentContexts, DocumentContext } from './DocumentContext';
-import * as vscode from 'vscode';
-import {Helpers} from './Helpers';
+import { DocumentContexts } from "./DocumentContext";
+import * as vscode from "vscode";
+import {Helpers} from "./Helpers";
 
 export default class BrowserContentProvider implements vscode.TextDocumentContentProvider {
 
@@ -15,13 +15,13 @@ export default class BrowserContentProvider implements vscode.TextDocumentConten
         private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
 
         provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): string {
-            
+
             // get doc from uri
             let context = this.documentContexts.GetDocumentContextByUri(uri);
             // get current slide
             const editor = context.editor;
 
-            let slidePosition = this.helpers.getSlidePosition(editor); 
+            let slidePosition = this.helpers.getSlidePosition(editor);
             // update uri
 
             return `<style>html, body, iframe { height: 100% }</style>
@@ -31,8 +31,8 @@ export default class BrowserContentProvider implements vscode.TextDocumentConten
         get onDidChange(): vscode.Event<vscode.Uri> {
             return this._onDidChange.event;
         }
-        
-        public update(uri: vscode.Uri) {
+
+        public update(uri: vscode.Uri):void {
             this._onDidChange.fire(uri);
         }
     }
