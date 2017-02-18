@@ -1,9 +1,9 @@
-import * as vscode from 'vscode';
 import { should } from 'chai';
 import { Helpers } from "../src/Helpers";
 import { Configuration } from "../src//Configuration";
 
 should();
+
 let slidesWithFront = `---
 theme : "white"
 transition: "zoom"

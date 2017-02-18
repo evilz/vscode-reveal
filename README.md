@@ -93,6 +93,14 @@ Please add issues on github.
 
 ## Release Notes
 
+### 0.0.9
+
+- fix Issues
+    - Side by side view does not refresh
+    - highlightTheme
+
+- new feature : custom theme :)
+
 ### 0.0.8
 
 - Front matter !
