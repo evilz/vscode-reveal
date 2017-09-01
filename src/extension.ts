@@ -101,7 +101,10 @@ export function activate(context: vscode.ExtensionContext) {
             if (document === vscode.window.activeTextEditor.document) {
                 let context = getContext();
                 statusBarController.update(context);
-                provider.update(context.server.uri);
+                
+                if (context.server.uri) {
+                    provider.update(context.server.uri);
+                }
             }
         }));
 
