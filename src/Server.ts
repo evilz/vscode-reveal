@@ -23,7 +23,7 @@ export class RevealServer {
     private editor: TextEditor;
 
     state = RevealServerState.Stopped;
-    uri: Uri;
+    public uri?: Uri;
 
     get title(): string {
         return `RevealJS : ${this.editor.document.fileName}`;
