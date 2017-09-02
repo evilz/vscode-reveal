@@ -2,8 +2,6 @@
 
 This extension let you display a reveal js presentation directly from an opened markdown document.
 
-> This extension IS IN DEVELOPMENT and can have many bugs.
-
 ## Features
 
 ### Create revealjs presentation directly from markdown file
