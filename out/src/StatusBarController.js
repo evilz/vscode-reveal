@@ -1,6 +1,7 @@
 "use strict";
-const vscode_1 = require('vscode');
-const Models_1 = require('./Models');
+Object.defineProperty(exports, "__esModule", { value: true });
+const vscode_1 = require("vscode");
+const Models_1 = require("./Models");
 class StatusBarController {
     constructor(slidifyOptions) {
         this._slidifyOptions = slidifyOptions;

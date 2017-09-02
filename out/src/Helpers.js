@@ -1,5 +1,6 @@
 "use strict";
-const vscode = require('vscode');
+Object.defineProperty(exports, "__esModule", { value: true });
+const vscode = require("vscode");
 var front = require('yaml-front-matter');
 /** Helper functions collection to count slides */
 class Helpers {

@@ -1,10 +1,11 @@
 'use strict';
-const vscode = require('vscode');
-const BrowserContentProvider_1 = require('./BrowserContentProvider');
-const StatusBarController_1 = require('./StatusBarController');
-const Configuration_1 = require('./Configuration');
-const DocumentContext_1 = require('./DocumentContext');
-const Helpers_1 = require('./Helpers');
+Object.defineProperty(exports, "__esModule", { value: true });
+const vscode = require("vscode");
+const BrowserContentProvider_1 = require("./BrowserContentProvider");
+const StatusBarController_1 = require("./StatusBarController");
+const Configuration_1 = require("./Configuration");
+const DocumentContext_1 = require("./DocumentContext");
+const Helpers_1 = require("./Helpers");
 var open = require('open');
 function activate(context) {
     let configuration = new Configuration_1.Configuration();
@@ -77,7 +78,9 @@ function activate(context) {
         if (document === vscode.window.activeTextEditor.document) {
             let context = getContext();
             statusBarController.update(context);
-            provider.update(context.server.uri);
+            if (context.server.uri) {
+                provider.update(context.server.uri);
+            }
         }
     }));
 }

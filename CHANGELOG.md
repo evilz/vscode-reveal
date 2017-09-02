@@ -1,3 +1,8 @@
+### 1.0.0
+
+- No me a preveiw !
+- Fix issue https://github.com/evilz/vscode-reveal/issues/16  (Thank to Matt Bierner #mjbvz) 
+- Fix no refresh on save
 
 ### 0.0.9
 

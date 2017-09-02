@@ -1,20 +1,13 @@
+language: node_js
 sudo: false
-
-os:
-  - osx
-  - linux
-
-before_install:
-  - if [ $TRAVIS_OS_NAME == "linux" ]; then
-      export CXX="g++-4.9" CC="gcc-4.9" DISPLAY=:99.0;
-      sh -e /etc/init.d/xvfb start;
-      sleep 3;
-    fi
+node_js:
+  - "node"
 
 install:
   - npm install
 
+before_script:
+  - npm run build
+  
 script:
-    - npm run build
-    - npm test
-    - npm run lint
+  - npm test

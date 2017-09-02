@@ -1,9 +1,10 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const Models_1 = require("./Models");
 const Template_1 = require("./Template");
-const vscode_1 = require('vscode');
-const path = require('path');
-const express = require('express');
+const vscode_1 = require("vscode");
+const path = require("path");
+const express = require("express");
 var md = require('reveal.js/plugin/markdown/markdown');
 var front = require('yaml-front-matter');
 class RevealServer {

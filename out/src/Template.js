@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 class Template {
     static Render(title, revealOptions, slides) {
         return `<!doctype html>

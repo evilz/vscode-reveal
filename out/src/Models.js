@@ -1,7 +1,8 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var RevealServerState;
 (function (RevealServerState) {
     RevealServerState[RevealServerState["Stopped"] = 0] = "Stopped";
     RevealServerState[RevealServerState["Started"] = 1] = "Started";
-})(exports.RevealServerState || (exports.RevealServerState = {}));
-var RevealServerState = exports.RevealServerState;
+})(RevealServerState = exports.RevealServerState || (exports.RevealServerState = {}));
 //# sourceMappingURL=Models.js.map

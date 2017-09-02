@@ -1,5 +1,6 @@
 "use strict";
-const Server_1 = require('./Server');
+Object.defineProperty(exports, "__esModule", { value: true });
+const Server_1 = require("./Server");
 class DocumentContexts {
     constructor(configuration) {
         this.innerArray = new Array();

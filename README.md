@@ -10,33 +10,7 @@ This extension let you display a reveal js presentation directly from an opened 
 
 Sample of markdown : 
 
-```
----
-theme : "white"
-transition: "zoom"
-customTheme: "myCSS"
----
-Foo
-
-Note: test note
-
----
-
-Bar
-\```csharp
-public void AwesomeFunc(){
-    Show.Me.Your.Best();
-}
-\```
-
-----
-
-Sub Bar
-
----
-
-The End.
-```
+https://raw.githubusercontent.com/evilz/vscode-reveal/master/sample.md
 
 ### Display side by side or in browser
 

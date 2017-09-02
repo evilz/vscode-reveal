@@ -1,5 +1,6 @@
 "use strict";
-const chai_1 = require('chai');
+Object.defineProperty(exports, "__esModule", { value: true });
+const chai_1 = require("chai");
 const Helpers_1 = require("../src/Helpers");
 const Configuration_1 = require("../src//Configuration");
 chai_1.should();
