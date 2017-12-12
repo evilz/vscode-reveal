@@ -1,14 +1,14 @@
-'use strict';
-import * as vscode from 'vscode';
-import { ExtensionOptions, SlidifyOptions, RevealJsOptions } from './Models';
+'use strict'
+import * as vscode from 'vscode'
+import { ExtensionOptions, RevealJsOptions, SlidifyOptions } from './Models'
 
 export class Configuration implements ExtensionOptions {
 
-     public get revealJsOptions(){
-         return <any>vscode.workspace.getConfiguration('revealjs') as RevealJsOptions;
+     public get revealJsOptions() {
+         return vscode.workspace.getConfiguration('revealjs') as any as RevealJsOptions
      }
 
-    public get slidifyOptions(){
-         return <any>vscode.workspace.getConfiguration('revealjs') as SlidifyOptions;
+    public get slidifyOptions() {
+         return vscode.workspace.getConfiguration('revealjs') as any as SlidifyOptions
      }
 }
