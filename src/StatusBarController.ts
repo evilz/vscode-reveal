@@ -1,89 +1,71 @@
-import { window, StatusBarAlignment, StatusBarItem, TextDocument } from 'vscode';
-import { RevealServerState, SlidifyOptions } from './Models';
-import { DocumentContext } from './DocumentContext';
-
+import { StatusBarAlignment, StatusBarItem, TextDocument, window } from 'vscode'
+import { ISlidifyOptions, RevealServerState } from './Models'
+import { VSodeRevealContext } from './VSodeRevealContext'
 
 export class StatusBarController {
-    private _countItem: StatusBarItem;
-    private _addressItem: StatusBarItem;
-    private _stopItem: StatusBarItem;
+  private countItem: StatusBarItem
+  private addressItem: StatusBarItem
+  private stopItem: StatusBarItem
 
-    private _slidifyOptions: SlidifyOptions;
+  public update(context: VSodeRevealContext) {
+    this.updateAddress(context)
+    this.updateCount(context)
+    this.updateStop(context)
+  }
 
-    constructor(slidifyOptions: SlidifyOptions) {
-        this._slidifyOptions = slidifyOptions;
+  public dispose() {
+    this.addressItem.dispose()
+    this.countItem.dispose()
+    this.stopItem.dispose()
+  }
+
+  private updateAddress(context: VSodeRevealContext) {
+    if (!this.addressItem) {
+      this.addressItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
     }
 
-    private updateAddress(context: DocumentContext) {
-        if (!this._addressItem) { this._addressItem = window.createStatusBarItem(StatusBarAlignment.Right, 100); }
+    if (context.server.state === RevealServerState.Started) {
+      this.addressItem.text = `$(server) ${context.server.uri}`
+      this.addressItem.command = 'vscode-revealjs.showRevealJSInBrowser'
+      this.addressItem.show()
+    } else {
+      this.addressItem.hide()
+    }
+  }
 
-        if (context.server.state === RevealServerState.Started) {
-            this._addressItem.text = `$(server) ${context.server.uri}`;
-            this._addressItem.command = "vscode-revealjs.showRevealJSInBrowser";
-            this._addressItem.show();
-        } else {
-            this._addressItem.hide();
-        }
-
-
+  private updateStop(context: VSodeRevealContext) {
+    if (!this.stopItem) {
+      this.stopItem = window.createStatusBarItem(StatusBarAlignment.Right, 101)
     }
 
-    private updateStop(context: DocumentContext) {
-        if (!this._stopItem) { this._stopItem = window.createStatusBarItem(StatusBarAlignment.Right, 101); }
+    this.stopItem.text = `$(primitive-square)`
+    this.stopItem.color = 'red'
+    this.stopItem.command = 'vscode-revealjs.KillRevealJSServer'
 
-        this._stopItem.text = `$(primitive-square)`;
-        this._stopItem.color = 'red';
-        this._stopItem.command = "vscode-revealjs.KillRevealJSServer";
+    if (context.server.state === RevealServerState.Started) {
+      this.stopItem.show()
+    } else {
+      this.stopItem.hide()
+    }
+  }
 
-        if (context.server.state === RevealServerState.Started) {
-
-            this._stopItem.show();
-        } else {
-            this._stopItem.hide();
-        }
+  private updateCount(context: VSodeRevealContext) {
+    if (!this.countItem) {
+      this.countItem = window.createStatusBarItem(StatusBarAlignment.Right, 102)
     }
 
-    private updateCount(context: DocumentContext) {
-
-        if (!this._countItem) { this._countItem = window.createStatusBarItem(StatusBarAlignment.Right, 102); }
-
-        if (!context.editor || context.editor.document.languageId !== 'markdown') {
-            this._countItem.hide();
-            return;
-        }
-
-        let slidecount = this.getSlideCount(context.editor.document);
-        if (slidecount < 2) {
-            this._countItem.hide();
-        }
-        else {
-            this._countItem.text = `$(note) ${slidecount} Slides`;
-            this._countItem.command = "vscode-revealjs.showRevealJS";
-            this._countItem.show();
-        }
+    if (!context.editor || context.editor.document.languageId !== 'markdown') {
+      this.countItem.hide()
+      return
     }
 
-
-    public update(context: DocumentContext) {
-        this.updateAddress(context);
-        this.updateCount(context);
-        this.updateStop(context);
+    const slidecount = context.slideCount
+    if (slidecount < 2) {
+      this.countItem.hide()
+    } else {
+      this.countItem.text = `$(note) ${slidecount} Slides`
+      this.countItem.command = 'vscode-revealjs.showRevealJS'
+      this.countItem.show()
     }
-
-
-    public getSlideCount(doc: TextDocument): number {
-        let count = 0;
-        let docContent = doc.getText();
-        let regex = new RegExp(this._slidifyOptions.separator, "gm");
-
-        let matches = docContent.match(regex);
-        if (matches) {
-            count = matches.length + 1;
-        }
-        return count;
-    }
-
-    public dispose() {
-        this._countItem.dispose();
-    }
+  }
 }

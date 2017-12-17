@@ -1,10 +1,19 @@
-import { RevealJsOptions} from './Models';
+// tslint:disable-next-line:no-submodule-imports
+import md = require('reveal.js/plugin/markdown/markdown')
+import { ExtensionOptions, IRevealJsOptions } from './Models'
 
-export class Template {
+export const renderRevealHtml = (
+  title: string,
+  extensionOptions: ExtensionOptions,
+  slidesContent: string
+) => {
+  const slides = md.slidify(slidesContent, extensionOptions) as string
+  const html = renderTemplate(title, extensionOptions, slides)
+  return html
+}
 
-    public static Render (title:string, revealOptions:RevealJsOptions, slides:any  ):string{
-
-        return `<!doctype html>
+const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: any): string => {
+  return `<!doctype html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -63,12 +72,11 @@ export class Template {
             };
             // options from URL query string
             var queryOptions = Reveal.getQueryHash() || {};
-            var options = ${ JSON.stringify(revealOptions, null, 2)};
+            var options = ${JSON.stringify(revealOptions, null, 2)};
             options = extend(defaultOptions, options, queryOptions);
             Reveal.initialize(options);
         </script>
         
     </body>
-</html>`;
-    }
+</html>`
 }
