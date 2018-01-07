@@ -1,13 +1,16 @@
 import { StatusBarAlignment, StatusBarItem, TextDocument, window } from 'vscode'
 import { ISlidifyOptions, RevealServerState } from './Models'
-import { VSodeRevealContext } from './VSodeRevealContext'
+import { VSCodeRevealContext } from './VSCodeRevealContext'
 
 export class StatusBarController {
   private countItem: StatusBarItem
   private addressItem: StatusBarItem
   private stopItem: StatusBarItem
 
-  public update(context: VSodeRevealContext) {
+  constructor(private getContext: (() => VSCodeRevealContext)) {}
+
+  public update() {
+    const context = this.getContext()
     this.updateAddress(context)
     this.updateCount(context)
     this.updateStop(context)
@@ -19,7 +22,7 @@ export class StatusBarController {
     this.stopItem.dispose()
   }
 
-  private updateAddress(context: VSodeRevealContext) {
+  private updateAddress(context: VSCodeRevealContext) {
     if (!this.addressItem) {
       this.addressItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
     }
@@ -33,7 +36,7 @@ export class StatusBarController {
     }
   }
 
-  private updateStop(context: VSodeRevealContext) {
+  private updateStop(context: VSCodeRevealContext) {
     if (!this.stopItem) {
       this.stopItem = window.createStatusBarItem(StatusBarAlignment.Right, 101)
     }
@@ -49,7 +52,7 @@ export class StatusBarController {
     }
   }
 
-  private updateCount(context: VSodeRevealContext) {
+  private updateCount(context: VSCodeRevealContext) {
     if (!this.countItem) {
       this.countItem = window.createStatusBarItem(StatusBarAlignment.Right, 102)
     }

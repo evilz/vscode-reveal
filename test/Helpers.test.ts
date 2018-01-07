@@ -1,6 +1,6 @@
 // tslint:disable-next-line:no-implicit-dependencies
 import { should } from 'chai'
-import * as vscode from 'vscode'
+// import * as vscode from 'vscode'
 
 should()
 

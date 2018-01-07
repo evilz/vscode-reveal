@@ -7,6 +7,10 @@
     ],
     "rules": {
       "no-console":false,
-      "max-classes-per-file": false
+      "max-classes-per-file": false,
+      "variable-name":false,
+      "no-implicit-dependencies": false,
+      "only-arrow-functions": false
+      
     }
 }
