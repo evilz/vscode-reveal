@@ -1,5 +1,9 @@
+import * as fs from 'fs'
 import open = require('open')
+import * as path from 'path'
 import * as vscode from 'vscode'
+import { saveHtml } from './ExportHTML'
+import { savePdf } from './ExportPDF'
 import IframeContentProvider from './IframeContentProvider'
 import { ISlide } from './Models'
 import { countLines, countLinesToSlide } from './SlideParser'
@@ -62,4 +66,44 @@ export const goToSlide = (getContext: (() => VSCodeRevealContext)) => (topindex:
 
   currentContext.editor.selections = [new vscode.Selection(position, position)]
   currentContext.editor.revealRange(new vscode.Range(position, position.translate(20)))
+}
+
+export const EXPORT_PDF = 'vscode-revealjs.exportPDF'
+export type EXPORT_PDF = typeof EXPORT_PDF
+
+export const exportPDF = (getContext: (() => VSCodeRevealContext)) => (topindex: number, verticalIndex: number) => {
+  try {
+    const currentContext = getContext()
+    if (currentContext === undefined) {
+      return
+    }
+    const url = currentContext.server.uri.toString() + '?print-pdf'
+    savePdf(url, currentContext.editor.document.fileName.replace('.md', '.pdf'))
+      .then(pdfPath => {
+        open(pdfPath)
+      })
+      .catch(err => {
+        vscode.window.showErrorMessage('Cannot save pdf: ' + err)
+      })
+    // USE https://github.com/GoogleChrome/chrome-launcher
+    // LAUNCH CHROME and print
+    // "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --headless --print-to-pdf="d:\\{{path and file name}}.pdf" https://google.com
+  } catch (err) {
+    vscode.window.showErrorMessage(err)
+  }
+}
+
+export const EXPORT_HTML = 'vscode-revealjs.exportHTML'
+export type EXPORT_HTML = typeof EXPORT_HTML
+
+export const exportHTML = (getContext: (() => VSCodeRevealContext)) => (topindex: number, verticalIndex: number) => {
+  const currentContext = getContext()
+  if (currentContext === undefined) {
+    return
+  }
+  saveHtml(currentContext.uri, currentContext.editor.document.fileName.replace('.md', ''))
+    .then(dirPath => open(dirPath))
+    .catch(err => {
+      vscode.window.showErrorMessage('Cannot save pdf: ' + err)
+    })
 }

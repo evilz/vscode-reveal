@@ -2,11 +2,7 @@
 import md = require('reveal.js/plugin/markdown/markdown')
 import { ExtensionOptions, IRevealJsOptions } from './Models'
 
-export const renderRevealHtml = (
-  title: string,
-  extensionOptions: ExtensionOptions,
-  slidesContent: string
-) => {
+export const renderRevealHtml = (title: string, extensionOptions: ExtensionOptions, slidesContent: string) => {
   const slides = md.slidify(slidesContent, extensionOptions) as string
   const html = renderTemplate(title, extensionOptions, slides)
   return html
@@ -75,6 +71,7 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
             var options = ${JSON.stringify(revealOptions, null, 2)};
             options = extend(defaultOptions, options, queryOptions);
             Reveal.initialize(options);
+
         </script>
         
     </body>

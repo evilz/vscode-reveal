@@ -56,9 +56,8 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
 }
 
 class SlideNode extends vscode.TreeItem {
- 
   get iconName() {
-    return this.isVertical ? 'slide-orange.png' : 'slide-blue.png'
+    return this.isVertical ? 'slide-orange.svg' : 'slide-blue.svg'
   }
 
   public iconPath = {
