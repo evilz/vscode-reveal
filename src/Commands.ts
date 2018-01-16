@@ -1,5 +1,4 @@
 import * as fs from 'fs'
-import open = require('open')
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { saveHtml } from './ExportHTML'
@@ -8,6 +7,9 @@ import IframeContentProvider from './IframeContentProvider'
 import { ISlide } from './Models'
 import { countLines, countLinesToSlide } from './SlideParser'
 import { VSCodeRevealContext } from './VSCodeRevealContext'
+import { openInChrome } from "./ChromeHelper";
+import * as opn from 'opn'
+
 
 const VSCODE_PREVIEWHTML = 'vscode.previewHtml'
 export type VSCODE_PREVIEWHTML = typeof VSCODE_PREVIEWHTML
@@ -36,7 +38,7 @@ export type SHOW_REVEALJS_IN_BROWSER = typeof SHOW_REVEALJS_IN_BROWSER
 
 export const showRevealJSInBrowser = (getContext: (() => VSCodeRevealContext)) => () => {
   const context = getContext()
-  return open(context.uri)
+  return openInChrome(context.uri)
 }
 
 export const STOP_REVEALJS_SERVER = 'vscode-revealjs.stopRevealJSServer'
@@ -77,14 +79,18 @@ export const exportPDF = (getContext: (() => VSCodeRevealContext)) => (topindex:
     if (currentContext === undefined) {
       return
     }
-    const url = currentContext.server.uri.toString() + '?print-pdf'
-    savePdf(url, currentContext.editor.document.fileName.replace('.md', '.pdf'))
-      .then(pdfPath => {
-        open(pdfPath)
-      })
-      .catch(err => {
-        vscode.window.showErrorMessage('Cannot save pdf: ' + err)
-      })
+    const url = currentContext.server.uri.toString() + '?print-pdf-now'
+    openInChrome(url)
+
+    // savePdf(url, currentContext.editor.document.fileName.replace('.md', '.pdf'))
+    //   .then((f) => {
+    //     open(f)
+    //     vscode.window.showInformationMessage('completed')
+    //   })
+    //   .catch(err => {
+    //     vscode.window.showErrorMessage('Cannot save pdf: ' + err)
+    //   })
+
     // USE https://github.com/GoogleChrome/chrome-launcher
     // LAUNCH CHROME and print
     // "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --headless --print-to-pdf="d:\\{{path and file name}}.pdf" https://google.com
@@ -102,7 +108,7 @@ export const exportHTML = (getContext: (() => VSCodeRevealContext)) => (topindex
     return
   }
   saveHtml(currentContext.uri, currentContext.editor.document.fileName.replace('.md', ''))
-    .then(dirPath => open(dirPath))
+    .then(dirPath => opn(dirPath))
     .catch(err => {
       vscode.window.showErrorMessage('Cannot save pdf: ' + err)
     })

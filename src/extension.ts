@@ -1,5 +1,5 @@
 'use strict'
-import open = require('open')
+import * as opn from 'opn'
 import * as vscode from 'vscode'
 import {
   EXPORT_HTML,

@@ -1,6 +1,7 @@
 import * as path from 'path'
 import * as os from 'os'
 import * as fs from 'fs'
+import * as opn from 'opn'
 
 const WIN_APPDATA = process.env.LOCALAPPDATA || '/'
 
@@ -50,4 +51,15 @@ export function existsSync(filepath: string): boolean {
     // doesn't exist
     return false
   }
+}
+
+const chromeAppNames = []
+chromeAppNames[Platform.Linux] = 'google-chrome '
+chromeAppNames[Platform.OSX] = 'google chrome'
+chromeAppNames[Platform.Windows] = 'chrome'
+
+export const openInChrome = url => {
+  const platform = getPlatform()
+  let chromeApp = chromeAppNames[platform]
+  return opn(url, { app: chromeApp })
 }

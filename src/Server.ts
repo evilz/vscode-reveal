@@ -2,6 +2,7 @@ import * as express from 'express'
 import * as http from 'http'
 // import * as url from 'url'; tobe used for pdf print
 import * as path from 'path'
+import * as fs from 'fs-extra'
 import { TextEditor, Uri } from 'vscode'
 import { IRevealJsOptions, ISlidifyOptions, RevealServerState } from './Models'
 
@@ -42,7 +43,12 @@ export class RevealServer {
   }
 
   private initExpressServer = (rootDir: string) => {
+
+
     const revealBasePath = path.resolve(require.resolve('reveal.js'), '..', '..')
+
+    this.app.use(this.saveRes(rootDir, revealBasePath))
+
 
     const staticDirs = ['css', 'js', 'images', 'plugin', 'lib']
     for (const dir of staticDirs) {
@@ -65,4 +71,54 @@ export class RevealServer {
     const html = this.renderHtml()
     res.send(html)
   }
+
+  private myLogger = (req, res, next) => {
+    console.log('LOGGED');
+    next();
+    console.log(res.body)
+  };
+
+
+  private saveRes = (rootdir, revealjsDir) => (req, res, next) => {
+    const send = res.send
+    res.send = function (data) {
+      send.apply(res, arguments)
+    }
+
+    const sendFile = res.sendFile
+    res.sendFile = function (path, options, cb) {
+      sendFile.apply(res, arguments)
+    }
+
+    // const write = res.write
+    // res.write = function (data) {
+    //   write.apply(res, arguments)
+    // }
+
+    // const end = res.end
+    // res.end = (chunk) => {
+
+    //   const body = Buffer.concat([chunk]).toString('utf8');
+    //   console.log(req.path, body);
+
+    //   end.apply(res, arguments);
+    // };
+    console.log(req.url)
+
+    const staticDirs = ['/css', '/js', '/images', '/plugin', '/lib']
+    for (const dir of staticDirs) {
+      if (req.url.indexOf(dir) === 0) {
+        // save 
+        const file = path.join(revealjsDir, req.url)
+        const dest = path.join(rootdir, 'export', req.url)
+        fs.copy(file, dest).then(() => console.log('çopyfile'))
+          .catch(err => console.log(err))
+        //fs.copyFileSync(file, dest)
+      }
+    }
+
+    next();
+  }
+
+
 }
