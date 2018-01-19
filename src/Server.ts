@@ -8,6 +8,9 @@ import { IRevealJsOptions, ISlidifyOptions, RevealServerState } from './Models'
 
 // tslint:disable-next-line:no-submodule-imports
 import md = require('reveal.js/plugin/markdown/markdown')
+import { VSCodeRevealContext } from './VSCodeRevealContext'
+import { renderRevealHtml } from './Template'
+import { saveIndex, saveContent } from './ExportHTML'
 
 export class RevealServer {
   public state = RevealServerState.Stopped
@@ -18,9 +21,13 @@ export class RevealServer {
   private staticDir = express.static
   private host: string = 'localhost'
 
-  constructor(private renderHtml: (() => string), fileName: string) {
-    const rootDir = path.dirname(fileName)
-    this.initExpressServer(rootDir)
+  private rootDir = ''
+  private revealBasePath = ''
+
+  constructor(private context: VSCodeRevealContext) {
+    this.rootDir = path.dirname(this.context.editor.document.fileName)
+    this.revealBasePath = path.resolve(require.resolve('reveal.js'), '..', '..')
+    this.initExpressServer()
   }
 
   public stop() {
@@ -35,27 +42,20 @@ export class RevealServer {
     if (this.state === RevealServerState.Stopped) {
       this.server = this.app.listen(0)
       this.state = RevealServerState.Started
-      console.log(
-        `Reveal-server started, opening at http://${this.host}:${this.server.address().port}`
-      )
+      console.log(`Reveal-server started, opening at http://${this.host}:${this.server.address().port}`)
     }
     this.uri = Uri.parse(`http://${this.host}:${this.server.address().port}/`)
   }
 
-  private initExpressServer = (rootDir: string) => {
-
-
-    const revealBasePath = path.resolve(require.resolve('reveal.js'), '..', '..')
-
-    this.app.use(this.saveRes(rootDir, revealBasePath))
-
+  private initExpressServer = () => {
+    this.app.use(this.exportMiddleware())
 
     const staticDirs = ['css', 'js', 'images', 'plugin', 'lib']
     for (const dir of staticDirs) {
-      this.app.use('/' + dir, this.staticDir(path.join(revealBasePath, dir)))
+      this.app.use('/' + dir, this.staticDir(path.join(this.revealBasePath, dir)))
     }
 
-    this.app.use('/', this.staticDir(rootDir))
+    this.app.use('/', this.staticDir(this.rootDir))
 
     const highlightPath = path.resolve(require.resolve('highlight.js'), '..', '..')
     this.app.use(`/lib/css/`, this.staticDir(path.join(highlightPath, 'styles')))
@@ -64,61 +64,22 @@ export class RevealServer {
   }
 
   private renderMarkdownAsSlides: express.RequestHandler = (req, res) => {
-    // Look for print-pdf option
-    // if (~req.url.indexOf('?print-pdf')) {
-    //    req.url = req.url.replace('?print-pdf', '');
-    // }
-    const html = this.renderHtml()
+    const { title, extensionOptions, slideContent } = this.context
+    const html = renderRevealHtml(title, extensionOptions, slideContent)
     res.send(html)
   }
 
-  private myLogger = (req, res, next) => {
-    console.log('LOGGED');
-    next();
-    console.log(res.body)
-  };
-
-
-  private saveRes = (rootdir, revealjsDir) => (req, res, next) => {
-    const send = res.send
-    res.send = function (data) {
-      send.apply(res, arguments)
-    }
-
-    const sendFile = res.sendFile
-    res.sendFile = function (path, options, cb) {
-      sendFile.apply(res, arguments)
-    }
-
-    // const write = res.write
-    // res.write = function (data) {
-    //   write.apply(res, arguments)
-    // }
-
-    // const end = res.end
-    // res.end = (chunk) => {
-
-    //   const body = Buffer.concat([chunk]).toString('utf8');
-    //   console.log(req.path, body);
-
-    //   end.apply(res, arguments);
-    // };
-    console.log(req.url)
-
-    const staticDirs = ['/css', '/js', '/images', '/plugin', '/lib']
-    for (const dir of staticDirs) {
-      if (req.url.indexOf(dir) === 0) {
-        // save 
-        const file = path.join(revealjsDir, req.url)
-        const dest = path.join(rootdir, 'export', req.url)
-        fs.copy(file, dest).then(() => console.log('çopyfile'))
-          .catch(err => console.log(err))
-        //fs.copyFileSync(file, dest)
+  private exportMiddleware = () => (req, res, next) => {
+    if (this.context.IsInExportMode) {
+      const send = res.send
+      // tslint:disable-next-line:no-this-assignment
+      const { rootDir, revealBasePath } = this
+      res.send = function(data) {
+        saveIndex(rootDir, data)
+        send.apply(res, arguments)
       }
+      saveContent(rootDir, revealBasePath, req)
     }
-
-    next();
+    next()
   }
-
-
 }

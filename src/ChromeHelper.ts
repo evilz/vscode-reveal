@@ -58,8 +58,11 @@ chromeAppNames[Platform.Linux] = 'google-chrome '
 chromeAppNames[Platform.OSX] = 'google chrome'
 chromeAppNames[Platform.Windows] = 'chrome'
 
-export const openInChrome = url => {
+export const openInChrome = (url: string, headless?: boolean) => {
   const platform = getPlatform()
-  let chromeApp = chromeAppNames[platform]
+  const chromeApp = chromeAppNames[platform]
+  if (headless) {
+    return opn(url, { app: [chromeApp, '--headless'] })
+  }
   return opn(url, { app: chromeApp })
 }

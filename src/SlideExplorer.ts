@@ -1,6 +1,6 @@
 import * as path from 'path'
 import * as vscode from 'vscode'
-import { GO_TO_SLIDE } from './Commands'
+import { GO_TO_SLIDE } from './Commands/goToSlide'
 import { ISlide } from './Models'
 import { VSCodeRevealContext } from './VSCodeRevealContext'
 import { VSCodeRevealContexts } from './VSCodeRevealContexts'

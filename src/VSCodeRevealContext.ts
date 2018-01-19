@@ -5,13 +5,15 @@ import { ExtensionOptions, IRevealJsOptions, ISlide, ISlidifyOptions, RevealServ
 import { RevealServer } from './Server'
 import { countLines, parseSlides } from './SlideParser'
 import { renderRevealHtml } from './Template'
+import { setTimeout } from 'timers'
 
 export class VSCodeRevealContext {
   private _server: RevealServer
   private _slides: ISlide[]
+  private _isInExportMode = false
 
   constructor(public editor: TextEditor) {
-    this._server = new RevealServer(() => this.renderHtml(), editor.document.fileName)
+    this._server = new RevealServer(this)
     this.refresh()
   }
 
@@ -26,6 +28,19 @@ export class VSCodeRevealContext {
 
   public getDocumentText(range?: Range): string {
     return this.editor.document.getText(range)
+  }
+
+  public SetInExportMode(callback) {
+    this._isInExportMode = true
+    // Not smart but should be OK
+    setTimeout(() => {
+      this._isInExportMode = false
+      callback()
+    }, 10000)
+  }
+
+  get IsInExportMode() {
+    return this._isInExportMode
   }
 
   get slideContent(): string {
@@ -65,11 +80,6 @@ export class VSCodeRevealContext {
   get server(): RevealServer {
     return this._server
   }
-
-  private renderHtml = () => {
-    return renderRevealHtml(this.title, this.extensionOptions, this.slideContent)
-  }
-
   get slides() {
     return this._slides
   }
@@ -93,7 +103,6 @@ export class VSCodeRevealContext {
   }
 
   get uri(): string {
-    // TODO : refqcto in explicit method
     if (this.server.state === RevealServerState.Stopped) {
       this.server.start()
     }

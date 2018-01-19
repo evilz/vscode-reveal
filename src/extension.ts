@@ -1,20 +1,14 @@
 'use strict'
 import * as opn from 'opn'
 import * as vscode from 'vscode'
-import {
-  EXPORT_HTML,
-  EXPORT_PDF,
-  exportHTML,
-  exportPDF,
-  GO_TO_SLIDE,
-  goToSlide,
-  SHOW_REVEALJS,
-  SHOW_REVEALJS_IN_BROWSER,
-  showRevealJS,
-  showRevealJSInBrowser,
-  STOP_REVEALJS_SERVER,
-  stopRevealJSServer
-} from './Commands'
+
+import { SHOW_REVEALJS, VSCODE_PREVIEWHTML, showRevealJS } from './commands/showRevealJS'
+import { SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser } from './commands/showRevealJSInBrowser'
+import { STOP_REVEALJS_SERVER, stopRevealJSServer } from './commands/stopRevealJSServer'
+import { GO_TO_SLIDE, goToSlide } from './commands/goToSlide'
+import { EXPORT_PDF, exportPDF } from './commands/exportPDF'
+import { EXPORT_HTML, exportHTML } from './commands/exportHTML'
+
 import IframeContentProvider from './IframeContentProvider'
 import { RevealServerState } from './Models'
 import { SlideTreeProvider } from './SlideExplorer'
@@ -53,6 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
   console.log('"vscode-reveal" is now active')
 
   // COMMANDS
+
   registerCommand(SHOW_REVEALJS, showRevealJS(getContext, iframeProvider))
   registerCommand(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(contexts.getContext))
   registerCommand(STOP_REVEALJS_SERVER, stopRevealJSServer(contexts.getContext, statusBarController))
