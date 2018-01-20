@@ -2,11 +2,7 @@
 import md = require('reveal.js/plugin/markdown/markdown')
 import { ExtensionOptions, IRevealJsOptions } from './Models'
 
-export const renderRevealHtml = (
-  title: string,
-  extensionOptions: ExtensionOptions,
-  slidesContent: string
-) => {
+export const renderRevealHtml = (title: string, extensionOptions: ExtensionOptions, slidesContent: string) => {
   const slides = md.slidify(slidesContent, extensionOptions) as string
   const html = renderTemplate(title, extensionOptions, slides)
   return html
@@ -20,15 +16,31 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
         <title>${title}</title>
         <link rel="stylesheet" href="css/reveal.css">
         <link rel="stylesheet" href="css/theme/${revealOptions.theme}.css" id="theme">
-        <link rel="stylesheet" href="${revealOptions.customTheme}.css" id="theme">
+        ${revealOptions.customTheme ? ` <link rel="stylesheet" href="${revealOptions.customTheme}.css" id="theme">` : ''}
+       
         <!-- For syntax highlighting -->
         <link rel="stylesheet" href="lib/css/${revealOptions.highlightTheme}.css">
-        <link rel="stylesheet" href="lib/css/${revealOptions.customHighlightTheme}.css">
+
+        ${revealOptions.customHighlightTheme ? `<link rel="stylesheet" href="lib/css/${revealOptions.customHighlightTheme}.css">` : ''}
 
         <!-- If the query includes 'print-pdf', use the PDF print sheet -->
         <script>
           document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
         </script>
+
+        <style type="text/css">
+            @page {    
+              margin: 0;
+              size: auto; 
+            }
+        </style>
+
+        <script>
+         if(window.location.search.match( /print-pdf-now/gi )) {
+           window.print();
+         }
+      </script>
+
     </head>
     <body>
 
@@ -75,6 +87,7 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
             var options = ${JSON.stringify(revealOptions, null, 2)};
             options = extend(defaultOptions, options, queryOptions);
             Reveal.initialize(options);
+
         </script>
         
     </body>

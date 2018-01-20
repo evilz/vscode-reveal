@@ -34,14 +34,18 @@
     "commands": [
       {
         "command": "vscode-revealjs.showRevealJS",
-        "title": "Revealjs: Show presentation by side"
+        "title": "Revealjs: Show presentation by side",
+        "icon": {
+          "light": "resources/light/split.svg",
+          "dark": "resources/dark/split.svg"
+        }
       },
       {
         "command": "vscode-revealjs.showRevealJSInBrowser",
         "title": "Revealjs: Open presentation in browser",
         "icon": {
-          "light": "resources/slide-blue.png",
-          "dark": "resources/slide-blue.png"
+          "light": "resources/light/browser.svg",
+          "dark": "resources/dark/browser.svg"
         }
       },
       {
@@ -51,6 +55,22 @@
       {
         "command": "vscode-revealjs.goToSlide",
         "title": "Revealjs: Go to slide"
+      },
+      {
+        "command": "vscode-revealjs.exportPDF",
+        "title": "Revealjs: Export in PDF",
+        "icon": {
+          "light": "resources/light/pdf.svg",
+          "dark": "resources/dark/pdf.svg"
+        }
+      },
+      {
+        "command": "vscode-revealjs.exportHTML",
+        "title": "Revealjs: Export in HTML",
+        "icon": {
+          "light": "resources/light/html.svg",
+          "dark": "resources/dark/html.svg"
+        }
       }
     ],
     "configuration": {
@@ -238,11 +258,26 @@
           "command": "vscode-revealjs.showRevealJSInBrowser",
           "when": "view == slidesExplorer",
           "group": "navigation"
+        },
+        {
+          "command": "vscode-revealjs.showRevealJS",
+          "when": "view == slidesExplorer",
+          "group": "navigation"
+        },
+        {
+          "command": "vscode-revealjs.exportPDF",
+          "when": "view == slidesExplorer",
+          "group": "navigation"
+        },
+        {
+          "command": "vscode-revealjs.exportHTML",
+          "when": "view == slidesExplorer",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
         {
-          "command": "vscode-revealjs.showRevealJSInBrowser",
+          "command": "vscode-revealjs.goToSlide",
           "when": "view == slidesExplorer && viewItem == slideNode"
         }
       ]
@@ -260,9 +295,12 @@
   },
   "dependencies": {
     "express": "^4.16.2",
+    "fs-extra": "^5.0.0",
     "gray-matter": "^3.1.1",
     "highlight.js": "^9.12.0",
-    "open": "0.0.5",
+    "opn": "^5.2.0",
+    "os": "^0.1.1",
+    "quickly-copy-file": "^1.0.0",
     "reveal.js": "^3.6.0"
   },
   "devDependencies": {
