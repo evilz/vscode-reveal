@@ -3,7 +3,7 @@ import * as http from 'http'
 // import * as url from 'url'; tobe used for pdf print
 import * as path from 'path'
 import * as fs from 'fs-extra'
-import { TextEditor, Uri } from 'vscode'
+import { TextEditor, Uri, window } from 'vscode'
 import { IRevealJsOptions, ISlidifyOptions, RevealServerState } from './Models'
 
 // tslint:disable-next-line:no-submodule-imports
@@ -39,12 +39,16 @@ export class RevealServer {
   }
 
   public start() {
-    if (this.state === RevealServerState.Stopped) {
-      this.server = this.app.listen(0)
-      this.state = RevealServerState.Started
-      console.log(`Reveal-server started, opening at http://${this.host}:${this.server.address().port}`)
+    try {
+      if (this.state === RevealServerState.Stopped) {
+        this.server = this.app.listen(0)
+        this.state = RevealServerState.Started
+        console.log(`Reveal-server started, opening at http://${this.host}:${this.server.address().port}`)
+      }
+      this.uri = Uri.parse(`http://${this.host}:${this.server.address().port}/`)
+    } catch (err) {
+      window.showErrorMessage(`Cannot start server: ${err}`)
     }
-    this.uri = Uri.parse(`http://${this.host}:${this.server.address().port}/`)
   }
 
   private initExpressServer = () => {

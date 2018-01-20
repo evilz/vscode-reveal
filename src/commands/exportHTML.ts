@@ -25,12 +25,8 @@ export const exportHTML = (getContext: (() => VSCodeRevealContext)) => async (to
   if (currentContext === undefined) {
     return
   }
-
   currentContext.SetInExportMode(() => {
     opn(getExportFolderPath(currentContext))
   })
-
   openInChrome(currentContext.uri, true)
-
-  // TODO : flag in context then refresh preview or call chrome in heqdless ?
 }
