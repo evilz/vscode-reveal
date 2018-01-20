@@ -2,6 +2,7 @@ import * as path from 'path'
 import * as os from 'os'
 import * as fs from 'fs'
 import * as opn from 'opn'
+import { window } from 'vscode'
 
 const WIN_APPDATA = process.env.LOCALAPPDATA || '/'
 
@@ -58,11 +59,16 @@ chromeAppNames[Platform.Linux] = 'google-chrome '
 chromeAppNames[Platform.OSX] = 'google chrome'
 chromeAppNames[Platform.Windows] = 'chrome'
 
-export const openInChrome = (url: string, headless?: boolean) => {
-  const platform = getPlatform()
-  const chromeApp = chromeAppNames[platform]
-  if (headless) {
-    return opn(url, { app: [chromeApp, '--headless'] })
+export const openInChrome = async (url: string, headless?: boolean) => {
+  try {
+    const platform = getPlatform()
+    const chromeApp = chromeAppNames[platform]
+    if (headless) {
+      return await opn(url, { app: [chromeApp, '--headless'] })
+    }
+    return await opn(url, { app: chromeApp })
+  } catch (error) {
+    window.showWarningMessage('Can find Chrome on your computer, try with default browser...')
+    await opn(url)
   }
-  return opn(url, { app: chromeApp })
 }

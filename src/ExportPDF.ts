@@ -1,7 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as vscode from 'vscode'
-import * as which from 'which'
 import { getBrowserPath } from './ChromeHelper'
 import { spawn } from 'child_process'
 
@@ -16,7 +15,7 @@ export const savePdf = async (url, filename): Promise<string> => {
     const chromeFlags = ['--headless', '--disable-gpu', '--no-margins', '--remote-debugging-port=9222', url]
     // const chromeFlags = ['--headless', '--disable-gpu', '--print-to-pdf=' + filename, '--no-margins', '--remote-debugging-port=9222', url]
     const chromeProc = spawn(chromePath, chromeFlags, {})
-    chromeProc.on('exit', function(code, signal) {
+    chromeProc.on('exit', function (code, signal) {
       console.log('child process exited with ' + `code ${code} and signal ${signal}`)
     })
     chromeProc.stdout.on('data', data => {
@@ -28,7 +27,7 @@ export const savePdf = async (url, filename): Promise<string> => {
         reject(data)
       }
     })
-    chromeProc.on('exit', function(code, signal) {
+    chromeProc.on('exit', function (code, signal) {
       console.log('child process exited with ' + `code ${code} and signal ${signal}`)
       if (code === 0) {
         resolve(filename)

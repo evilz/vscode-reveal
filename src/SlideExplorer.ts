@@ -1,6 +1,6 @@
 import * as path from 'path'
 import * as vscode from 'vscode'
-import { GO_TO_SLIDE } from './Commands/goToSlide'
+import { GO_TO_SLIDE } from './commands/goToSlide'
 import { ISlide } from './Models'
 import { VSCodeRevealContext } from './VSCodeRevealContext'
 import { VSCodeRevealContexts } from './VSCodeRevealContexts'
@@ -11,7 +11,7 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
   // tslint:disable-next-line:member-ordering
   public readonly onDidChangeTreeData: vscode.Event<SlideNode | null> = this._onDidChangeTreeData.event
 
-  constructor(private getContext: (() => VSCodeRevealContext)) {}
+  constructor(private getContext: (() => VSCodeRevealContext)) { }
 
   public update() {
     // Optimize on slide change only !!
