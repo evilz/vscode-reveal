@@ -1,13 +1,13 @@
 {
-  "name": "vscode-reveal",
-  "displayName": "vscode-reveal",
+  "name": "vscode-reveal-preview",
+  "displayName": "vscode-reveal (PREVIEW)",
   "description": "Show markdown as revealJs presentation",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
   "icon": "images/logo-v2.png",
-  "preview": false,
+  "preview": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/evilz/vscode-reveal"
@@ -31,8 +31,7 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [
-      {
+    "commands": [{
         "command": "vscode-revealjs.showRevealJS",
         "title": "Revealjs: Show presentation by side",
         "icon": {
@@ -245,16 +244,13 @@
       }
     },
     "views": {
-      "explorer": [
-        {
-          "id": "slidesExplorer",
-          "name": "Slides"
-        }
-      ]
+      "explorer": [{
+        "id": "slidesExplorer",
+        "name": "Slides"
+      }]
     },
     "menus": {
-      "view/title": [
-        {
+      "view/title": [{
           "command": "vscode-revealjs.showRevealJSInBrowser",
           "when": "view == slidesExplorer",
           "group": "navigation"
@@ -275,12 +271,10 @@
           "group": "navigation"
         }
       ],
-      "view/item/context": [
-        {
-          "command": "vscode-revealjs.goToSlide",
-          "when": "view == slidesExplorer && viewItem == slideNode"
-        }
-      ]
+      "view/item/context": [{
+        "command": "vscode-revealjs.goToSlide",
+        "when": "view == slidesExplorer && viewItem == slideNode"
+      }]
     }
   },
   "scripts": {

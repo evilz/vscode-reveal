@@ -1,3 +1,9 @@
+### 2.0.0
+
+- New sidebar !!!!
+- Pdf export
+- Html export
+
 ### 1.0.0
 
 - No me a preveiw !

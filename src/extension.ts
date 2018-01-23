@@ -93,6 +93,12 @@ export function activate(context: vscode.ExtensionContext) {
     this,
     context.subscriptions
   )
+
+  vscode.workspace.onDidCloseTextDocument(document => {
+    contexts.deleteContext(document)
+  },
+    this,
+    context.subscriptions)
 }
 
 // this method is called when your extension is deactivated

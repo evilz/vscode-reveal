@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { VSCodeRevealContext } from './VSCodeRevealContext'
 
+
 export class VSCodeRevealContexts {
   private innerArray = new Array<VSCodeRevealContext>()
 
@@ -19,6 +20,20 @@ export class VSCodeRevealContexts {
     return actualContext
   }
 
+  public deleteContext = (document: vscode.TextDocument) => {
+    if (!document) {
+      return undefined
+    }
+
+    const index = this.innerArray.findIndex(x => x.editor.document === document)
+    if (index >= 0) {
+      const context = this.innerArray[index]
+      context.server.stop()
+      this.innerArray = this.innerArray.splice(index, 1)
+    }
+
+  }
+
   private getActiveEditor = () => {
     const editor = vscode.window.activeTextEditor
     if (editor.document.languageId !== 'markdown') {
@@ -26,4 +41,6 @@ export class VSCodeRevealContexts {
     }
     return editor
   }
+
+
 }
