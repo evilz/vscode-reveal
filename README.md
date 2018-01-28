@@ -2,7 +2,7 @@
 
 This extension let you display a reveal.js presentation directly from an opened markdown document.
 
-![demo](https://github.com/evilz/vscode-reveal/raw/Version_2_Alpha/images/demo2.0-bis.gif)
+![demo](https://github.com/evilz/vscode-reveal/raw/master/images/demo2.0-bis.gif)
 
 ## Features
 
@@ -37,7 +37,7 @@ https://raw.githubusercontent.com/evilz/vscode-reveal/master/sample.md
 
 As soon as your markdown document has at least two slides, slides counter will appear in the status bar on right.
 
-![](https://github.com/evilz/vscode-reveal/raw/Version_2_Alpha/images/statusbar.PNG)
+![](https://github.com/evilz/vscode-reveal/raw/master/images/statusbar.png)
 
 Clicking on slide counter will launch preview on right, and you can now see the local address of express server used to host Reveal presentation.
 Clicking on the address will launch presentation in the browser.
@@ -54,7 +54,7 @@ Blue icon is used to show horizontal slide, orange is used for vertical ones.
 Clicking on slide name will move the cursor on beginning of the slide in the editor.
 If the preview is opened it will also show the selected slide on it.  
 
-![](https://github.com/evilz/vscode-reveal/raw/Version_2_Alpha/images/sidebar.png)
+![](https://github.com/evilz/vscode-reveal/raw/master/images/sidebar.png)
 
 
 ## <a id="theme"></a> Theme
