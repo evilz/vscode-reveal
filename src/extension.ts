@@ -1,116 +1,107 @@
-'use strict';
-import * as vscode from 'vscode';
-import BrowserContentProvider from './BrowserContentProvider';
-import { StatusBarController } from './StatusBarController';
-import { Configuration } from './Configuration';
-import { DocumentContexts } from './DocumentContext';
-import { Helpers } from './Helpers';
+'use strict'
+import * as opn from 'opn'
+import * as vscode from 'vscode'
 
-var open = require('open');
+import { SHOW_REVEALJS, VSCODE_PREVIEWHTML, showRevealJS } from './commands/showRevealJS'
+import { SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser } from './commands/showRevealJSInBrowser'
+import { STOP_REVEALJS_SERVER, stopRevealJSServer } from './commands/stopRevealJSServer'
+import { GO_TO_SLIDE, goToSlide } from './commands/goToSlide'
+import { EXPORT_PDF, exportPDF } from './commands/exportPDF'
+import { EXPORT_HTML, exportHTML } from './commands/exportHTML'
+
+import IframeContentProvider from './IframeContentProvider'
+import { RevealServerState } from './Models'
+import { SlideTreeProvider } from './SlideExplorer'
+import { StatusBarController } from './StatusBarController'
+import { VSCodeRevealContext } from './VSCodeRevealContext'
+import { VSCodeRevealContexts } from './VSCodeRevealContexts'
 
 export function activate(context: vscode.ExtensionContext) {
+  const registerCommand = (command: string, callback: (...args: any[]) => any, thisArg?: any) => {
+    const disposable = vscode.commands.registerCommand(command, callback, thisArg)
+    context.subscriptions.push(disposable)
+  }
 
-    let configuration = new Configuration();
-    let documentContexts = new DocumentContexts(configuration);
-    let statusBarController = new StatusBarController(configuration.slidifyOptions);
-    let helpers = new Helpers(configuration);
-    let provider = new BrowserContentProvider(documentContexts, helpers);
-    vscode.workspace.registerTextDocumentContentProvider('http', provider);
+  const contexts = new VSCodeRevealContexts()
+  const getContext = contexts.getContext.bind(contexts)
 
-    let currentTab: vscode.TextEditor;
+  // -- IframeContentProvider --
+  const iframeProvider = new IframeContentProvider(getContext)
+  iframeProvider.register()
 
-     
+  // -- Status --
+  const statusBarController = new StatusBarController(getContext)
+  statusBarController.update()
 
-    console.log('Congratulations, your extension "vscode-reveal" is now active!');
+  // -- TreeExplorer --
+  const slidesExplorer = new SlideTreeProvider(getContext)
+  slidesExplorer.register()
 
-    let showRevealJS = () => {
-        if (currentTab.document.languageId !== "markdown") {
-            vscode.window.showInformationMessage("revealjs presentation can only be markdown file");
-            return null;
-        }
-        let context = getContext();
-        context.server.start();
-        return context.server.uri;
-    };
+  const refreshAll = () => {
+    contexts.getContext().refresh()
+    statusBarController.update()
+    slidesExplorer.update()
+    iframeProvider.update()
+  }
 
-    let getContext = () => {
-        let context = documentContexts.GetDocumentContext(currentTab);
-        if (!context) {
-            context = documentContexts.createContext(currentTab);
-        }
+  console.log('"vscode-reveal" is now active')
 
-        return context;
-    };
+  // COMMANDS
 
-    currentTab = vscode.window.activeTextEditor;
-    statusBarController.update(getContext());
+  registerCommand(SHOW_REVEALJS, showRevealJS(getContext, iframeProvider))
+  registerCommand(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(contexts.getContext))
+  registerCommand(STOP_REVEALJS_SERVER, stopRevealJSServer(contexts.getContext, statusBarController))
+  registerCommand(GO_TO_SLIDE, goToSlide(contexts.getContext))
+  registerCommand(EXPORT_PDF, exportPDF(contexts.getContext))
+  registerCommand(EXPORT_HTML, exportHTML(contexts.getContext))
 
-    // COMMAND : showRevealJS
-    context.subscriptions.push(vscode.commands.registerCommand('vscode-revealjs.showRevealJS', () => {
-        if (currentTab === null) { currentTab = vscode.window.activeTextEditor; }
-        let uri = showRevealJS();
-        if (uri) {
-            return vscode.commands.executeCommand('vscode.previewHtml', uri, vscode.ViewColumn.Two, 'Reveal JS presentation')
-                .then(
-                (success) => { },
-                (error) => { vscode.window.showErrorMessage(error); }
-                );
-        }
-        else { return null; }
-    }));
+  // ON SELECTION CHANGE
+  vscode.window.onDidChangeTextEditorSelection(e => {
+    iframeProvider.update()
+    contexts.getContext().refresh() // dont change this order !!!!!!
+    statusBarController.update()
+    slidesExplorer.update()
+  })
 
-    // COMMAND : showRevealJSInBrowser
-    context.subscriptions.push(
-        vscode.commands.registerCommand('vscode-revealjs.showRevealJSInBrowser', () => {
-            if (currentTab === null) { currentTab = vscode.window.activeTextEditor; }
-            let uri = showRevealJS();
-            return open(uri.toString());
+  // ON TAB CHANGE
+  vscode.window.onDidChangeActiveTextEditor(
+    editor => {
+      if (editor) {
+        refreshAll()
+      }
+    },
+    this,
+    context.subscriptions
+  )
 
-        })
-    );
+  // ON CHANGE TEXT
+  // vscode.workspace.onDidChangeTextDocument(
+  //   e => {
+  //     // refreshAll()
+  //   },
+  //   this,
+  //   context.subscriptions
+  // )
 
-    // COMMAND : KillRevealJSServer
-    context.subscriptions.push(
-        vscode.commands.registerCommand('vscode-revealjs.KillRevealJSServer', () => {
-            let context = getContext();
-            context.server.stop();
-            statusBarController.update(context);
-        })
-    );
-    
-    // ON TAB CHANGE
-    context.subscriptions.push(
-        vscode.window.onDidChangeActiveTextEditor((e: vscode.TextEditor) => {
-            if (e) {
-                currentTab = e;
-                statusBarController.update(getContext());
-            }
-        })
-    );
+  // ON SAVE
+  vscode.workspace.onDidSaveTextDocument(
+    document => {
+      if (document === vscode.window.activeTextEditor.document) {
+        refreshAll()
+      }
+    },
+    this,
+    context.subscriptions
+  )
 
-    // ON CHANGE TEXT
-    context.subscriptions.push(
-        vscode.workspace.onDidChangeTextDocument((_) => {
-            statusBarController.update(getContext());
-        })
-    );
-
-    // ON SAVE
-    context.subscriptions.push(
-        vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
-            if (document === vscode.window.activeTextEditor.document) {
-                let context = getContext();
-                statusBarController.update(context);
-                
-                if (context.server.uri) {
-                    provider.update(context.server.uri);
-                }
-            }
-        }));
-
-
+  vscode.workspace.onDidCloseTextDocument(document => {
+    contexts.deleteContext(document)
+  },
+    this,
+    context.subscriptions)
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {
+  console.log('"vscode-reveal" is now deactivated')
 }

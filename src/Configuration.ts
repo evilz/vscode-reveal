@@ -1,14 +1,20 @@
+/**
+ * @file Manages the configuration settings for the extension.
+ * @author Vincent Bourdon @Evilznet
+ */
+
 'use strict'
 import * as vscode from 'vscode'
-import { ExtensionOptions, RevealJsOptions, SlidifyOptions } from './Models'
+import { ExtensionOptions, IRevealJsOptions, ISlidifyOptions } from './Models'
 
-export class Configuration implements ExtensionOptions {
+export const getRevealJsOptions = () => {
+  return getExtensionOptions() as IRevealJsOptions
+}
 
-     public get revealJsOptions() {
-         return vscode.workspace.getConfiguration('revealjs') as any as RevealJsOptions
-     }
+export const getSlidifyOptions = () => {
+  return getExtensionOptions() as ISlidifyOptions
+}
 
-    public get slidifyOptions() {
-         return vscode.workspace.getConfiguration('revealjs') as any as SlidifyOptions
-     }
+export const getExtensionOptions = () => {
+  return (vscode.workspace.getConfiguration('revealjs') as any) as ExtensionOptions
 }

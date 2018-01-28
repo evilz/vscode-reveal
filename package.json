@@ -1,19 +1,19 @@
 {
-  "name": "vscode-reveal",
-  "displayName": "vscode-reveal",
+  "name": "vscode-reveal-preview",
+  "displayName": "vscode-reveal (PREVIEW)",
   "description": "Show markdown as revealJs presentation",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
-  "icon": "images/logo.png",
-  "preview": false,
+  "icon": "images/logo-v2.png",
+  "preview": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/evilz/vscode-reveal"
   },
   "engines": {
-    "vscode": "^1.5.0"
+    "vscode": "^1.13.0"
   },
   "categories": [
     "Other"
@@ -31,14 +31,45 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [
-      {
+    "commands": [{
         "command": "vscode-revealjs.showRevealJS",
-        "title": "Revealjs: Show presentation by side"
+        "title": "Revealjs: Show presentation by side",
+        "icon": {
+          "light": "resources/light/split.svg",
+          "dark": "resources/dark/split.svg"
+        }
       },
       {
         "command": "vscode-revealjs.showRevealJSInBrowser",
-        "title": "Revealjs: Open presentation in browser"
+        "title": "Revealjs: Open presentation in browser",
+        "icon": {
+          "light": "resources/light/browser.svg",
+          "dark": "resources/dark/browser.svg"
+        }
+      },
+      {
+        "command": "vscode-revealjs.stopRevealJSServer",
+        "title": "Revealjs: Stop reveal server"
+      },
+      {
+        "command": "vscode-revealjs.goToSlide",
+        "title": "Revealjs: Go to slide"
+      },
+      {
+        "command": "vscode-revealjs.exportPDF",
+        "title": "Revealjs: Export in PDF",
+        "icon": {
+          "light": "resources/light/pdf.svg",
+          "dark": "resources/dark/pdf.svg"
+        }
+      },
+      {
+        "command": "vscode-revealjs.exportHTML",
+        "title": "Revealjs: Export in HTML",
+        "icon": {
+          "light": "resources/light/html.svg",
+          "dark": "resources/dark/html.svg"
+        }
       }
     ],
     "configuration": {
@@ -87,7 +118,7 @@
         },
         "revealjs.history": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Push each slide change to the browser history"
         },
         "revealjs.keyboard": {
@@ -211,6 +242,39 @@
           "description": "Number of pixels to move the parallax background per slide"
         }
       }
+    },
+    "views": {
+      "explorer": [{
+        "id": "slidesExplorer",
+        "name": "Slides"
+      }]
+    },
+    "menus": {
+      "view/title": [{
+          "command": "vscode-revealjs.showRevealJSInBrowser",
+          "when": "view == slidesExplorer",
+          "group": "navigation"
+        },
+        {
+          "command": "vscode-revealjs.showRevealJS",
+          "when": "view == slidesExplorer",
+          "group": "navigation"
+        },
+        {
+          "command": "vscode-revealjs.exportPDF",
+          "when": "view == slidesExplorer",
+          "group": "navigation"
+        },
+        {
+          "command": "vscode-revealjs.exportHTML",
+          "when": "view == slidesExplorer",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [{
+        "command": "vscode-revealjs.goToSlide",
+        "when": "view == slidesExplorer && viewItem == slideNode"
+      }]
     }
   },
   "scripts": {
@@ -219,15 +283,19 @@
     "postinstall": "node ./node_modules/vscode/bin/install",
     "build": "tsc -p ./",
     "test": "node ./node_modules/vscode/bin/test",
+    "preunittest": "tsc -p ./",
+    "unittest": "cd out && mocha",
     "lint": "tslint -t verbose 'src/**/*.ts'"
   },
   "dependencies": {
     "express": "^4.16.2",
+    "fs-extra": "^5.0.0",
+    "gray-matter": "^3.1.1",
     "highlight.js": "^9.12.0",
-    "open": "0.0.5",
-    "reveal.js": "^3.6.0",
-    "yaml-front-matter": "^3.4.0",
-    "vscode": "^1.1.10"
+    "opn": "^5.2.0",
+    "os": "^0.1.1",
+    "quickly-copy-file": "^1.0.0",
+    "reveal.js": "^3.6.0"
   },
   "devDependencies": {
     "@types/chai": "^4.0.10",
@@ -241,6 +309,9 @@
     "mocha": "^4.0.1",
     "tslint": "^5.8.0",
     "tslint-config-prettier": "^1.6.0",
-    "typescript": "^2.6.2"
+    "tslint-eslint-rules": "^4.1.1",
+    "tslint-microsoft-contrib": "^5.0.1",
+    "typescript": "^2.6.2",
+    "vscode": "^1.1.10"
   }
 }
