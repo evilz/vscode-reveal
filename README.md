@@ -2,7 +2,7 @@
 
 This extension let you display a reveal.js presentation directly from an opened markdown document.
 
-![demo](/images/demo2.0-bis.gif)
+![demo](https://github.com/evilz/vscode-reveal/raw/Version_2_Alpha/images/demo2.0-bis.gif)
 
 ## Features
 
@@ -21,10 +21,10 @@ This extension let you display a reveal.js presentation directly from an opened 
 
 ## <a id="markdown"></a> Markdown
 
-Create revealjs presentation directly from markdown file,
-open or create a new file in markdown and use default slide separator to see slide counter change in status bar and title appear in sidebar.
+Create reveal.js presentation directly from markdown file,
+open or create a new file in markdown and use default slide separator to see slide counter change in the status bar and title appear in the sidebar.
 
-Since Reveal.js use marked to parse the markdown string you can use this in you document: 
+Since Reveal.js use marked to parse the markdown string you can use this in your document: 
 
 - GitHub flavored markdown.
 - GFM tables
@@ -35,26 +35,26 @@ https://raw.githubusercontent.com/evilz/vscode-reveal/master/sample.md
 
 ## <a id="statusbar"></a> Status bar
 
-As soon as your markdown documet has at least two slides, slides counter will appear in status bar on right.
+As soon as your markdown document has at least two slides, slides counter will appear in the status bar on right.
 
-![](/images/statusbar.png)
+![](https://github.com/evilz/vscode-reveal/raw/Version_2_Alpha/images/statusbar.PNG)
 
-Clicking on slide counter will launch preview on right, and you can now see local address of express server used to host Reveal presentation.
-Clicking on the address will launch presentation in browser.
+Clicking on slide counter will launch preview on right, and you can now see the local address of express server used to host Reveal presentation.
+Clicking on the address will launch presentation in the browser.
 
-You can stop express server when you want by clicking on red square.
+You can stop express server when you want by clicking on the red square.
 
 ## <a id="sidebar"></a> Sidebar and navigation
 
-**Now in version 2** you can see list of all your slides on sidebar.
-List will show the first line of text it found in the slide, most of the time it will be a title, but it can also be a image ref or something else.
+**Now in version 2**, you can see a list of all your slides on the sidebar.
+The list will show the first line of text that is found in the slide, most of the time it will be a title, but it can also be an image or something else.
 
-Blue icon is used to show horiontal slide, orange is use for vertical ones.
+Blue icon is used to show horizontal slide, orange is used for vertical ones.
 
-Clincking on slide name will move the cursor on begining of the slide in the editor.
+Clicking on slide name will move the cursor on beginning of the slide in the editor.
 If the preview is opened it will also show the selected slide on it.  
 
-![](/images/sidebar.png)
+![](https://github.com/evilz/vscode-reveal/raw/Version_2_Alpha/images/sidebar.png)
 
 
 ## <a id="theme"></a> Theme
@@ -72,12 +72,12 @@ reveal.js comes with a few themes built in:
 - Moon 
 - Solarized
 
-You can set it using `revealjs.theme` parameter in Vs code config or in the document it-self using front matter.
+You can set it using `revealjs.theme` parameter in Vs code config or in the document itself using front matter.
 
-If you want a custom theme you can do it !
-Just add custom style in a css file in same folder that your markdown.
+If you want a custom theme you can do it!
+Just add custom style to a CSS file in the same folder that your markdown.
 
-exemple : 
+example: 
 if your file name is `my-theme.css` just add this in the front matter header :
 
 ```
@@ -87,13 +87,13 @@ customTheme : "my-theme"
 ```
 
 
-Note that you can use both theme and custom theme as same time. Your custom theme will be loaded after to override default revealJS theme.
+Note that you can use both theme and custom theme at the same time. Your custom theme will be loaded after to override default reveal.js theme.
 
 
 
 ## <a id="highlight"></a> Highlight Theme
 
-You can use code block in your markdown that will be highlitghted by highlight.js.
+You can use code block in your markdown that will be highlighted by highlight.js.
 So you can configure the coloration theme by setting `revealjs.highlightTheme` parameter of VS Code, or set it using front matter.
 
 ```
@@ -107,7 +107,7 @@ Get the theme list here https://highlightjs.org/
 ## <a id="options"></a> Reveal.js Options
 
 
-You can customise many setting on for your revealjs presentation.
+You can customize many setting on for your reveal.js presentation.
 
 <table><tr><th>Name</th><th>Description</th><th>Default</th></tr><tr><td><code>revealjs.notesSeparator</code></td><td>Revealjs markdown note delimiter</td><td><code>note:</code></td></tr><tr><td><code>revealjs.separator</code></td><td>Revealjs markdown slide separator</td><td><code>^(
 ?|
@@ -139,20 +139,20 @@ transition: "zoom"
 
 ## <a id="preview"></a> Open preview on right side
 
-To display the preview on right side you can :
+To display the preview on the right side you can :
 - click on slide count in status bar
 - click split icon in sidebar header
 - call command `Revealjs: Show presentation by side`
 
 
-The preview wil be synchronize with the current cursor position.
+The preview will be synchronize with the current cursor position.
 
 ## <a id="browser"></a> Open in browser
 
-To display presentation in browser you can:
-- click on server address in status bar
-- click icon in sidebar header
-- call command `Revealjs: Open presentation in browser`
+To display presentation in the browser you can:
+- click on server address in the status bar
+- click the icon in sidebar header
+- call command `Revealjs: Open presentation in a browser`
 
 
 This will try to use Chrome that is the best browser to use for reveal.js presentation, if it can't find it, your default browser will be used.
@@ -161,7 +161,7 @@ This will try to use Chrome that is the best browser to use for reveal.js presen
 ## <a id="pdf"></a> Print to PDF
 
 To export your presentation to pdf you can:
-- click on pdf icon in sidebar
+- click on PDF icon in the sidebar
 - call the command `Revealjs: Export in PDF`
 
 
@@ -174,16 +174,16 @@ Be sure to set print setting correctly:
 ## <a id="htmlexport"></a> Export static Website
 
 To export your presentation to a static website you can:
-- click on html icon in sidebar
+- click on HTML icon in the sidebar
 - call the command `Revealjs: Export in HTML`
 
 
-This will try to launch Chrome in headless or your default browser it take about 10sec and then open export folder.
+This will try to launch Chrome in headless or your default browser it takes about 10sec and then open the export folder.
 
 ## <a id="faq"></a> FAQ
 
 
-> Note : First time windows will ask you about firewall. If you open the port for the application, you can see your prensentation remotly.
+> Note : The first time, Windows will ask you about the firewall. If you open the port for the application, you can see your presentation remotely.
 
 
 ## Known Issues
