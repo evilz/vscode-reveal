@@ -61,8 +61,7 @@ chromeAppNames[Platform.Windows] = 'chrome'
 
 export const openInChrome = async (url: string, headless?: boolean) => {
   try {
-    const platform = getPlatform()
-    const chromeApp = chromeAppNames[platform]
+    const chromeApp = getBrowserPath();
     if (headless) {
       return await opn(url, { app: [chromeApp, '--headless'] })
     }
