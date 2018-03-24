@@ -2,7 +2,7 @@
   "name": "vscode-reveal",
   "displayName": "vscode-reveal",
   "description": "Show markdown as revealJs presentation",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
@@ -240,13 +240,24 @@
           "type": "number",
           "default": null,
           "description": "Number of pixels to move the parallax background per slide"
+        },
+        "revealjs.slideExplorerEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Hide or show slides explorer"
+        },
+        "revealjs.browserPath": {
+          "type": "string",
+          "default": null,
+          "description": "Full path of browser to use"
         }
       }
     },
     "views": {
       "explorer": [{
         "id": "slidesExplorer",
-        "name": "Slides"
+        "name": "Slides",
+        "when": "slideExplorerEnabled"
       }]
     },
     "menus": {

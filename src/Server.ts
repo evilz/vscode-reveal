@@ -77,12 +77,12 @@ export class RevealServer {
     if (this.context.IsInExportMode) {
       const send = res.send
       // tslint:disable-next-line:no-this-assignment
-      const { rootDir, revealBasePath } = this
-      res.send = function(data) {
-        saveIndex(rootDir, data)
+      const { rootDir, revealBasePath, context } = this
+      res.send = function (data) {
+        saveIndex(context, rootDir, data)
         send.apply(res, arguments)
       }
-      saveContent(rootDir, revealBasePath, req)
+      saveContent(context, rootDir, revealBasePath, req)
     }
     next()
   }

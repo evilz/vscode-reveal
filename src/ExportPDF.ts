@@ -1,8 +1,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as vscode from 'vscode'
-import { getBrowserPath } from './ChromeHelper'
+import { getBrowserPath } from './BrowserHelper'
 import { spawn } from 'child_process'
+import { getExtensionOptions } from './Configuration';
 
 /*
  * export a html to a pdf file (html-pdf)
@@ -11,7 +12,7 @@ import { spawn } from 'child_process'
 export const savePdf = async (url, filename): Promise<string> => {
   vscode.window.setStatusBarMessage('$(markdown) export to pdf...')
   const promise = new Promise<string>((resolve, reject) => {
-    const chromePath = getBrowserPath()
+    const chromePath = getBrowserPath(getExtensionOptions())
     const chromeFlags = ['--headless', '--disable-gpu', '--no-margins', '--remote-debugging-port=9222', url]
     // const chromeFlags = ['--headless', '--disable-gpu', '--print-to-pdf=' + filename, '--no-margins', '--remote-debugging-port=9222', url]
     const chromeProc = spawn(chromePath, chromeFlags, {})

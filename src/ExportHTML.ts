@@ -4,18 +4,19 @@ import * as path from 'path'
 import * as vscode from 'vscode'
 import { VSCodeRevealContext } from './VSCodeRevealContext'
 
-const exportFolderName = 'export'
+
 
 export const getExportFolderPath = (context: VSCodeRevealContext) => {
   const rootDir = path.dirname(context.editor.document.fileName)
+  const exportFolderName = path.basename(context.editor.document.fileName, '.md') + "-export"
   return path.join(rootDir, exportFolderName)
 }
 
-export const saveIndex = (rootdir, data) => {
-  const destDir = path.join(rootdir, exportFolderName)
-  const destFile = path.join(destDir, 'index.html')
-  if (!fs.existsSync(destDir)) {
-    fs.mkdirSync(destDir)
+export const saveIndex = (context, rootdir, data) => {
+  const exportFolderName = getExportFolderPath(context)
+  const destFile = path.join(exportFolderName, 'index.html')
+  if (!fs.existsSync(exportFolderName)) {
+    fs.mkdirSync(exportFolderName)
   }
 
   fs.writeFile(destFile, data, err => {
@@ -36,7 +37,8 @@ const copy = async (file, dest) => {
   }
 }
 
-export const saveContent = async (rootdir, revealjsDir, req) => {
+export const saveContent = async (context, rootdir, revealjsDir, req) => {
+  const exportFolderName = getExportFolderPath(context)
   const staticDirs = ['/css', '/js', '/images', '/plugin', '/lib']
 
   // highlight JS Module
@@ -44,16 +46,16 @@ export const saveContent = async (rootdir, revealjsDir, req) => {
     const highlightPath = path.resolve(require.resolve('highlight.js'), '..', '..')
     // save
     const file = path.join(highlightPath, 'styles', req.url.replace(`/lib/css/`, ''))
-    const dest = path.join(rootdir, 'export', req.url)
+    const dest = path.join(exportFolderName, req.url)
     await copy(file, dest)
   } else if (staticDirs.find(dir => req.url.indexOf(dir) === 0)) {
     // RevealJS Module or relative files
     const file = path.join(revealjsDir, req.url)
-    const dest = path.join(rootdir, 'export', req.url)
+    const dest = path.join(exportFolderName, req.url)
     await copy(file, dest)
   } else if (req.url !== '/') {
     const file = path.join(rootdir, req.url)
-    const dest = path.join(rootdir, 'export', req.url)
+    const dest = path.join(exportFolderName, req.url)
     await copy(file, dest)
   }
 }
