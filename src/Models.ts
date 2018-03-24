@@ -3,7 +3,7 @@ export enum RevealServerState {
   Started
 }
 
-export type ExtensionOptions = ISlidifyOptions & IRevealJsOptions
+export type ExtensionOptions = ISlidifyOptions & IRevealJsOptions & IExtensionOptions
 
 export interface ISlidifyOptions {
   separator: string
@@ -49,9 +49,15 @@ export interface IRevealJsOptions {
   parallaxBackgroundVertical?: number
 }
 
+export interface IExtensionOptions {
+  slideExplorerEnabled: boolean
+  browserPath: string
+}
+
 export interface ISlide {
   title: string
   index: number
   text: string
   verticalChildren?: ISlide[] // Rem : child can't have child
 }
+

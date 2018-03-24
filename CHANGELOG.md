@@ -1,3 +1,13 @@
+### 2.0.3
+
+Fix issues :
+
+- Export html in folder with same name of markdown file suffixed by '-export'
+- Export speaker notes
+- Find chrome on linux
+- Can change chrome path in configuration
+- Slide explorer can be hide in configuration
+
 ### 2.0.0
 
 - New sidebar !!!!

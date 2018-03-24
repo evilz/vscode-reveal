@@ -5,16 +5,20 @@
 
 'use strict'
 import * as vscode from 'vscode'
-import { ExtensionOptions, IRevealJsOptions, ISlidifyOptions } from './Models'
+import { ExtensionOptions, IRevealJsOptions, ISlidifyOptions, IExtensionOptions } from './Models'
 
 export const getRevealJsOptions = () => {
-  return getExtensionOptions() as IRevealJsOptions
+  return loadExtensionOptions() as IRevealJsOptions
 }
 
 export const getSlidifyOptions = () => {
-  return getExtensionOptions() as ISlidifyOptions
+  return loadExtensionOptions() as ISlidifyOptions
 }
 
 export const getExtensionOptions = () => {
+  return loadExtensionOptions() as IExtensionOptions
+}
+
+export const loadExtensionOptions = () => {
   return (vscode.workspace.getConfiguration('revealjs') as any) as ExtensionOptions
 }

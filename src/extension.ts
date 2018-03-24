@@ -15,8 +15,11 @@ import { SlideTreeProvider } from './SlideExplorer'
 import { StatusBarController } from './StatusBarController'
 import { VSCodeRevealContext } from './VSCodeRevealContext'
 import { VSCodeRevealContexts } from './VSCodeRevealContexts'
+import { getExtension } from 'mime';
+import { getExtensionOptions } from './Configuration';
 
 export function activate(context: vscode.ExtensionContext) {
+
   const registerCommand = (command: string, callback: (...args: any[]) => any, thisArg?: any) => {
     const disposable = vscode.commands.registerCommand(command, callback, thisArg)
     context.subscriptions.push(disposable)
@@ -33,9 +36,12 @@ export function activate(context: vscode.ExtensionContext) {
   const statusBarController = new StatusBarController(getContext)
   statusBarController.update()
 
+
   // -- TreeExplorer --
   const slidesExplorer = new SlideTreeProvider(getContext)
   slidesExplorer.register()
+
+
 
   const refreshAll = () => {
     contexts.getContext().refresh()
@@ -45,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   console.log('"vscode-reveal" is now active')
-
+  vscode.commands.executeCommand('setContext', 'slideExplorerEnabled', getExtensionOptions().slideExplorerEnabled);
   // COMMANDS
 
   registerCommand(SHOW_REVEALJS, showRevealJS(getContext, iframeProvider))
@@ -82,6 +88,10 @@ export function activate(context: vscode.ExtensionContext) {
   //   this,
   //   context.subscriptions
   // )
+
+  vscode.workspace.onDidChangeConfiguration(e => {
+    vscode.commands.executeCommand('setContext', 'slideExplorerEnabled', getExtensionOptions().slideExplorerEnabled);
+  })
 
   // ON SAVE
   vscode.workspace.onDidSaveTextDocument(
