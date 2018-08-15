@@ -24,12 +24,12 @@ This extension let you display a reveal.js presentation directly from an opened 
 Create reveal.js presentation directly from markdown file,
 open or create a new file in markdown and use default slide separator to see slide counter change in the status bar and title appear in the sidebar.
 
-Since Reveal.js use marked to parse the markdown string you can use this in your document: 
+Since Reveal.js use marked to parse the markdown string you can use this in your document:
 
 - GitHub flavored markdown.
 - GFM tables
 
-If you need a sample file you can get it here:  
+If you need a sample file you can get it here:
 https://raw.githubusercontent.com/evilz/vscode-reveal/master/sample.md
 
 
@@ -52,24 +52,24 @@ The list will show the first line of text that is found in the slide, most of th
 Blue icon is used to show horizontal slide, orange is used for vertical ones.
 
 Clicking on slide name will move the cursor on beginning of the slide in the editor.
-If the preview is opened it will also show the selected slide on it.  
+If the preview is opened it will also show the selected slide on it.
 
 ![](https://github.com/evilz/vscode-reveal/raw/master/images/sidebar.png)
 
 
 ## <a id="theme"></a> Theme
 
-reveal.js comes with a few themes built in: 
-- Black (default) 
-- White 
-- League 
-- Sky 
-- Beige 
-- Simple 
-- Serif 
-- Blood 
-- Night 
-- Moon 
+reveal.js comes with a few themes built in:
+- Black (default)
+- White
+- League
+- Sky
+- Beige
+- Simple
+- Serif
+- Blood
+- Night
+- Moon
 - Solarized
 
 You can set it using `revealjs.theme` parameter in Vs code config or in the document itself using front matter.
@@ -77,7 +77,7 @@ You can set it using `revealjs.theme` parameter in Vs code config or in the docu
 If you want a custom theme you can do it!
 Just add custom style to a CSS file in the same folder that your markdown.
 
-example: 
+example:
 if your file name is `my-theme.css` just add this in the front matter header :
 
 ```
@@ -103,6 +103,32 @@ highlightTheme : "other theme"
 ```
 
 Get the theme list here https://highlightjs.org/
+
+## <a id="extra-plugins"></a> Adding Your Own Reveal.js Plugins
+
+The Reveal ecosystem contains a number of useful [plugins](https://github.com/hakimel/reveal.js/wiki/Plugins,-Tools-and-Hardware). Some on these (notes, highlight, and math) are included automatically with vscode-reveal. You can install others locally in your project.
+
+1. Use `npm install` to load the plugin you want into your project. This will create a `node_modules` subdirectory if these isn't one already.
+
+2. Add a `customPlugins` line to your document's header. This should be followed by a list of the plugins you want to include. For each, you specify its main file as a path, relative to the `node_modules` directory.
+
+3. If the plugin, requires initialization, create a `customJavascript` section in the header and write the initialization code there.
+
+For example, to include the `reveal-code-focus` plugin, your header might look like this:
+
+~~~
+---
+customPlugins:
+  - "reveal-code-focus/reveal-code-focus.js"
+
+customJavascript: |
+  window.RevealCodeFocus({});
+---
+~~~
+
+This feature is experimental: Reveal.js is a bit touchy when it comes to load order, and some plugins may not work.
+
+
 
 ## <a id="options"></a> Reveal.js Options
 
@@ -189,4 +215,3 @@ This will try to launch Chrome in headless or your default browser it takes abou
 ## Known Issues
 
 Please add issues on github.
-

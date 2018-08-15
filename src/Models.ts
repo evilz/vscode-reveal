@@ -17,6 +17,8 @@ export interface IRevealJsOptions {
 
   customTheme?: string
   customHighlightTheme?: string
+  customPlugins?: string
+  customJavascript?: string
 
   controls: boolean
   progress: boolean
@@ -60,4 +62,3 @@ export interface ISlide {
   text: string
   verticalChildren?: ISlide[] // Rem : child can't have child
 }
-

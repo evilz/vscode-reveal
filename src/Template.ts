@@ -17,7 +17,7 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
         <link rel="stylesheet" href="css/reveal.css">
         <link rel="stylesheet" href="css/theme/${revealOptions.theme}.css" id="theme">
         ${revealOptions.customTheme ? ` <link rel="stylesheet" href="${revealOptions.customTheme}.css" id="theme">` : ''}
-       
+
         <!-- For syntax highlighting -->
         <link rel="stylesheet" href="lib/css/${revealOptions.highlightTheme}.css">
 
@@ -29,9 +29,9 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
         </script>
 
         <style type="text/css">
-            @page {    
+            @page {
               margin: 0;
-              size: auto; 
+              size: auto;
             }
         </style>
 
@@ -69,10 +69,20 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
               { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
               { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
               { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
-              { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
               { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
               { src: 'plugin/math/math.js', async: true }
             ];
+
+            var extraPlugins = ${JSON.stringify(revealOptions.customPlugins || [])};
+            if (!extraPlugins.includes("reveal-code-focus/reveal-code-focus.js")) {
+              deps.push({ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } });
+            }
+            else {
+              deps.push({ src: 'plugin/highlight/highlight.js', async: false });
+            }
+
+            deps = deps.concat(extraPlugins.map(name => { return { src: "node_modules/" + name, async: false }}));
+
             // default options to init reveal.js
             var defaultOptions = {
               controls: true,
@@ -88,8 +98,11 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
             options = extend(defaultOptions, options, queryOptions);
             Reveal.initialize(options);
 
+            window.onload = () => {
+              ${revealOptions.customJavascript};
+            }
         </script>
-        
+
     </body>
 </html>`
 }
