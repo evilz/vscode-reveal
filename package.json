@@ -31,7 +31,8 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [{
+    "commands": [
+      {
         "command": "vscode-revealjs.showRevealJS",
         "title": "Revealjs: Show presentation by side",
         "icon": {
@@ -254,14 +255,17 @@
       }
     },
     "views": {
-      "explorer": [{
-        "id": "slidesExplorer",
-        "name": "Slides",
-        "when": "slideExplorerEnabled"
-      }]
+      "explorer": [
+        {
+          "id": "slidesExplorer",
+          "name": "Slides",
+          "when": "slideExplorerEnabled"
+        }
+      ]
     },
     "menus": {
-      "view/title": [{
+      "view/title": [
+        {
           "command": "vscode-revealjs.showRevealJSInBrowser",
           "when": "view == slidesExplorer",
           "group": "navigation"
@@ -282,10 +286,12 @@
           "group": "navigation"
         }
       ],
-      "view/item/context": [{
-        "command": "vscode-revealjs.goToSlide",
-        "when": "view == slidesExplorer && viewItem == slideNode"
-      }]
+      "view/item/context": [
+        {
+          "command": "vscode-revealjs.goToSlide",
+          "when": "view == slidesExplorer && viewItem == slideNode"
+        }
+      ]
     }
   },
   "scripts": {
@@ -323,6 +329,6 @@
     "tslint-eslint-rules": "^4.1.1",
     "tslint-microsoft-contrib": "^5.0.1",
     "typescript": "^2.6.2",
-    "vscode": "^1.1.10"
+    "vscode": "^1.1.21"
   }
 }
