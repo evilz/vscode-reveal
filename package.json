@@ -257,7 +257,7 @@
           "default": null,
           "description": "Path where the HTML export is created, relative to the .md file"
         },
-        "revealjs.openFilemanagerAfterHMLTExport": {
+        "revealjs.openFilemanagerAfterHTMLExport": {
           "type": "boolean",
           "default": true,
           "description": "Open the file manager after HTML export"
