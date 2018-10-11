@@ -28,7 +28,7 @@ export const exportHTML = (getContext: (() => VSCodeRevealContext)) => async () 
   }
   currentContext.SetInExportMode(() => {
     const path = getExportFolderPath(currentContext)
-    if (getExtensionOptions().openFilemanagerAfterHMLTExport) {
+    if (getExtensionOptions().openFilemanagerAfterHTMLExport) {
       opn(path)
     }
   })
