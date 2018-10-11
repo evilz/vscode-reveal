@@ -17,7 +17,7 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
         <link rel="stylesheet" href="css/reveal.css">
         <link rel="stylesheet" href="css/theme/${revealOptions.theme}.css" id="theme">
         ${revealOptions.customTheme ? ` <link rel="stylesheet" href="${revealOptions.customTheme}.css" id="theme">` : ''}
-       
+
         <!-- For syntax highlighting -->
         <link rel="stylesheet" href="lib/css/${revealOptions.highlightTheme}.css">
 
@@ -29,9 +29,9 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
         </script>
 
         <style type="text/css">
-            @page {    
+            @page {
               margin: 0;
-              size: auto; 
+              size: auto;
             }
         </style>
 
@@ -85,11 +85,14 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
             // options from URL query string
             var queryOptions = Reveal.getQueryHash() || {};
             var options = ${JSON.stringify(revealOptions, null, 2)};
+            if(options.autoSlideMethod !== undefined) {
+              options.autoSlideMethod = eval(options.autoSlideMethod);
+            }
             options = extend(defaultOptions, options, queryOptions);
             Reveal.initialize(options);
 
         </script>
-        
+
     </body>
 </html>`
 }

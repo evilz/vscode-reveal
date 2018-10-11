@@ -182,6 +182,11 @@
           "default": 0,
           "description": "Number of milliseconds between automatically proceeding to the next slide, disabled when set to 0, this value can be overwritten by using a data-autoslide attribute on your slides"
         },
+        "revealjs.autoSlideMethod": {
+          "type": "string",
+          "default": "Reveal.navigateNext",
+          "description": "The direction in which the slides will move whilst autoslide is active"
+        },
         "revealjs.autoSlideStoppable": {
           "type": "boolean",
           "default": true,
