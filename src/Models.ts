@@ -53,7 +53,7 @@ export interface IExtensionOptions {
   slideExplorerEnabled: boolean
   browserPath: string
   exportHTMLPath: string
-  openFilemanagerAfterHMLTExport: boolean
+  openFilemanagerAfterHTMLExport: boolean
 }
 
 export interface ISlide {
