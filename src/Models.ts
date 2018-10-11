@@ -52,6 +52,8 @@ export interface IRevealJsOptions {
 export interface IExtensionOptions {
   slideExplorerEnabled: boolean
   browserPath: string
+  exportHTMLPath: string
+  openFilemanagerAfterHMLTExport: boolean
 }
 
 export interface ISlide {
@@ -60,4 +62,3 @@ export interface ISlide {
   text: string
   verticalChildren?: ISlide[] // Rem : child can't have child
 }
-
