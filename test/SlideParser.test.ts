@@ -16,25 +16,25 @@ const defaultSlidifyOptions: ISlidifyOptions = {
 }
 
 should()
-suite('Slide parser tests', function() {
+describe('Slide parser tests', function() {
   let slideContent = ''
 
-  suiteSetup(function() {
+  before(function() {
     const currentPath = path.dirname(this.test.parent.file)
     const samplePath = path.join(currentPath, '../../sample.md')
     const data = fs.readFileSync(samplePath)
     slideContent = matter(data.toString()).content
   })
 
-  test('Shoud count simple slides', function() {
+  it('Shoud count simple slides', function() {
     const slides = parseSlides(slideContent, defaultSlidifyOptions)
     slides.should.has.lengthOf(26)
   })
 
-  test('First slide should have correct number of lines', function() {
+  it('First slide should have correct number of lines', function() {
     const slides = parseSlides(slideContent, defaultSlidifyOptions)
 
-    const expectedLineCount = [7, 5]
+    const expectedLineCount = [7, 6]
 
     expectedLineCount.forEach((expected, i) => {
       countLines(slides[i].text).should.equal(expected)
