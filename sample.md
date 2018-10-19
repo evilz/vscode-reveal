@@ -39,7 +39,7 @@ Nested slides are useful for adding additional detail underneath a high level ho
 ## Basement Level 2
 
 That's it, time to go back up.
-						
+
 <a href="#/2">
     <img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="transform: rotate(180deg); -webkit-transform: rotate(180deg);">
 </a>
@@ -114,14 +114,14 @@ Highlight <span class="fragment highlight-red">red</span> <span class="fragment 
 
 ## Transition Styles
 
-You can select from different transitions, like:  
+You can select from different transitions, like:
 [None](?transition=none#/transitions) - [Fade](?transition=fade#/transitions) - [Slide](?transition=slide#/transitions) - [Convex](?transition=convex#/transitions) - [Concave](?transition=concave#/transitions) - [Zoom](?transition=zoom#/transitions)
 
 ---
 
 ## Themes
 
-reveal.js comes with a few themes built in:  
+reveal.js comes with a few themes built in:
 <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/black.css'); return false;">Black (default)</a> -
 <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/white.css'); return false;">White</a> -
 <a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/league.css'); return false;">League</a> -
@@ -158,7 +158,7 @@ Set `data-background="#dddddd"` on a slide to change the background color. All C
 
 <!-- .slide: data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px" -->
 
-## TILED BACKGROUNDS				
+## TILED BACKGROUNDS
 
 ```markdown
 <!-- .slide: data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px" -->
@@ -168,7 +168,7 @@ Set `data-background="#dddddd"` on a slide to change the background color. All C
 
 <!-- .slide: data-background-video="https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.mp4,https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.webm" data-background-color="#000000" -->
 
-## Video Backgrounds				
+## Video Backgrounds
 
 ```markdown
 <!-- .slide: data-background-video="https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.mp4,https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.webm" data-background-color="#000000" -->
@@ -178,7 +178,7 @@ Set `data-background="#dddddd"` on a slide to change the background color. All C
 
 <!-- .slide: data-background="http://i.giphy.com/90F8aUepslB84.gif" -->
 
-## ... and GIFs!				
+## ... and GIFs!
 
 ```markdown
 <!-- .slide: data-background="http://i.giphy.com/90F8aUepslB84.gif" -->
@@ -243,18 +243,18 @@ Code syntax highlighting courtesy of [highlight.js](http://softwaremaniacs.org/s
 
 ## Tabular Tables
 | Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
+| ------------- | :-----------: | ----: |
 | col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
+| col 2 is      | centered      | $12   |
+| zebra stripes | are neat      | $1    |
 
 ---
 
 ## Clever Quotes
 
-These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">“The nice thing about standards is that there are so many to choose from”</q> and block:
+These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">"The nice thing about standards is that there are so many to choose from"</q> and block:
 
-> “For years there has been a theory that millions of monkeys typing at random on millions of typewriters would reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.”
+> "For years there has been a theory that millions of monkeys typing at random on millions of typewriters would reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue."
 
 ---
 
@@ -320,5 +320,5 @@ Press B or . on your keyboard to pause the presentation. This is helpful when yo
 <!-- .slide: style="text-align: left;" -->
 # THE END
 
-- [Try the online editor](http://slides.com)  
+- [Try the online editor](http://slides.com)
 - [Source code & documentation](https://github.com/hakimel/reveal.js)
