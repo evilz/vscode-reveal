@@ -35,7 +35,7 @@ export interface IRevealJsOptions {
   showNotes: boolean
   autoSlide: number
   autoSlideStoppable: boolean
-  // autoSlideMethod: Reveal.navigateNext,
+  autoSlideMethod: string // Reveal.navigateNext,
   mouseWheel: boolean
   hideAddressBar: boolean
   previewLinks: boolean
@@ -60,4 +60,3 @@ export interface ISlide {
   text: string
   verticalChildren?: ISlide[] // Rem : child can't have child
 }
-
