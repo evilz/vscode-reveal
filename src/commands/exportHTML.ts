@@ -4,7 +4,7 @@ import { SHOW_REVEALJS_IN_BROWSER } from './showRevealJSInBrowser'
 import * as opn from 'opn'
 import { getExportFolderPath } from '../ExportHTML'
 import { openInBrowser } from '../BrowserHelper'
-import { getExtensionOptions } from '../Configuration';
+import { getExtensionOptions } from '../Configuration'
 
 export const EXPORT_HTML = 'vscode-revealjs.exportHTML'
 export type EXPORT_HTML = typeof EXPORT_HTML
@@ -27,7 +27,10 @@ export const exportHTML = (getContext: (() => VSCodeRevealContext)) => async () 
     return
   }
   currentContext.SetInExportMode(() => {
-    opn(getExportFolderPath(currentContext))
+    const path = getExportFolderPath(currentContext)
+    if (getExtensionOptions().openFilemanagerAfterHTMLExport) {
+      opn(path)
+    }
   })
   openInBrowser(getExtensionOptions(), currentContext.uri, true)
   openInBrowser(getExtensionOptions(), `${currentContext.server.uri}plugin/notes/notes.html`, true)

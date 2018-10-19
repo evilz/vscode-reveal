@@ -256,6 +256,16 @@
           "type": "string",
           "default": null,
           "description": "Full path of browser to use"
+        },
+        "revealjs.exportHTMLPath": {
+          "type": "string",
+          "default": null,
+          "description": "Path where the HTML export is created, relative to the .md file"
+        },
+        "revealjs.openFilemanagerAfterHTMLExport": {
+          "type": "boolean",
+          "default": true,
+          "description": "Open the file manager after HTML export"
         }
       }
     },

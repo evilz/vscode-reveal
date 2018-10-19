@@ -4,11 +4,12 @@ import * as path from 'path'
 import * as vscode from 'vscode'
 import { VSCodeRevealContext } from './VSCodeRevealContext'
 
-
-
 export const getExportFolderPath = (context: VSCodeRevealContext) => {
   const rootDir = path.dirname(context.editor.document.fileName)
-  const exportFolderName = path.basename(context.editor.document.fileName, '.md') + "-export"
+  let exportFolderName = path.basename(context.editor.document.fileName, '.md') + '-export'
+  if (context.extensionOptions.exportHTMLPath !== null && context.extensionOptions.exportHTMLPath !== '') {
+    exportFolderName = context.extensionOptions.exportHTMLPath
+  }
   return path.join(rootDir, exportFolderName)
 }
 

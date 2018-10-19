@@ -35,7 +35,7 @@ export interface IRevealJsOptions {
   showNotes: boolean
   autoSlide: number
   autoSlideStoppable: boolean
-  autoSlideMethod: string // Reveal.navigateNext,
+  autoSlideMethod: string // 'Reveal.navigateNext',
   mouseWheel: boolean
   hideAddressBar: boolean
   previewLinks: boolean
@@ -52,6 +52,8 @@ export interface IRevealJsOptions {
 export interface IExtensionOptions {
   slideExplorerEnabled: boolean
   browserPath: string
+  exportHTMLPath: string
+  openFilemanagerAfterHTMLExport: boolean
 }
 
 export interface ISlide {
