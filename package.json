@@ -335,7 +335,7 @@
     "@types/glob": "^7.1.1",
     "@types/mocha": "^5.2.5",
     "@types/mustache": "^0.8.32",
-    "@types/node": "^8.0.58",
+    "@types/node": "^10.12.0",
     "@types/open": "0.0.29",
     "chai": "^4.2.0",
     "mocha": "^4.0.1",
