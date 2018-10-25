@@ -10,15 +10,13 @@ jobs:
     steps:
       - template: azure-pipelines-steps.yml
 
-
-jobs:
   - job: Windows
     pool:
       vmImage: 'vs2017-win2016'
     steps:
       - template: azure-pipelines-steps.yml 
 
-- job: macOS
+  - job: macOS
     pool:
       vmImage: 'xcode9-macos10.13'
     steps:
