@@ -5,8 +5,7 @@ steps:
     versionSpec: '8.x'
   displayName: 'Install Node.js'
 
-- script: |
-    npm install && npm run vscode:prepublish && npm run unittest
+- script: npm install && npm run vscode:prepublish && npm run unittest
   displayName: 'npm unittest'
 
 - task: PublishTestResults@2
