@@ -341,7 +341,7 @@
     "mocha": "^4.0.1",
     "mocha-junit-reporter": "^1.18.0",
     "tslint": "^5.8.0",
-    "tslint-config-prettier": "^1.6.0",
+    "tslint-config-prettier": "^1.15.0",
     "tslint-eslint-rules": "^4.1.1",
     "tslint-microsoft-contrib": "^5.2.1",
     "typescript": "^2.6.2",
