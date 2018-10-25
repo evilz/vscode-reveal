@@ -1,11 +1,37 @@
 // tslint:disable-next-line:no-submodule-imports
 import md = require('reveal.js/plugin/markdown/markdown')
 import { ExtensionOptions, IRevealJsOptions } from './Models'
+import { readFile } from 'fs';
+
+
+const defaultOptions = `{
+  controls: true,
+  progress: true,
+  history: true,
+  center: true,
+  transition: 'default',
+  dependencies: [
+    { src: 'lib/js/classList.js', condition: function () { return !document.body.classList; } },
+    { src: 'plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+    { src: 'plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+    { src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+    { src: 'plugin/notes/notes.js', async: true, condition: function () { return !!document.body.classList; } },
+    { src: 'plugin/math/math.js', async: true }
+  ]
+};`
+
 
 export const renderRevealHtml = (title: string, extensionOptions: ExtensionOptions, slidesContent: string) => {
   const slides = md.slidify(slidesContent, extensionOptions) as string
   const html = renderTemplate(title, extensionOptions, slides)
   return html
+}
+
+const fileOptions = async (filePath) => {
+  const options = await readFile(filePath, null);
+
+
+
 }
 
 const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: any): string => {
@@ -36,9 +62,9 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
         </style>
 
         <script>
-         if(window.location.search.match( /print-pdf-now/gi )) {
-           window.print();
-         }
+          if(window.location.search.match( /print-pdf-now/gi )) {
+            window.print();
+          }
       </script>
 
     </head>
@@ -64,30 +90,17 @@ const renderTemplate = (title: string, revealOptions: IRevealJsOptions, slides: 
               }
               return target;
             }
-            // Optional libraries used to extend on reveal.js
-            var deps = [
-              { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-              { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
-              { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
-              { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-              { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
-              { src: 'plugin/math/math.js', async: true }
-            ];
-            // default options to init reveal.js
-            var defaultOptions = {
-              controls: true,
-              progress: true,
-              history: true,
-              center: true,
-              transition: 'default',
-              dependencies: deps
-            };
+            var defaultOptions = ${defaultOptions}
             // options from URL query string
-            var queryOptions = Reveal.getQueryHash() || {};
             var options = ${JSON.stringify(revealOptions, null, 2)};
+            // autoSlide HACK
             if(options.autoSlideMethod !== undefined) {
               options.autoSlideMethod = eval(options.autoSlideMethod);
             }
+
+
+            var queryOptions = Reveal.getQueryHash() || {};
+            
             options = extend(defaultOptions, options, queryOptions);
             Reveal.initialize(options);
 

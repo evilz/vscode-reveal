@@ -1,0 +1,17 @@
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '8.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install && npm run vscode:prepublish && npm run unittest
+  displayName: 'npm unittest'
+
+- task: PublishTestResults@2
+  displayName: Publish Test Results
+  inputs:
+    testRunner: JUnit
+    testResultsFiles: '**\TEST-Result.xml'
+    testRunTitle: 'Mocha Test Run'
