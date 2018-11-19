@@ -13,7 +13,7 @@
     "url": "https://github.com/evilz/vscode-reveal"
   },
   "engines": {
-    "vscode": "^1.13.0"
+    "vscode": "^1.25.0"
   },
   "categories": [
     "Other"
@@ -269,8 +269,17 @@
         }
       }
     },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "slides-explorer",
+          "title": "VSCode Reveal",
+          "icon": "resources/slide-gray.svg"
+        }
+      ]
+    },
     "views": {
-      "explorer": [
+      "slides-explorer": [
         {
           "id": "slidesExplorer",
           "name": "Slides",
