@@ -344,7 +344,7 @@
     "tslint-config-prettier": "^1.15.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-microsoft-contrib": "^5.2.1",
-    "typescript": "^3.1.6",
+    "typescript": "^3.2.2",
     "vscode": "^1.1.21"
   }
 }
