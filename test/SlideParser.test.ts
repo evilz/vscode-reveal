@@ -3,7 +3,7 @@ import { should } from 'chai'
 import * as fs from 'fs'
 import * as matter from 'gray-matter'
 import * as path from 'path'
-// import * as vscode from 'vscode'
+import * as vscode from 'vscode'
 import { ISlide, ISlidifyOptions } from '../src/Models'
 import { countLines, parseSlides } from '../src/SlideParser'
 
@@ -16,22 +16,22 @@ const defaultSlidifyOptions: ISlidifyOptions = {
 }
 
 should()
-describe('Slide parser tests', function() {
+describe('Slide parser tests', function () {
   let slideContent = ''
 
-  before(function() {
+  before(function () {
     const currentPath = path.dirname(this.test.parent.file)
     const samplePath = path.join(currentPath, '../../sample.md')
     const data = fs.readFileSync(samplePath)
     slideContent = matter(data.toString()).content
   })
 
-  it('Shoud count simple slides', function() {
+  it('Shoud count simple slides', function () {
     const slides = parseSlides(slideContent, defaultSlidifyOptions)
     slides.should.has.lengthOf(26)
   })
 
-  it('First slide should have correct number of lines', function() {
+  it('First slide should have correct number of lines', function () {
     const slides = parseSlides(slideContent, defaultSlidifyOptions)
 
     const expectedLineCount = [7, 6]
