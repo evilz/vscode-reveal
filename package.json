@@ -332,7 +332,7 @@
     "express": "^4.16.4",
     "express-es6-template-engine": "^2.1.7",
     "fs-extra": "^7.0.1",
-    "gray-matter": "^4.0.1",
+    "gray-matter": "^4.0.2",
     "highlight.js": "^9.13.1",
     "opn": "^5.4.0",
     "os": "^0.1.1",
