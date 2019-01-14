@@ -1,11 +1,16 @@
 import { openInBrowser } from '../BrowserHelper'
-import { VSCodeRevealContext } from '../VSCodeRevealContext'
-import { getExtensionOptions } from '../Configuration';
 
 export const SHOW_REVEALJS_IN_BROWSER = 'vscode-revealjs.showRevealJSInBrowser'
 export type SHOW_REVEALJS_IN_BROWSER = typeof SHOW_REVEALJS_IN_BROWSER
 
-export const showRevealJSInBrowser = (getContext: (() => VSCodeRevealContext)) => () => {
-  const context = getContext()
-  return openInBrowser(getExtensionOptions(), context.uri)
+export const showRevealJSInBrowser = (getUri: () => string | null, getBrowserPath: () => string | null) => () => {
+  const browserPath = getBrowserPath()
+  if (browserPath === null) {
+    throw new Error('No browser found')
+  }
+  const uri = getUri()
+  if (uri === null) {
+    return
+  }
+  return openInBrowser(browserPath, uri)
 }

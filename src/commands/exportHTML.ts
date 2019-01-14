@@ -1,37 +1,40 @@
-import { VSCodeRevealContext } from '../VSCodeRevealContext'
-import * as vscode from 'vscode'
-import { SHOW_REVEALJS_IN_BROWSER } from './showRevealJSInBrowser'
-import * as opn from 'opn'
-import { getExportFolderPath } from '../ExportHTML'
+import { ProgressLocation, Uri, window } from 'vscode'
 import { openInBrowser } from '../BrowserHelper'
-import { getExtensionOptions } from '../Configuration'
 
 export const EXPORT_HTML = 'vscode-revealjs.exportHTML'
 export type EXPORT_HTML = typeof EXPORT_HTML
 
-export const exportHTML = (getContext: (() => VSCodeRevealContext)) => async () => {
-  vscode.window.withProgress({ location: vscode.ProgressLocation.Window, title: 'hello' }, p => {
+export const exportHTML = (setExportMode: () => void, getUri: () => string | null, getBrowserPath: () => string | null) => async () => {
+  const uri = getUri()
+  if (uri === null) {
+    return
+  }
+
+  const browserPath = getBrowserPath()
+  if (browserPath === null) {
+    throw new Error('No browser found')
+  }
+
+  window.withProgress({ location: ProgressLocation.Window, title: 'hello' }, p => {
     return new Promise((resolve, reject) => {
       p.report({ message: 'Start exporting html...' })
       const handle = setInterval(() => {
         p.report({ message: 'Export to html done' })
-        clearInterval(handle)
+        clearInterval(handle)  
         resolve()
-      }, 9000)
+      }, 9000)  // tell ok in 9s
     })
   })
 
   // vscode.window.withProgress('$(gear) export to html...')
-  const currentContext = getContext()
-  if (currentContext === undefined) {
-    return
-  }
-  currentContext.SetInExportMode(() => {
-    const path = getExportFolderPath(currentContext)
-    if (getExtensionOptions().openFilemanagerAfterHTMLExport) {
-      opn(path)
-    }
-  })
-  openInBrowser(getExtensionOptions(), currentContext.uri, true)
-  openInBrowser(getExtensionOptions(), `${currentContext.server.uri}plugin/notes/notes.html`, true)
+
+  setExportMode()
+  // currentContext.SetInExportMode(() => {
+  //   const path = getExportFolderPath(currentContext)
+  //   if (getExtensionOptions().openFilemanagerAfterHTMLExport) {
+  //     opn(path)
+  //   }
+  // })
+  openInBrowser(browserPath, uri, true)
+  openInBrowser(browserPath, `${uri}plugin/notes/notes.html`, true)
 }

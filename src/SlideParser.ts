@@ -1,4 +1,5 @@
-import { ISlide, ISlidifyOptions } from './Models'
+import { IDocumentOptions } from './Configuration';
+import { ISlide } from './ISlide';
 
 export const countLines = text => {
   return text.split('\n').length
@@ -11,7 +12,7 @@ export const countLines = text => {
  * @returns number of horizontal slides
  */
 
-export const parseSlides = (slideContent: string, slidifyOptions: ISlidifyOptions): ISlide[] => {
+export const parseSlides = (slideContent: string, slidifyOptions: IDocumentOptions): ISlide[] => {
   const regex = new RegExp(slidifyOptions.separator, 'gm')
   const slides = slideContent.split(regex)
   return slides.map((s, i) => parseSlide(s, i, slidifyOptions))
@@ -42,8 +43,8 @@ export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, ver
   return lineToSlide
 }
 
-const parseSlide = (slideContent: string, index: number, slidifyOptions: ISlidifyOptions): ISlide => {
-  const verticalSlides = getVerticalSlides(slideContent, slidifyOptions)
+const parseSlide = (slideContent: string, index: number, documentOption: IDocumentOptions): ISlide => {
+  const verticalSlides = getVerticalSlides(slideContent, documentOption)
   const currentSlide = verticalSlides[0]
 
   return {
@@ -53,8 +54,8 @@ const parseSlide = (slideContent: string, index: number, slidifyOptions: ISlidif
   }
 }
 
-const getVerticalSlides = (slideContent: string, slidifyOptions: ISlidifyOptions): ISlide[] => {
-  const regex = new RegExp(slidifyOptions.verticalSeparator, 'gm')
+const getVerticalSlides = (slideContent: string, documentOption: IDocumentOptions): ISlide[] => {
+  const regex = new RegExp(documentOption.verticalSeparator, 'gm')
   const slides = slideContent.split(regex)
 
   const verticalSlides = slides.map((s, i) => {

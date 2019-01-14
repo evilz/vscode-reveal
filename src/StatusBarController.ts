@@ -1,19 +1,34 @@
-import { StatusBarAlignment, StatusBarItem, TextDocument, window } from 'vscode'
-import { ISlidifyOptions, RevealServerState } from './Models'
-import { VSCodeRevealContext } from './VSCodeRevealContext'
+import { StatusBarAlignment, StatusBarItem, TextDocument, Uri, window } from 'vscode'
 
 export class StatusBarController {
   private countItem: StatusBarItem
   private addressItem: StatusBarItem
   private stopItem: StatusBarItem
 
-  constructor(private getContext: (() => VSCodeRevealContext)) {}
+  constructor(private getServerUri: (() => Uri | null), private getSlidesCount: (() => number)) {
+    this.addressItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
+    this.addressItem.command = 'vscode-revealjs.showRevealJSInBrowser'
+    this.addressItem.hide()
+
+    this.stopItem = window.createStatusBarItem(StatusBarAlignment.Right, 101)
+    this.stopItem.hide()
+    this.stopItem.text = `$(primitive-square)`
+    this.stopItem.color = 'red'
+    this.stopItem.command = 'vscode-revealjs.KillRevealJSServer'
+
+    this.countItem = window.createStatusBarItem(StatusBarAlignment.Right, 102)
+    this.countItem.command = 'vscode-revealjs.showRevealJS'
+    this.countItem.hide()
+
+    this.update()
+  }
 
   public update() {
-    const context = this.getContext()
-    this.updateAddress(context)
-    this.updateCount(context)
-    this.updateStop(context)
+    const serverUri = this.getServerUri()
+    const slideCount = this.getSlidesCount()
+    this.updateAddress(serverUri)
+    this.updateCount(slideCount)
+    this.updateStop(serverUri)
   }
 
   public dispose() {
@@ -22,52 +37,30 @@ export class StatusBarController {
     this.stopItem.dispose()
   }
 
-  private updateAddress(context: VSCodeRevealContext) {
-    if (!this.addressItem) {
-      this.addressItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
-    }
-
-    if (context.server.state === RevealServerState.Started) {
-      this.addressItem.text = `$(server) ${context.server.uri}`
-      this.addressItem.command = 'vscode-revealjs.showRevealJSInBrowser'
+  private updateAddress(serverUri: Uri | null) {
+    if (serverUri !== null) {
+      this.addressItem.text = `$(server) ${serverUri}`
       this.addressItem.show()
     } else {
+      this.addressItem.text = ''
       this.addressItem.hide()
     }
   }
 
-  private updateStop(context: VSCodeRevealContext) {
-    if (!this.stopItem) {
-      this.stopItem = window.createStatusBarItem(StatusBarAlignment.Right, 101)
-    }
-
-    this.stopItem.text = `$(primitive-square)`
-    this.stopItem.color = 'red'
-    this.stopItem.command = 'vscode-revealjs.KillRevealJSServer'
-
-    if (context.server.state === RevealServerState.Started) {
-      this.stopItem.show()
-    } else {
+  private updateStop(serverUri: Uri | null) {
+    if (serverUri === null) {
       this.stopItem.hide()
+    } else {
+      this.stopItem.show()
     }
   }
 
-  private updateCount(context: VSCodeRevealContext) {
-    if (!this.countItem) {
-      this.countItem = window.createStatusBarItem(StatusBarAlignment.Right, 102)
-    }
-
-    if (!context.editor || context.editor.document.languageId !== 'markdown') {
-      this.countItem.hide()
-      return
-    }
-
-    const slidecount = context.slideCount
-    if (slidecount < 2) {
+  private updateCount(slideCount: number) {
+    if (slideCount < 2) {
+      this.countItem.text = ''
       this.countItem.hide()
     } else {
-      this.countItem.text = `$(note) ${slidecount} Slides`
-      this.countItem.command = 'vscode-revealjs.showRevealJS'
+      this.countItem.text = `$(note) ${slideCount} Slides`
       this.countItem.show()
     }
   }

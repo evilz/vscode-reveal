@@ -1,20 +1,23 @@
 import * as fs from 'fs'
-import * as copyFile from 'quickly-copy-file'
 import * as path from 'path'
-import * as vscode from 'vscode'
-import { VSCodeRevealContext } from './VSCodeRevealContext'
+import * as copyFile from 'quickly-copy-file'
 
-export const getExportFolderPath = (context: VSCodeRevealContext) => {
-  const rootDir = path.dirname(context.editor.document.fileName)
-  let exportFolderName = path.basename(context.editor.document.fileName, '.md') + '-export'
-  if (context.extensionOptions.exportHTMLPath !== null && context.extensionOptions.exportHTMLPath !== '') {
-    exportFolderName = context.extensionOptions.exportHTMLPath
-  }
-  return path.join(rootDir, exportFolderName)
+export enum ExportMode {
+  No,
+  Export
 }
 
-export const saveIndex = (context, rootdir, data) => {
-  const exportFolderName = getExportFolderPath(context)
+// export const getExportFolderPath = ( context: VSCodeRevealContext) => {
+//   const rootDir = path.dirname(context.editor.document.fileName)
+//   let exportFolderName = path.basename(context.editor.document.fileName, '.md') + '-export'
+//   if (context.extensionOptions.exportHTMLPath !== null && context.extensionOptions.exportHTMLPath !== '') {
+//     exportFolderName = context.extensionOptions.exportHTMLPath
+//   }
+//   return path.join(rootDir, exportFolderName)
+// }
+
+export const saveIndex = (getExportFolderPath: () => string, data) => {
+  const exportFolderName = getExportFolderPath()
   const destFile = path.join(exportFolderName, 'index.html')
   if (!fs.existsSync(exportFolderName)) {
     fs.mkdirSync(exportFolderName)
@@ -38,8 +41,16 @@ const copy = async (file, dest) => {
   }
 }
 
-export const saveContent = async (context, rootdir, revealjsDir, req) => {
-  const exportFolderName = getExportFolderPath(context)
+export const saveContent = async (getExportFolderPath: () => string | null, getRootdir: () => string | null, revealjsDir, req) => {
+  const exportFolderName = getExportFolderPath()
+  if (exportFolderName === null) {
+    return
+  }
+
+  const rootDir = getRootdir()
+  if (rootDir === null) {
+    return
+  }
   const staticDirs = ['/css', '/js', '/images', '/plugin', '/lib']
 
   // highlight JS Module
@@ -55,7 +66,7 @@ export const saveContent = async (context, rootdir, revealjsDir, req) => {
     const dest = path.join(exportFolderName, req.url)
     await copy(file, dest)
   } else if (req.url !== '/') {
-    const file = path.join(rootdir, req.url)
+    const file = path.join(rootDir, req.url)
     const dest = path.join(exportFolderName, req.url)
     await copy(file, dest)
   }

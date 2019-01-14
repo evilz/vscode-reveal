@@ -1,9 +1,13 @@
-import * as path from 'path'
-import * as os from 'os'
+/**
+ * @summary Helpers to launch Chrome Browser
+ * @author Vincent B. <evilznet@gmail.com>
+ */
+
 import * as fs from 'fs'
 import * as opn from 'opn'
+import * as os from 'os'
+import * as path from 'path'
 import { window } from 'vscode'
-import { IExtensionOptions } from './Models';
 
 const WIN_APPDATA = process.env.LOCALAPPDATA || '/'
 
@@ -14,7 +18,7 @@ const DEFAULT_CHROME_PATH = {
     WIN_LOCALAPPDATA: path.join(WIN_APPDATA, 'Google\\Chrome\\Application\\chrome.exe'),
     WINx86: 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
 
-    CHROMIUM_BROWSER: '/usr/bin/chromium-browser',
+    CHROMIUM_BROWSER: '/usr/bin/chromium-browser'
 }
 
 export const enum Platform {
@@ -38,40 +42,50 @@ export function existsSync(filepath: string): boolean {
     }
 }
 
-export function getBrowserPath(extensionOptions: IExtensionOptions): string {
+const getOSXChrome = () => (existsSync(DEFAULT_CHROME_PATH.OSX) ? DEFAULT_CHROME_PATH.OSX : null)
 
-    if (extensionOptions.browserPath !== null) {
-        return extensionOptions.browserPath
-    }
-
-
-    const platform = getPlatform()
-    if (platform === Platform.OSX) {
-        return existsSync(DEFAULT_CHROME_PATH.OSX) ? DEFAULT_CHROME_PATH.OSX : null
-    } else if (platform === Platform.Windows) {
-        if (existsSync(DEFAULT_CHROME_PATH.WINx86)) {
-            return DEFAULT_CHROME_PATH.WINx86
-        } else if (existsSync(DEFAULT_CHROME_PATH.WIN)) {
-            return DEFAULT_CHROME_PATH.WIN
-        } else if (existsSync(DEFAULT_CHROME_PATH.WIN_LOCALAPPDATA)) {
-            return DEFAULT_CHROME_PATH.WIN_LOCALAPPDATA
-        } else {
-            return null
-        }
+const getWindowsChrome = () => {
+    if (existsSync(DEFAULT_CHROME_PATH.WINx86)) {
+        return DEFAULT_CHROME_PATH.WINx86
+    } else if (existsSync(DEFAULT_CHROME_PATH.WIN)) {
+        return DEFAULT_CHROME_PATH.WIN
+    } else if (existsSync(DEFAULT_CHROME_PATH.WIN_LOCALAPPDATA)) {
+        return DEFAULT_CHROME_PATH.WIN_LOCALAPPDATA
     } else {
-        return existsSync(DEFAULT_CHROME_PATH.LINUX) ? DEFAULT_CHROME_PATH.LINUX :
-            existsSync(DEFAULT_CHROME_PATH.CHROMIUM_BROWSER) ? DEFAULT_CHROME_PATH.CHROMIUM_BROWSER :
-                null
+        return null
     }
 }
 
-export const openInBrowser = async (extensionOptions: IExtensionOptions, url: string, headless?: boolean) => {
+const getLinuxChrome = () => {
+    if (existsSync(DEFAULT_CHROME_PATH.LINUX)) {
+        return DEFAULT_CHROME_PATH.LINUX
+    }
+    if (existsSync(DEFAULT_CHROME_PATH.CHROMIUM_BROWSER)) {
+        return DEFAULT_CHROME_PATH.CHROMIUM_BROWSER
+    }
+    return null
+}
+
+export function getChromePath(): string | null {
+    switch (getPlatform()) {
+        case Platform.OSX:
+            return getOSXChrome()
+        case Platform.Windows:
+            return getWindowsChrome()
+        case Platform.Linux:
+            return getLinuxChrome()
+        default:
+            return null
+    }
+}
+
+// TODO: Remove reference to UI here return specific type like result
+export const openInBrowser = async (browserPath: string, url: string, headless?: boolean) => {
     try {
-        const browserApp = getBrowserPath(extensionOptions);
         if (headless) {
-            return await opn(url, { app: [browserApp, '--headless'] })
+            return await opn(url, { app: [browserPath, '--headless'] })
         }
-        return await opn(url, { app: browserApp })
+        return await opn(url, { app: browserPath })
     } catch (error) {
         window.showWarningMessage('Can find Chrome on your computer, try with default browser...')
         await opn(url)

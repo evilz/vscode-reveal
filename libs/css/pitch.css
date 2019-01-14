@@ -1,0 +1,246 @@
+.reveal div.left-20 { float: left; z-index: -10; width: 20%; text-align: left; }
+.reveal div.left-30 { float: left; z-index: -10; width: 30%; text-align: left; }
+.reveal div.left-40 { float: left; z-index: -10; width: 40%; text-align: left; }
+.reveal div.left-50 { float: left; z-index: -10; width: 50%; text-align: left; }
+.reveal div.left-60 { float: left; z-index: -10; width: 60%; text-align: left; }
+.reveal div.left-70 { float: left; z-index: -10; width: 70%; text-align: left; }
+.reveal div.left-80 { float: left; z-index: -10; width: 80%; text-align: left; }
+.reveal div.right-20 { float: right; z-index: -10; width: 20%; text-align: right }
+.reveal div.right-30 { float: right; z-index: -10; width: 30%; text-align: right }
+.reveal div.right-40 { float: right; z-index: -10; width: 40%; text-align: right }
+.reveal div.right-50 { float: right; z-index: -10; width: 50%; text-align: right }
+.reveal div.right-60 { float: right; z-index: -10; width: 60%; text-align: right }
+.reveal div.right-70 { float: right; z-index: -10; width: 70%; text-align: right }
+.reveal div.right-80 { float: right; z-index: -10; width: 80%; text-align: right }
+
+.li-nested-item { margin-left: 1em !important; }
+.quote-attribution { font-size: 0.6em !important; }
+
+.midpoint { position: absolute; top: 49%; left: 50%; transform: translate(-50%, -50%); position: fixed; text-align: center; }
+.north { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); text-align: center; }
+.south { position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); text-align: center; }
+.east { position: fixed; right: 0px; top: 49%; transform: translateY(-50%); text-align: right; }
+.north-east { position: fixed; top: 25px; right: 0px; text-align: right; }
+.south-east { position: fixed; bottom: 35px; right: 0px; text-align: right; }
+.west { position: fixed; left: 0px; top: 49%; transform: translateY(-50%); text-align: left; }
+.north-west { position: fixed; top: 25px; left: 0px; text-align: left; }
+.south-west { position: fixed; bottom: 35px; left: 0px; text-align: left; }
+
+.span-5  { width:  5% !important }
+.span-10 { width: 10% !important }
+.span-15 { width: 15% !important }
+.span-20 { width: 20% !important }
+.span-25 { width: 25% !important }
+.span-30 { width: 30% !important }
+.span-35 { width: 35% !important }
+.span-40 { width: 40% !important }
+.span-45 { width: 45% !important }
+.span-50 { width: 50% !important }
+.span-55 { width: 55% !important }
+.span-60 { width: 60% !important }
+.span-65 { width: 65% !important }
+.span-70 { width: 70% !important }
+.span-75 { width: 75% !important }
+.span-80 { width: 80% !important }
+.span-85 { width: 85% !important }
+.span-90 { width: 90% !important }
+.span-95 { width: 95% !important }
+.span-100 { width: 100% !important }
+
+.text-black  { color: #000000 !important; }
+.text-blue   { color: #4487F2 !important; }
+.text-gray   { color: #777777 !important; }
+.text-green  { color: #8EA33B !important; }
+.text-orange { color: #F26225 !important; }
+.text-pink   { color: #E71E60 !important; }
+.text-purple { color: #643B85 !important; }
+.text-yellow { color: #F5DB2E !important; }
+.text-white  { color: #FFFFFF !important; }
+
+.bg-black  { background: #000000 !important; }
+.bg-blue   { background: #4487F2 !important; }
+.bg-gray   { background: #777777 !important; }
+.bg-green  { background: #8EA33B !important; }
+.bg-orange { background: #F26225 !important; }
+.bg-pink   { background: #E71E60 !important; }
+.bg-purple { background: #643B85 !important; }
+.bg-yellow { background: #F5DB2E !important; }
+.bg-white  { background: #FFFFFF !important; }
+
+#boxed-text-box {
+    text-align: center;
+}
+
+#boxed-text-title-box {
+    font-size: 0.8em;
+    padding: 0.1em 0 0.3em 0;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#boxed-text-title {
+    font-size: 0.6em;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    font-variant: small-caps;
+}
+
+#boxed-text {
+    font-size: 0.8em;
+    margin: 0;
+    padding: 0.5em 1em 1em 1em;
+}
+
+#boxed-text-box.rounded {
+    border-radius: 18px;
+}
+
+#boxed-text-box.rounded div {
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+}
+
+#boxed-text-box.waved {
+    border-radius: 15px 50px;
+}
+
+#boxed-text-box.waved div {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 50px;
+}
+
+
+/* GitPitch Menu Styling */
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size:1.3em;
+    font-weight: bold;
+}
+.reveal .controls {
+    bottom: 20px;
+}
+.gp-menu-bars {
+    font-size: 24px;
+}
+
+div.pitch-menu {
+    width: 100%;
+    text-align: center;
+    padding-top: 40px;
+}
+
+div.pitch-menu-logo {
+    height: 48px;
+    margin-left: 43px;
+    background-size: 200px 48px;
+    background-repeat: no-repeat;
+    background-image: url(/assets/images/gp-menu-logo.png);
+}
+
+div.pitch-menu div.section-heading {
+    display: none;
+    color: white;
+    font-size: 1.1em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+div.pitch-menu .git-box {
+    width: 90%;
+    margin: 0 auto;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+div.git-box > table:first-of-type {
+    margin-left: 8%;
+}
+div.git-box, div.git-octicon, .git-octicon span  {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+}
+div.pitch-menu .git-box .short-link {
+    width: 8em;
+    font-size: 1em;
+    color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Roboto', sans-serif;
+}
+div.pitch-menu .git-box a {
+    font-size: 1em;
+    text-decoration:none;
+}
+div.pitch-menu .git-box a a:hover {
+    color: #e48436;
+}
+div.pitch-menu .git-box table th, div.pitch-menu table td {
+    text-align: left;
+    padding: 0.6em 0.3em 0.6em 0.3em;
+    border: 0;
+}
+div.pitch-menu .git-label {
+    color: #b3b3b3;
+    font-size: 1em;
+    font-family: 'Roboto', sans-serif;
+}
+div.pitch-menu .git-octicon {
+    font: normal normal normal 16px/1 octicons;
+    font-size:1.1em;
+    color: white;
+}
+div.pitch-menu .git-octicon .star-fork {
+    padding-left: 4px;
+    color: white;
+}
+span.octicon.octicon-star, span.octicon.octicon-repo-forked {
+    color: #fff;
+}
+span.octicon span.star-fork {
+    font-family: 'Roboto', sans-serif;
+    font-size: 90%;
+}
+.git-octicon span.octicon {
+    font-family: octicons;
+}
+div.pitch-menu ul {
+    list-style-type: none;
+    margin: 14px 0 0px 0;
+}
+div.pitch-menu ul li.slideshow {
+    font-size: 0.95em;
+    cursor: pointer;
+    text-align: left;
+    padding: 10px 0;
+}
+div.pitch-menu ul li.home-git {
+    padding: 14px 0 14px 0;
+    font-size: 1.0em;
+    letter-spacing: 1.5px;
+    text-align: center;
+}
+div.pitch-menu ul li.home-git a {
+    font-family: 'Roboto', sans-serif !important;
+}
+div.pitch-menu ul li.home-themes {
+    padding: 14px 0 14px 0;
+    font-size: 1.0em;
+    text-transform: capitalize;
+    letter-spacing: 1.5px;
+    text-align: center;
+    border-top: solid 1px #222;
+}
+div.pitch-menu ul li.home-themes a {
+    font-family: 'Roboto', sans-serif !important;
+}
+hr.fade-away {
+    border: 0;
+    height: 1px;
+    background: #999;
+    background-image: linear-gradient(to right, #666, #999, #666);
+    width: 80%;
+}
+div.pitch-menu ul i.fa.fa-download, div.pitch-menu ul i.fa.fa-print, div.pitch-menu ul i.fa.fa-external-link {
+    padding-right: 5px;
+}

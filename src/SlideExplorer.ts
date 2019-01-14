@@ -1,9 +1,7 @@
 import * as path from 'path'
 import * as vscode from 'vscode'
 import { GO_TO_SLIDE } from './commands/goToSlide'
-import { ISlide } from './Models'
-import { VSCodeRevealContext } from './VSCodeRevealContext'
-import { VSCodeRevealContexts } from './VSCodeRevealContexts'
+import { ISlide } from './ISlide'
 
 export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
   // tslint:disable-next-line:variable-name
@@ -11,7 +9,7 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
   // tslint:disable-next-line:member-ordering
   public readonly onDidChangeTreeData: vscode.Event<SlideNode | null> = this._onDidChangeTreeData.event
 
-  constructor(private getContext: (() => VSCodeRevealContext)) { }
+  constructor(private getSlide: (() => ISlide[])) {}
 
   public update() {
     // Optimize on slide change only !!
@@ -27,27 +25,27 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
   }
 
   public getChildren(element?: SlideNode): vscode.ProviderResult<SlideNode[]> {
-    const currentContext = this.getContext()
+    const slides = this.getSlide()
     return new Promise(resolve => {
       if (element) {
-        resolve(this.mapSlides(element.slide.verticalChildren, true, element.slide.index))
+        resolve(this.mapSlides(element.slide.verticalChildren, element.slide.index))
       } else {
-        resolve(this.mapSlides(currentContext.slides))
+        resolve(this.mapSlides(slides))
       }
     })
   }
 
-  private mapSlides(slides: ISlide[], isVertical: boolean = false, parentIndex?: number) {
-    return slides.map(
+  private mapSlides(slides?: ISlide[], parentIndex?: number) {
+    return slides!.map(
       (s, i) =>
         new SlideNode(
           s,
-          isVertical,
+          parentIndex !== undefined,
           `${s.index} : ${s.title}`,
           s.verticalChildren ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None,
           {
+            arguments: [(parentIndex === undefined ? {horizontal: s.index, vertical: 0} : { horizontal: parentIndex, vertical: s.index})],
             command: GO_TO_SLIDE,
-            arguments: isVertical ? [parentIndex, s.index] : [s.index, 0],
             title: 'Go to slide'
           }
         )
@@ -61,8 +59,8 @@ class SlideNode extends vscode.TreeItem {
   }
 
   public iconPath = {
-    light: path.join(__filename, '..', '..', '..', 'resources', this.iconName),
-    dark: path.join(__filename, '..', '..', '..', 'resources', this.iconName)
+    dark: path.join(__filename, '..', '..', '..', 'resources', this.iconName),
+    light: path.join(__filename, '..', '..', '..', 'resources', this.iconName)
   }
   constructor(
     public readonly slide: ISlide,
