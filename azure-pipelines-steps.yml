@@ -6,7 +6,7 @@ steps:
   displayName: 'Install Node.js'
 
 - script: npm install && npm run vscode:prepublish && npm run unittest
-  displayName: 'npm unittest'
+  displayName: 'npm unittest-ci'
 
 - task: PublishTestResults@2
   displayName: Publish Test Results

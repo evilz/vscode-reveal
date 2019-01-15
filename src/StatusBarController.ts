@@ -1,11 +1,11 @@
-import { StatusBarAlignment, StatusBarItem, TextDocument, Uri, window } from 'vscode'
+import { StatusBarAlignment, StatusBarItem, window } from 'vscode'
 
 export class StatusBarController {
   private countItem: StatusBarItem
   private addressItem: StatusBarItem
   private stopItem: StatusBarItem
 
-  constructor(private getServerUri: (() => Uri | null), private getSlidesCount: (() => number)) {
+  constructor(private getServerUri: (() => string | null), private getSlidesCount: (() => number)) {
     this.addressItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
     this.addressItem.command = 'vscode-revealjs.showRevealJSInBrowser'
     this.addressItem.hide()
@@ -37,7 +37,7 @@ export class StatusBarController {
     this.stopItem.dispose()
   }
 
-  private updateAddress(serverUri: Uri | null) {
+  private updateAddress(serverUri: string | null) {
     if (serverUri !== null) {
       this.addressItem.text = `$(server) ${serverUri}`
       this.addressItem.show()
@@ -47,7 +47,7 @@ export class StatusBarController {
     }
   }
 
-  private updateStop(serverUri: Uri | null) {
+  private updateStop(serverUri: string | null) {
     if (serverUri === null) {
       this.stopItem.hide()
     } else {

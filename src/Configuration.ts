@@ -3,10 +3,6 @@
  * @author Vincent Bourdon @Evilznet
  */
 
-'use strict'
-import { workspace } from 'vscode'
-import { extensionId } from './constants';
-
 export type Configuration = IDocumentOptions & IExtensionOptions
 
 export interface IDocumentOptions {
@@ -113,7 +109,7 @@ export const defaultConfiguration: Configuration = {
   openFilemanagerAfterHTMLExport: true
 }
 
-export const loadConfiguration = () => {
-  const loaded = workspace.getConfiguration(extensionId)
+export const loadConfiguration = (getExtensionConf: () => any) => {
+  const loaded = getExtensionConf()
   return ({ ...defaultConfiguration, ...loaded } as any) as Configuration
 }

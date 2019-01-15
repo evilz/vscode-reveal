@@ -1,21 +1,18 @@
-import * as fs from 'fs'
-import * as path from 'path'
-import * as vscode from 'vscode'
 import { spawn } from 'child_process'
-import { getExtensionOptions } from './Configuration';
+// import * as vscode from 'vscode'
 
 /*
  * export a html to a pdf file (html-pdf)
 //  */
 
 export const savePdf = (getBrowserPath: () => string) => async (url, filename): Promise<string> => {
-  vscode.window.setStatusBarMessage('$(markdown) export to pdf...')
+  // vscode.window.setStatusBarMessage('$(markdown) export to pdf...')
   const promise = new Promise<string>((resolve, reject) => {
     const chromePath = getBrowserPath()
     const chromeFlags = ['--headless', '--disable-gpu', '--no-margins', '--remote-debugging-port=9222', url]
     // const chromeFlags = ['--headless', '--disable-gpu', '--print-to-pdf=' + filename, '--no-margins', '--remote-debugging-port=9222', url]
     const chromeProc = spawn(chromePath, chromeFlags, {})
-    chromeProc.on('exit', function (code, signal) {
+    chromeProc.on('exit', (code, signal) => {
       console.log('child process exited with ' + `code ${code} and signal ${signal}`)
     })
     chromeProc.stdout.on('data', data => {
@@ -27,7 +24,7 @@ export const savePdf = (getBrowserPath: () => string) => async (url, filename): 
         reject(data)
       }
     })
-    chromeProc.on('exit', function (code, signal) {
+    chromeProc.on('exit', (code, signal) => {
       console.log('child process exited with ' + `code ${code} and signal ${signal}`)
       if (code === 0) {
         resolve(filename)

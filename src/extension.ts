@@ -1,6 +1,6 @@
 'use strict'
-import * as vscode from 'vscode'
 
+import { commands, ExtensionContext, window, workspace } from 'vscode';
 import { getChromePath } from './BrowserHelper'
 import { EXPORT_HTML, exportHTML } from './commands/exportHTML'
 import { EXPORT_PDF, exportPDF } from './commands/exportPDF'
@@ -8,17 +8,18 @@ import { GO_TO_SLIDE } from './commands/goToSlide'
 import { SHOW_REVEALJS, showRevealJS } from './commands/showRevealJS'
 import { SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser } from './commands/showRevealJSInBrowser'
 import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
+import { extensionId } from './constants';
 import Container from './Container'
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext) {
   const registerCommand = (command: string, callback: (...args: any[]) => any, thisArg?: any) => {
-    const disposable = vscode.commands.registerCommand(command, callback, thisArg)
+    const disposable = commands.registerCommand(command, callback, thisArg)
     context.subscriptions.push(disposable)
   }
 
-  const container = new Container()
+  const container = new Container(() => workspace.getConfiguration(extensionId) as any)
 
-  container.onDidChangeActiveTextEditor(vscode.window.activeTextEditor)
+  container.onDidChangeActiveTextEditor(window.activeTextEditor)
 
   const getBrowser = () => {
     const fromConf = container.getConfiguration().browserPath
@@ -26,7 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   console.log('"vscode-reveal" is now active')
-  vscode.commands.executeCommand('setContext', 'slideExplorerEnabled', container.getConfiguration().slideExplorerEnabled)
+  commands.executeCommand('setContext', 'slideExplorerEnabled', container.getConfiguration().slideExplorerEnabled)
   // COMMANDS
 
   // move this directly in command file
@@ -40,20 +41,20 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(EXPORT_HTML, exportHTML(() => container.setExportMode(), () => container.getUri(), getBrowser))
 
   // ON SELECTION CHANGE
-  vscode.window.onDidChangeTextEditorSelection(e => container.onDidChangeTextEditorSelection(e))
+  window.onDidChangeTextEditorSelection(e => container.onDidChangeTextEditorSelection(e))
 
   // ON TAB CHANGE
-  vscode.window.onDidChangeActiveTextEditor(e => container.onDidChangeActiveTextEditor(e))
+  window.onDidChangeActiveTextEditor(e => container.onDidChangeActiveTextEditor(e))
 
   // ON CHANGE TEXT
-  vscode.workspace.onDidChangeTextDocument(e => container.onDidChangeTextDocument(e))
+  workspace.onDidChangeTextDocument(e => container.onDidChangeTextDocument(e))
 
   // ON SAVE
-  vscode.workspace.onDidSaveTextDocument(e => container.onDidSaveTextDocument(e))
+  workspace.onDidSaveTextDocument(e => container.onDidSaveTextDocument(e))
 
-  vscode.workspace.onDidCloseTextDocument(e => container.onDidCloseTextDocument(e))
+  workspace.onDidCloseTextDocument(e => container.onDidCloseTextDocument(e))
 
-  vscode.workspace.onDidChangeConfiguration(e => container.onDidChangeConfiguration(e))
+  workspace.onDidChangeConfiguration(e => container.onDidChangeConfiguration(e))
 }
 
 // this method is called when your extension is deactivated

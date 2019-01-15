@@ -13,11 +13,10 @@ import {
   Webview
 } from 'vscode'
 
-import { Configuration, getDocumentOptions, loadConfiguration } from './Configuration'
+import { Configuration, getDocumentOptions } from './Configuration'
 import { extensionId } from './constants'
 import { EditorContext } from './EditorContext'
 import { ExportMode, saveContent } from './ExportHTML'
-import IframeContentProvider from './IframeContentProvider'
 import { ISlide } from './ISlide'
 import { RevealServer } from './RevealServer'
 import { SlideTreeProvider } from './SlideExplorer'
@@ -27,7 +26,6 @@ import * as http from 'http'
 
 export default class Container {
   private server: RevealServer
-  private _iframeProvider: IframeContentProvider
   private statusBarController: StatusBarController
   private slidesExplorer: SlideTreeProvider
   private editorContext: EditorContext | null
@@ -58,8 +56,8 @@ export default class Container {
     }
     this.server.start()
     this.server.refresh()
+    this.refreshWebView()
     this.statusBarController.update()
-    this.iframeProvider.update()
     this.slidesExplorer.update()
   }
 
@@ -82,33 +80,19 @@ export default class Container {
       return
     }
 
-    this.configuration = loadConfiguration()
+    this.configuration = this.loadConfiguration()
   }
 
-  public get iframeProvider() {
-    return this._iframeProvider
-  }
-
-  public constructor() {
-    this.configuration = loadConfiguration()
+  public constructor(private loadConfiguration: () => Configuration) {
+    this.configuration = this.loadConfiguration()
 
     this.editorContext = null
 
     this.server = new RevealServer(this.getRootDir, this.getSlideContent, this.getConfiguration, this.getExportMode, this.saveHtmlFn)
 
-    this._iframeProvider = new IframeContentProvider(() => this.getUri())
-    this._iframeProvider.register() // ?? disposable ??
-
-    // ADD subscriptiton here
-    // context.subscriptions.push((this._lineTracker = new GitLineTracker()));
-    // context.subscriptions.push((this._tracker = new GitDocumentTracker()));
-    // context.subscriptions.push((this._fileAnnotationController = new FileAnnotationController()));
-
-    // -- Status --
     this.statusBarController = new StatusBarController(() => this.server.uri, () => this.slideCount)
     this.statusBarController.update()
 
-    // -- TreeExplorer --
     this.slidesExplorer = new SlideTreeProvider(() => this.slides)
     this.slidesExplorer.register()
   }

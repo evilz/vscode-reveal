@@ -325,7 +325,8 @@
     "build": "tsc -p ./",
     "test": "node ./node_modules/vscode/bin/test",
     "preunittest": "tsc -p ./",
-    "unittest": "cd out && mocha --reporter mocha-junit-reporter --reporter-options mochaFile=./TestResults/TEST-Result.xml",
+    "unittest-ci": "cd out && mocha --reporter mocha-junit-reporter --reporter-options mochaFile=./TestResults/TEST-Result.xml",
+    "unittest-dev": "cd out && mocha",
     "lint": "tslint -t verbose 'src/**/*.ts'"
   },
   "dependencies": {

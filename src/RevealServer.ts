@@ -1,22 +1,16 @@
 import * as express from 'express'
 import * as es6Renderer from 'express-es6-template-engine'
-import { appendFile } from 'fs'
-import * as fs from 'fs-extra'
 import * as http from 'http'
 import * as path from 'path'
-import { TextEditor, Uri, window } from 'vscode'
 
 import { Configuration } from './Configuration'
-import { ExportMode, saveContent, saveIndex } from './ExportHTML'
+import { ExportMode, saveIndex } from './ExportHTML'
 
-// tslint:disable-next-line:no-submodule-imports
-import md = require('reveal.js/plugin/markdown/markdown')
 export class RevealServer {
   private app = express()
   private server: http.Server | null
   private staticDir = express.static
   private host: string = 'localhost'
-  private revealBasePath = path.resolve(require.resolve('reveal.js'), '..', '..')
 
   constructor(
     private getRootDir: () => string | null,
@@ -37,7 +31,7 @@ export class RevealServer {
   }
 
   public get uri() {
-    return this.isListening ? Uri.parse(`http://${this.host}:${this.server!.address().port}/`) : null
+    return this.isListening ? `http://${this.host}:${this.server!.address().port}/` : null
   }
   public start() {
     try {
@@ -114,9 +108,6 @@ export class RevealServer {
     })
   }
 
-  private getExportFolderPath() {
-    return this.getConfiguration().exportHTMLPath ? this.getConfiguration().exportHTMLPath : this.getRootDir()
-  }
 
   private exportMiddleware = () => {
     return (req, res, next) => {

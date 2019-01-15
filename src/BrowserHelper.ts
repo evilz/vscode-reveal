@@ -7,7 +7,6 @@ import * as fs from 'fs'
 import * as opn from 'opn'
 import * as os from 'os'
 import * as path from 'path'
-import { window } from 'vscode'
 
 const WIN_APPDATA = process.env.LOCALAPPDATA || '/'
 
@@ -87,7 +86,8 @@ export const openInBrowser = async (browserPath: string, url: string, headless?:
         }
         return await opn(url, { app: browserPath })
     } catch (error) {
-        window.showWarningMessage('Can find Chrome on your computer, try with default browser...')
         await opn(url)
+        throw new Error('Can find Chrome on your computer, try with default browser...')
+        
     }
 }
