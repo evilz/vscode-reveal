@@ -6,8 +6,13 @@ steps:
   displayName: 'Install Node.js'
 
 - script: npm install
-- script:  run unittest-ci
+  displayName: Npm Install
 
+- script: npm run vscode:prepublish
+  displayName: Typescript Compile
+
+- script: npm run unittest-ci
+  displayName: Run unit tests
 
 - task: PublishTestResults@2
   displayName: Publish Test Results
