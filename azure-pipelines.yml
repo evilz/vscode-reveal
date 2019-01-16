@@ -7,6 +7,7 @@ jobs:
   - job: Linux
     pool:
       vmImage: 'ubuntu-16.04'
+    variables: Env
     steps:
       - template: azure-pipelines-steps.yml
 
