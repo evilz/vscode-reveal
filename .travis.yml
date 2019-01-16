@@ -20,7 +20,7 @@ install:
 
 script:
   - npm run vscode:prepublish 
-  - npm run unittest-ci
+  - npm run unittest-dev
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
