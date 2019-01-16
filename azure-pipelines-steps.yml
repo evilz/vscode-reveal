@@ -18,6 +18,6 @@ steps:
 - task: PublishTestResults@2
   displayName: Publish Test Results
   inputs:
-    testRunner: xUnit
+    testRunner: JUnit
     testResultsFiles: '**\junit.xml'
     testRunTitle: 'Mocha Test Result'
