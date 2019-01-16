@@ -19,8 +19,8 @@ install:
   - npm install
 
 script:
-  - npm run vscode:prepublish 
-  - npm run unittest-dev
+  - npm run vscode:prepublish
+  - npm run test:ci
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
