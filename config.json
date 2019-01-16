@@ -1,0 +1,20 @@
+{
+    "reporterEnabled": "spec, xunit",
+
+    "reporterOptions": {
+        "id": "default"
+    },
+
+    "dotReporterOptions": {
+        "id": "dot"
+    },
+
+    "xunitReporterOptions": {
+        "id": "xunit",
+        "output": "xunit.xml"
+    },
+
+    "tapReporterOptions": {
+        "id": "tap"
+    }
+}

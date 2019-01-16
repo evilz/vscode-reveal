@@ -11,12 +11,12 @@ steps:
 - script: npm run vscode:prepublish
   displayName: Typescript Compile
 
-- script: npm run unittest-ci
+- script: npm run test:ci
   displayName: Run unit tests
 
 - task: PublishTestResults@2
   displayName: Publish Test Results
   inputs:
-    testRunner: JUnit
-    testResultsFiles: '**\TEST-Result.xml'
-    testRunTitle: 'Mocha Test Run'
+    testRunner: xUnit
+    testResultsFiles: '**\xunit.xml'
+    testRunTitle: 'Mocha Test Result'

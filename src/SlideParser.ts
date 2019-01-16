@@ -4,13 +4,6 @@ import { ISlide } from './ISlide';
 export const countLines = text => {
   return text.split('\n').length
 }
-/**
- * Count horizontal slides
- *
- * @param {string} slideContent (w/o front matter)
- * @param {string} separator
- * @returns number of horizontal slides
- */
 
 export const parseSlides = (slideContent: string, slidifyOptions: IDocumentOptions): ISlide[] => {
   const regex = new RegExp(slidifyOptions.separator, 'gm')

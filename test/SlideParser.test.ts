@@ -20,7 +20,7 @@ describe('Slide parser tests', () => {
 
   before(function() {
     const currentPath = path.dirname(this!.test!.parent!.file!)
-    const samplePath = path.join(currentPath, '../../sample.md')
+    const samplePath = path.join(currentPath, '../sample.md')
     const data = fs.readFileSync(samplePath)
     slideContent = matter(data.toString()).content
   })

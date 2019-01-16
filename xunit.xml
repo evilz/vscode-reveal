@@ -1,0 +1,4 @@
+<testsuite name="Mocha Tests" tests="2" failures="0" errors="0" skipped="0" timestamp="Wed, 16 Jan 2019 07:33:17 GMT" time="0.05">
+<testcase classname="Slide parser tests" name="Shoud count simple slides" time="0.006"/>
+<testcase classname="Slide parser tests" name="First slide should have correct number of lines" time="0.005"/>
+</testsuite>
