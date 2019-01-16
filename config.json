@@ -1,20 +1,6 @@
 {
-    "reporterEnabled": "spec, xunit",
-
-    "reporterOptions": {
-        "id": "default"
-    },
-
-    "dotReporterOptions": {
-        "id": "dot"
-    },
-
-    "xunitReporterOptions": {
-        "id": "xunit",
-        "output": "xunit.xml"
-    },
-
-    "tapReporterOptions": {
-        "id": "tap"
+    "reporterEnabled": "mocha-junit-reporter",
+    "mochaJunitReporterReporterOptions": {
+        "mochaFile": "junit.xml"
     }
 }

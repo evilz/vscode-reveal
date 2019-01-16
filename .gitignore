@@ -92,3 +92,7 @@ $RECYCLE.BIN/
 *.lnk
 
 *.map
+
+
+junit.xml
+xunit.xml

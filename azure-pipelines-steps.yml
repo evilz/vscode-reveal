@@ -19,5 +19,5 @@ steps:
   displayName: Publish Test Results
   inputs:
     testRunner: xUnit
-    testResultsFiles: '**\xunit.xml'
+    testResultsFiles: '**\junit.xml'
     testRunTitle: 'Mocha Test Result'
