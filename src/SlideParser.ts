@@ -1,8 +1,10 @@
-import { IDocumentOptions } from './Configuration';
-import { ISlide } from './ISlide';
+import { EOL } from 'os'
+import { IDocumentOptions } from './Configuration'
+import { ISlide } from './ISlide'
 
 export const countLines = text => {
-  return text.split('\n').length
+  const eol = EOL
+  return text.split(eol).length
 }
 
 export const parseSlides = (slideContent: string, slidifyOptions: IDocumentOptions): ISlide[] => {
