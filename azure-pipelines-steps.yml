@@ -20,4 +20,4 @@ steps:
   inputs:
     testRunner: JUnit
     testResultsFiles: '**\junit.xml'
-    testRunTitle: '$(Agent.JobName) Test Result'
+    testRunTitle: '$(Agent.OS) $(Agent.OSArchitecture) Test Result'
