@@ -5,7 +5,6 @@ import * as matter from 'gray-matter'
 import * as path from 'path'
 import { defaultConfiguration, getDocumentOptions } from '../src/Configuration'
 import { countLines, parseSlides } from '../src/SlideParser'
-import { platform } from 'os'
 
 // const sampleFile = fs.readFileSync('../sample.md').toString()
 
@@ -17,7 +16,7 @@ config.verticalSeparator = '^[\r\n?|\n]--[\r\n?|\n]$'
 
 should()
 
-describe(`${platform()} - Slide parser tests`, () => {
+describe('Slide parser tests', () => {
   let slideContent = ''
 
   before(function() {
