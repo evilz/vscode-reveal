@@ -20,4 +20,4 @@ steps:
   inputs:
     testRunner: JUnit
     testResultsFiles: '**\junit.xml'
-    testRunTitle: '${platform} Test Result'
+    testRunTitle: '$(platform) Test Result'
