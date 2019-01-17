@@ -22,5 +22,5 @@ steps:
     testResultsFiles: '**\junit.xml'
     testRunTitle: '$(Agent.OS) $(Agent.OSArchitecture) Test Result'
 
-- script: npm run sonar -- -Dsonar.login=$(sonar.token)
+- script: npm run sonar -- -Dsonar.login=$(sonar.token) -Dsonar.pullrequest.branch=$(System.PullRequest.SourceBranch) -Dsonar.pullrequest.key=$(System.PullRequest.PullRequestId)
   displayName: sonar
