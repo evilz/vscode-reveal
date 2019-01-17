@@ -327,8 +327,25 @@
     "preunittest": "tsc -p ./",
     "unittest-ci": "cd out && mocha --reporter mocha-junit-reporter --reporter-options mochaFile=TEST-Result.xml",
     "test:ci": "mocha ./test/**/*test.ts -r ts-node/register --reporter mocha-multi-reporters --reporter-options configFile=./config.json",
+    "test:cover": "nyc mocha ./test/**/*test.ts -r ts-node/register/transpile-only -r source-map-support/register --recursive --reporter mocha-multi-reporters --reporter-options configFile=./config.json",
     "unittest-dev": "cd out && mocha",
-    "lint": "tslint -t verbose 'src/**/*.ts'"
+    "lint": "tslint -t verbose 'src/**/*.ts'",
+    "sonar": "sonar-scanner -Dsonar.projectKey=evilz_vscode-reveal -Dsonar.organization=evilz-github -Dsonar.sources=./src -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=af804f1c8fdb714af298b8d79ddc4e28487a4e97"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "**/libs/*"
+    ],
+    "reporter": [
+      "html",
+      "lcov"
+    ],
+    "all": true  
   },
   "dependencies": {
     "express": "^4.16.4",
@@ -355,12 +372,16 @@
     "mocha": "^5.2.0",
     "mocha-junit-reporter": "^1.18.0",
     "mocha-multi-reporters": "^1.1.7",
+    "nyc": "^13.1.0",
     "request": "^2.88.0",
+    "sonarqube-scanner": "^2.1.2",
+    "source-map-support": "^0.5.10",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.17.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-microsoft-contrib": "^5.2.1",
+    "tslint-sonarts": "^1.8.0",
     "typescript": "^3.1.6",
     "vscode": "^1.1.21"
   }

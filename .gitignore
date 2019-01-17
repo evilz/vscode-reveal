@@ -96,3 +96,6 @@ $RECYCLE.BIN/
 
 junit.xml
 xunit.xml
+
+**/.nyc_output/*
+**/.scannerwork/*
