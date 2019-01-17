@@ -330,7 +330,7 @@
     "test:cover": "nyc mocha ./test/**/*test.ts -r ts-node/register/transpile-only -r source-map-support/register --recursive --reporter mocha-multi-reporters --reporter-options configFile=./config.json",
     "unittest-dev": "cd out && mocha",
     "lint": "tslint -t verbose 'src/**/*.ts'",
-    "sonar": "sonar-scanner -Dsonar.projectKey=evilz_vscode-reveal -Dsonar.organization=evilz-github -Dsonar.sources=./src -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=af804f1c8fdb714af298b8d79ddc4e28487a4e97"
+    "sonar": "sonar-scanner -Dsonar.projectKey=evilz_vscode-reveal -Dsonar.organization=evilz-github -Dsonar.sources=./src -Dsonar.host.url=https://sonarcloud.io -Dsonar.pullrequest.base=master -Dsonar.pullrequest.provider=GitHub -Dsonar.pullrequest.github.repository=evilz/vscode-reveal"
   },
   "nyc": {
     "extension": [
