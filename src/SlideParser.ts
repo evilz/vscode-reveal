@@ -19,7 +19,6 @@ export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, ver
   const lineToSlide = slides.slice(0, stopSlideIndex).reduce((lines, slide) => {
     const count = lines + countLines(slide.text) // + 1 // heightSeparator
 
-    // has some vertical slides
     if (slide.verticalChildren) {
       const stopVerticalAt = slide.index === horizontalIndex ? verticalIndex - 1 : slide.verticalChildren.length
 

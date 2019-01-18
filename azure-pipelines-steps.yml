@@ -23,4 +23,6 @@ steps:
     testRunTitle: '$(Agent.OS) $(Agent.OSArchitecture) Test Result'
 
 - script: npm run sonar -- -Dsonar.login=$(sonar.token) -Dsonar.pullrequest.branch=$(System.PullRequest.SourceBranch) -Dsonar.pullrequest.key=$(System.PullRequest.PullRequestId)
-  displayName: sonar
+  displayName: sonar PR branch $(System.PullRequest.SourceBranch) - $(System.PullRequest.PullRequestId)
+
+
