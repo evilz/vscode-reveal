@@ -22,7 +22,7 @@ steps:
     testResultsFiles: '**\junit.xml'
     testRunTitle: '$(Agent.OS) $(Agent.OSArchitecture) Test Result'
 
-- script: npm run sonar -- -Dsonar.login=$(sonar.token) -Dsonar.pullrequest.branch=$(System.PullRequest.SourceBranch) -Dsonar.pullrequest.key=$(System.PullRequest.PullRequestId)
-  displayName: sonar PR branch $(System.PullRequest.SourceBranch) - $(System.PullRequest.PullRequestId)
+- script: npm run sonar -- -Dsonar.login=$(sonar.token) -Dsonar.pullrequest.branch=$(System.PullRequest.SourceBranch) -Dsonar.pullrequest.key=$(System.PullRequest.PullRequestNumber)
+  displayName: sonar PR branch $(System.PullRequest.SourceBranch) - $(System.PullRequest.PullRequestNumber)
 
 
