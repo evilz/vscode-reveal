@@ -76,17 +76,7 @@ export class RevealServer {
         'template',
         {
           locals: {
-            ...this.getConfiguration(),
-            author: '',
-            controlsLayout: 'TODO',
-            customHighlightTheme: null,
-            customTheme: null,
-            description: '',
-            isDarkTheme: false,
-            logoImg: null,
-            logoPosition: 'left',
-            math: `{mathjax: 'somefile', config: 'MATHCONFIG !!!!' }`,
-            title: this.getConfiguration().title
+            ...this.getConfiguration()
           },
           partials: {
             // _codeFragHighlightStyle: 'partials/CodeFragHighlightStyle',
@@ -107,7 +97,6 @@ export class RevealServer {
       )
     })
   }
-
 
   private exportMiddleware = () => {
     return (req, res, next) => {

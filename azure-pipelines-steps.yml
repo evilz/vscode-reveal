@@ -11,7 +11,7 @@ steps:
 - script: npm run vscode:prepublish
   displayName: Typescript Compile
 
-- script: npm run test:ci
+- script: npm run test:cover
   displayName: Run unit tests
   continueOnError: true
 
@@ -21,3 +21,6 @@ steps:
     testRunner: JUnit
     testResultsFiles: '**\junit.xml'
     testRunTitle: '$(Agent.OS) $(Agent.OSArchitecture) Test Result'
+
+- script: npm run sonar -- -Dsonar.login=$(sonar.token) -Dsonar.pullrequest.branch=$(System.PullRequest.SourceBranch) -Dsonar.pullrequest.key=$(System.PullRequest.PullRequestId)
+  displayName: sonar

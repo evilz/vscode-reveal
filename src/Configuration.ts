@@ -48,6 +48,9 @@ export interface IDocumentOptions {
 
   title: string // TODO : should take first big title or can be set
   layout: string
+  logoImg: string | null
+  description: string
+  author: string
 }
 
 export interface IExtensionOptions {
@@ -69,6 +72,9 @@ export const defaultConfiguration: Configuration = {
   layout: '',
   title: 'title',
   // tslint:disable-next-line:object-literal-sort-keys
+  logoImg: null,
+  description: '',
+  author: '',
   notesSeparator: 'note:',
   separator: '^[\r\n?|\n]---[\r\n?|\n]$',
   verticalSeparator: '^[\r\n?|\n]--[\r\n?|\n]$',

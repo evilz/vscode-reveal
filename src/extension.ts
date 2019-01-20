@@ -1,6 +1,6 @@
 'use strict'
 
-import { commands, ExtensionContext, window, workspace } from 'vscode';
+import { commands, ExtensionContext, window, workspace } from 'vscode'
 import { getChromePath } from './BrowserHelper'
 import { EXPORT_HTML, exportHTML } from './commands/exportHTML'
 import { EXPORT_PDF, exportPDF } from './commands/exportPDF'
@@ -8,7 +8,8 @@ import { GO_TO_SLIDE } from './commands/goToSlide'
 import { SHOW_REVEALJS, showRevealJS } from './commands/showRevealJS'
 import { SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser } from './commands/showRevealJSInBrowser'
 import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
-import { extensionId } from './constants';
+import { loadConfiguration } from './Configuration'
+import { extensionId } from './constants'
 import Container from './Container'
 
 export function activate(context: ExtensionContext) {
@@ -17,7 +18,7 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(disposable)
   }
 
-  const container = new Container(() => workspace.getConfiguration(extensionId) as any)
+  const container = new Container(() => loadConfiguration(() => workspace.getConfiguration(extensionId) as any))
 
   container.onDidChangeActiveTextEditor(window.activeTextEditor)
 
