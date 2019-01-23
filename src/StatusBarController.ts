@@ -14,7 +14,7 @@ export class StatusBarController {
     this.stopItem.hide()
     this.stopItem.text = `$(primitive-square)`
     this.stopItem.color = 'red'
-    this.stopItem.command = 'vscode-revealjs.KillRevealJSServer'
+    this.stopItem.command = 'vscode-revealjs.stopRevealJSServer'
 
     this.countItem = window.createStatusBarItem(StatusBarAlignment.Right, 102)
     this.countItem.command = 'vscode-revealjs.showRevealJS'
