@@ -673,7 +673,7 @@ console.log( 'Create printout for slide ' + storage[1].data[i].slide.h + "." + s
 		if( mode == 1 ) showChalkboard();
 //console.log("playback (ok)");
 		
-	}
+	};
 
 	function stopPlayback() {
 //console.log("stopPlayback");
@@ -684,7 +684,7 @@ console.log( 'Create printout for slide ' + storage[1].data[i].slide.h + "." + s
 			}
 			timeouts[id] = [];
 		}
-	}
+	};
 
 	function playEvent( id, event, timestamp ) {
 //console.log( timestamp +" / " + JSON.stringify(event));
@@ -718,7 +718,7 @@ console.log( 'Create printout for slide ' + storage[1].data[i].slide.h + "." + s
 				break;
 
 		}
-	}
+	};
 
 	function drawCurve( id, event, timestamp ) {
 		if  ( event.curve.length > 1 ) {
@@ -748,7 +748,7 @@ console.log( 'Create printout for slide ' + storage[1].data[i].slide.h + "." + s
 			}
 		}
 
-	}
+	};
 
 	function eraseCurve( id, event, timestamp ) {
 		if  ( event.curve.length > 1 ) {
@@ -773,7 +773,7 @@ console.log( 'Create printout for slide ' + storage[1].data[i].slide.h + "." + s
 			}
 		}
 
-	}
+	};
 
 
 	function startDrawing( x, y, erase ) {
@@ -1198,7 +1198,7 @@ console.log( 'Create printout for slide ' + storage[1].data[i].slide.h + "." + s
 				}
 			}
 		}
-	}
+	};
 
 	function toggleChalkboard() {
 //console.log("toggleChalkboard " + mode);
@@ -1211,7 +1211,7 @@ console.log( 'Create printout for slide ' + storage[1].data[i].slide.h + "." + s
 			showChalkboard();
 			if ( !readOnly ) recordEvent( { type:"open", begin: Date.now() - slideStart } );
 		}
-	}
+	};
 
 	function clear() {
 		if ( !readOnly ) {
@@ -1222,7 +1222,7 @@ console.log( 'Create printout for slide ' + storage[1].data[i].slide.h + "." + s
 			message.content = { sender: 'chalkboard-plugin', type: 'clear' };
 			document.dispatchEvent( message );
 		}
-	}
+	};
 
 	function resetSlide( force ) {
 		var ok = force || confirm("Please confirm to delete chalkboard drawings on this slide!");
@@ -1251,7 +1251,7 @@ console.log( 'Create printout for slide ' + storage[1].data[i].slide.h + "." + s
 			message.content = { sender: 'chalkboard-plugin', type: 'resetSlide' };
 			document.dispatchEvent( message );
 		}
-	}
+	};
 
 	function resetStorage( force ) {
 		var ok = force || confirm("Please confirm to delete all chalkboard drawings!");
@@ -1275,7 +1275,7 @@ console.log( 'Create printout for slide ' + storage[1].data[i].slide.h + "." + s
 			message.content = { sender: 'chalkboard-plugin', type: 'init', storage: storage, mode: mode };
 			document.dispatchEvent( message );
 		}
-	}
+	};
 
 	this.drawWithPen = drawWithPen;
 	this.drawWithChalk = drawWithChalk;
