@@ -3,8 +3,8 @@ import * as es6Renderer from 'express-es6-template-engine'
 import * as http from 'http'
 import * as path from 'path'
 
+import { Response } from 'request'
 import { Configuration } from './Configuration'
-import { ExportMode, saveIndex } from './ExportHTML'
 
 export class RevealServer {
   private app = express()
@@ -16,8 +16,8 @@ export class RevealServer {
     private getRootDir: () => string | null,
     private getSlideContent: () => string | null,
     private getConfiguration: () => Configuration,
-    private getMode: () => ExportMode,
-    private exportFn: (req) => Promise<void>
+    private isInExport: () => boolean,
+    private exportFn: (url: string, data: string) => void
   ) {}
 
   public get isListening() {
@@ -31,7 +31,12 @@ export class RevealServer {
   }
 
   public get uri() {
-    return this.isListening ? `http://${this.host}:${this.server!.address().port}/` : null
+    if (!this.isListening) {
+      return null
+    }
+
+    const addr = this.server!.address()
+    return typeof addr === 'string' ? addr : `http://${this.host}:${addr.port}/`
   }
   public start() {
     try {
@@ -39,7 +44,6 @@ export class RevealServer {
         this.configure()
         this.refresh()
         this.server = this.app.listen(0)
-        console.log(`Reveal-server started, opening at http://${this.host}:${this.server.address().port}`)
       }
     } catch (err) {
       throw new Error(`Cannot start server: ${err}`)
@@ -48,16 +52,15 @@ export class RevealServer {
 
   public refresh() {
     if (this.getRootDir()) {
-      this.app.use('/', this.staticDir(this.getRootDir() || ''))
+      // this.app.use('/', this.exportWrapper(this.staticDir(this.getRootDir() || '')))
     }
   }
 
   public configure() {
-    this.app.use(this.exportMiddleware())
+    this.app.use(this.exportMiddleware(this.exportFn, () => this.isInExport()))
 
     const libsPAth = path.join(__dirname, '..', '..', 'libs')
     this.app.use('/libs', express.static(libsPAth))
-
     this.app.get('/markdown.md', (req, res) => {
       res.send(this.getSlideContent())
     })
@@ -91,6 +94,7 @@ export class RevealServer {
           if (err) {
             res.send(err.message)
           } else {
+            // save here
             res.send(content)
           }
         }
@@ -98,16 +102,38 @@ export class RevealServer {
     })
   }
 
-  private exportMiddleware = () => {
+  private exportMiddleware = (exportfn, isInExport) => {
     return (req, res, next) => {
-      if (this.getMode() === ExportMode.Export) {
-        const send = res.send
-        res.send = function(data) {
-          saveIndex(this.getExportFolderPath, data)
-          send.apply(res, arguments)
+      const _exportfn = exportfn
+      const _isInExport = isInExport
+      if (_isInExport()) {
+        const oldWrite = res.write
+        const oldEnd = res.end
+        const chunks: any[] = []
+
+        // tslint:disable-next-line:only-arrow-functions
+        res.write = function(chunk) {
+          chunks.push(chunk)
+
+          oldWrite.apply(res, arguments)
         }
-        // saveContent(exportDir, rootDir, revealBasePath, req)
-        this.exportFn(req)
+
+        // tslint:disable-next-line:only-arrow-functions
+        res.end = async function(chunk) {
+          if (chunk) {
+            chunks.push(chunk)
+          }
+
+          // console.log(req.path, body)
+          try {
+            const body = Buffer.concat(chunks).toString('utf8')
+            _exportfn(req.path, body)
+          } catch (error) {
+            console.error(`can get body of ${req.path}: ${error}`)
+          }
+
+          oldEnd.apply(res, arguments)
+        }
       }
       next()
     }

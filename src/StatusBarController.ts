@@ -1,4 +1,7 @@
 import { StatusBarAlignment, StatusBarItem, window } from 'vscode'
+import { SHOW_REVEALJS } from './commands/showRevealJS'
+import { SHOW_REVEALJS_IN_BROWSER } from './commands/showRevealJSInBrowser'
+import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
 
 export class StatusBarController {
   private countItem: StatusBarItem
@@ -7,17 +10,17 @@ export class StatusBarController {
 
   constructor(private getServerUri: (() => string | null), private getSlidesCount: (() => number)) {
     this.addressItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
-    this.addressItem.command = 'vscode-revealjs.showRevealJSInBrowser'
+    this.addressItem.command = SHOW_REVEALJS_IN_BROWSER
     this.addressItem.hide()
 
     this.stopItem = window.createStatusBarItem(StatusBarAlignment.Right, 101)
     this.stopItem.hide()
     this.stopItem.text = `$(primitive-square)`
     this.stopItem.color = 'red'
-    this.stopItem.command = 'vscode-revealjs.KillRevealJSServer'
+    this.stopItem.command = STOP_REVEALJS_SERVER
 
     this.countItem = window.createStatusBarItem(StatusBarAlignment.Right, 102)
-    this.countItem.command = 'vscode-revealjs.showRevealJS'
+    this.countItem.command = SHOW_REVEALJS
     this.countItem.hide()
 
     this.update()

@@ -23,12 +23,12 @@ export function activate(context: ExtensionContext) {
   container.onDidChangeActiveTextEditor(window.activeTextEditor)
 
   const getBrowser = () => {
-    const fromConf = container.getConfiguration().browserPath
+    const fromConf = container.configuration.browserPath
     return fromConf === null ? getChromePath() : fromConf
   }
 
   console.log('"vscode-reveal" is now active')
-  commands.executeCommand('setContext', 'slideExplorerEnabled', container.getConfiguration().slideExplorerEnabled)
+  commands.executeCommand('setContext', 'slideExplorerEnabled', container.configuration.slideExplorerEnabled)
   // COMMANDS
 
   // move this directly in command file
@@ -39,7 +39,7 @@ export function activate(context: ExtensionContext) {
 
   registerCommand(GO_TO_SLIDE, arg => container.goToSlide(arg.horizontal, arg.vertical))
   registerCommand(EXPORT_PDF, exportPDF(() => container.getUri(false), getBrowser))
-  registerCommand(EXPORT_HTML, exportHTML(() => container.setExportMode(), () => container.getUri(), getBrowser))
+  registerCommand(EXPORT_HTML, exportHTML(() => container.startExport(), () => container.configuration.openFilemanagerAfterHTMLExport))
 
   // ON SELECTION CHANGE
   window.onDidChangeTextEditorSelection(e => container.onDidChangeTextEditorSelection(e))

@@ -1,9 +1,4 @@
 import * as vscode from 'vscode'
-// import IframeContentProvider from '../IframeContentProvider'
-
-const VSCODE_PREVIEWHTML = 'vscode.previewHtml'
-export type VSCODE_PREVIEWHTML = typeof VSCODE_PREVIEWHTML
-
 export const SHOW_REVEALJS = 'vscode-revealjs.showRevealJS'
 export type SHOW_REVEALJS = typeof SHOW_REVEALJS
 

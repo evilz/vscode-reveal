@@ -111,7 +111,7 @@ export const defaultConfiguration: Configuration = {
   parallaxBackgroundVertical: null,
   slideExplorerEnabled: true,
   browserPath: null,
-  exportHTMLPath: null,
+  exportHTMLPath: `./export`,
   openFilemanagerAfterHTMLExport: true
 }
 

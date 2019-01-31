@@ -1,9 +1,9 @@
-import * as vscode from 'vscode';
+// import * as vscode from 'vscode';
 // import { lazy } from './util/lazy';
 
 enum Trace {
-	Off,
-	Verbose
+  Off,
+  Verbose
 }
 
 // namespace Trace {
@@ -19,7 +19,6 @@ enum Trace {
 // 		}
 // 	}
 // }
-
 
 // function isString(value: any): value is string {
 // 	return Object.prototype.toString.call(value) === '[object String]';

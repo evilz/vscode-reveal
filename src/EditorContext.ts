@@ -1,10 +1,8 @@
 import * as matter from 'gray-matter'
 import * as path from 'path'
-import { setTimeout } from 'timers'
 import { Position, Range, Selection, TextDocument, TextEditor } from 'vscode'
-import { getExtensionOptions, IDocumentOptions } from './Configuration'
+import { IDocumentOptions } from './Configuration'
 import { ISlide } from './ISlide'
-import { RevealServer } from './RevealServer'
 import { countLines, countLinesToSlide, parseSlides } from './SlideParser'
 
 export interface ISlidePosition {

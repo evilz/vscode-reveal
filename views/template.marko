@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>reveal.js – The HTML Presentation Framework</title>
+    <title>${title}</title>
 
     <meta name="description" content="${description}">
     <meta name="author" content="${author}">
@@ -65,32 +65,35 @@
               </style>
 
 
-    <!-- ONLY when line number is true !! -->
-<link href="libs/highlight.js/9.12.0/reveal-line-numbers-mod.css" rel="stylesheet" type="text/css"/>
+    <!-- ONLY when line number is true !! 
+<link href="libs/highlight.js/9.12.0/reveal-line-numbers-mod.css" rel="stylesheet" type="text/css"/>-->
 
+<script>
+         if(window.location.search.match( /print-pdf-now/gi )) {
+           window.print();
+         }
+      </script>
 </head>
 
 <body>
 
-        <!-- LOGO -->
+        ${logoImg ? `
         <div id="gp-logo" style="position: fixed; top: 20px; left: 20px; z-index: 1">
             <img src="${logoImg}"/>
-        </div>
+        </div>` : ''}
 
     <div class="reveal">
 
         <!-- Any section element inside of this container is displayed as a slide -->
         <div class="slides">
 
-     <section data-markdown="/markdown.md" data-separator="${separator}" data-separator-vertical="${verticalSeparator}"
-                data-separator-notes="${notesSeparator}" data-charset="utf-8">
+            <section data-markdown="/markdown.md" data-separator="${separator}" data-separator-vertical="${verticalSeparator}"
+                        data-separator-notes="${notesSeparator}" data-charset="utf-8">
             </section>
-
-
         </div>
 
         
-<footer id="title-footer"><p id="notification"></p></footer>
+        <footer id="title-footer"><p id="notification"></p></footer>
 
     </div>
 
@@ -150,6 +153,29 @@
                 mathjax: 'libs/reveal.js/3.7.0/plugin/math/MathJax.js',
 					// mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
 					config: 'TeX-AMS_HTML-full'
+				},
+            chart: {
+					defaults: { 
+						global: { 
+							title: { fontColor: "#FFF" }, 
+							legend: {
+								position: "bottom",
+								labels: { fontColor: "#FFF" },
+							},
+							tooltips: {
+								labels: { fontColor: "#FFF" },
+							},
+						}, 
+						scale: { 
+							scaleLabel: { fontColor: "#FFF" }, 
+							gridLines: { color: "#FFF", zeroLineColor: "#FFF" }, 
+							ticks: { fontColor: "#FFF" }, 
+						} 
+					},
+					line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] }, 
+					bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+					pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
+					radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
 				},
             menu: {
                 // Specifies which side of the presentation the menu will 
