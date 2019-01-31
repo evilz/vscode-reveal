@@ -24,7 +24,7 @@ title_footer.getElementsByTagNames=function(list,obj)
 	if (!obj)
 	{
 		var obj=document;
-	};
+	}
 	var tagNames=list.split(',');
 	var resultArray=new Array();
 	for (var i=0;i<tagNames.length;i++)
@@ -33,13 +33,13 @@ title_footer.getElementsByTagNames=function(list,obj)
 		for (var j=0;j<tags.length;j++)
 		{
 			resultArray.push(tags[j]);
-		};
-	};
+		}
+	}
 	var testNode=resultArray[0];
 	if (!testNode)
 	{
 		return [];
-	};
+	}
 	if (testNode.sourceIndex)
 	{
 		resultArray.sort(
@@ -57,7 +57,7 @@ title_footer.getElementsByTagNames=function(list,obj)
 				return 3-(a.compareDocumentPosition(b)&6);
 			}
 		);
-	};
+	}
 	return resultArray;
 };
 
@@ -88,7 +88,7 @@ title_footer.initialize=function(title,background)
 		if (first_section.getElementsByTagName('section').length>0)
 		{
 			first_section=first_section.getElementsByTagName('section')[0];
-		};
+		}
 		var title_elements=this.getElementsByTagNames('h1,h2,h3',first_section);
 		if (title_elements.length>0)
 		{
@@ -96,9 +96,9 @@ title_footer.initialize=function(title,background)
 			for (var title_elements_index=1;title_elements_index<title_elements.length;title_elements_index++)
 			{
 				this.title=this.title+' - '+title_elements[title_elements_index].textContent;
-			};
-		};
-	};
+			}
+		}
+	}
 
 	// Create the Title-Footer footer
 
