@@ -134,5 +134,6 @@ export const defaultConfiguration: Configuration = {
 
 export const loadConfiguration = (getExtensionConf: () => any) => {
   const loaded = getExtensionConf()
-  return ({ ...defaultConfiguration, ...loaded } as any) as Configuration
+  // tslint:disable-next-line:no-object-literal-type-assertion
+  return { ...defaultConfiguration, ...loaded } as Configuration
 }
