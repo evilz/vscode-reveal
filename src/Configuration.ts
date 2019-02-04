@@ -6,11 +6,20 @@
 export type Configuration = IDocumentOptions & IExtensionOptions
 
 export interface IDocumentOptions {
+  controlsTutorial: boolean
+  controlsLayout: 'edges' | 'bottom-right'
+  controlsBackArrows: 'faded' | 'hidden' | 'visible'
+  fragmentInURL: boolean
+  autoPlayMedia: boolean
+  defaultTiming: number
+  // The display mode that will be used to show slides
+  display: 'block'
+
   separator: string
   verticalSeparator: string
   notesSeparator: string
 
-  theme?: string
+  theme: 'black' | 'white' | 'league' | 'beige' | 'sky' | 'night' | 'serif' | 'simple' | 'solarized'
   highlightTheme?: string
 
   customTheme?: string
@@ -37,9 +46,9 @@ export interface IDocumentOptions {
   mouseWheel: boolean
   hideAddressBar: boolean
   previewLinks: boolean
-  transition: string // 'default', // none/fade/slide/convex/concave/zoom
-  transitionSpeed: string // 'default', // default/fast/slow
-  backgroundTransition: string // 'default', // none/fade/slide/convex/concave/zoom
+  transition: 'default' | 'none' | 'fade' | 'slide' | 'convex' | 'concave' | 'zoom'
+  transitionSpeed: 'default' | 'fast' | 'slow'
+  backgroundTransition: 'default' | 'none' | 'fade' | 'slide' | 'convex' | 'concave' | 'zoom'
   viewDistance: number
   parallaxBackgroundImage: string // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
   parallaxBackgroundSize: string // CSS syntax, e.g. "2100px 900px"
@@ -78,6 +87,14 @@ export const defaultConfiguration: Configuration = {
   notesSeparator: 'note:',
   separator: '^[\r\n?|\n]---[\r\n?|\n]$',
   verticalSeparator: '^[\r\n?|\n]--[\r\n?|\n]$',
+
+  controlsTutorial: true,
+  controlsLayout: 'bottom-right',
+  controlsBackArrows: 'faded',
+  fragmentInURL: false,
+  autoPlayMedia: false,
+  defaultTiming: 120,
+  display: 'block',
   theme: 'black',
   highlightTheme: 'Zenburn',
   controls: true,

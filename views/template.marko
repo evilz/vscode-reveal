@@ -12,18 +12,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
     <!-- REVEAL CSS-->
     <link rel="stylesheet" href="libs/reveal.js/3.7.0/css/reveal.css">
-    <link rel="stylesheet" href="libs/reveal.js/3.7.0/css/theme/black.css" id="theme">
+    <link rel="stylesheet" href="libs/reveal.js/3.7.0/css/theme/${theme}.css" id="theme">
     <link rel="stylesheet" href="libs/reveal.js/3.7.0/plugin/title-footer/title-footer-mod.css" />
 
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="libs/reveal.js/3.7.0/lib/css/zenburn.css">
-
-    <!-- PITCH-->
-    <link href="libs/css/pitch.css" rel="stylesheet" type="text/css"/>
-    <link href="libs/css/pitchpro.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="libs/highlight.js/9.12.0/${highlightTheme}.css">
 
 
     <!-- Printing and PDF exports -->
@@ -34,20 +30,9 @@
         link.href = window.location.search.match(/print-pdf/gi) ? 'libs/reveal.js/3.7.0/css/print/pdf.css' : 'libs/reveal.js/3.7.0/css/print/paper.css';
         document.getElementsByTagName('head')[0].appendChild(link);
     </script>
-
-    <!--[if lt IE 9]>
-		<script src="lib/js/html5shiv.js"></script>
-        <![endif]-->
         
         <style>
-                .reveal .slides section .fragment.current-only {
-                  opacity: 1;
-                  visibility: visible;
-                  display: none;
-                }
-                .reveal .slides section .fragment.current-only.current-fragment {
-                  display: block;
-                }
+                
                 /* Solarized Light theme */
                 .line { display: block; }
                 .line.focus { background: #fdf6e3; color: #657b83; }
@@ -62,12 +47,63 @@
                 .line.focus .hljs-emphasis { font-style: italic; }
                 .line.focus .hljs-strong { font-weight: bold; }
                 .yellow-slide .line.focus:nth-child(2) { background: yellow; }
-              </style>
 
+    .reveal .slides section .code-presenting-annotation {
+        font-size: 70%;
+    }
+    .reveal .slides section .fragment.current-only {
+        visibility: visible;
+        display: none;
+    }
+    .reveal .slides section .fragment.current-only.current-fragment {
+        display: block;
+    }
+    .line {
+        display: block;
+    }
+    .line.focus {
+        /* opacity: 1.0; */
+    }
 
-    <!-- ONLY when line number is true !! 
-<link href="libs/highlight.js/9.12.0/reveal-line-numbers-mod.css" rel="stylesheet" type="text/css"/>-->
+.hljs {
+  background: none;
+}
 
+.reveal pre {
+  width: 98%;
+  margin: 0px;
+  box-shadow: none;
+}
+
+.reveal pre code {
+  font-size: 1.2em;
+  line-height: 1.2;
+  border-radius: 10px;
+  max-height: 60vh !important;
+  overflow: hidden !important;
+}
+
+@media (device-width: 100vw) and (device-height: 100vh) {
+  .reveal pre code {
+    max-height: 50vh !important;
+  }
+}
+
+#logo img {
+  max-height: 3.5em;
+  max-width: none;
+}
+
+.reveal .slides section .code-presenting-annotation {
+  color: white;
+  background: black;
+  padding: 0px 15px;
+  border-radius: 15px;
+  opacity: 0.75 !important;
+  font-size: 50% !important;
+}
+
+</style>
 <script>
          if(window.location.search.match( /print-pdf-now/gi )) {
            window.print();
@@ -78,7 +114,7 @@
 <body>
 
         ${logoImg ? `
-        <div id="gp-logo" style="position: fixed; top: 20px; left: 20px; z-index: 1">
+        <div id="logo" style="position: fixed; top: 20px; left: 20px; z-index: 1">
             <img src="${logoImg}"/>
         </div>` : ''}
 
@@ -92,8 +128,6 @@
             </section>
         </div>
 
-        
-        <footer id="title-footer"><p id="notification"></p></footer>
 
     </div>
 
@@ -105,13 +139,43 @@
 
         // More info https://github.com/hakimel/reveal.js#configuration
         Reveal.initialize({
-            controls: true,
-            progress: true,
-            history: true,
-            center: true,
-
-            transition: 'slide', // none/fade/slide/convex/concave/zoom
-
+           
+            controls: ${controls},
+            controlsTutorial: ${controlsTutorial},
+            controlsLayout: '${controlsLayout}',
+            controlsBackArrows: '${controlsBackArrows}',
+            progress: ${progress},
+            slideNumber: ${slideNumber},
+            history: ${history},
+            keyboard: ${keyboard},
+            overview: ${overview},
+            center: ${center},
+            touch: ${touch},
+            loop: ${loop},
+            rtl: ${rtl},
+            shuffle: ${shuffle},
+            fragments: ${fragments},
+            fragmentInURL: ${fragmentInURL},
+            embedded: ${embedded},
+            help: ${help},
+            showNotes: ${showNotes},
+            autoPlayMedia: ${autoPlayMedia},
+            autoSlide: ${autoSlide},
+            autoSlideStoppable: ${autoSlideStoppable},
+            autoSlideMethod: Reveal.navigateNext,
+            defaultTiming: ${defaultTiming},
+            mouseWheel: ${mouseWheel},
+            hideAddressBar: ${hideAddressBar},
+            previewLinks: ${previewLinks},
+            transition: '${transition}',
+            transitionSpeed: '${transitionSpeed}',
+            backgroundTransition: '${backgroundTransition}',
+            viewDistance: ${viewDistance},
+            parallaxBackgroundImage: '${parallaxBackgroundImage}',
+            parallaxBackgroundSize: '${parallaxBackgroundSize}',
+            parallaxBackgroundHorizontal: ${parallaxBackgroundHorizontal},
+            parallaxBackgroundVertical: ${parallaxBackgroundVertical},
+            display: '${display}',
 
             // More info https://github.com/hakimel/reveal.js#dependencies
             dependencies: [
@@ -218,14 +282,7 @@
                 // providing an array of objects with 'title', 'icon'
                 // properties, and either a 'src' or 'content' property.
                 // custom: false,
-                custom: [
-                
-                { title: 'Home', active: true,
-                  icon: '<i class="fa fa-bookmark">',
-                  src: '/pitchme/home/github/gitpitch/gitpitch/master/white?offline=false' },
-                
-                
-                ],
+                custom: [ ],
                 // Specifies the themes that will be available in the themes
                 // menu panel. Set to 'true' to show the themes menu panel
                 // with the default themes list. Alternatively, provide an
@@ -294,47 +351,19 @@
                 // icons. If your presentation needs to load a different
                 // font-awesome library the 'loadIcons' option can be set to false
                 // and the menu will not attempt to load the font-awesome library.
-                loadIcons: true
+                loadIcons: false
             },
+            chalkboard: { 
+		toggleChalkboardButton: { left: "60px", bottom: "30px", top: "auto", right: "auto" },
+		toggleNotesButton: { left: "90px", bottom: "30px", top: "auto", right: "auto" },
+		
+	}
         });
 
+       
+
     </script>
 
-<script>
-        function pushNotification(msg, fade) {
-          var footer = document.getElementById('title-footer')
-          var notification = document.getElementById('notification')
-          if(window.innerWidth < 700) {
-            footer.className = "footer-hidden";
-          } else {
-              footer.className = "footer-visible";
-              if(fade) {
-                notification.className = "footer-fade";
-                notification.innerHTML = msg;
-              } else {
-                notification.className = "footer-hard";
-                notification.innerHTML = msg;
-              }
-          }
-        };
-    
-        function pushHelpNotification() {
-          if(window.innerWidth < 700)
-            pushNotification("<a href='#' onclick='RevealMenu.toggle()'>Menu</a> | <a href='#' onclick='enterFullscreen()'>Fullscreen</a> | <a href='#' onclick='enterOverview()'>Overview</a> | <a href='#' onclick='enterBlackout()'>Blackout</a> | <a href='#' onclick='RevealNotes.open()'>Speaker</a> | <a href='#' onclick='enterHelp()'>Help</a>");
-          else
-            pushNotification("Navigate : Space / Arrow Keys | <a href='#' onclick='RevealMenu.toggle()'>M</a> - Menu | <a href='#' onclick='enterFullscreen()'>F</a> - Fullscreen | <a href='#' onclick='enterOverview()'>O</a> - Overview | <a href='#' onclick='enterBlackout()'>B</a> - Blackout | <a href='#' onclick='RevealNotes.open()'>S</a> - Speaker | <a href='#' onclick='enterHelp()'>?</a> - Help");
-        }
-    
-        function pushFootnoteNotification() {
-          
-            pushNotification("GitPitch - The Fastest Way From Idea To Presentation", true);
-          
-        }
-    
-        function pushCodePresentingStepNotification(step, frags) {
-          pushNotification("Code Presenting - Step " + step + " / " + frags, true);
-        }
-    </script>
 </body>
 
 </html>

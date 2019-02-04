@@ -2,6 +2,8 @@
 theme : "white"
 transition: "zoom"
 highlightTheme: "darkula"
+logoImg: "https://raw.githubusercontent.com/evilz/vscode-reveal/master/images/logo-v2.png"
+slideNumber: true
 ---
 
 # vscode-reveal
@@ -66,20 +68,20 @@ Presentations look great on touch devices, like mobile phones and tablets. Simpl
 
 ---
 
+## Markdown support
 
-						## Markdown support
-
-						Write content using inline or external Markdown.
-						Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
+Write content using inline or external Markdown.
+Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
 
 --
 
 ```
-						  ## Markdown support
+  ## Markdown support
 
-						  Write content using inline or external Markdown.
-						  Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
-						```
+  Write content using inline or external Markdown.
+  Instructions and more info available in the 
+  [readme](https://github.com/hakimel/reveal.js#markdown).
+```
 
 ---
 
@@ -555,9 +557,11 @@ An extension of the math.js plugin allowing to render LaTeX in SVG.
 
 --
 
-## title-footer
+### coucou footer
 
 Includes a footer in all the slides of a Reveal.js presentation (with optional exclusion of some slides) that will show the title of the presentation.
+
+
 
 --
 
@@ -574,9 +578,9 @@ A plugin that allows focusing on specific lines of code blocks.
 alert('hi');
 ```
 
-<p class="fragment" data-code-focus="1">This focuses on the comment.</p>
-<p class="fragment" data-code-focus="1-2">Another fragment.</p>
 
+<span class="code-presenting-annotation fragment current-only" data-code-focus="1">Present code found within any repository source file.</span>
+<span class="code-presenting-annotation fragment current-only" data-code-focus="1-2">Without ever leaving your slideshow.</span>
 
 ---
 
