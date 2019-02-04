@@ -77,48 +77,7 @@ title_footer.initialize = function(title, background) {
     }
   }
 
-<<<<<<< HEAD
   // Create the Title-Footer footer
-=======
-	this.background=background || 'rgba(0,0,0,0.1)';
-	var title=title || '';
-	if (title!='')
-	{
-		this.title=title;
-	}
-	else
-	{
-		var first_section=document.getElementsByTagName('section')[0];
-		if (first_section.getElementsByTagName('section').length>0)
-		{
-			first_section=first_section.getElementsByTagName('section')[0];
-		}
-		var title_elements=this.getElementsByTagNames('h1,h2,h3',first_section);
-		if (title_elements.length>0)
-		{
-			this.title=title_elements[0].textContent;
-			for (var title_elements_index=1;title_elements_index<title_elements.length;title_elements_index++)
-			{
-				this.title=this.title+' - '+title_elements[title_elements_index].textContent;
-			}
-		}
-	}
-
-	// Create the Title-Footer footer
-
-	var title_footer=document.createElement('footer');
-	title_footer.setAttribute('id','title-footer');
-	title_footer.setAttribute('style','background:'+this.background);
-	var title_footer_p=document.createElement('p');
-	title_footer.appendChild(title_footer_p);
-	var a_element=document.createElement('a');
-	a_element.setAttribute('href','#/0');
-	a_element.appendChild(document.createTextNode(this.title));
-	title_footer_p.appendChild(a_element);
-	var div_class_reveal=document.querySelectorAll('.reveal')[0];
-	div_class_reveal.appendChild(title_footer);
-};
->>>>>>> b022a0dc1a125162d7ac66e26d25e5e3fe5fb968
 
   var title_footer = document.createElement('footer')
   title_footer.setAttribute('id', 'title-footer')
