@@ -1,6 +1,5 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import * as copyFile from 'quickly-copy-file'
 import util = require('util')
 const writeFile = util.promisify(fs.writeFile)
 const stat = util.promisify(fs.stat)

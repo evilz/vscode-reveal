@@ -3,13 +3,11 @@ import * as es6Renderer from 'express-es6-template-engine'
 import * as http from 'http'
 import * as path from 'path'
 
-import { Response } from 'request'
 import { Configuration } from './Configuration'
 
 export class RevealServer {
   private app = express()
   private server: http.Server | null
-  private staticDir = express.static
   private host: string = 'localhost'
 
   constructor(
@@ -64,11 +62,7 @@ export class RevealServer {
     this.app.get('/markdown.md', (req, res) => {
       res.send(this.getSlideContent())
     })
-    // this.app.use('/markdown.md',express.static(this.context.editor.document.fileName))
-    // const highlightPath = path.resolve(require.resolve('highlight.js'), '..', '..')
-    // this.app.use(`/lib/css/`, this.staticDir(path.join(highlightPath, 'styles')))
 
-    // this.app.get('/', this.renderMarkdownAsSlides)
     const viewsPath = path.resolve(__dirname, '..', '..', 'views')
     this.app.engine('marko', es6Renderer)
     this.app.set('views', viewsPath)
@@ -81,14 +75,7 @@ export class RevealServer {
           locals: {
             ...this.getConfiguration()
           },
-          partials: {
-            // _codeFragHighlightStyle: 'partials/CodeFragHighlightStyle',
-            // _logo: 'partials/Logo',
-            // _notificationBarStyle: 'partials/NotificationBarStyle',
-            // _reveal: 'partials/Reveal',
-            // _revealCoreOverrides: 'partials/RevealCoreOverrides',
-            // _styleDependencies: 'partials/StyleDependencies'
-          }
+          partials: {}
         },
         (err, content) => {
           if (err) {

@@ -9,10 +9,9 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
   // tslint:disable-next-line:member-ordering
   public readonly onDidChangeTreeData: vscode.Event<SlideNode | null> = this._onDidChangeTreeData.event
 
-  constructor(private getSlide: (() => ISlide[])) {}
+  constructor(private getSlide: () => ISlide[]) {}
 
   public update() {
-    // Optimize on slide change only !!
     this._onDidChangeTreeData.fire()
   }
 
@@ -44,7 +43,7 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
           `${s.index} : ${s.title}`,
           s.verticalChildren ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None,
           {
-            arguments: [(parentIndex === undefined ? {horizontal: s.index, vertical: 0} : { horizontal: parentIndex, vertical: s.index})],
+            arguments: [parentIndex === undefined ? { horizontal: s.index, vertical: 0 } : { horizontal: parentIndex, vertical: s.index }],
             command: GO_TO_SLIDE,
             title: 'Go to slide'
           }
