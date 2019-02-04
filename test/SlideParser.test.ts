@@ -28,7 +28,7 @@ describe('Slide parser tests', () => {
 
   it('Shoud count simple slides', () => {
     const slides = parseSlides(slideContent, config)
-    slides.should.has.lengthOf(26)
+    slides.should.has.lengthOf(27)
   })
 
   it('First slide should have correct number of lines', () => {
