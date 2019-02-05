@@ -5,11 +5,11 @@ import { ISlide } from './ISlide'
 
 export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
   // tslint:disable-next-line:variable-name
-  private _onDidChangeTreeData: vscode.EventEmitter<SlideNode | null> = new vscode.EventEmitter<SlideNode | null>()
+  private readonly _onDidChangeTreeData: vscode.EventEmitter<SlideNode | null> = new vscode.EventEmitter<SlideNode | null>()
   // tslint:disable-next-line:member-ordering
   public readonly onDidChangeTreeData: vscode.Event<SlideNode | null> = this._onDidChangeTreeData.event
 
-  constructor(private getSlide: () => ISlide[]) {}
+  constructor(private readonly getSlide: () => ISlide[]) {}
 
   public update() {
     this._onDidChangeTreeData.fire()
@@ -26,7 +26,7 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
   public getChildren(element?: SlideNode): vscode.ProviderResult<SlideNode[]> {
     const slides = this.getSlide()
     return new Promise(resolve => {
-      if (element) {
+      if (element && element.slide.verticalChildren) {
         resolve(this.mapSlides(element.slide.verticalChildren, element.slide.index))
       } else {
         resolve(this.mapSlides(slides))
@@ -34,8 +34,8 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
     })
   }
 
-  private mapSlides(slides?: ISlide[], parentIndex?: number) {
-    return slides!.map(
+  private mapSlides(slides: ISlide[], parentIndex?: number) {
+    return slides.map(
       (s, i) =>
         new SlideNode(
           s,

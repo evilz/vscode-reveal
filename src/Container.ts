@@ -26,13 +26,12 @@ import { SlideTreeProvider } from './SlideExplorer'
 import { StatusBarController } from './StatusBarController'
 
 export default class Container {
-  private server: RevealServer
-  private statusBarController: StatusBarController
-  private slidesExplorer: SlideTreeProvider
+  private readonly server: RevealServer
+  private readonly statusBarController: StatusBarController
+  private readonly slidesExplorer: SlideTreeProvider
   private editorContext: EditorContext | null
   private _configuration: Configuration
   private webView: Webview | null
-  private _isInExport: boolean = false
 
   public onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent) {
     if (this.editorContext === null) {
@@ -68,9 +67,7 @@ export default class Container {
   }
 
   public onDidSaveTextDocument(e: TextDocument) {
-    //   if (document === vscode!.window!.activeTextEditor!.document) {
-    //     refreshAll()
-    //   }
+    console.log('onDidSaveTextDocument')
   }
 
   public onDidCloseTextDocument(e: TextDocument) {
@@ -78,14 +75,14 @@ export default class Container {
   }
 
   public onDidChangeConfiguration(e: ConfigurationChangeEvent) {
-    if (!e.affectsConfiguration(extensionId, null!)) {
+    if (!e.affectsConfiguration(extensionId)) {
       return
     }
 
     this._configuration = this.loadConfiguration()
   }
 
-  public constructor(private loadConfiguration: () => Configuration) {
+  public constructor(private readonly loadConfiguration: () => Configuration) {
     this._configuration = this.loadConfiguration()
 
     this.editorContext = null
@@ -161,7 +158,7 @@ export default class Container {
     return this.exportPromise
   }
 
-  private saveHtmlFn = (url: string, data: string) => saveContent(() => this.exportPath, url, data)
+  private readonly saveHtmlFn = (url: string, data: string) => saveContent(() => this.exportPath, url, data)
 
   get slides(): ISlide[] {
     return this.editorContext === null ? [] : this.editorContext.slides

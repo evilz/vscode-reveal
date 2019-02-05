@@ -20,5 +20,11 @@
     "coverage-gutters.partialHighlightDark": "rgba(121, 86, 10, 0.15)",
     "coverage-gutters.partialHighlightLight": "rgba(220, 213, 143, 0.15)",
     "coverage-gutters.showLineCoverage": true,
-    "coverage-gutters.showRulerCoverage": true
+    "coverage-gutters.showRulerCoverage": true,
+    "sonarlint.connectedMode.project": {
+        "projectKey": "evilz_vscode-reveal",
+        "serverId": "evilz-github"
+    },
+    
+
 }

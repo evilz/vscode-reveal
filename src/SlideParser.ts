@@ -16,7 +16,7 @@ export const parseSlides = (slideContent: string, slidifyOptions: IDocumentOptio
 export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, verticalIndex: number) => {
   const stopSlideIndex = verticalIndex > 0 ? horizontalIndex + 1 : horizontalIndex
 
-  const lineToSlide = slides.slice(0, stopSlideIndex).reduce((lines, slide) => {
+  return slides.slice(0, stopSlideIndex).reduce((lines, slide) => {
     const count = lines + countLines(slide.text) // + 1 // heightSeparator
 
     if (slide.verticalChildren) {
@@ -33,8 +33,6 @@ export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, ver
 
     return count
   }, 0)
-
-  return lineToSlide
 }
 
 const parseSlide = (slideContent: string, index: number, documentOption: IDocumentOptions): ISlide => {
@@ -52,10 +50,9 @@ const getVerticalSlides = (slideContent: string, documentOption: IDocumentOption
   const regex = new RegExp(documentOption.verticalSeparator, 'gm')
   const slides = slideContent.split(regex)
 
-  const verticalSlides = slides.map((s, i) => {
+  return slides.map((s, i) => {
     return { title: findTitle(s), index: i, text: s }
   })
-  return verticalSlides
 }
 
 const findTitle = (text: string) => {

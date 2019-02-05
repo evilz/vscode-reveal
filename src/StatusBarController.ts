@@ -4,11 +4,11 @@ import { SHOW_REVEALJS_IN_BROWSER } from './commands/showRevealJSInBrowser'
 import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
 
 export class StatusBarController {
-  private countItem: StatusBarItem
-  private addressItem: StatusBarItem
-  private stopItem: StatusBarItem
+  private readonly countItem: StatusBarItem
+  private readonly addressItem: StatusBarItem
+  private readonly stopItem: StatusBarItem
 
-  constructor(private getServerUri: (() => string | null), private getSlidesCount: (() => number)) {
+  constructor(private readonly getServerUri: () => string | null, private readonly getSlidesCount: () => number) {
     this.addressItem = window.createStatusBarItem(StatusBarAlignment.Right, 100)
     this.addressItem.command = SHOW_REVEALJS_IN_BROWSER
     this.addressItem.hide()
