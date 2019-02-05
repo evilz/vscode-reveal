@@ -6,16 +6,16 @@ import * as path from 'path'
 import { Configuration } from './Configuration'
 
 export class RevealServer {
-  private app = express()
+  private readonly app = express()
   private server: http.Server | null
-  private host: string = 'localhost'
+  private readonly host = 'localhost'
 
   constructor(
-    private getRootDir: () => string | null,
-    private getSlideContent: () => string | null,
-    private getConfiguration: () => Configuration,
-    private isInExport: () => boolean,
-    private exportFn: (url: string, data: string) => void
+    private readonly getRootDir: () => string | null,
+    private readonly getSlideContent: () => string | null,
+    private readonly getConfiguration: () => Configuration,
+    private readonly isInExport: () => boolean,
+    private readonly exportFn: (url: string, data: string) => void
   ) {}
 
   public get isListening() {
@@ -23,17 +23,17 @@ export class RevealServer {
   }
 
   public stop() {
-    if (this.isListening) {
-      this.server!.close()
+    if (this.isListening && this.server) {
+      this.server.close()
     }
   }
 
   public get uri() {
-    if (!this.isListening) {
+    if (!this.isListening || this.server === null) {
       return null
     }
 
-    const addr = this.server!.address()
+    const addr = this.server.address()
     return typeof addr === 'string' ? addr : `http://${this.host}:${addr.port}/`
   }
   public start() {
@@ -89,7 +89,7 @@ export class RevealServer {
     })
   }
 
-  private exportMiddleware = (exportfn, isInExport) => {
+  private readonly exportMiddleware = (exportfn, isInExport) => {
     return (req, res, next) => {
       const _exportfn = exportfn
       const _isInExport = isInExport

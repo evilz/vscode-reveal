@@ -11,6 +11,7 @@ import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
 import { loadConfiguration } from './Configuration'
 import { extensionId } from './constants'
 import Container from './Container'
+import { Logger } from './Logger'
 
 export function activate(context: ExtensionContext) {
   const registerCommand = (command: string, callback: (...args: any[]) => any, thisArg?: any) => {
@@ -18,7 +19,12 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(disposable)
   }
 
-  const container = new Container(() => loadConfiguration(() => workspace.getConfiguration(extensionId) as any))
+  const loadConfigurationFn = () => loadConfiguration(() => workspace.getConfiguration(extensionId) as any)
+
+  const startingConfig = loadConfigurationFn()
+  const logger = new Logger(startingConfig.logLevel)
+
+  const container = new Container(loadConfigurationFn, logger)
 
   container.onDidChangeActiveTextEditor(window.activeTextEditor)
 
@@ -27,34 +33,22 @@ export function activate(context: ExtensionContext) {
     return fromConf === null ? getChromePath() : fromConf
   }
 
-  console.log('"vscode-reveal" is now active')
+  logger.log('"vscode-reveal" is now active')
   commands.executeCommand('setContext', 'slideExplorerEnabled', container.configuration.slideExplorerEnabled)
-  // COMMANDS
 
-  // move this directly in command file
-  // registerCommand(SHOW_REVEALJS, showRevealJS(() => container.isMarkdownFile(), container.iframeProvider))
   registerCommand(SHOW_REVEALJS, showRevealJS(view => container.refreshWebView(view)))
   registerCommand(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() => container.getUri(), getBrowser))
   registerCommand(STOP_REVEALJS_SERVER, () => container.stopServer())
 
   registerCommand(GO_TO_SLIDE, arg => container.goToSlide(arg.horizontal, arg.vertical))
   registerCommand(EXPORT_PDF, exportPDF(() => container.getUri(false), getBrowser))
-  registerCommand(EXPORT_HTML, exportHTML(() => container.startExport(), () => container.configuration.openFilemanagerAfterHTMLExport))
+  registerCommand(EXPORT_HTML, exportHTML(logger, () => container.startExport(), () => container.configuration.openFilemanagerAfterHTMLExport))
 
-  // ON SELECTION CHANGE
   window.onDidChangeTextEditorSelection(e => container.onDidChangeTextEditorSelection(e))
-
-  // ON TAB CHANGE
   window.onDidChangeActiveTextEditor(e => container.onDidChangeActiveTextEditor(e))
-
-  // ON CHANGE TEXT
   workspace.onDidChangeTextDocument(e => container.onDidChangeTextDocument(e))
-
-  // ON SAVE
   workspace.onDidSaveTextDocument(e => container.onDidSaveTextDocument(e))
-
   workspace.onDidCloseTextDocument(e => container.onDidCloseTextDocument(e))
-
   workspace.onDidChangeConfiguration(e => container.onDidChangeConfiguration(e))
 }
 

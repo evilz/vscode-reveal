@@ -21,6 +21,7 @@ import { extensionId } from './constants'
 import { EditorContext } from './EditorContext'
 import { saveContent } from './ExportHTML'
 import { ISlide } from './ISlide'
+import { Logger } from './Logger'
 import { RevealServer } from './RevealServer'
 import { SlideTreeProvider } from './SlideExplorer'
 import { StatusBarController } from './StatusBarController'
@@ -80,9 +81,10 @@ export default class Container {
     }
 
     this._configuration = this.loadConfiguration()
+    this.logger.LogLevel = this._configuration.logLevel
   }
 
-  public constructor(private readonly loadConfiguration: () => Configuration) {
+  public constructor(private readonly loadConfiguration: () => Configuration, private readonly logger: Logger) {
     this._configuration = this.loadConfiguration()
 
     this.editorContext = null

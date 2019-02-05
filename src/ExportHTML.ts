@@ -1,10 +1,5 @@
-import * as fs from 'fs'
-import * as path from 'path'
-import util = require('util')
-const writeFile = util.promisify(fs.writeFile)
-const stat = util.promisify(fs.stat)
-const mkdir = util.promisify(fs.mkdir)
 import { outputFileSync } from 'fs-extra'
+import * as path from 'path'
 
 export const saveContent = (getExportFolderPath: () => string | null, url: string, data: string) => {
   const exportFolderName = getExportFolderPath()

@@ -1,6 +1,6 @@
 import * as matter from 'gray-matter'
 import * as path from 'path'
-import { Position, Range, Selection, TextDocument, TextEditor } from 'vscode'
+import { Position, Range, Selection, TextEditor } from 'vscode'
 import { IDocumentOptions } from './Configuration'
 import { ISlide } from './ISlide'
 import { countLines, countLinesToSlide, parseSlides } from './SlideParser'
@@ -12,7 +12,7 @@ export interface ISlidePosition {
 
 export class EditorContext {
   // re-instance when change
-  public constructor(public editor: TextEditor, private rawDocumentOptions: IDocumentOptions) {
+  public constructor(public editor: TextEditor, private readonly rawDocumentOptions: IDocumentOptions) {
     this.refresh()
   }
 
@@ -25,7 +25,6 @@ export class EditorContext {
 
   public updatePosition(cursorPosition: Position) {
     const start = new Position(0, 0)
-    // const end = this.editor.selection.active
     const range = new Range(start, cursorPosition)
 
     const content = matter(this.getDocumentText(range)).content

@@ -4,9 +4,8 @@ import { GO_TO_SLIDE } from './commands/goToSlide'
 import { ISlide } from './ISlide'
 
 export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
-  // tslint:disable-next-line:variable-name
   private readonly _onDidChangeTreeData: vscode.EventEmitter<SlideNode | null> = new vscode.EventEmitter<SlideNode | null>()
-  // tslint:disable-next-line:member-ordering
+
   public readonly onDidChangeTreeData: vscode.Event<SlideNode | null> = this._onDidChangeTreeData.event
 
   constructor(private readonly getSlide: () => ISlide[]) {}

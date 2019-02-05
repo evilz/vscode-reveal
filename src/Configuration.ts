@@ -1,3 +1,5 @@
+import { LogLevel } from './Logger'
+
 /**
  * @file Manages the configuration settings for the extension.
  * @author Vincent Bourdon @Evilznet
@@ -12,19 +14,14 @@ export interface IDocumentOptions {
   fragmentInURL: boolean
   autoPlayMedia: boolean
   defaultTiming: number
-  // The display mode that will be used to show slides
   display: 'block'
-
   separator: string
   verticalSeparator: string
   notesSeparator: string
-
   theme: 'black' | 'white' | 'league' | 'beige' | 'sky' | 'night' | 'serif' | 'simple' | 'solarized'
   highlightTheme?: string
-
   customTheme?: string
   customHighlightTheme?: string
-
   controls: boolean
   progress: boolean
   slideNumber: boolean
@@ -67,6 +64,7 @@ export interface IExtensionOptions {
   browserPath: string | null
   exportHTMLPath: string | null
   openFilemanagerAfterHTMLExport: boolean
+  logLevel: LogLevel
 }
 
 export const getDocumentOptions = (configuration: Configuration) => {
@@ -126,10 +124,12 @@ export const defaultConfiguration: Configuration = {
   parallaxBackgroundSize: '',
   parallaxBackgroundHorizontal: null,
   parallaxBackgroundVertical: null,
+
   slideExplorerEnabled: true,
   browserPath: null,
   exportHTMLPath: `./export`,
-  openFilemanagerAfterHTMLExport: true
+  openFilemanagerAfterHTMLExport: true,
+  logLevel: LogLevel.Verbose
 }
 
 export const loadConfiguration = (getExtensionConf: () => any) => {
