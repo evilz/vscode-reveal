@@ -1,22 +1,10 @@
-import * as vscode from 'vscode'
-import { extensionId } from './constants'
-
 export enum LogLevel {
   Error,
   Verbose
 }
 
 export class Logger {
-  private outputChannel: vscode.OutputChannel
-
-  private get OutputChannel() {
-    if (!this.outputChannel) {
-      this.outputChannel = vscode.window.createOutputChannel(extensionId)
-    }
-
-    return this.outputChannel
-  }
-  constructor(private logLevel: LogLevel) {}
+  constructor(private logLevel: LogLevel, private readonly appendLine: (string) => void) {}
 
   public error(message: string) {
     this.appendLine(`[error - ${new Date().toLocaleTimeString()}] ${message}`)
@@ -26,10 +14,6 @@ export class Logger {
     if (this.logLevel === LogLevel.Verbose) {
       this.appendLine(`[info - ${new Date().toLocaleTimeString()}] ${message}`)
     }
-  }
-
-  private appendLine(value: string) {
-    return this.OutputChannel.appendLine(value)
   }
 
   public get LogLevel() {

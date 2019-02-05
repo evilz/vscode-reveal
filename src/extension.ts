@@ -20,9 +20,13 @@ export function activate(context: ExtensionContext) {
   }
 
   const loadConfigurationFn = () => loadConfiguration(() => workspace.getConfiguration(extensionId) as any)
-
   const startingConfig = loadConfigurationFn()
-  const logger = new Logger(startingConfig.logLevel)
+
+  const outputChannel = window.createOutputChannel(extensionId)
+
+  const appendLine = (value: string) => outputChannel.appendLine(value)
+
+  const logger = new Logger(startingConfig.logLevel, appendLine)
 
   const container = new Container(loadConfigurationFn, logger)
 
@@ -42,7 +46,10 @@ export function activate(context: ExtensionContext) {
 
   registerCommand(GO_TO_SLIDE, arg => container.goToSlide(arg.horizontal, arg.vertical))
   registerCommand(EXPORT_PDF, exportPDF(() => container.getUri(false), getBrowser))
-  registerCommand(EXPORT_HTML, exportHTML(logger, () => container.startExport(), () => container.configuration.openFilemanagerAfterHTMLExport))
+  registerCommand(
+    EXPORT_HTML,
+    exportHTML(logger, () => container.startExport(), () => container.configuration.openFilemanagerAfterHTMLExport)
+  )
 
   window.onDidChangeTextEditorSelection(e => container.onDidChangeTextEditorSelection(e))
   window.onDidChangeActiveTextEditor(e => container.onDidChangeActiveTextEditor(e))
