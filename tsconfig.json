@@ -9,6 +9,11 @@
         "sourceMap": true,
         "rootDir": ".",
         "strictNullChecks": true,
+        "plugins": [
+            {
+              "name": "typescript-tslint-plugin"
+            }
+          ]
     },
     "exclude": [
         "node_modules",

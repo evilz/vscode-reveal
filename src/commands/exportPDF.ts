@@ -1,4 +1,3 @@
-import * as vscode from 'vscode'
 import { openInBrowser } from '../BrowserHelper'
 
 export const EXPORT_PDF = 'vscode-revealjs.exportPDF'

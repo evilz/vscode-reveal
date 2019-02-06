@@ -3,35 +3,35 @@
  * @author Vincent B. <evilznet@gmail.com>
  */
 import {
+  commands,
   ConfigurationChangeEvent,
-  Disposable,
   TextDocument,
   TextDocumentChangeEvent,
   TextEditor,
   TextEditorSelectionChangeEvent,
-  Uri,
   Webview
 } from 'vscode'
 
-import { Configuration, getDocumentOptions, loadConfiguration } from './Configuration'
+import * as path from 'path'
+
+import { debounce } from 'lodash'
+import { SHOW_REVEALJS } from './commands/showRevealJS'
+import { Configuration, getDocumentOptions } from './Configuration'
 import { extensionId } from './constants'
 import { EditorContext } from './EditorContext'
-import { ExportMode, saveContent } from './ExportHTML'
-import IframeContentProvider from './IframeContentProvider'
+import { saveContent } from './ExportHTML'
 import { ISlide } from './ISlide'
+import { Logger } from './Logger'
 import { RevealServer } from './RevealServer'
 import { SlideTreeProvider } from './SlideExplorer'
 import { StatusBarController } from './StatusBarController'
 
-import * as http from 'http'
-
 export default class Container {
-  private server: RevealServer
-  private _iframeProvider: IframeContentProvider
-  private statusBarController: StatusBarController
-  private slidesExplorer: SlideTreeProvider
+  private readonly server: RevealServer
+  private readonly statusBarController: StatusBarController
+  private readonly slidesExplorer: SlideTreeProvider
   private editorContext: EditorContext | null
-  private configuration: Configuration
+  private _configuration: Configuration
   private webView: Webview | null
 
   public onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent) {
@@ -58,8 +58,8 @@ export default class Container {
     }
     this.server.start()
     this.server.refresh()
+    this.refreshWebView()
     this.statusBarController.update()
-    this.iframeProvider.update()
     this.slidesExplorer.update()
   }
 
@@ -68,9 +68,7 @@ export default class Container {
   }
 
   public onDidSaveTextDocument(e: TextDocument) {
-    //   if (document === vscode!.window!.activeTextEditor!.document) {
-    //     refreshAll()
-    //   }
+    console.log('onDidSaveTextDocument')
   }
 
   public onDidCloseTextDocument(e: TextDocument) {
@@ -78,67 +76,91 @@ export default class Container {
   }
 
   public onDidChangeConfiguration(e: ConfigurationChangeEvent) {
-    if (!e.affectsConfiguration(extensionId, null!)) {
+    if (!e.affectsConfiguration(extensionId)) {
       return
     }
 
-    this.configuration = loadConfiguration()
+    this._configuration = this.loadConfiguration()
+    this.logger.LogLevel = this._configuration.logLevel
   }
 
-  public get iframeProvider() {
-    return this._iframeProvider
-  }
-
-  public constructor() {
-    this.configuration = loadConfiguration()
+  public constructor(private readonly loadConfiguration: () => Configuration, private readonly logger: Logger) {
+    this._configuration = this.loadConfiguration()
 
     this.editorContext = null
 
-    this.server = new RevealServer(this.getRootDir, this.getSlideContent, this.getConfiguration, this.getExportMode, this.saveHtmlFn)
+    this.server = new RevealServer(
+      () => this.rootDir,
+      () => this.slideContent,
+      () => this.configuration,
+      () => this.isInExport,
+      (req, data) => this.saveHtmlFn(req, data)
+    )
 
-    this._iframeProvider = new IframeContentProvider(() => this.getUri())
-    this._iframeProvider.register() // ?? disposable ??
-
-    // ADD subscriptiton here
-    // context.subscriptions.push((this._lineTracker = new GitLineTracker()));
-    // context.subscriptions.push((this._tracker = new GitDocumentTracker()));
-    // context.subscriptions.push((this._fileAnnotationController = new FileAnnotationController()));
-
-    // -- Status --
     this.statusBarController = new StatusBarController(() => this.server.uri, () => this.slideCount)
     this.statusBarController.update()
 
-    // -- TreeExplorer --
     this.slidesExplorer = new SlideTreeProvider(() => this.slides)
     this.slidesExplorer.register()
   }
 
-  private getRootDir = () => {
+  private get rootDir() {
     if (this.editorContext) {
       return this.editorContext.dirname
     }
-    return null
+    return ''
   }
-  private getSlideContent = () => {
+  private get slideContent() {
     if (this.editorContext) {
       return this.editorContext.slideContent
     }
     return null
   }
-  public getConfiguration = () => {
+  public get configuration() {
     return this.editorContext !== null && this.editorContext.hasfrontConfig
       ? // tslint:disable-next-line:no-object-literal-type-assertion
-        ({ ...this.configuration, ...this.editorContext.documentOptions } as Configuration)
-      : this.configuration
+        ({ ...this._configuration, ...this.editorContext.documentOptions } as Configuration)
+      : this._configuration
   }
 
-  private exportMode = ExportMode.No
-  private getExportMode = () => this.exportMode
-  public setExportMode() {
-    this.exportMode = ExportMode.Export
+  private exportPromiseResolve: (value?: string | PromiseLike<string>) => void
+  private exportPromiseReject: (reason?: any) => void
+  private endDebounce: (() => void) | null = null
+
+  get isInExport() {
+    if (this.exportPromise === null) {
+      return false
+    }
+    if (this.endDebounce !== null) {
+      this.endDebounce()
+    }
+
+    return this.exportPromise !== null
   }
 
-  private saveHtmlFn = req => saveContent(this.getExportPath, this.getRootDir, null, req)
+  private exportPromise: Promise<string> | null = null
+
+  public startExport() {
+    if (this.exportPromise === null) {
+      this.exportPromise = new Promise<string>((resolve, reject) => {
+        this.exportPromiseResolve = resolve
+        this.exportPromiseReject = reject
+      })
+
+      this.endDebounce = debounce(() => {
+        if (this.exportPromise && this.exportPromiseResolve) {
+          this.exportPromiseResolve(this.exportPath)
+          this.exportPromise = null
+          this.endDebounce = null
+        }
+      }, 800)
+    }
+
+    this.webView ? this.refreshWebView() : commands.executeCommand(SHOW_REVEALJS)
+    return this.exportPromise
+  }
+
+  private readonly saveHtmlFn = (url: string, data: string) => saveContent(() => this.exportPath, url, data)
 
   get slides(): ISlide[] {
     return this.editorContext === null ? [] : this.editorContext.slides
@@ -176,8 +198,8 @@ export default class Container {
     this.statusBarController.update()
   }
 
-  public getExportPath() {
-    return this.configuration.exportHTMLPath ? this.configuration.exportHTMLPath : this.getRootDir()
+  public get exportPath() {
+    return this.configuration.exportHTMLPath ? this.configuration.exportHTMLPath : path.join(this.rootDir, 'export')
   }
 
   public refreshWebView(view?: Webview) {

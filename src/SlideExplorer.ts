@@ -4,15 +4,13 @@ import { GO_TO_SLIDE } from './commands/goToSlide'
 import { ISlide } from './ISlide'
 
 export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
-  // tslint:disable-next-line:variable-name
-  private _onDidChangeTreeData: vscode.EventEmitter<SlideNode | null> = new vscode.EventEmitter<SlideNode | null>()
-  // tslint:disable-next-line:member-ordering
+  private readonly _onDidChangeTreeData: vscode.EventEmitter<SlideNode | null> = new vscode.EventEmitter<SlideNode | null>()
+
   public readonly onDidChangeTreeData: vscode.Event<SlideNode | null> = this._onDidChangeTreeData.event
 
-  constructor(private getSlide: (() => ISlide[])) {}
+  constructor(private readonly getSlide: () => ISlide[]) {}
 
   public update() {
-    // Optimize on slide change only !!
     this._onDidChangeTreeData.fire()
   }
 
@@ -27,7 +25,7 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
   public getChildren(element?: SlideNode): vscode.ProviderResult<SlideNode[]> {
     const slides = this.getSlide()
     return new Promise(resolve => {
-      if (element) {
+      if (element && element.slide.verticalChildren) {
         resolve(this.mapSlides(element.slide.verticalChildren, element.slide.index))
       } else {
         resolve(this.mapSlides(slides))
@@ -35,8 +33,8 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
     })
   }
 
-  private mapSlides(slides?: ISlide[], parentIndex?: number) {
-    return slides!.map(
+  private mapSlides(slides: ISlide[], parentIndex?: number) {
+    return slides.map(
       (s, i) =>
         new SlideNode(
           s,
@@ -44,7 +42,7 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
           `${s.index} : ${s.title}`,
           s.verticalChildren ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None,
           {
-            arguments: [(parentIndex === undefined ? {horizontal: s.index, vertical: 0} : { horizontal: parentIndex, vertical: s.index})],
+            arguments: [parentIndex === undefined ? { horizontal: s.index, vertical: 0 } : { horizontal: parentIndex, vertical: s.index }],
             command: GO_TO_SLIDE,
             title: 'Go to slide'
           }

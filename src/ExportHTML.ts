@@ -1,99 +1,19 @@
-import * as fs from 'fs'
+import { outputFileSync } from 'fs-extra'
 import * as path from 'path'
-import * as copyFile from 'quickly-copy-file'
 
-export enum ExportMode {
-  No,
-  Export
-}
-
-// export const getExportFolderPath = ( context: VSCodeRevealContext) => {
-//   const rootDir = path.dirname(context.editor.document.fileName)
-//   let exportFolderName = path.basename(context.editor.document.fileName, '.md') + '-export'
-//   if (context.extensionOptions.exportHTMLPath !== null && context.extensionOptions.exportHTMLPath !== '') {
-//     exportFolderName = context.extensionOptions.exportHTMLPath
-//   }
-//   return path.join(rootDir, exportFolderName)
-// }
-
-export const saveIndex = (getExportFolderPath: () => string, data) => {
-  const exportFolderName = getExportFolderPath()
-  const destFile = path.join(exportFolderName, 'index.html')
-  if (!fs.existsSync(exportFolderName)) {
-    fs.mkdirSync(exportFolderName)
-  }
-
-  fs.writeFile(destFile, data, err => {
-    if (err) {
-      console.log(err)
-    } else {
-      console.log(`create ${destFile}`)
-    }
-  })
-}
-
-const copy = async (file, dest) => {
-  try {
-    await copyFile(file, dest)
-    console.log(`${file} was copied to ${dest}`)
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-export const saveContent = async (getExportFolderPath: () => string | null, getRootdir: () => string | null, revealjsDir, req) => {
+export const saveContent = (getExportFolderPath: () => string | null, url: string, data: string) => {
   const exportFolderName = getExportFolderPath()
   if (exportFolderName === null) {
     return
   }
 
-  const rootDir = getRootdir()
-  if (rootDir === null) {
-    return
-  }
-  const staticDirs = ['/css', '/js', '/images', '/plugin', '/lib']
+  const file = url.endsWith('/') ? `${url}index.html` : url
+  const filePath = path.join(exportFolderName, file)
+  console.log(`Saving file ${filePath}`)
 
-  // highlight JS Module
-  if (req.url.indexOf(`/lib/css/`) === 0) {
-    const highlightPath = path.resolve(require.resolve('highlight.js'), '..', '..')
-    // save
-    const file = path.join(highlightPath, 'styles', req.url.replace(`/lib/css/`, ''))
-    const dest = path.join(exportFolderName, req.url)
-    await copy(file, dest)
-  } else if (staticDirs.find(dir => req.url.indexOf(dir) === 0)) {
-    // RevealJS Module or relative files
-    const file = path.join(revealjsDir, req.url)
-    const dest = path.join(exportFolderName, req.url)
-    await copy(file, dest)
-  } else if (req.url !== '/') {
-    const file = path.join(rootDir, req.url)
-    const dest = path.join(exportFolderName, req.url)
-    await copy(file, dest)
+  try {
+    outputFileSync(filePath, data)
+  } catch (error) {
+    console.error(error)
   }
 }
-
-// export const saveHtml = async (url, dir) => {
-//   const asyncFiles = [
-//     '/lib/js/classList.js',
-//     '/plugin/markdown/marked.js',
-//     '/plugin/markdown/markdown.js',
-//     '/plugin/highlight/highlight.js',
-//     '/plugin/notes/notes.js',
-//     '/plugin/math/math.js',
-//     '/css/print/paper.css'
-//   ]
-
-//   const options = {
-//     urls: [url, ...asyncFiles.map(f => url + f)],
-//     directory: dir
-//   }
-
-//   try {
-//     fs.removeSync(options.directory)
-//     // with promise
-//     // const result = await scrape(options)
-//     return options.directory
-//   } catch (err) {
-//     vscode.window.showErrorMessage('Cannot save slides in html: ' + err)
-//   }
-// }

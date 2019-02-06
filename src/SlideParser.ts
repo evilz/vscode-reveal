@@ -1,16 +1,11 @@
-import { IDocumentOptions } from './Configuration';
-import { ISlide } from './ISlide';
+import { EOL } from 'os'
+import { IDocumentOptions } from './Configuration'
+import { ISlide } from './ISlide'
 
 export const countLines = text => {
-  return text.split('\n').length
+  const eol = EOL
+  return text.split(eol).length
 }
-/**
- * Count horizontal slides
- *
- * @param {string} slideContent (w/o front matter)
- * @param {string} separator
- * @returns number of horizontal slides
- */
 
 export const parseSlides = (slideContent: string, slidifyOptions: IDocumentOptions): ISlide[] => {
   const regex = new RegExp(slidifyOptions.separator, 'gm')
@@ -21,10 +16,9 @@ export const parseSlides = (slideContent: string, slidifyOptions: IDocumentOptio
 export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, verticalIndex: number) => {
   const stopSlideIndex = verticalIndex > 0 ? horizontalIndex + 1 : horizontalIndex
 
-  const lineToSlide = slides.slice(0, stopSlideIndex).reduce((lines, slide) => {
+  return slides.slice(0, stopSlideIndex).reduce((lines, slide) => {
     const count = lines + countLines(slide.text) // + 1 // heightSeparator
 
-    // has some vertical slides
     if (slide.verticalChildren) {
       const stopVerticalAt = slide.index === horizontalIndex ? verticalIndex - 1 : slide.verticalChildren.length
 
@@ -39,8 +33,6 @@ export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, ver
 
     return count
   }, 0)
-
-  return lineToSlide
 }
 
 const parseSlide = (slideContent: string, index: number, documentOption: IDocumentOptions): ISlide => {
@@ -58,10 +50,9 @@ const getVerticalSlides = (slideContent: string, documentOption: IDocumentOption
   const regex = new RegExp(documentOption.verticalSeparator, 'gm')
   const slides = slideContent.split(regex)
 
-  const verticalSlides = slides.map((s, i) => {
+  return slides.map((s, i) => {
     return { title: findTitle(s), index: i, text: s }
   })
-  return verticalSlides
 }
 
 const findTitle = (text: string) => {

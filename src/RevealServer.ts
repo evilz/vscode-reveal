@@ -1,29 +1,21 @@
 import * as express from 'express'
 import * as es6Renderer from 'express-es6-template-engine'
-import { appendFile } from 'fs'
-import * as fs from 'fs-extra'
 import * as http from 'http'
 import * as path from 'path'
-import { TextEditor, Uri, window } from 'vscode'
 
 import { Configuration } from './Configuration'
-import { ExportMode, saveContent, saveIndex } from './ExportHTML'
 
-// tslint:disable-next-line:no-submodule-imports
-import md = require('reveal.js/plugin/markdown/markdown')
 export class RevealServer {
-  private app = express()
+  private readonly app = express()
   private server: http.Server | null
-  private staticDir = express.static
-  private host: string = 'localhost'
-  private revealBasePath = path.resolve(require.resolve('reveal.js'), '..', '..')
+  private readonly host = 'localhost'
 
   constructor(
-    private getRootDir: () => string | null,
-    private getSlideContent: () => string | null,
-    private getConfiguration: () => Configuration,
-    private getMode: () => ExportMode,
-    private exportFn: (req) => Promise<void>
+    private readonly getRootDir: () => string | null,
+    private readonly getSlideContent: () => string | null,
+    private readonly getConfiguration: () => Configuration,
+    private readonly isInExport: () => boolean,
+    private readonly exportFn: (url: string, data: string) => void
   ) {}
 
   public get isListening() {
@@ -31,13 +23,18 @@ export class RevealServer {
   }
 
   public stop() {
-    if (this.isListening) {
-      this.server!.close()
+    if (this.isListening && this.server) {
+      this.server.close()
     }
   }
 
   public get uri() {
-    return this.isListening ? Uri.parse(`http://${this.host}:${this.server!.address().port}/`) : null
+    if (!this.isListening || this.server === null) {
+      return null
+    }
+
+    const addr = this.server.address()
+    return typeof addr === 'string' ? addr : `http://${this.host}:${addr.port}/`
   }
   public start() {
     try {
@@ -45,7 +42,6 @@ export class RevealServer {
         this.configure()
         this.refresh()
         this.server = this.app.listen(0)
-        console.log(`Reveal-server started, opening at http://${this.host}:${this.server.address().port}`)
       }
     } catch (err) {
       throw new Error(`Cannot start server: ${err}`)
@@ -54,24 +50,19 @@ export class RevealServer {
 
   public refresh() {
     if (this.getRootDir()) {
-      this.app.use('/', this.staticDir(this.getRootDir() || ''))
+      // this.app.use('/', this.exportWrapper(this.staticDir(this.getRootDir() || '')))
     }
   }
 
   public configure() {
-    this.app.use(this.exportMiddleware())
+    this.app.use(this.exportMiddleware(this.exportFn, () => this.isInExport()))
 
     const libsPAth = path.join(__dirname, '..', '..', 'libs')
     this.app.use('/libs', express.static(libsPAth))
-
     this.app.get('/markdown.md', (req, res) => {
       res.send(this.getSlideContent())
     })
-    // this.app.use('/markdown.md',express.static(this.context.editor.document.fileName))
-    // const highlightPath = path.resolve(require.resolve('highlight.js'), '..', '..')
-    // this.app.use(`/lib/css/`, this.staticDir(path.join(highlightPath, 'styles')))
 
-    // this.app.get('/', this.renderMarkdownAsSlides)
     const viewsPath = path.resolve(__dirname, '..', '..', 'views')
     this.app.engine('marko', es6Renderer)
     this.app.set('views', viewsPath)
@@ -82,31 +73,15 @@ export class RevealServer {
         'template',
         {
           locals: {
-            ...this.getConfiguration(),
-            author: '',
-            controlsLayout: 'TODO',
-            customHighlightTheme: null,
-            customTheme: null,
-            description: '',
-            isDarkTheme: false,
-            logoImg: null,
-            logoPosition: 'left',
-            math: `{mathjax: 'somefile', config: 'MATHCONFIG !!!!' }`,
-            title: this.getConfiguration().title
+            ...this.getConfiguration()
           },
-          partials: {
-            // _codeFragHighlightStyle: 'partials/CodeFragHighlightStyle',
-            // _logo: 'partials/Logo',
-            // _notificationBarStyle: 'partials/NotificationBarStyle',
-            // _reveal: 'partials/Reveal',
-            // _revealCoreOverrides: 'partials/RevealCoreOverrides',
-            // _styleDependencies: 'partials/StyleDependencies'
-          }
+          partials: {}
         },
         (err, content) => {
           if (err) {
             res.send(err.message)
           } else {
+            // save here
             res.send(content)
           }
         }
@@ -114,20 +89,38 @@ export class RevealServer {
     })
   }
 
-  private getExportFolderPath() {
-    return this.getConfiguration().exportHTMLPath ? this.getConfiguration().exportHTMLPath : this.getRootDir()
-  }
-
-  private exportMiddleware = () => {
+  private readonly exportMiddleware = (exportfn, isInExport) => {
     return (req, res, next) => {
-      if (this.getMode() === ExportMode.Export) {
-        const send = res.send
-        res.send = function(data) {
-          saveIndex(this.getExportFolderPath, data)
-          send.apply(res, arguments)
+      const _exportfn = exportfn
+      const _isInExport = isInExport
+      if (_isInExport()) {
+        const oldWrite = res.write
+        const oldEnd = res.end
+        const chunks: any[] = []
+
+        // tslint:disable-next-line:only-arrow-functions
+        res.write = function(chunk) {
+          chunks.push(chunk)
+
+          oldWrite.apply(res, arguments)
         }
-        // saveContent(exportDir, rootDir, revealBasePath, req)
-        this.exportFn(req)
+
+        // tslint:disable-next-line:only-arrow-functions
+        res.end = async function(chunk) {
+          if (chunk) {
+            chunks.push(chunk)
+          }
+
+          // console.log(req.path, body)
+          try {
+            const body = Buffer.concat(chunks).toString('utf8')
+            _exportfn(req.path, body)
+          } catch (error) {
+            console.error(`can get body of ${req.path}: ${error}`)
+          }
+
+          oldEnd.apply(res, arguments)
+        }
       }
       next()
     }

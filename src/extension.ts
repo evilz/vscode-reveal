@@ -1,6 +1,6 @@
 'use strict'
-import * as vscode from 'vscode'
 
+import { commands, ExtensionContext, window, workspace } from 'vscode'
 import { getChromePath } from './BrowserHelper'
 import { EXPORT_HTML, exportHTML } from './commands/exportHTML'
 import { EXPORT_PDF, exportPDF } from './commands/exportPDF'
@@ -8,52 +8,55 @@ import { GO_TO_SLIDE } from './commands/goToSlide'
 import { SHOW_REVEALJS, showRevealJS } from './commands/showRevealJS'
 import { SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser } from './commands/showRevealJSInBrowser'
 import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
+import { loadConfiguration } from './Configuration'
+import { extensionId } from './constants'
 import Container from './Container'
+import { Logger } from './Logger'
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext) {
   const registerCommand = (command: string, callback: (...args: any[]) => any, thisArg?: any) => {
-    const disposable = vscode.commands.registerCommand(command, callback, thisArg)
+    const disposable = commands.registerCommand(command, callback, thisArg)
     context.subscriptions.push(disposable)
   }
 
-  const container = new Container()
+  const loadConfigurationFn = () => loadConfiguration(() => workspace.getConfiguration(extensionId) as any)
+  const startingConfig = loadConfigurationFn()
 
-  container.onDidChangeActiveTextEditor(vscode.window.activeTextEditor)
+  const outputChannel = window.createOutputChannel(extensionId)
+
+  const appendLine = (value: string) => outputChannel.appendLine(value)
+
+  const logger = new Logger(startingConfig.logLevel, appendLine)
+
+  const container = new Container(loadConfigurationFn, logger)
+
+  container.onDidChangeActiveTextEditor(window.activeTextEditor)
 
   const getBrowser = () => {
-    const fromConf = container.getConfiguration().browserPath
+    const fromConf = container.configuration.browserPath
     return fromConf === null ? getChromePath() : fromConf
   }
 
-  console.log('"vscode-reveal" is now active')
-  vscode.commands.executeCommand('setContext', 'slideExplorerEnabled', container.getConfiguration().slideExplorerEnabled)
-  // COMMANDS
+  logger.log('"vscode-reveal" is now active')
+  commands.executeCommand('setContext', 'slideExplorerEnabled', container.configuration.slideExplorerEnabled)
 
-  // move this directly in command file
-  // registerCommand(SHOW_REVEALJS, showRevealJS(() => container.isMarkdownFile(), container.iframeProvider))
   registerCommand(SHOW_REVEALJS, showRevealJS(view => container.refreshWebView(view)))
   registerCommand(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() => container.getUri(), getBrowser))
   registerCommand(STOP_REVEALJS_SERVER, () => container.stopServer())
 
   registerCommand(GO_TO_SLIDE, arg => container.goToSlide(arg.horizontal, arg.vertical))
   registerCommand(EXPORT_PDF, exportPDF(() => container.getUri(false), getBrowser))
-  registerCommand(EXPORT_HTML, exportHTML(() => container.setExportMode(), () => container.getUri(), getBrowser))
+  registerCommand(
+    EXPORT_HTML,
+    exportHTML(logger, () => container.startExport(), () => container.configuration.openFilemanagerAfterHTMLExport)
+  )
 
-  // ON SELECTION CHANGE
-  vscode.window.onDidChangeTextEditorSelection(e => container.onDidChangeTextEditorSelection(e))
-
-  // ON TAB CHANGE
-  vscode.window.onDidChangeActiveTextEditor(e => container.onDidChangeActiveTextEditor(e))
-
-  // ON CHANGE TEXT
-  vscode.workspace.onDidChangeTextDocument(e => container.onDidChangeTextDocument(e))
-
-  // ON SAVE
-  vscode.workspace.onDidSaveTextDocument(e => container.onDidSaveTextDocument(e))
-
-  vscode.workspace.onDidCloseTextDocument(e => container.onDidCloseTextDocument(e))
-
-  vscode.workspace.onDidChangeConfiguration(e => container.onDidChangeConfiguration(e))
+  window.onDidChangeTextEditorSelection(e => container.onDidChangeTextEditorSelection(e))
+  window.onDidChangeActiveTextEditor(e => container.onDidChangeActiveTextEditor(e))
+  workspace.onDidChangeTextDocument(e => container.onDidChangeTextDocument(e))
+  workspace.onDidSaveTextDocument(e => container.onDidSaveTextDocument(e))
+  workspace.onDidCloseTextDocument(e => container.onDidCloseTextDocument(e))
+  workspace.onDidChangeConfiguration(e => container.onDidChangeConfiguration(e))
 }
 
 // this method is called when your extension is deactivated

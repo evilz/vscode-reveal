@@ -5,12 +5,24 @@ steps:
     versionSpec: '8.x'
   displayName: 'Install Node.js'
 
-- script: npm install && npm run vscode:prepublish && npm run unittest
-  displayName: 'npm unittest'
+- script: npm install
+  displayName: Npm Install
+
+- script: npm run vscode:prepublish
+  displayName: Typescript Compile
+
+- script: npm run test:cover
+  displayName: Run unit tests
+  continueOnError: true
 
 - task: PublishTestResults@2
   displayName: Publish Test Results
   inputs:
     testRunner: JUnit
-    testResultsFiles: '**\TEST-Result.xml'
-    testRunTitle: 'Mocha Test Run'
+    testResultsFiles: '**\junit.xml'
+    testRunTitle: '$(Agent.OS) $(Agent.OSArchitecture) Test Result'
+
+- script: npm run sonar -- -Dsonar.login=$(sonar.token) -Dsonar.pullrequest.branch=$(System.PullRequest.SourceBranch) -Dsonar.pullrequest.key=$(System.PullRequest.PullRequestNumber)
+  displayName: sonar PR branch $(System.PullRequest.SourceBranch) - $(System.PullRequest.PullRequestNumber)
+
+

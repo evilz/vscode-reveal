@@ -21,3 +21,19 @@ jobs:
       vmImage: 'xcode9-macos10.13'
     steps:
       - template: azure-pipelines-steps.yml 
+
+  # - job: Release
+  #   pool:
+  #     vmImage: 'ubuntu-16.04'
+  #   dependsOn:
+  #     - Linux
+  #     - Windows
+  #     - macOS
+  #   condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  #   steps:
+  # NPM INSTALL
+  # NPM VERSION
+  # RELEASE NOTE ?
+  # PREPUBLISH
+  # vsce package
+  # vsce publish -p <token>

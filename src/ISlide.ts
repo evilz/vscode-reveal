@@ -1,5 +1,3 @@
-
-
 export interface ISlide {
   title: string
   index: number

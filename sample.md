@@ -2,6 +2,8 @@
 theme : "white"
 transition: "zoom"
 highlightTheme: "darkula"
+logoImg: "https://raw.githubusercontent.com/evilz/vscode-reveal/master/images/logo-v2.png"
+slideNumber: true
 ---
 
 # vscode-reveal
@@ -66,19 +68,20 @@ Presentations look great on touch devices, like mobile phones and tablets. Simpl
 
 ---
 
+## Markdown support
 
-						## Markdown support
-
-						Write content using inline or external Markdown.
-						Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
+Write content using inline or external Markdown.
+Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
 
 --
-```
-						  ## Markdown support
 
-						  Write content using inline or external Markdown.
-						  Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
-						```
+```
+  ## Markdown support
+
+  Write content using inline or external Markdown.
+  Instructions and more info available in the 
+  [readme](https://github.com/hakimel/reveal.js#markdown).
+```
 
 ---
 
@@ -314,6 +317,270 @@ Press B or . on your keyboard to pause the presentation. This is helpful when yo
 *   [Auto-progression](https://github.com/hakimel/reveal.js#auto-sliding)
 *   [Parallax backgrounds](https://github.com/hakimel/reveal.js#parallax-background)
 *   [Custom keyboard bindings](https://github.com/hakimel/reveal.js#keyboard-bindings)
+
+---
+
+## Plugins
+
+--
+
+## search
+
+Handles finding a text string anywhere in the slides and showing the next occurrence to the user by navigatating to that slide and highlighting it.
+
+**Shortcut : `CTRL + SHIFT + F`**
+
+
+--
+
+## Zoom
+
+Zoom anywhere on your presentation
+
+**Shortcut : `alt + click`: Zoom in. Repeat to zoom back out.**
+
+--
+
+## Notes
+
+Add note to speaker view.
+
+Default markdown syntaxe is
+
+```text
+note: a custom note here
+```
+
+--
+
+## Chalkboard
+
+Have you ever missed the traditional classroom experience where you can quickly sketch something on a chalkboard?
+
+Just press 'b' or click on the pencil button to open and close your chalkboard.
+
+--
+
+## Chalkboard
+
+- Click the `left mouse button` to write on the chalkboard
+- Click the `right mouse button` to wipe the chalkboard
+- Click the `DEL` key to clear the chalkboard
+
+--
+
+## MAKE NOTES ON SLIDES
+
+Did you notice the <i class="fa fa-pencil"></i> button?
+
+By pressing 'c' or clicking the button you can start and stop the notes taking mode allowing you to write comments and notes directly on the slide.
+
+--
+
+## Chart
+
+Add chart from simple string
+
+--
+
+### Line chart from JSON string
+<canvas class="stretch" data-chart="line">
+<!--
+{
+ "data": {
+  "labels": ["January"," February"," March"," April"," May"," June"," July"],
+  "datasets":[
+   {
+    "data":[65,59,80,81,56,55,40],
+    "label":"My first dataset","backgroundColor":"rgba(20,220,220,.8)"
+   },
+   {
+    "data":[28,48,40,19,86,27,90],
+    "label":"My second dataset","backgroundColor":"rgba(220,120,120,.8)"
+   }
+  ]
+ }, 
+ "options": { "responsive": "true" }
+}
+-->
+</canvas>
+
+--
+
+### Line chart with CSV data and JSON configuration
+
+<canvas class="stretch" data-chart="line">
+My first dataset,  65, 59, 80, 81, 56, 55, 40
+<!-- This is a comment -->
+My second dataset, 28, 48, 40, 19, 86, 27, 90
+<!-- 
+{ 
+"data" : {
+	"labels" : ["Enero", "Febrero", "Marzo", "Avril", "Mayo", "Junio", "Julio"],
+	"datasets" : [{ "borderColor": "#0f0", "borderDash": ["5","10"] }, { "borderColor": "#0ff" } ]
+	}
+}
+-->
+</canvas>
+
+--
+
+### Bar chart with CSV data
+
+<canvas class="stretch" data-chart="bar">
+,January, February, March, April, May, June, July
+My first dataset, 65, 59, 80, 81, 56, 55, 40
+My second dataset, 28, 48, 40, 19, 86, 27, 90
+</canvas>
+
+--
+
+### Stacked bar chart from CSV file with JSON configuration
+<canvas class="stretch" data-chart="bar" data-chart-src="chart/data.csv">
+<!-- 
+{
+"data" : {
+"datasets" : [{ "backgroundColor": "#0f0" }, { "backgroundColor": "#0ff" } ]
+},
+"options": { "responsive": true, "scales": { "xAxes": [{ "stacked": true }], "yAxes": [{ "stacked": true }] } }
+}
+-->
+</canvas>
+
+--
+
+### Pie chart
+
+<canvas class="stretch" data-chart="pie">
+,Black, Red, Green, Yellow
+My first dataset, 40, 40, 20, 6
+My second dataset, 45, 40, 25, 4
+</canvas>
+
+--
+
+## EMBEDDING A TWEET
+To embed a tweet, simply determine its URL and include the following code in your slides:
+
+```html
+<div class="tweet" data-src="TWEET_URL"></div>
+```
+
+--
+
+<div class="tweet" data-src="https://twitter.com/Evilznet/status/1086984843056107525"></div>
+
+--
+
+## menu
+
+A SLIDEOUT MENU FOR NAVIGATING REVEAL.JS PRESENTATIONS
+
+--
+
+See the  <i class="fa fa-bars"></i>  in the corner?
+
+Click it and the menu will open from the side.
+
+Click anywhere on the slide to return to the presentation,
+or use the close button in the menu.
+
+--
+
+If you don't like the menu button,
+you can use the slide number instead.
+
+Go on, give it a go.
+
+The menu button can be hidden using the options, 
+but you need to enable the slide number link.
+
+--
+
+Or you can open the menu by pressing the m key.
+
+You can navigate the menu with the keyboard as well. 
+Just use the arrow keys and <space> or <enter> to change slides.
+
+You can disable the keyboard for the 
+menu in the options if you wish.
+
+--
+
+## LEFT OR RIGHT
+You can configure the menu to slide in from the left or right
+
+--
+
+### MARKERS
+The slide markers in the menu can be useful to show 
+you the progress through the presentation.
+
+You can hide them if you want.
+
+You can also show/hide slide numbers.
+
+--
+
+### SLIDE TITLES
+The menu uses the first heading to label each slide
+but you can specify another label if you want.
+
+Use a data-menu-title attribute in the section element to give the slide a custom label, or add a menu-title class to any element in the slide you wish.
+
+You can change the titleSelector option and use
+any elements you like as the default for labelling each slide.
+
+--
+
+## MathSVG
+
+An extension of the math.js plugin allowing to render LaTeX in SVG.
+
+--
+
+### The Lorenz Equations
+
+\[\begin{aligned}
+\dot{x} &amp; = \sigma(y-x) \\
+\dot{y} &amp; = \rho x - y - xz \\
+\dot{z} &amp; = -\beta z + xy
+\end{aligned} \]
+
+--
+
+### The Cauchy-Schwarz Inequality
+
+<script type="math/tex; mode=display">
+  \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)
+</script>
+
+--
+
+### coucou footer
+
+Includes a footer in all the slides of a Reveal.js presentation (with optional exclusion of some slides) that will show the title of the presentation.
+
+
+
+--
+
+## code-focus
+
+A plugin that allows focusing on specific lines of code blocks.
+
+--
+
+### Code Focus Demo
+
+```js
+// Useless comment.
+alert('hi');
+```
+
+
+<span class="code-presenting-annotation fragment current-only" data-code-focus="1">Present code found within any repository source file.</span>
+<span class="code-presenting-annotation fragment current-only" data-code-focus="1-2">Without ever leaving your slideshow.</span>
 
 ---
 

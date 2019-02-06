@@ -92,3 +92,10 @@ $RECYCLE.BIN/
 *.lnk
 
 *.map
+
+
+junit.xml
+xunit.xml
+
+**/.nyc_output/*
+**/.scannerwork/*
