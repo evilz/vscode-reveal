@@ -7,6 +7,8 @@ import { LogLevel } from './Logger'
 
 export type Configuration = IDocumentOptions & IExtensionOptions
 
+type themes = 'black' | 'white' | 'league' | 'beige' | 'sky' | 'night' | 'serif' | 'simple' | 'solarized'
+type transitions = 'default' | 'none' | 'fade' | 'slide' | 'convex' | 'concave' | 'zoom'
 export interface IDocumentOptions {
   controlsTutorial: boolean
   controlsLayout: 'edges' | 'bottom-right'
@@ -18,7 +20,7 @@ export interface IDocumentOptions {
   separator: string
   verticalSeparator: string
   notesSeparator: string
-  theme: 'black' | 'white' | 'league' | 'beige' | 'sky' | 'night' | 'serif' | 'simple' | 'solarized'
+  theme: themes
   highlightTheme?: string
   customTheme?: string
   customHighlightTheme?: string
@@ -43,9 +45,9 @@ export interface IDocumentOptions {
   mouseWheel: boolean
   hideAddressBar: boolean
   previewLinks: boolean
-  transition: 'default' | 'none' | 'fade' | 'slide' | 'convex' | 'concave' | 'zoom'
+  transition: transitions
   transitionSpeed: 'default' | 'fast' | 'slow'
-  backgroundTransition: 'default' | 'none' | 'fade' | 'slide' | 'convex' | 'concave' | 'zoom'
+  backgroundTransition: transitions
   viewDistance: number
   parallaxBackgroundImage: string // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
   parallaxBackgroundSize: string // CSS syntax, e.g. "2100px 900px"
