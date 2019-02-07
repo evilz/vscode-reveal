@@ -1,5 +1,7 @@
 # vscode-reveal
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=evilz_vscode-reveal&metric=alert_status)](https://sonarcloud.io/dashboard?id=evilz_vscode-reveal)
+
 This extension let you display a reveal.js presentation directly from an opened markdown document.
 
 ![demo](https://github.com/evilz/vscode-reveal/raw/master/images/demo2.0-bis.gif)
