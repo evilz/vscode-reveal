@@ -17,10 +17,13 @@
     <link rel="stylesheet" href="libs/reveal.js/3.7.0/css/theme/${theme}.css" id="theme">
     <link rel="stylesheet" href="libs/reveal.js/3.7.0/plugin/title-footer/title-footer-mod.css" />
 
+
+
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="libs/reveal.js/3.7.0/lib/css/zenburn.css">
     <link rel="stylesheet" href="libs/highlight.js/9.12.0/${highlightTheme}.css">
 
+     ${customTheme ? `<link rel="stylesheet" href="${customTheme}.css">` : ''}
 
     <!-- Printing and PDF exports -->
     <script>

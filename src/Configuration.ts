@@ -21,9 +21,9 @@ export interface IDocumentOptions {
   verticalSeparator: string
   notesSeparator: string
   theme: themes
-  highlightTheme?: string
-  customTheme?: string
-  customHighlightTheme?: string
+  highlightTheme: string | null
+  customTheme: string | null
+  customHighlightTheme: string | null
   controls: boolean
   progress: boolean
   slideNumber: boolean
@@ -87,6 +87,9 @@ export const defaultConfiguration: Configuration = {
   notesSeparator: 'note:',
   separator: '^[\r\n?|\n]---[\r\n?|\n]$',
   verticalSeparator: '^[\r\n?|\n]--[\r\n?|\n]$',
+
+  customHighlightTheme: null,
+  customTheme: null,
 
   controlsTutorial: true,
   controlsLayout: 'bottom-right',

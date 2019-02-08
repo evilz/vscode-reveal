@@ -11,7 +11,7 @@ export class RevealServer {
   private readonly host = 'localhost'
 
   constructor(
-    private readonly getRootDir: () => string | null,
+    private readonly getRootDir: () => string,
     private readonly getSlideContent: () => string | null,
     private readonly getConfiguration: () => Configuration,
     private readonly isInExport: () => boolean,
@@ -49,9 +49,7 @@ export class RevealServer {
   }
 
   public refresh() {
-    if (this.getRootDir()) {
-      // this.app.use('/', this.exportWrapper(this.staticDir(this.getRootDir() || '')))
-    }
+    this.app.use('/', express.static(this.getRootDir()))
   }
 
   public configure() {

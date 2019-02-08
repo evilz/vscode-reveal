@@ -2,6 +2,7 @@
 import { should } from 'chai'
 import * as fs from 'fs'
 import * as matter from 'gray-matter'
+import { before, describe, it } from 'mocha'
 import * as path from 'path'
 import { defaultConfiguration, getDocumentOptions } from '../src/Configuration'
 import { countLines, parseSlides } from '../src/SlideParser'
