@@ -3,6 +3,10 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=evilz_vscode-reveal&metric=alert_status)](https://sonarcloud.io/dashboard?id=evilz_vscode-reveal)
 [![Azure Pipeline](https://evilz.visualstudio.com/vscode-reveal/_apis/build/status/2)](https://evilz.visualstudio.com/vscode-reveal/_build?definitionId=2)
 
+[![NODE.JS DEPENDENCIES](https://david-dm.org/evilz/vscode-reveal/status.svg)](https://david-dm.org/evilz/vscode-reveal)
+
+[![NODE.JS DEV DEPENDENCIES](https://david-dm.org/evilz/vscode-reveal/dev-status.svg)](https://david-dm.org/evilz/vscode-reveal?type=dev)
+
 This extension let you display a reveal.js presentation directly from an opened markdown document.
 
 ![demo](https://github.com/evilz/vscode-reveal/raw/master/images/demo2.0-bis.gif)
