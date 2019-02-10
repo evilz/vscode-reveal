@@ -93,8 +93,16 @@ export class RevealServer {
       const _isInExport = isInExport
       if (_isInExport()) {
         const oldWrite = res.write
+        const oldSend = res.send
         const oldEnd = res.end
         const chunks: any[] = []
+        let innerBody: string | null = null
+
+        // tslint:disable-next-line: only-arrow-functions
+        res.send = function(body) {
+          innerBody = body
+          oldSend.apply(res, arguments)
+        }
 
         // tslint:disable-next-line:only-arrow-functions
         res.write = function(chunk) {
@@ -111,8 +119,13 @@ export class RevealServer {
 
           // console.log(req.path, body)
           try {
-            const body = Buffer.concat(chunks).toString('utf8')
-            _exportfn(req.path, body)
+            if (innerBody) {
+              _exportfn(req.originalUrl.split('?')[0], innerBody)
+              innerBody = null
+            } else {
+              const body = Buffer.concat(chunks).toString('utf8')
+              _exportfn(req.originalUrl.split('?')[0], body)
+            }
           } catch (error) {
             console.error(`can get body of ${req.path}: ${error}`)
           }
