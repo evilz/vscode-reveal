@@ -153,7 +153,7 @@ export default class Container {
           this.exportPromise = null
           this.endDebounce = null
         }
-      }, 800)
+      }, 1500)
     }
 
     this.webView ? this.refreshWebView() : commands.executeCommand(SHOW_REVEALJS)
