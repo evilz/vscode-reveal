@@ -364,7 +364,7 @@
     "@types/lodash.debounce": "^4.0.4",
     "@types/mocha": "^5.2.5",
     "@types/mustache": "^0.8.32",
-    "@types/node": "^10.12.21",
+    "@types/node": "^11.9.4",
     "@types/open": "0.0.29",
     "@types/request": "^2.48.1",
     "chai": "^4.2.0",
