@@ -383,6 +383,6 @@
     "tslint-sonarts": "^1.9.0",
     "typescript": "^3.3.1",
     "typescript-tslint-plugin": "^0.3.1",
-    "vscode": "^1.1.27"
+    "vscode": "^1.1.32"
   }
 }
