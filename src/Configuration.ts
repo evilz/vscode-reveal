@@ -59,6 +59,12 @@ export interface IDocumentOptions {
   logoImg: string | null
   description: string
   author: string
+
+  enableMenu: boolean
+  enableChalkboard: boolean
+  enableTitleFooter: boolean
+  enableZoom: boolean
+  enableSearch: boolean
 }
 
 export interface IExtensionOptions {
@@ -134,7 +140,13 @@ export const defaultConfiguration: Configuration = {
   browserPath: null,
   exportHTMLPath: `./export`,
   openFilemanagerAfterHTMLExport: true,
-  logLevel: LogLevel.Verbose
+  logLevel: LogLevel.Verbose,
+
+  enableMenu: true,
+  enableChalkboard: true,
+  enableTitleFooter: true,
+  enableZoom: true,
+  enableSearch: true
 }
 
 export const loadConfiguration = (getExtensionConf: () => any) => {

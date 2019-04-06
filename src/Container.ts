@@ -57,7 +57,6 @@ export default class Container {
       this.editorContext = new EditorContext(editor, getDocumentOptions(this.configuration))
     }
     this.server.start()
-    this.server.refresh()
     this.refreshWebView()
     this.statusBarController.update()
     this.slidesExplorer.update()
