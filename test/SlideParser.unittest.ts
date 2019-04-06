@@ -2,7 +2,7 @@
 import { should } from 'chai'
 import * as fs from 'fs'
 import * as matter from 'gray-matter'
-import { before, describe, it } from 'mocha'
+import { before, suite, test } from 'mocha'
 import * as path from 'path'
 import { defaultConfiguration, getDocumentOptions } from '../src/Configuration'
 import { countLines, parseSlides } from '../src/SlideParser'
@@ -12,12 +12,12 @@ import { countLines, parseSlides } from '../src/SlideParser'
 const config = getDocumentOptions(defaultConfiguration)
 
 config.notesSeparator = 'note:'
-config.separator = '^[\r\n?|\n]---[\r\n?|\n]$'
-config.verticalSeparator = '^[\r\n?|\n]--[\r\n?|\n]$'
+config.separator = '^[\r\n|\n]---[\r\n|\n]$'
+config.verticalSeparator = '^[\r\n|\n]--[\r\n|\n]$'
 
 should()
 
-describe('Slide parser tests', () => {
+suite('Slide parser tests', () => {
   let slideContent = ''
 
   before(function() {
@@ -27,12 +27,12 @@ describe('Slide parser tests', () => {
     slideContent = matter(data.toString()).content
   })
 
-  it('Shoud count simple slides', () => {
+  test('Shoud count simple slides', () => {
     const slides = parseSlides(slideContent, config)
     slides.should.has.lengthOf(27)
   })
 
-  it('First slide should have correct number of lines', () => {
+  test('First slide should have correct number of lines', () => {
     const slides = parseSlides(slideContent, config)
 
     const expectedLineCount = [7, 5]

@@ -57,7 +57,6 @@ export default class Container {
       this.editorContext = new EditorContext(editor, getDocumentOptions(this.configuration))
     }
     this.server.start()
-    this.server.refresh()
     this.refreshWebView()
     this.statusBarController.update()
     this.slidesExplorer.update()
@@ -153,7 +152,7 @@ export default class Container {
           this.exportPromise = null
           this.endDebounce = null
         }
-      }, 800)
+      }, 1500)
     }
 
     this.webView ? this.refreshWebView() : commands.executeCommand(SHOW_REVEALJS)

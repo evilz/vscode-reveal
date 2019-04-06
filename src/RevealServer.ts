@@ -11,7 +11,7 @@ export class RevealServer {
   private readonly host = 'localhost'
 
   constructor(
-    private readonly getRootDir: () => string,
+    private readonly getRootDir: () => string | null,
     private readonly getSlideContent: () => string | null,
     private readonly getConfiguration: () => Configuration,
     private readonly isInExport: () => boolean,
@@ -38,9 +38,10 @@ export class RevealServer {
   }
   public start() {
     try {
-      if (!this.isListening) {
+      const rootDir = this.getRootDir()
+      if (!this.isListening && this.getRootDir()) {
         this.configure()
-        this.refresh()
+        this.refresh(rootDir)
         this.server = this.app.listen(0)
       }
     } catch (err) {
@@ -48,11 +49,11 @@ export class RevealServer {
     }
   }
 
-  public refresh() {
-    this.app.use('/', express.static(this.getRootDir()))
+  private refresh(rootDir) {
+    this.app.use('/', express.static(rootDir))
   }
 
-  public configure() {
+  private configure() {
     this.app.use(this.exportMiddleware(this.exportFn, () => this.isInExport()))
 
     const libsPAth = path.join(__dirname, '..', '..', 'libs')
@@ -91,28 +92,47 @@ export class RevealServer {
     return (req, res, next) => {
       const _exportfn = exportfn
       const _isInExport = isInExport
+
+      console.log('req', req)
       if (_isInExport()) {
-        const oldWrite = res.write
+        req.headers['if-modified-since'] = undefined
+        req.headers['if-none-match'] = undefined
+
+        const oldSend = res.send
         const oldEnd = res.end
+
         const chunks: any[] = []
+        let innerBody: string | null = null
 
-        // tslint:disable-next-line:only-arrow-functions
-        res.write = function(chunk) {
-          chunks.push(chunk)
-
-          oldWrite.apply(res, arguments)
+        // tslint:disable-next-line: only-arrow-functions
+        res.send = function(body) {
+          // console.log('send ', typeof body, body && body.length, req.path)
+          innerBody = body
+          oldSend.apply(res, arguments)
         }
 
         // tslint:disable-next-line:only-arrow-functions
         res.end = async function(chunk) {
+          // console.log('end ', typeof chunk, chunk && chunk.length, req.path)
           if (chunk) {
             chunks.push(chunk)
           }
 
           // console.log(req.path, body)
           try {
-            const body = Buffer.concat(chunks).toString('utf8')
-            _exportfn(req.path, body)
+            if (innerBody) {
+              if (innerBody.length === 0) {
+                throw 'inner body of 0 for ' + req.originalUrl
+              }
+              _exportfn(req.originalUrl.split('?')[0], innerBody)
+              innerBody = null
+            } else {
+              const body = Buffer.concat(chunks).toString('utf8')
+              if (body.length === 0) {
+                throw req.originalUrl
+              }
+              _exportfn(req.originalUrl.split('?')[0], body)
+            }
           } catch (error) {
             console.error(`can get body of ${req.path}: ${error}`)
           }

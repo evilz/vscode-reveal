@@ -99,3 +99,5 @@ xunit.xml
 
 **/.nyc_output/*
 **/.scannerwork/*
+
+/export/*

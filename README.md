@@ -1,4 +1,4 @@
-# vscode-reveal [![](https://img.shields.io/badge/Version-3.3.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=evilz.vscode-reveal)
+# vscode-reveal [![](https://img.shields.io/badge/Version-3.3.2-blue.svg)](https://marketplace.visualstudio.com/items?itemName=evilz.vscode-reveal)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=evilz_vscode-reveal&metric=alert_status)](https://sonarcloud.io/dashboard?id=evilz_vscode-reveal)
 [![Azure Pipeline](https://evilz.visualstudio.com/vscode-reveal/_apis/build/status/2)](https://evilz.visualstudio.com/vscode-reveal/_build?definitionId=2)
