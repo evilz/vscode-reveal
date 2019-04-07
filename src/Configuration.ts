@@ -91,8 +91,8 @@ export const defaultConfiguration: Configuration = {
   description: '',
   author: '',
   notesSeparator: 'note:',
-  separator: '^[\r\n?|\n]---[\r\n?|\n]$',
-  verticalSeparator: '^[\r\n?|\n]--[\r\n?|\n]$',
+  separator: '^\r?\n---\r?\n$',
+  verticalSeparator: '^\r?\n--\r?\n$',
 
   customHighlightTheme: null,
   customTheme: null,

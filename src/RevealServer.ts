@@ -122,14 +122,14 @@ export class RevealServer {
           try {
             if (innerBody) {
               if (innerBody.length === 0) {
-                throw 'inner body of 0 for ' + req.originalUrl
+                throw new Error('inner body of 0 for ' + req.originalUrl)
               }
               _exportfn(req.originalUrl.split('?')[0], innerBody)
               innerBody = null
             } else {
               const body = Buffer.concat(chunks).toString('utf8')
               if (body.length === 0) {
-                throw req.originalUrl
+                throw new Error('inner body of 0 for ' + req.originalUrl)
               }
               _exportfn(req.originalUrl.split('?')[0], body)
             }
