@@ -1,3 +1,10 @@
+### 3.4.0
+Fix issues :
+- Export html with no content in file
+- Default searators
+- Update dependencies
+- Add settings to disable some plugin
+
 ### 2.0.3
 
 Fix issues :
