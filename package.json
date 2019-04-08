@@ -365,7 +365,7 @@
     "@types/mocha": "^5.2.6",
     "@types/mustache": "^0.8.32",
     "@types/node": "^10.12.21",
-    "@types/open": "0.0.29",
+    "@types/open": "6.0.0",
     "@types/request": "^2.48.1",
     "chai": "^4.2.0",
     "mocha": "^6.0.2",
