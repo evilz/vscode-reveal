@@ -330,7 +330,9 @@
     "test:cover": "nyc mocha ./test/**/*test.ts -r ts-node/register/transpile-only -r source-map-support/register --recursive --reporter mocha-multi-reporters --reporter-options configFile=./config.json",
     "unittest-dev": "cd out && mocha",
     "lint": "tslint -t verbose 'src/**/*.ts'",
-    "sonar": "sonar-scanner -Dsonar.projectKey=evilz_vscode-reveal -Dsonar.organization=evilz-github -Dsonar.sources=./src -Dsonar.host.url=https://sonarcloud.io -Dsonar.pullrequest.base=master -Dsonar.pullrequest.provider=GitHub -Dsonar.pullrequest.github.repository=evilz/vscode-reveal"
+    "sonar": "sonar-scanner -Dsonar.projectKey=evilz_vscode-reveal -Dsonar.organization=evilz-github -Dsonar.sources=./src -Dsonar.host.url=https://sonarcloud.io -Dsonar.pullrequest.base=master -Dsonar.pullrequest.provider=GitHub -Dsonar.pullrequest.github.repository=evilz/vscode-reveal",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "nyc": {
     "extension": [
@@ -355,7 +357,8 @@
     "opn": "^5.4.0",
     "os": "^0.1.1",
     "reveal.js": "^3.7.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.11",
+    "snyk": "^1.192.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -384,5 +387,6 @@
     "typescript": "^3.4.1",
     "typescript-tslint-plugin": "^0.3.1",
     "vscode": "^1.1.33"
-  }
+  },
+  "snyk": true
 }
