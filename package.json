@@ -374,7 +374,7 @@
     "nyc": "^13.3.0",
     "request": "^2.88.0",
     "sonarqube-scanner": "^2.4.0",
-    "source-map-support": "^0.5.10",
+    "source-map-support": "^0.5.13",
     "ts-node": "^8.0.2",
     "tslint": "^5.15.0",
     "tslint-config-prettier": "^1.18.0",
