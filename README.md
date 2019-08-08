@@ -25,6 +25,7 @@ This extension let you display a reveal.js presentation directly from an opened 
 - [Open in browser](#browser)
 - [Print to PDF](#pdf)
 - [Export static Website](#htmlexport)
+- [Plugins](#plugins)
 - [FAQ](#faq)
 
 ## <a id="markdown"></a> Markdown
@@ -187,6 +188,48 @@ To export your presentation to a static website you can:
 
 
 This will try to launch Chrome in headless or your default browser it takes about 10sec and then open the export folder.
+
+## <a id="plugins"></a> Plugins
+
+### Disable slideout menu
+
+```
+---
+enableMenu: false
+---
+```
+
+### Disable chalkboard
+
+```
+---
+enableChalkboard: false
+---
+```
+
+### Disable title footer
+
+```
+---
+enableTitleFooter: false
+---
+```
+
+### Disable zoom
+
+```
+---
+enableZoom: false
+---
+```
+
+### Disable search
+
+```
+---
+enableSearch: false
+---
+```
 
 ## <a id="faq"></a> FAQ
 
