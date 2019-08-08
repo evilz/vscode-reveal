@@ -352,7 +352,7 @@
     "express-es6-template-engine": "^2.1.7",
     "fs-extra": "^7.0.1",
     "gray-matter": "^4.0.2",
-    "opn": "^5.4.0",
+    "opn": "^6.0.0",
     "os": "^0.1.1",
     "reveal.js": "^3.7.0",
     "lodash": "^4.17.11"
