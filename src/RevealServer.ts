@@ -51,10 +51,10 @@ export class RevealServer {
 
   private refresh(rootDir) {
     this.app.use('/', express.static(rootDir))
-    //this.app.use('/', gzip(rootDir, {
+    // this.app.use('/', gzip(rootDir, {
     //  enableBrotli: true,
     //  orderPreference: ['br']
-    //}))
+    // }))
   }
 
   private configure() {
