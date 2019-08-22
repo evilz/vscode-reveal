@@ -349,7 +349,7 @@
   },
   "dependencies": {
     "express": "^4.16.4",
-    "express-es6-template-engine": "^2.1.7",
+    "express-es6-template-engine": "^2.1.9",
     "fs-extra": "^7.0.1",
     "gray-matter": "^4.0.2",
     "opn": "^6.0.0",
