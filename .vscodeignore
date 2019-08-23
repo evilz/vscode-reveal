@@ -8,3 +8,9 @@ src/**
 .gitignore
 tsconfig.json
 vsc-extension-quickstart.md
+sample.md
+sample.pdf
+sample2.md
+coverconfig.json
+azure-pipelines.yml
+azure-pipelines-steps.yml

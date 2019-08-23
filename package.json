@@ -84,12 +84,12 @@
         },
         "revealjs.separator": {
           "type": "string",
-          "default": "^\r?\n---\r?\n$",
+          "default": "^\\r?\\n---\\r?\\n$",
           "description": "Revealjs markdown slide separator"
         },
         "revealjs.verticalSeparator": {
           "type": "string",
-          "default": "^\r?\n--\r?\n$",
+          "default": "^\\r?\\n--\\r?\\n$",
           "description": "Revealjs markdown vertical separator"
         },
         "revealjs.theme": {
@@ -354,7 +354,7 @@
     "gray-matter": "^4.0.2",
     "opn": "^6.0.0",
     "os": "^0.1.1",
-    "reveal.js": "^3.7.0",
+    "reveal.js": "^3.8.0",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
