@@ -16,7 +16,7 @@ export class RevealServer {
     private readonly getConfiguration: () => Configuration,
     private readonly isInExport: () => boolean,
     private readonly exportFn: (url: string, data: string) => void
-  ) {}
+  ) { }
 
   public get isListening() {
     return this.server ? this.server.listening : false
@@ -105,14 +105,14 @@ export class RevealServer {
         let innerBody: string | null = null
 
         // tslint:disable-next-line: only-arrow-functions
-        res.send = function(body) {
+        res.send = function (body) {
           // console.log('send ', typeof body, body && body.length, req.path)
           innerBody = body
           oldSend.apply(res, arguments)
         }
 
         // tslint:disable-next-line:only-arrow-functions
-        res.end = async function(chunk) {
+        res.end = async function (chunk) {
           // console.log('end ', typeof chunk, chunk && chunk.length, req.path)
           if (chunk) {
             chunks.push(chunk)
