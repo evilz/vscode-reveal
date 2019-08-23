@@ -18,7 +18,7 @@ var title_footer = {
 
 /* Function to obtain all child elements with any of the indicated tags (from http://www.quirksmode.org/dom/getElementsByTagNames.html) */
 
-title_footer.getElementsByTagNames = function(list, obj) {
+title_footer.getElementsByTagNames = function (list, obj) {
   if (!obj) {
     var obj = document
   }
@@ -35,11 +35,11 @@ title_footer.getElementsByTagNames = function(list, obj) {
     return []
   }
   if (testNode.sourceIndex) {
-    resultArray.sort(function(a, b) {
+    resultArray.sort(function (a, b) {
       return a.sourceIndex - b.sourceIndex
     })
   } else if (testNode.compareDocumentPosition) {
-    resultArray.sort(function(a, b) {
+    resultArray.sort(function (a, b) {
       return 3 - (a.compareDocumentPosition(b) & 6)
     })
   }
@@ -48,11 +48,11 @@ title_footer.getElementsByTagNames = function(list, obj) {
 
 /* Method to initialize the Title-Footer footer */
 
-title_footer.initialize = function(title, background) {
+title_footer.initialize = function (title, background) {
   // Link to the Title-Footer CSS
 
   var link = document.createElement('link')
-  link.href = 'libs/reveal.js/3.7.0/plugin/title-footer/title-footer.css'
+  link.href = 'libs/reveal.js/3.8.0/plugin/title-footer/title-footer.css'
   link.type = 'text/css'
   link.rel = 'stylesheet'
   document.getElementsByTagName('head')[0].appendChild(link)

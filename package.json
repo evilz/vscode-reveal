@@ -84,12 +84,12 @@
         },
         "revealjs.separator": {
           "type": "string",
-          "default": "^\r?\n---\r?\n$",
+          "default": "^\\r?\\n---\\r?\\n$",
           "description": "Revealjs markdown slide separator"
         },
         "revealjs.verticalSeparator": {
           "type": "string",
-          "default": "^\r?\n--\r?\n$",
+          "default": "^\\r?\\n--\\r?\\n$",
           "description": "Revealjs markdown vertical separator"
         },
         "revealjs.theme": {
