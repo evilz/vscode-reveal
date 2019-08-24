@@ -1,22 +1,24 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es6",
+        "target": "es2018",
         "outDir": "out",
         "lib": [
-            "es6"
+            "es2018"
         ],
         "sourceMap": true,
         "rootDir": ".",
         "strictNullChecks": true,
         "plugins": [
             {
-              "name": "typescript-tslint-plugin"
+                "name": "typescript-tslint-plugin"
             }
-          ]
+        ],
+        "types": []
     },
     "exclude": [
         "node_modules",
-        ".vscode-test"
+        ".vscode-test",
+        "test"
     ]
 }
