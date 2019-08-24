@@ -1,10 +1,8 @@
-import { EOL } from 'os'
-import { IDocumentOptions } from './Configuration'
-import { ISlide } from './ISlide'
+import { IDocumentOptions } from './Configuration';
+import { ISlide } from './ISlide';
 
 export const countLines = text => {
-  const eol = EOL
-  return text.split(eol).length
+  return text.split("\n").length
 }
 
 export const parseSlides = (slideContent: string, slidifyOptions: IDocumentOptions): ISlide[] => {
@@ -13,26 +11,31 @@ export const parseSlides = (slideContent: string, slidifyOptions: IDocumentOptio
   return slides.map((s, i) => parseSlide(s, i, slidifyOptions))
 }
 
-export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, verticalIndex: number) => {
+const lineInSeparator = (separator: string) => (separator.match(/\\n/gm) || []).length
+
+export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, verticalIndex: number, slidifyOptions: IDocumentOptions) => {
   const stopSlideIndex = verticalIndex > 0 ? horizontalIndex + 1 : horizontalIndex
-
+  const separatorHeight = lineInSeparator(slidifyOptions.separator)
+  const verticalSeparatorHeight = lineInSeparator(slidifyOptions.verticalSeparator)
   return slides.slice(0, stopSlideIndex).reduce((lines, slide) => {
-    const count = lines + countLines(slide.text) // + 1 // heightSeparator
 
-    if (slide.verticalChildren) {
-      const stopVerticalAt = slide.index === horizontalIndex ? verticalIndex - 1 : slide.verticalChildren.length
+    const lineInSlide = countLines(slide.text)
+    const count = lines + countLines(slide.text) + separatorHeight
 
-      const innerCount = slide.verticalChildren
-        ? slide.verticalChildren.slice(0, stopVerticalAt).reduce((innerLines, innerSlide) => {
-            return innerLines + countLines(innerSlide.text) // + 1 // heightVerticalSeparator
-          }, 0)
-        : 0
-
-      return count + innerCount
-    }
-
-    return count
+    return slide.verticalChildren
+      ? count + addChildrenSlideLines(slide, horizontalIndex, verticalIndex, verticalSeparatorHeight)
+      : count
   }, 0)
+}
+
+const addChildrenSlideLines = (slide, horizontalIndex, verticalIndex, verticalSeparatorHeight) => {
+  const stopVerticalAt = slide.index === horizontalIndex ? verticalIndex - 1 : slide.verticalChildren.length
+
+  return slide.verticalChildren
+    ? slide.verticalChildren.slice(0, stopVerticalAt).reduce((innerLines, innerSlide) => {
+      return innerLines + countLines(innerSlide.text) + verticalSeparatorHeight
+    }, 0)
+    : 0
 }
 
 const parseSlide = (slideContent: string, index: number, documentOption: IDocumentOptions): ISlide => {
@@ -64,5 +67,6 @@ const findTitle = (text: string) => {
     .replace(/\r\n/g, '\n') // nomalize line return
     .replace(/^\s*\n/gm, '') // remove whitespace lines
     .split('\n')
-  return lines[0]
+  return lines[0].trim()
 }
+
