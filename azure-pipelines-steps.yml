@@ -1,28 +1,25 @@
-
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '8.x'
-  displayName: 'Install Node.js'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "8.x"
+    displayName: "Install Node.js"
 
-- script: npm install
-  displayName: Npm Install
+  - script: npm install
+    displayName: Npm Install
 
-- script: npm run vscode:prepublish
-  displayName: Typescript Compile
+  - script: npm run vscode:prepublish
+    displayName: Typescript Compile
 
-- script: npm run test:cover
-  displayName: Run unit tests
-  continueOnError: true
+  - script: npm run coverage
+    displayName: Run unit tests
+    continueOnError: true
 
-- task: PublishTestResults@2
-  displayName: Publish Test Results
-  inputs:
-    testRunner: JUnit
-    testResultsFiles: '**\junit.xml'
-    testRunTitle: '$(Agent.OS) $(Agent.OSArchitecture) Test Result'
+  - task: PublishTestResults@2
+    displayName: Publish Test Results
+    inputs:
+      testRunner:
+      testResultsFiles: '**\junit.xml'
+      testRunTitle: "$(Agent.OS) $(Agent.OSArchitecture) Test Result"
 
-- script: npm run sonar -- -Dsonar.login=$(sonar.token) -Dsonar.pullrequest.branch=$(System.PullRequest.SourceBranch) -Dsonar.pullrequest.key=$(System.PullRequest.PullRequestNumber)
-  displayName: sonar PR branch $(System.PullRequest.SourceBranch) - $(System.PullRequest.PullRequestNumber)
-
-
+  - script: npm run sonar -- -Dsonar.login=$(sonar.token) -Dsonar.pullrequest.branch=$(System.PullRequest.SourceBranch) -Dsonar.pullrequest.key=$(System.PullRequest.PullRequestNumber)
+    displayName: sonar PR branch $(System.PullRequest.SourceBranch) - $(System.PullRequest.PullRequestNumber)
