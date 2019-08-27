@@ -14,7 +14,10 @@
                 "name": "typescript-tslint-plugin"
             }
         ],
-        "types": []
+        "types": [
+            "jest",
+            "node"
+        ]
     },
     "exclude": [
         "node_modules",
