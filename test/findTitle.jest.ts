@@ -1,5 +1,5 @@
-import { defaultConfiguration } from './../src/Configuration';
 import { parseSlides } from '../src/SlideParser'
+import { defaultConfiguration } from './../src/Configuration';
 
 
 test('Should retrieve title from content', () => {

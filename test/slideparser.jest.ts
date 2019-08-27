@@ -1,6 +1,6 @@
-import { ISlide } from './../src/ISlide';
 import { defaultConfiguration, getDocumentOptions } from '../src/Configuration'
-import { countLines, parseSlides, countLinesToSlide } from '../src/SlideParser'
+import { countLines, countLinesToSlide, parseSlides } from '../src/SlideParser'
+import { ISlide } from './../src/ISlide';
 
 // const sampleFile = fs.readFileSync('../sample.md').toString()
 
