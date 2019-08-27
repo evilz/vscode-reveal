@@ -113,7 +113,6 @@ test('Should count vertical slides', () => {
 })
 
 test('Slides should have correct number of lines', () => {
-    const slides = parseSlides(slideContent, config)
 
     expect(countLines(slides[0].text)).toBe(4)
     expect(countLines(slides[1].text)).toBe(7)

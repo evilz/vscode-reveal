@@ -17,7 +17,7 @@ steps:
   - task: PublishTestResults@2
     displayName: Publish Test Results
     inputs:
-      testRunner:
+      testRunner: junit
       testResultsFiles: "junit.xml"
       testRunTitle: "$(Agent.OS) $(Agent.OSArchitecture) Test Result"
 
