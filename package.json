@@ -326,14 +326,29 @@
     "compile": "tsc -watch -p ./",
     "postinstall": "node ./node_modules/vscode/bin/install",
     "build": "tsc -p ./",
-    "test": "node ./node_modules/vscode/bin/test",
-    "preunittest": "tsc -p ./",
-    "unittest-ci": "cd out && mocha --reporter mocha-junit-reporter --reporter-options mochaFile=TEST-Result.xml",
-    "test:ci": "mocha ./test/**/*unittest.ts -r ts-node/register --reporter mocha-multi-reporters --reporter-options configFile=./config.json",
-    "test:cover": "nyc mocha ./test/**/*test.ts -r ts-node/register/transpile-only -r source-map-support/register --recursive --reporter mocha-multi-reporters --reporter-options configFile=./config.json",
+    "test:vscode": "node ./node_modules/vscode/bin/test",
+    "test": "jest",
+    "coverage": "jest --coverage",
     "unittest-dev": "cd out && mocha",
     "lint": "tslint -t verbose './'",
     "sonar": "sonar-scanner -Dsonar.projectKey=evilz_vscode-reveal -Dsonar.organization=evilz-github -Dsonar.sources=./src -Dsonar.host.url=https://sonarcloud.io -Dsonar.pullrequest.base=master -Dsonar.pullrequest.provider=GitHub -Dsonar.pullrequest.github.repository=evilz/vscode-reveal"
+  },
+  "jest": {
+    "verbose": true,
+    "preset": "ts-jest",
+    "testMatch": [
+      "**/test/**/*.jest.ts"
+    ],
+    "coverageReporters": [
+      "lcov",
+      "text"
+    ],
+    "collectCoverageFrom": [
+      "**/src/**/*.ts",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ],
+    "testResultsProcessor": "jest-junit"
   },
   "nyc": {
     "extension": [
@@ -365,6 +380,7 @@
     "@types/express": "^4.17.0",
     "@types/express-serve-static-core": "^4.16.7",
     "@types/glob": "^7.1.1",
+    "@types/jest": "^24.0.18",
     "@types/lodash.debounce": "^4.0.6",
     "@types/mocha": "^5.2.7",
     "@types/mustache": "^0.8.32",
@@ -375,6 +391,8 @@
     "@types/webpack": "^4.32.1",
     "chai": "^4.2.0",
     "fs-plus": "^3.1.1",
+    "jest": "^24.9.0",
+    "jest-junit": "^8.0.0",
     "mocha": "^6.2.0",
     "mocha-junit-reporter": "^1.23.1",
     "mocha-multi-reporters": "^1.1.7",
@@ -385,6 +403,9 @@
     "ts-loader": "^6.0.4",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
+    "ts-jest": "^24.0.2",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.15.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-microsoft-contrib": "^6.2.0",
