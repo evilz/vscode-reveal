@@ -5,12 +5,12 @@
 import {
   commands,
   ConfigurationChangeEvent,
+  ExtensionContext,
   TextDocument,
   TextDocumentChangeEvent,
   TextEditor,
   TextEditorSelectionChangeEvent,
-  Webview,
-  ExtensionContext
+  Webview
 } from 'vscode'
 
 import * as path from 'path'
