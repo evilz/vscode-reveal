@@ -1,5 +1,6 @@
 # output
 /out
+/dist
 
 # vscode 
 /.vscode-test

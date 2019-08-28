@@ -28,7 +28,7 @@ export function activate(context: ExtensionContext) {
 
   const logger = new Logger(startingConfig.logLevel, appendLine)
 
-  const container = new Container(loadConfigurationFn, logger)
+  const container = new Container(loadConfigurationFn, logger, context)
 
   container.onDidChangeActiveTextEditor(window.activeTextEditor)
 

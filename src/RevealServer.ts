@@ -14,9 +14,10 @@ export class RevealServer {
     private readonly getRootDir: () => string | null,
     private readonly getSlideContent: () => string | null,
     private readonly getConfiguration: () => Configuration,
+    private readonly extensionPath: string,
     private readonly isInExport: () => boolean,
     private readonly exportFn: (url: string, data: string) => void
-  ) {}
+  ) { }
 
   public get isListening() {
     return this.server ? this.server.listening : false
@@ -56,13 +57,13 @@ export class RevealServer {
   private configure() {
     this.app.use(this.exportMiddleware(this.exportFn, () => this.isInExport()))
 
-    const libsPAth = path.join(__dirname, '..', '..', 'libs')
+    const libsPAth = path.join(this.extensionPath, 'libs')
     this.app.use('/libs', express.static(libsPAth))
     this.app.get('/markdown.md', (req, res) => {
       res.send(this.getSlideContent())
     })
 
-    const viewsPath = path.resolve(__dirname, '..', '..', 'views')
+    const viewsPath = path.resolve(this.extensionPath, 'views')
     this.app.engine('marko', es6Renderer)
     this.app.set('views', viewsPath)
     this.app.set('view engine', 'marko')
@@ -105,14 +106,14 @@ export class RevealServer {
         let innerBody: string | null = null
 
         // tslint:disable-next-line: only-arrow-functions
-        res.send = function(body) {
+        res.send = function (body) {
           // console.log('send ', typeof body, body && body.length, req.path)
           innerBody = body
           oldSend.apply(res, arguments)
         }
 
         // tslint:disable-next-line:only-arrow-functions
-        res.end = async function(chunk) {
+        res.end = async function (chunk) {
           // console.log('end ', typeof chunk, chunk && chunk.length, req.path)
           if (chunk) {
             chunks.push(chunk)
