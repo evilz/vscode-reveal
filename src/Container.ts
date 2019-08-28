@@ -9,7 +9,8 @@ import {
   TextDocumentChangeEvent,
   TextEditor,
   TextEditorSelectionChangeEvent,
-  Webview
+  Webview,
+  ExtensionContext
 } from 'vscode'
 
 import * as path from 'path'
@@ -83,7 +84,7 @@ export default class Container {
     this.logger.LogLevel = this._configuration.logLevel
   }
 
-  public constructor(private readonly loadConfiguration: () => Configuration, private readonly logger: Logger) {
+  public constructor(private readonly loadConfiguration: () => Configuration, private readonly logger: Logger, private extensionContext: ExtensionContext) {
     this._configuration = this.loadConfiguration()
 
     this.editorContext = null
@@ -92,6 +93,7 @@ export default class Container {
       () => this.rootDir,
       () => this.slideContent,
       () => this.configuration,
+      this.extensionContext.extensionPath,
       () => this.isInExport,
       (req, data) => this.saveHtmlFn(req, data)
     )
@@ -118,7 +120,7 @@ export default class Container {
   public get configuration() {
     return this.editorContext !== null && this.editorContext.hasfrontConfig
       ? // tslint:disable-next-line:no-object-literal-type-assertion
-        ({ ...this._configuration, ...this.editorContext.documentOptions } as Configuration)
+      ({ ...this._configuration, ...this.editorContext.documentOptions } as Configuration)
       : this._configuration
   }
 

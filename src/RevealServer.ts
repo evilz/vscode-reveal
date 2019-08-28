@@ -14,6 +14,7 @@ export class RevealServer {
     private readonly getRootDir: () => string | null,
     private readonly getSlideContent: () => string | null,
     private readonly getConfiguration: () => Configuration,
+    private readonly extensionPath: string,
     private readonly isInExport: () => boolean,
     private readonly exportFn: (url: string, data: string) => void
   ) { }
@@ -56,13 +57,13 @@ export class RevealServer {
   private configure() {
     this.app.use(this.exportMiddleware(this.exportFn, () => this.isInExport()))
 
-    const libsPAth = path.join(__dirname, '..', '..', 'libs')
+    const libsPAth = path.join(this.extensionPath, 'libs')
     this.app.use('/libs', express.static(libsPAth))
     this.app.get('/markdown.md', (req, res) => {
       res.send(this.getSlideContent())
     })
 
-    const viewsPath = path.resolve(__dirname, '..', '..', 'views')
+    const viewsPath = path.resolve(this.extensionPath, 'views')
     this.app.engine('marko', es6Renderer)
     this.app.set('views', viewsPath)
     this.app.set('view engine', 'marko')

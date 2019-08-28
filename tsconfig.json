@@ -3,7 +3,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "target": "es6",
-        "outDir": "out",
+        "outDir": "dist",
         "lib": [
             "es6"
         ],
@@ -12,9 +12,9 @@
         "strictNullChecks": true,
         "plugins": [
             {
-              "name": "typescript-tslint-plugin"
+                "name": "typescript-tslint-plugin"
             }
-          ]
+        ]
     },
     "exclude": [
         "node_modules",

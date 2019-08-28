@@ -29,7 +29,7 @@
     "onCommand:vscode-revealjs.showRevealJS",
     "onCommand:vscode-revealjs.showRevealJSInBrowser"
   ],
-  "main": "./out/src/extension",
+  "main": "./dist/extension",
   "contributes": {
     "commands": [
       {
@@ -319,7 +319,7 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run build && webpack --mode production",
+    "vscode:prepublish": "webpack --mode production",
     "webpack": "webpack --mode development",
     "webpack-dev": "webpack --mode development --watch",
     "test-compile": "tsc -p ./",
@@ -332,7 +332,7 @@
     "test:ci": "mocha ./test/**/*unittest.ts -r ts-node/register --reporter mocha-multi-reporters --reporter-options configFile=./config.json",
     "test:cover": "nyc mocha ./test/**/*test.ts -r ts-node/register/transpile-only -r source-map-support/register --recursive --reporter mocha-multi-reporters --reporter-options configFile=./config.json",
     "unittest-dev": "cd out && mocha",
-    "lint": "tslint -t verbose 'src/**/*.ts'",
+    "lint": "tslint -t verbose './'",
     "sonar": "sonar-scanner -Dsonar.projectKey=evilz_vscode-reveal -Dsonar.organization=evilz-github -Dsonar.sources=./src -Dsonar.host.url=https://sonarcloud.io -Dsonar.pullrequest.base=master -Dsonar.pullrequest.provider=GitHub -Dsonar.pullrequest.github.repository=evilz/vscode-reveal"
   },
   "nyc": {
