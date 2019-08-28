@@ -94,7 +94,7 @@ export class EditorContext {
   }
 
   public goToSlide(topindex: number, verticalIndex: number) {
-    const linesCount = countLinesToSlide(this.slides, topindex, verticalIndex) + this.frontMatterLineCount
+    const linesCount = countLinesToSlide(this.slides, topindex, verticalIndex, this.documentOptions) + this.frontMatterLineCount
 
     const position = new Position(linesCount + 1, 0) // ugly + 1 to go to real first line
     this.editor.selections = [new Selection(position, position)]
