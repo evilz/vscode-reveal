@@ -363,7 +363,7 @@
     "all": true
   },
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "express-es6-template-engine": "^2.1.9",
     "fs-extra": "^7.0.1",
     "gray-matter": "^4.0.2",
