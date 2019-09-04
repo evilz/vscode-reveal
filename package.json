@@ -239,12 +239,12 @@
         },
         "revealjs.parallaxBackgroundHorizontal": {
           "type": "number",
-          "default": null,
+          "default": 0,
           "description": "Number of pixels to move the parallax background per slide"
         },
         "revealjs.parallaxBackgroundVertical": {
           "type": "number",
-          "default": null,
+          "default": 0,
           "description": "Number of pixels to move the parallax background per slide"
         },
         "revealjs.slideExplorerEnabled": {
@@ -259,7 +259,7 @@
         },
         "revealjs.exportHTMLPath": {
           "type": "string",
-          "default": null,
+          "default": "./export",
           "description": "Path where the HTML export is created, relative to the .md file"
         },
         "revealjs.openFilemanagerAfterHTMLExport": {
@@ -369,11 +369,18 @@
     "express": "^4.17.1",
     "express-es6-template-engine": "^2.1.9",
     "fs-extra": "^7.0.1",
+    "fs-jetpack": "^2.2.2",
     "gray-matter": "^4.0.2",
+    "koa": "^2.8.1",
+    "koa-ejs": "^4.2.0",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
     "lodash": "^4.17.15",
     "opn": "^6.0.0",
     "os": "^0.1.1",
-    "reveal.js": "^3.8.0"
+    "reveal.js": "^3.8.0",
+    "showdown": "^1.9.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.0",
@@ -381,6 +388,10 @@
     "@types/express-serve-static-core": "^4.16.7",
     "@types/glob": "^7.1.1",
     "@types/jest": "^24.0.18",
+    "@types/koa": "^2.0.49",
+    "@types/koa-ejs": "^4.2.0",
+    "@types/koa-router": "^7.0.42",
+    "@types/koa-static": "^4.0.1",
     "@types/lodash.debounce": "^4.0.6",
     "@types/mocha": "^5.2.7",
     "@types/mustache": "^0.8.32",
@@ -388,6 +399,7 @@
     "@types/open": "6.2.1",
     "@types/opn": "^5.5.0",
     "@types/request": "^2.48.2",
+    "@types/showdown": "^1.9.3",
     "@types/webpack": "^4.32.1",
     "chai": "^4.2.0",
     "fs-plus": "^3.1.1",
@@ -400,10 +412,10 @@
     "request": "^2.88.0",
     "sonarqube-scanner": "^2.5.0",
     "source-map-support": "^0.5.13",
+    "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.4",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
-    "ts-jest": "^24.0.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-microsoft-contrib": "^6.2.0",

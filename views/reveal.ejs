@@ -1,0 +1,14 @@
+<% slides.forEach(function(slide){ %>
+
+    <% if (slide.children.length === 0){ %>
+        <%- slide.html %>
+    <% } else {%>
+    <section>
+        <%- slide.html %>
+        <% slide.children.forEach(function(child){ %>
+        <%- child.html %>
+        <% }) %>
+
+    </section>
+    <% } %>
+<% }) %>

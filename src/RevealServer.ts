@@ -1,22 +1,30 @@
-import * as express from 'express'
+import * as Koa from 'koa'
+import * as koalogger from 'koa-logger'
+import * as Router from 'koa-router'
+import * as koastatic from 'koa-static'
 import * as es6Renderer from 'express-es6-template-engine'
 import * as http from 'http'
 import * as path from 'path'
+import * as render from 'koa-ejs'
+
+import revealCnverter from './showdown-reveal'
 
 import { Configuration } from './Configuration'
+import { ISlide } from './ISlide';
+import { ExportOptions, exportHTML } from "./ExportHTML";
 
 export class RevealServer {
-  private readonly app = express()
+  private readonly app = new Koa();
   private server: http.Server | null
   private readonly host = 'localhost'
 
   constructor(
-    private readonly getRootDir: () => string | null,
-    private readonly getSlideContent: () => string | null,
+    private readonly getRootDir: () => string,
+    private readonly getSlides: () => ISlide[],
     private readonly getConfiguration: () => Configuration,
     private readonly extensionPath: string,
     private readonly isInExport: () => boolean,
-    private readonly exportFn: (url: string, data: string) => void
+    private readonly getExportPath: () => string
   ) { }
 
   public get isListening() {
@@ -39,10 +47,9 @@ export class RevealServer {
   }
   public start() {
     try {
-      const rootDir = this.getRootDir()
+
       if (!this.isListening && this.getRootDir()) {
         this.configure()
-        this.refresh(rootDir)
         this.server = this.app.listen(0)
       }
     } catch (err) {
@@ -50,98 +57,81 @@ export class RevealServer {
     }
   }
 
-  private refresh(rootDir) {
-    this.app.use('/', express.static(rootDir))
-  }
-
   private configure() {
-    this.app.use(this.exportMiddleware(this.exportFn, () => this.isInExport()))
+
+    const app = this.app
+
+    // LOG REQUEST
+    app.use(koalogger())
+    app.use(this.exportMiddleware(exportHTML, () => this.isInExport()))
+
+    // For static media or else
+    const rootDir = this.getRootDir()
+    if (rootDir) {
+      app.use(koastatic(rootDir));
+    }
+
+    render(app, {
+      root: path.resolve(this.extensionPath, 'views'),
+      layout: 'template',
+      viewExt: 'ejs',
+      cache: false,
+      debug: true
+    });
+
+    const router = new Router();
+    router.get('/', async (ctx, next) => {
+
+      const htmlSlides = this.getSlides().map(s => (
+        {
+          html: revealCnverter.makeHtml(s.text),
+          children: s.verticalChildren.map(c => ({ html: revealCnverter.makeHtml(c.text) }))
+        }))
+
+      ctx.state = { slides: htmlSlides, ...this.getConfiguration() }
+      await ctx.render('reveal');
+    });
 
     const libsPAth = path.join(this.extensionPath, 'libs')
-    this.app.use('/libs', express.static(libsPAth))
-    this.app.get('/markdown.md', (req, res) => {
-      res.send(this.getSlideContent())
+    router.get('/libs', koastatic(libsPAth));
+
+    // TODO : make middleware
+    //   this.app.get('/markdown.md', (req, res) => {
+    //     res.send(this.getSlideContent())
+    //   })
+
+    app.use(router.routes());
+
+    // Error Handling
+    app.on('error', err => {
+      // todo use logger 
+      console.error('server error', err)
     })
 
-    const viewsPath = path.resolve(this.extensionPath, 'views')
-    this.app.engine('marko', es6Renderer)
-    this.app.set('views', viewsPath)
-    this.app.set('view engine', 'marko')
-
-    this.app.get('/', (req, res) => {
-      res.render(
-        'template',
-        {
-          locals: {
-            ...this.getConfiguration()
-          },
-          partials: {}
-        },
-        (err, content) => {
-          if (err) {
-            res.send(err.message)
-          } else {
-            // save here
-            res.send(content)
-          }
-        }
-      )
-    })
+    this.server = app.listen();
   }
 
-  private readonly exportMiddleware = (exportfn, isInExport) => {
-    return (req, res, next) => {
-      const _exportfn = exportfn
-      const _isInExport = isInExport
 
-      console.log('req', req)
-      if (_isInExport()) {
-        req.headers['if-modified-since'] = undefined
-        req.headers['if-none-match'] = undefined
+  private readonly exportMiddleware = (exportfn: (ExportOptions)=>Promise<void>, isInExport) => {
 
-        const oldSend = res.send
-        const oldEnd = res.end
+    
+  
 
-        const chunks: any[] = []
-        let innerBody: string | null = null
+    return async (ctx: Koa.Context, next) => {
+      await next()
+      if (isInExport()) {
+        // req.headers['if-modified-since'] = undefined
+        // req.headers['if-none-match'] = undefined
 
-        // tslint:disable-next-line: only-arrow-functions
-        res.send = function (body) {
-          // console.log('send ', typeof body, body && body.length, req.path)
-          innerBody = body
-          oldSend.apply(res, arguments)
-        }
+        const exportPath = this.getExportPath()
+        const opts:ExportOptions = typeof ctx.body === "string"
+                                   ? { folderPath: exportPath, url: ctx.originalUrl.split('?')[0], srcFilePath: null    , data: ctx.body }
+                                   : { folderPath: exportPath, url: ctx.originalUrl.split('?')[0], srcFilePath: ctx.body.path, data: null }
 
-        // tslint:disable-next-line:only-arrow-functions
-        res.end = async function (chunk) {
-          // console.log('end ', typeof chunk, chunk && chunk.length, req.path)
-          if (chunk) {
-            chunks.push(chunk)
-          }
+        await exportfn(opts)
 
-          // console.log(req.path, body)
-          try {
-            if (innerBody) {
-              if (innerBody.length === 0) {
-                throw new Error('inner body of 0 for ' + req.originalUrl)
-              }
-              _exportfn(req.originalUrl.split('?')[0], innerBody)
-              innerBody = null
-            } else {
-              const body = Buffer.concat(chunks).toString('utf8')
-              if (body.length === 0) {
-                throw new Error('inner body of 0 for ' + req.originalUrl)
-              }
-              _exportfn(req.originalUrl.split('?')[0], body)
-            }
-          } catch (error) {
-            console.error(`can get body of ${req.path}: ${error}`)
-          }
-
-          oldEnd.apply(res, arguments)
-        }
       }
-      next()
+     
     }
   }
 }

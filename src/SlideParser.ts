@@ -45,7 +45,7 @@ const parseSlide = (slideContent: string, index: number, documentOption: IDocume
   return {
     ...currentSlide,
     index,
-    verticalChildren: verticalSlides.length > 1 ? verticalSlides.slice(1) : undefined
+    verticalChildren: verticalSlides.length > 1 ? verticalSlides.slice(1) : []
   }
 }
 
@@ -54,7 +54,7 @@ const getVerticalSlides = (slideContent: string, documentOption: IDocumentOption
   const slides = slideContent.split(regex)
 
   return slides.map((s, i) => {
-    return { title: findTitle(s), index: i, text: s }
+    return { title: findTitle(s), index: i, text: s, verticalChildren: [] }
   })
 }
 
