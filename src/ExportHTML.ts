@@ -1,10 +1,10 @@
 
 import * as path from 'path'
-//import { promises as fs } from 'fs'
+// import { promises as fs } from 'fs'
 
 import * as jetpack from "fs-jetpack";
 
-export type ExportOptions = {
+export interface ExportOptions {
   folderPath: string,
   url: string,
   data: string | null
@@ -16,8 +16,8 @@ export const exportHTML = async (options: ExportOptions) => {
 
   const file = url.endsWith('/') ? `${url}index.html` : url
   const filePath = path.join(folderPath ? folderPath  : ".", file)
-  //console.log(`Saving file ${filePath}`)
-  //await fs.mkdir(path.dirname(filePath), {recursive:true})
+  // console.log(`Saving file ${filePath}`)
+  // await fs.mkdir(path.dirname(filePath), {recursive:true})
   
   if (data) {
     try {

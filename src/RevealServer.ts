@@ -1,17 +1,17 @@
+import * as es6Renderer from 'express-es6-template-engine'
+import * as http from 'http'
 import * as Koa from 'koa'
+import * as render from 'koa-ejs'
 import * as koalogger from 'koa-logger'
 import * as Router from 'koa-router'
 import * as koastatic from 'koa-static'
-import * as es6Renderer from 'express-es6-template-engine'
-import * as http from 'http'
 import * as path from 'path'
-import * as render from 'koa-ejs'
 
 import revealCnverter from './showdown-reveal'
 
 import { Configuration } from './Configuration'
+import { exportHTML, ExportOptions } from "./ExportHTML";
 import { ISlide } from './ISlide';
-import { ExportOptions, exportHTML } from "./ExportHTML";
 
 export class RevealServer {
   private readonly app = new Koa();

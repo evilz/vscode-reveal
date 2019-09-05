@@ -69,7 +69,7 @@ const getVerticalSlides = (slideContent: string, documentOption: IDocumentOption
   const slides = slideContent.split(regex)
 
   return slides.map((s, i) => {
-    let content = trimFirstLastEmptyLine(s)
+    const content = trimFirstLastEmptyLine(s)
     return { title: findTitle(content), index: i, text: content, verticalChildren: [] }
   })
 }

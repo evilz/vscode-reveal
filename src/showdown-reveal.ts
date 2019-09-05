@@ -7,13 +7,13 @@ showdown.extension('reveal', () => {
     {
       type: 'output',
       filter: (text: string, converter) => {
-        let out: Array<string> = []
-        let background: string | null = null
+        const out: string[] = []
+        const background: string | null = null
         const lines = text.split('\n');
         for (let i = 0; i < lines.length; i++) {
           const line = lines[i];
           const trimed = line.trim();
-          if (trimed === "") continue;
+          if (trimed === "") { continue; }
 
           const isSlideAttributsMatch = trimed.match(/<!--\s+\.slide:\s+(.+)\s+-->/)
           if (isSlideAttributsMatch && isSlideAttributsMatch.length > 0) {
