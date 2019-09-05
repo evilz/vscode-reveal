@@ -5,13 +5,28 @@ export const countLines = text => {
   return text.split("\n").length
 }
 
+const trimFirstLastEmptyLine = (s) =>{
+  let content = s
+    content = content.indexOf("\n") === 0 ? content.substr(1) : content
+    content = content.indexOf("\r\n") === 0 ? content.substr(2) : content
+
+    content = content.lastIndexOf("\n") === content.length - 1 ? content.substr(0,content.length - 1) : content
+    content = content.lastIndexOf("\r\n") === content.length - 2 ? content.substr(0,content.length - 2) : content
+    return content
+}
+
 export const parseSlides = (slideContent: string, slidifyOptions: IDocumentOptions): ISlide[] => {
   const regex = new RegExp(slidifyOptions.separator, 'gm')
   const slides = slideContent.split(regex)
-  return slides.map((s, i) => parseSlide(s, i, slidifyOptions))
+  // TODO : do dirty remove first or last line !
+  return slides.map((s, i) => {
+    
+    return parseSlide(trimFirstLastEmptyLine(s), i, slidifyOptions)
+  
+  })
 }
 
-const lineInSeparator = (separator: string) => (separator.match(/\\n/gm) || []).length
+const lineInSeparator = (separator: string) => (separator.match(/\\n/gm) || []).length + 1
 
 export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, verticalIndex: number, slidifyOptions: IDocumentOptions) => {
   const stopSlideIndex = verticalIndex > 0 ? horizontalIndex + 1 : horizontalIndex
@@ -25,7 +40,7 @@ export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, ver
     return slide.verticalChildren
       ? count + addChildrenSlideLines(slide, horizontalIndex, verticalIndex, verticalSeparatorHeight)
       : count
-  }, 0)
+  }, 1)
 }
 
 const addChildrenSlideLines = (slide, horizontalIndex, verticalIndex, verticalSeparatorHeight) => {
@@ -45,7 +60,7 @@ const parseSlide = (slideContent: string, index: number, documentOption: IDocume
   return {
     ...currentSlide,
     index,
-    verticalChildren: verticalSlides.length > 1 ? verticalSlides.slice(1) : undefined
+    verticalChildren: verticalSlides.length > 1 ? verticalSlides.slice(1) : []
   }
 }
 
@@ -54,7 +69,8 @@ const getVerticalSlides = (slideContent: string, documentOption: IDocumentOption
   const slides = slideContent.split(regex)
 
   return slides.map((s, i) => {
-    return { title: findTitle(s), index: i, text: s }
+    const content = trimFirstLastEmptyLine(s)
+    return { title: findTitle(content), index: i, text: content, verticalChildren: [] }
   })
 }
 

@@ -13,6 +13,7 @@ import {
   Webview
 } from 'vscode'
 
+import * as jetpack from "fs-jetpack";
 import * as path from 'path'
 
 import { debounce } from 'lodash'
@@ -20,7 +21,7 @@ import { SHOW_REVEALJS } from './commands/showRevealJS'
 import { Configuration, getDocumentOptions } from './Configuration'
 import { extensionId } from './constants'
 import { EditorContext } from './EditorContext'
-import { saveContent } from './ExportHTML'
+import { exportHTML, ExportOptions } from './ExportHTML'
 import { ISlide } from './ISlide'
 import { Logger } from './Logger'
 import { RevealServer } from './RevealServer'
@@ -91,11 +92,11 @@ export default class Container {
 
     this.server = new RevealServer(
       () => this.rootDir,
-      () => this.slideContent,
+      () => this.slides,
       () => this.configuration,
       this.extensionContext.extensionPath,
       () => this.isInExport,
-      (req, data) => this.saveHtmlFn(req, data)
+      () => this.exportPath
     )
 
     this.statusBarController = new StatusBarController(() => this.server.uri, () => this.slideCount)
@@ -111,12 +112,7 @@ export default class Container {
     }
     return ''
   }
-  private get slideContent() {
-    if (this.editorContext) {
-      return this.editorContext.slideContent
-    }
-    return null
-  }
+
   public get configuration() {
     return this.editorContext !== null && this.editorContext.hasfrontConfig
       ? // tslint:disable-next-line:no-object-literal-type-assertion
@@ -124,44 +120,35 @@ export default class Container {
       : this._configuration
   }
 
-  private exportPromiseResolve: (value?: string | PromiseLike<string>) => void
-  private exportPromiseReject: (reason?: any) => void
-  private endDebounce: (() => void) | null = null
+  public get isInExport() { return this.exportTimeout !== null }
 
-  get isInExport() {
-    if (this.exportPromise === null) {
-      return false
-    }
-    if (this.endDebounce !== null) {
-      this.endDebounce()
-    }
+  private exportTimeout: NodeJS.Timeout | null = null
+  public export = async () =>  {
+    
+        // try {
+          if(this.exportTimeout !== null)
+          {
+            clearTimeout(this.exportTimeout)
+          }
+          await jetpack.removeAsync(this.exportPath)
+          
 
-    return this.exportPromise !== null
+          const promise = new Promise<string>((resolve) => { 
+            this.exportTimeout = setTimeout(() => resolve(this.exportPath), 5000)
+            
+            })
+            this.webView ? this.refreshWebView() : await commands.executeCommand(SHOW_REVEALJS)
+          
+          return promise
+      //   } catch (e) {
+      //     return this.configuration.exportHTMLPath;
+      //     console.error(e);
+
+      // }
+    
+    
   }
 
-  private exportPromise: Promise<string> | null = null
-
-  public startExport() {
-    if (this.exportPromise === null) {
-      this.exportPromise = new Promise<string>((resolve, reject) => {
-        this.exportPromiseResolve = resolve
-        this.exportPromiseReject = reject
-      })
-
-      this.endDebounce = debounce(() => {
-        if (this.exportPromise && this.exportPromiseResolve) {
-          this.exportPromiseResolve(this.exportPath)
-          this.exportPromise = null
-          this.endDebounce = null
-        }
-      }, 1500)
-    }
-
-    this.webView ? this.refreshWebView() : commands.executeCommand(SHOW_REVEALJS)
-    return this.exportPromise
-  }
-
-  private readonly saveHtmlFn = (url: string, data: string) => saveContent(() => this.exportPath, url, data)
 
   get slides(): ISlide[] {
     return this.editorContext === null ? [] : this.editorContext.slides
@@ -182,6 +169,11 @@ export default class Container {
     return withPosition ? `${serverUri}#/${slidepos.horizontal}/${slidepos.vertical}/${Date.now()}` : `${serverUri}`
   }
 
+  public get exportPath():string {
+    const finalPath = path.isAbsolute(this.configuration.exportHTMLPath) ? this.configuration.exportHTMLPath : path.join(this.rootDir, this.configuration.exportHTMLPath)
+    return finalPath
+  } 
+
   public isMarkdownFile() {
     return this.editorContext === null ? false : this.editorContext.isMarkdownFile
   }
@@ -197,10 +189,6 @@ export default class Container {
   public stopServer() {
     this.server.stop()
     this.statusBarController.update()
-  }
-
-  public get exportPath() {
-    return this.configuration.exportHTMLPath ? this.configuration.exportHTMLPath : path.join(this.rootDir, 'export')
   }
 
   public refreshWebView(view?: Webview) {

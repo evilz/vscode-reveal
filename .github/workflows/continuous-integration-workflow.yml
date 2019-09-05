@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node_version: [8, 10, 12]
+        node_version: [ 12]
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
@@ -20,8 +20,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: npm install, build, and test
-        run: |
+      - name: npm install
+        run:
           npm install
+
+      - name: build
+        run:
           npm run vscode:prepublish
+          
+
+      - name: test
+        run:
           npm run coverage

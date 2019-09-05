@@ -70,7 +70,7 @@ export interface IDocumentOptions {
 export interface IExtensionOptions {
   slideExplorerEnabled: boolean
   browserPath: string | null
-  exportHTMLPath: string | null
+  exportHTMLPath: string
   openFilemanagerAfterHTMLExport: boolean
   logLevel: LogLevel
 }
@@ -133,8 +133,8 @@ export const defaultConfiguration: Configuration = {
   viewDistance: 3,
   parallaxBackgroundImage: '',
   parallaxBackgroundSize: '',
-  parallaxBackgroundHorizontal: null,
-  parallaxBackgroundVertical: null,
+  parallaxBackgroundHorizontal: 0,
+  parallaxBackgroundVertical: 0,
 
   slideExplorerEnabled: true,
   browserPath: null,

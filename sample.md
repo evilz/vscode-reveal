@@ -1,7 +1,6 @@
 ---
-theme : "white"
-transition: "zoom"
-highlightTheme: "darkula"
+theme : "black"
+highlightTheme: "monokai"
 logoImg: "https://raw.githubusercontent.com/evilz/vscode-reveal/master/images/logo-v2.png"
 slideNumber: true
 ---
@@ -73,9 +72,7 @@ Presentations look great on touch devices, like mobile phones and tablets. Simpl
 Write content using inline or external Markdown.
 Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
 
---
-
-```
+```md
   ## Markdown support
 
   Write content using inline or external Markdown.
@@ -101,7 +98,7 @@ This slide has fragments which are also stepped through in the notes window.
 
 There's different types of fragments, like:
 
-grow    <!-- .element: class="fragment grow" -->
+grow <!-- .element: class="fragment grow" -->
 
 shrink  <!-- .element: class="fragment shrink" -->
 
@@ -125,17 +122,17 @@ You can select from different transitions, like:
 ## Themes
 
 reveal.js comes with a few themes built in:
-<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/black.css'); return false;">Black (default)</a> -
-<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/white.css'); return false;">White</a> -
-<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/league.css'); return false;">League</a> -
-<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/sky.css'); return false;">Sky</a> -
-<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/beige.css'); return false;">Beige</a> -
-<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/simple.css'); return false;">Simple</a> <br>
-<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/serif.css'); return false;">Serif</a> -
-<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/blood.css'); return false;">Blood</a> -
-<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/night.css'); return false;">Night</a> -
-<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/moon.css'); return false;">Moon</a> -
-<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/solarized.css'); return false;">Solarized</a>
+<a href="#" onclick="document.getElementById('theme').setAttribute('href','libs/reveal.js/3.8.0/css/theme/black.css'); return false;">Black (default)</a> -
+<a href="#" onclick="document.getElementById('theme').setAttribute('href','libs/reveal.js/3.8.0/css/theme/white.css'); return false;">White</a> -
+<a href="#" onclick="document.getElementById('theme').setAttribute('href','libs/reveal.js/3.8.0/css/theme/league.css'); return false;">League</a> -
+<a href="#" onclick="document.getElementById('theme').setAttribute('href','libs/reveal.js/3.8.0/css/theme/sky.css'); return false;">Sky</a> -
+<a href="#" onclick="document.getElementById('theme').setAttribute('href','libs/reveal.js/3.8.0/css/theme/beige.css'); return false;">Beige</a> -
+<a href="#" onclick="document.getElementById('theme').setAttribute('href','libs/reveal.js/3.8.0/css/theme/simple.css'); return false;">Simple</a> <br>
+<a href="#" onclick="document.getElementById('theme').setAttribute('href','libs/reveal.js/3.8.0/css/theme/serif.css'); return false;">Serif</a> -
+<a href="#" onclick="document.getElementById('theme').setAttribute('href','libs/reveal.js/3.8.0/css/theme/blood.css'); return false;">Blood</a> -
+<a href="#" onclick="document.getElementById('theme').setAttribute('href','libs/reveal.js/3.8.0/css/theme/night.css'); return false;">Night</a> -
+<a href="#" onclick="document.getElementById('theme').setAttribute('href','libs/reveal.js/3.8.0/css/theme/moon.css'); return false;">Moon</a> -
+<a href="#" onclick="document.getElementById('theme').setAttribute('href','libs/reveal.js/3.8.0/css/theme/solarized.css'); return false;">Solarized</a>
 
 ---
 
@@ -143,28 +140,29 @@ reveal.js comes with a few themes built in:
 ## Slide Backgrounds
 
 Set `data-background="#dddddd"` on a slide to change the background color. All CSS color formats are supported.
-						<a href="#" class="navigate-down">
-							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-						</a>
+
+<a href="#" class="navigate-down">
+  <img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
+</a>
 
 --
 
-<!-- .slide: data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" -->
+<!-- .slide: data-background="default-thumbnail.jpg" -->
 
 ## Image Backgrounds
 
 ```markdown
-<!-- .slide: data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" -->
+<!-- .slide: data-background="default-thumbnail.jpg" -->
 ```
 
 --
 
-<!-- .slide: data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px" -->
+<!-- .slide: data-background="default-thumbnail.jpg" data-background-repeat="repeat" data-background-size="100px" -->
 
 ## TILED BACKGROUNDS
 
 ```markdown
-<!-- .slide: data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px" -->
+<!-- .slide: data-background="default-thumbnail.jpg" data-background-repeat="repeat" data-background-size="100px" -->
 ```
 
 --
@@ -174,7 +172,7 @@ Set `data-background="#dddddd"` on a slide to change the background color. All C
 ## Video Backgrounds
 
 ```markdown
-<!-- .slide: data-background-video="https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.mp4,https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.webm" data-background-color="#000000" -->
+<!-- .slide: data-background-video="https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c0/Big_Buck_Bunny_4K.webm/Big_Buck_Bunny_4K.webm.480p.vp9.webm" data-background-color="#000000" -->
 ```
 
 --
@@ -206,6 +204,7 @@ You can override background transitions per-slide.
 ---
 
 ## Pretty Code
+
 ```js
 function linkify( selector ) {
   if( supports3DTransforms ) {
@@ -245,8 +244,9 @@ Code syntax highlighting courtesy of [highlight.js](http://softwaremaniacs.org/s
 ---
 
 ## Tabular Tables
+
 | Tables        | Are           | Cool  |
-| ------------- | :-----------: | ----: |
+|-------------|:-----------:|----:|
 | col 3 is      | right-aligned | $1600 |
 | col 2 is      | centered      | $12   |
 | zebra stripes | are neat      | $1    |
@@ -468,7 +468,7 @@ To embed a tweet, simply determine its URL and include the following code in you
 
 --
 
-<div class="tweet" data-src="https://twitter.com/Evilznet/status/1086984843056107525"></div>
+<div class="tweet"  data-src="https://twitter.com/Evilznet/status/1086984843056107525"></div>
 
 --
 
@@ -541,11 +541,13 @@ An extension of the math.js plugin allowing to render LaTeX in SVG.
 
 ### The Lorenz Equations
 
+<span>
 \[\begin{aligned}
 \dot{x} &amp; = \sigma(y-x) \\
 \dot{y} &amp; = \rho x - y - xz \\
 \dot{z} &amp; = -\beta z + xy
 \end{aligned} \]
+</span>
 
 --
 
@@ -557,7 +559,7 @@ An extension of the math.js plugin allowing to render LaTeX in SVG.
 
 --
 
-### coucou footer
+### Custom footer
 
 Includes a footer in all the slides of a Reveal.js presentation (with optional exclusion of some slides) that will show the title of the presentation.
 

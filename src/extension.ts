@@ -48,7 +48,7 @@ export function activate(context: ExtensionContext) {
   registerCommand(EXPORT_PDF, exportPDF(() => container.getUri(false), getBrowser))
   registerCommand(
     EXPORT_HTML,
-    exportHTML(logger, () => container.startExport(), () => container.configuration.openFilemanagerAfterHTMLExport)
+    exportHTML(logger, container.export, () => container.configuration.openFilemanagerAfterHTMLExport)
   )
 
   window.onDidChangeTextEditorSelection(e => container.onDidChangeTextEditorSelection(e))
