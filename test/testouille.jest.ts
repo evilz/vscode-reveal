@@ -13,10 +13,10 @@ test('wesh', () =>{
 
     const result = input.split(rsplit)
 
-    //console.log(result)
+    // console.log(result)
     
-    //console.log(result[0].split('\n').length)
-    //console.log(result[1].split('\n').length)
+    // console.log(result[0].split('\n').length)
+    // console.log(result[1].split('\n').length)
     
     const resultExec = rsplit.exec(input)
     const index = rsplit.lastIndex

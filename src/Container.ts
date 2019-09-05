@@ -21,7 +21,7 @@ import { SHOW_REVEALJS } from './commands/showRevealJS'
 import { Configuration, getDocumentOptions } from './Configuration'
 import { extensionId } from './constants'
 import { EditorContext } from './EditorContext'
-import { ExportOptions, exportHTML } from './ExportHTML'
+import { exportHTML, ExportOptions } from './ExportHTML'
 import { ISlide } from './ISlide'
 import { Logger } from './Logger'
 import { RevealServer } from './RevealServer'
@@ -125,7 +125,7 @@ export default class Container {
   private exportTimeout: NodeJS.Timeout | null = null
   public export = async () =>  {
     
-        //try {
+        // try {
           if(this.exportTimeout !== null)
           {
             clearTimeout(this.exportTimeout)
