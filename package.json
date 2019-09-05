@@ -348,7 +348,7 @@
       "!**/node_modules/**",
       "!**/vendor/**"
     ],
-    "testResultsProcessor": "jest-junit"
+    "reporters": [ "default", "jest-junit" ]
   },
   "nyc": {
     "extension": [
