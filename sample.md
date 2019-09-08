@@ -1,15 +1,17 @@
 ---
 theme : "black"
+transition: "slide"
 highlightTheme: "monokai"
-logoImg: "https://raw.githubusercontent.com/evilz/vscode-reveal/master/images/logo-v2.png"
-slideNumber: true
+logoImg: "logo.png"
+slideNumber: false
+title: "VSCode Reveal intro"
 ---
 
 # vscode-reveal
 
-### Awesome VS code extension using The HTML Presentation Framework Revealjs
+ Awesome VS code extension using The HTML Presentation Framework Revealjs
 
-<small>Created by [Hakim El Hattab](http://hakim.se) / [@hakimel](http://twitter.com/hakimel)</small>
+<small>Created by [Vincent B.](https://www.evilznet.com) / [@Evilznet](https://twitter.com/Evilznet)</small>
 
 ---
 
@@ -47,17 +49,13 @@ That's it, time to go back up.
 
 ---
 
-## Slides
-
-Not a coder? Not a problem. There's a fully-featured visual editor for authoring these, try it out at [http://slides.com](http://slides.com).
-
----
-
 ## Point of View
 
 Press **ESC** to enter the slide overview.
 
 Hold down alt and click on any element to zoom in on it using [zoom.js](http://lab.hakim.se/zoom-js). Alt + click anywhere to zoom back out.
+
+> Use ctrl + click in Linux
 
 ---
 
@@ -72,7 +70,9 @@ Presentations look great on touch devices, like mobile phones and tablets. Simpl
 Write content using inline or external Markdown.
 Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
 
-```md
+--
+
+```
   ## Markdown support
 
   Write content using inline or external Markdown.
@@ -104,7 +104,23 @@ shrink  <!-- .element: class="fragment shrink" -->
 
 fade-out    <!-- .element: class="fragment fade-out " -->
 
-fade-up (also down, left and right!) <!-- .element: class="fragment fade-up" -->
+<p>
+fade-right, <!-- .element: class="fragment fade-right" style="display: inline-block;" -->
+
+up,  <!-- .element: class="fragment fade-up" style="display: inline-block;" -->
+						
+down,  <!-- .element: class="fragment fade-down" style="display: inline-block;" -->
+
+left  <!-- .element: class="fragment fade-left" style="display: inline-block;" -->
+</p>
+
+--
+
+## Fragment Styles
+
+fade-in-then-out <!-- .element: class="fragment fade-in-then-out" -->
+
+fade-in-then-semi-out <!-- .element: class="fragment fade-in-then-semi-out" -->
 
 current-visible <!-- .element: class="fragment current-visible" -->
 
@@ -436,7 +452,7 @@ My second dataset, 28, 48, 40, 19, 86, 27, 90
 --
 
 ### Stacked bar chart from CSV file with JSON configuration
-<canvas class="stretch" data-chart="bar" data-chart-src="chart/data.csv">
+<canvas class="stretch" data-chart="bar" data-chart-src="https://rajgoel.github.io/reveal.js-demos/chart/data.csv">
 <!-- 
 {
 "data" : {

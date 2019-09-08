@@ -6,7 +6,7 @@
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
-  "icon": "images/logo-v2.png",
+  "icon": "logo.png",
   "preview": false,
   "repository": {
     "type": "git",
