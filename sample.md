@@ -67,11 +67,6 @@ Presentations look great on touch devices, like mobile phones and tablets. Simpl
 
 ## Markdown support
 
-Write content using inline or external Markdown.
-Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
-
---
-
 ```
   ## Markdown support
 
