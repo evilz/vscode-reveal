@@ -52,6 +52,8 @@
             { src: 'libs/reveal.js/3.8.0/plugin/embed-tweet/embed-tweet.js' },
             { src: 'libs/reveal.js/3.8.0/plugin/math/math.js', async: true },
             { src: 'libs/highlight.js/9.12.0/highlight.js', async: true },
+            { src: 'libs/reveal.js/3.8.0/plugin/anything/anything.js' },
+            { src: 'libs/reveal.js/3.8.0/plugin/mermaid/mermaid.min.js', async: true, callback: function() {mermaid.initialize({startOnLoad:false})} },	
 
            <% if (enableSearch) { %>
         { src: 'libs/reveal.js/3.8.0/plugin/search/search.js', async: true },
@@ -120,6 +122,12 @@
         pie: { backgroundColor: [["rgba(0,0,0,.8)", "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"]] },
         radar: { borderColor: ["rgba(20,220,220,.8)", "rgba(220,120,120,.8)", "rgba(20,120,220,.8)"] },
     },
+    anything: [ 
+	 {
+	  className: "mermaid"
+	 },
+	 // ...
+	],
     menu: {
         // Specifies which side of the presentation the menu will 
         // be shown. Use 'left' or 'right'.

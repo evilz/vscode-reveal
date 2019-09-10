@@ -1,10 +1,39 @@
 ---
-theme : "black"
+theme : "white"
 transition: "slide"
 highlightTheme: "monokai"
 logoImg: "logo.png"
 slideNumber: false
 title: "VSCode Reveal intro"
+---
+
+
+<div class="mermaid">
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>John: Hello John, how are you?
+    loop Healthcheck
+        John->>John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts <br/>prevail!
+    John-->>Alice: Great!
+    John->>Bob: How about you?
+    Bob-->>John: Jolly good!
+</div>
+
+---
+
+<div class="mermaid">
+graph LR;
+  A(AAAA)==> B(B node);
+  B==> C(SEE SEE);
+
+  class A diag-a-styles;
+  class B diag-b-styles
+  class C diag-c-styles;
+</div>
+
 ---
 
 # vscode-reveal
