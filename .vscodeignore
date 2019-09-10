@@ -16,3 +16,14 @@ sample2.md
 coverconfig.json
 azure-pipelines.yml
 azure-pipelines-steps.yml
+.github/**
+export/**
+images/**
+CHANGELOG.md
+config.json
+custom.css
+default-thumbnail.jpg
+image-placeholder.png
+junit.xml
+math.md
+tslint.json
