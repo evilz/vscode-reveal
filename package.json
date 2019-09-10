@@ -423,7 +423,7 @@
     "typescript": "^3.5.3",
     "typescript-tslint-plugin": "^0.3.1",
     "vscode": "^1.1.36",
-    "webpack": "^4.38.0",
+    "webpack": "^4.39.3",
     "webpack-cli": "^3.3.6",
     "webpack-node-externals": "^1.7.2"
   }
