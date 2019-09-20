@@ -385,11 +385,8 @@
     "markdown-it-multimd-table": "^3.2.3",
     "markdown-it-span": "^1.0.0",
     "markdown-it-task-lists": "^2.1.1",
-    "marked": "^0.7.0",
     "opn": "^6.0.0",
-    "os": "^0.1.1",
-    "reveal.js": "^3.8.0",
-    "showdown": "^1.9.0"
+    "os": "^0.1.1"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",
