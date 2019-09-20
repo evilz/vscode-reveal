@@ -1,5 +1,5 @@
 ---
-theme : "white"
+theme : "night"
 transition: "slide"
 highlightTheme: "monokai"
 logoImg: "logo.png"
@@ -7,11 +7,69 @@ slideNumber: false
 title: "VSCode Reveal intro"
 ---
 
+::: block
+*here be dragons* {style=background:red;width:500px}
+::: 
+
+---
+
+// @[vine](etVpwB7uHlw)
+
+---
+
+### Solar System Exploration, 1950s – 1960s
+
+- [ ] Mercury
+- [x] Venus
+- [x] Earth (Orbit/Moon)
+- [x] Mars
+- [ ] Jupiter
+- [ ] Saturn
+- [ ] Uranus
+- [ ] Neptune
+- [ ] Comet Haley
+
+---
+
+# some Table
+
+|             |          Grouping           ||
+First Header  | Second Header | Third Header |
+ ------------ | :-----------: | -----------: |
+Content       |          *Long Cell*        ||
+Content       |   **Cell**    |         Cell |
+                                              
+New section   |     More      |         Data |
+And more      | With an escaped '\\|'       ||
+[Prototype table]                             
+
+--
+
+First header | Second header
+-------------|---------------
+List:        | More  \
+- over       | data  \
+- several    |       \
+- lines      | 
+
+--
+
+First header | Second header
+-------------|---------------
+Merged       | Cell 1
+^^           | Cell 2
+^^           | Cell 3
+
+--
+
+
+
+---
 
 <div class="mermaid">
 sequenceDiagram
     participant Alice
-    participant Bob
+    participant Bob 
     Alice->>John: Hello John, how are you?
     loop Healthcheck
         John->>John: Fight against hypochondria
@@ -20,7 +78,7 @@ sequenceDiagram
     John-->>Alice: Great!
     John->>Bob: How about you?
     Bob-->>John: Jolly good!
-</div>
+</div> 
 
 ---
 
@@ -122,33 +180,31 @@ This slide has fragments which are also stepped through in the notes window.
 
 There's different types of fragments, like:
 
-grow <!-- .element: class="fragment grow" -->
+grow {.fragment .grow}
 
-shrink  <!-- .element: class="fragment shrink" -->
+shrink {.fragment .shrink}
 
-fade-out    <!-- .element: class="fragment fade-out " -->
+fade-out {.fragment .fade-out}
 
-<p>
-fade-right, <!-- .element: class="fragment fade-right" style="display: inline-block;" -->
+fade-right{.fragment .fade-right}
 
-up,  <!-- .element: class="fragment fade-up" style="display: inline-block;" -->
-						
-down,  <!-- .element: class="fragment fade-down" style="display: inline-block;" -->
+fade-up{.fragment .fade-up}
 
-left  <!-- .element: class="fragment fade-left" style="display: inline-block;" -->
-</p>
+fade-down{.fragment .fade-down}
+
+fade-left{.fragment .fade-left}
 
 --
 
 ## Fragment Styles
 
-fade-in-then-out <!-- .element: class="fragment fade-in-then-out" -->
+fade-in-then-out{.fragment .fade-in-then-out}
 
-fade-in-then-semi-out <!-- .element: class="fragment fade-in-then-semi-out" -->
+fade-in-then-semi-out {.fragment .fade-in-then-semi-out"}
 
-current-visible <!-- .element: class="fragment current-visible" -->
+current-visible {.fragment .current-visible}
 
-Highlight <span class="fragment highlight-red">red</span> <span class="fragment highlight-blue">blue</span> <span class="fragment highlight-green">green</span>
+Highlight **red**{.fragment .highlight-red} **blue**{.fragment .highlight-blue} **green**{.fragment .highlight-green}
 
 ---
 
@@ -181,9 +237,8 @@ reveal.js comes with a few themes built in:
 
 Set `data-background="#dddddd"` on a slide to change the background color. All CSS color formats are supported.
 
-<a href="#" class="navigate-down">
-  <img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-</a>
+[![Down arrow](https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png =178x238)](#){.navigate-down}
+
 
 --
 
@@ -615,14 +670,28 @@ A plugin that allows focusing on specific lines of code blocks.
 
 ### Code Focus Demo
 
-```js
-// Useless comment.
-alert('hi');
+
+```html
+<section>
+  <pre><code>
+  // Useless comment.
+  alert('hi');
+  </pre></code>
+  <p class="fragment" data-code-focus="1">
+    This focuses on the comment.
+  </p>
+  <p class="fragment" data-code-focus="1-2">
+    Another fragment.
+  </p>
+</section>
 ```
 
-
-<span class="code-presenting-annotation fragment current-only" data-code-focus="1">Present code found within any repository source file.</span>
-<span class="code-presenting-annotation fragment current-only" data-code-focus="1-2">Without ever leaving your slideshow.</span>
+This section is a slide. <!-- .element: class="fragment current-only" data-code-focus="1-12" -->
+<p class="fragment current-only" data-code-focus="1-12">This section is a slide.</p>
+<span class="fragment current-only" data-code-focus="2-5">This will be highlighted by `highlight.js`.</span>
+<span class="fragment current-only" data-code-focus="6-8">This fragment focuses on the first line.</span>
+<span class="fragment current-only" data-code-focus="9-11">This fragment focuses on lines 1 and 2.</span>
+<span class="fragment current-only" data-code-focus="1-12">See the next slide for a demo with the contents of this code block.</span>
 
 ---
 

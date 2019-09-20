@@ -16,12 +16,10 @@ import {
 import * as jetpack from "fs-jetpack";
 import * as path from 'path'
 
-import { debounce } from 'lodash'
 import { SHOW_REVEALJS } from './commands/showRevealJS'
 import { Configuration, getDocumentOptions } from './Configuration'
 import { extensionId } from './constants'
 import { EditorContext } from './EditorContext'
-import { exportHTML, ExportOptions } from './ExportHTML'
 import { ISlide } from './ISlide'
 import { Logger } from './Logger'
 import { RevealServer } from './RevealServer'

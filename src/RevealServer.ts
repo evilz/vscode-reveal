@@ -1,4 +1,3 @@
-import * as es6Renderer from 'express-es6-template-engine'
 import * as http from 'http'
 import * as Koa from 'koa'
 import * as render from 'koa-ejs'
@@ -6,12 +5,33 @@ import * as koalogger from 'koa-logger'
 import * as Router from 'koa-router'
 import * as koastatic from 'koa-static'
 import * as path from 'path'
+//import revealCnverter from './showdown-reveal'
 
-import revealCnverter from './showdown-reveal'
+import * as md from'markdown-it'
 
 import { Configuration } from './Configuration'
 import { exportHTML, ExportOptions } from "./ExportHTML";
 import { ISlide } from './ISlide';
+
+const markdown = md({
+  html: true,
+  linkify: true,
+  typographer: true
+})
+.use(require('markdown-it-multimd-table'), {enableMultilineRows: true,enableRowspan: true})
+.use(require('markdown-it-attrs'), {
+  // optional, these are default options
+  leftDelimiter: '{',
+  rightDelimiter: '}',
+  allowedAttributes: []  // empty array = all attributes are allowed
+})
+.use(require('markdown-it-imsize'))
+.use(require('markdown-it-task-lists'),{label: true, labelAfter: true})
+.use(require("markdown-it-block-embed"))
+.use(require('markdown-it-github-headings'))
+.use(require('markdown-it-container'), 'block');
+//.use(require('markdown-it-span'));
+
 
 export class RevealServer {
   private readonly app = new Koa();
@@ -82,10 +102,13 @@ export class RevealServer {
     const router = new Router();
     router.get('/', async (ctx, next) => {
 
+      
       const htmlSlides = this.getSlides().map(s => (
         {
-          html: revealCnverter.makeHtml(s.text),
-          children: s.verticalChildren.map(c => ({ html: revealCnverter.makeHtml(c.text) }))
+          //html: revealCnverter.makeHtml(s.text),
+          ...s,
+          html: markdown.render(s.text),
+          children: s.verticalChildren.map(c => ( {...c, html:  markdown.render(c.text) }))
         }))
 
       ctx.state = { slides: htmlSlides, ...this.getConfiguration() }

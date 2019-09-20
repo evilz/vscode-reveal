@@ -44,4 +44,4 @@ const converter = new showdown.Converter({
   simplifiedAutoLink: false
 })
 
-export default converter;
+//export default converter;

@@ -348,7 +348,10 @@
       "!**/node_modules/**",
       "!**/vendor/**"
     ],
-    "reporters": [ "default", "jest-junit" ]
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
   },
   "nyc": {
     "extension": [
@@ -366,9 +369,6 @@
     "all": true
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "express-es6-template-engine": "^2.1.9",
-    "fs-extra": "^7.0.1",
     "fs-jetpack": "^2.2.2",
     "gray-matter": "^4.0.2",
     "koa": "^2.8.1",
@@ -376,33 +376,35 @@
     "koa-logger": "^3.2.1",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
-    "lodash": "^4.17.15",
+    "markdown-it": "^10.0.0",
+    "markdown-it-attrs": "^3.0.1",
+    "markdown-it-block-embed": "0.0.3",
+    "markdown-it-container": "^2.0.0",
+    "markdown-it-github-headings": "^1.1.1",
+    "markdown-it-imsize": "^2.0.1",
+    "markdown-it-multimd-table": "^3.2.3",
+    "markdown-it-span": "^1.0.0",
+    "markdown-it-task-lists": "^2.1.1",
+    "marked": "^0.7.0",
     "opn": "^6.0.0",
     "os": "^0.1.1",
     "reveal.js": "^3.8.0",
     "showdown": "^1.9.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.0",
-    "@types/express": "^4.17.0",
-    "@types/express-serve-static-core": "^4.16.7",
     "@types/glob": "^7.1.1",
     "@types/jest": "^24.0.18",
     "@types/koa": "^2.0.49",
     "@types/koa-ejs": "^4.2.0",
     "@types/koa-router": "^7.0.42",
     "@types/koa-static": "^4.0.1",
-    "@types/lodash.debounce": "^4.0.6",
+    "@types/marked": "^0.6.5",
     "@types/mocha": "^5.2.7",
-    "@types/mustache": "^0.8.32",
     "@types/node": "^10.14.15",
-    "@types/open": "6.2.1",
     "@types/opn": "^5.5.0",
     "@types/request": "^2.48.2",
     "@types/showdown": "^1.9.3",
     "@types/webpack": "^4.32.1",
-    "chai": "^4.2.0",
-    "fs-plus": "^3.1.1",
     "jest": "^24.9.0",
     "jest-junit": "^8.0.0",
     "mocha": "^6.2.0",
