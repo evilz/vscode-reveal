@@ -9,6 +9,9 @@
     "max-classes-per-file": false,
     "variable-name": false,
     "no-implicit-dependencies": false,
-    "member-ordering": false
+    "member-ordering": false,
+    "object-literal-sort-keys": false
+  	    
+
   }
 }

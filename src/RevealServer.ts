@@ -5,32 +5,13 @@ import * as koalogger from 'koa-logger'
 import * as Router from 'koa-router'
 import * as koastatic from 'koa-static'
 import * as path from 'path'
-// import revealCnverter from './showdown-reveal'
 
-import * as md from'markdown-it'
+import markdown from './Markdown-it'
 
 import { Configuration } from './Configuration'
-import { exportHTML, ExportOptions } from "./ExportHTML";
+import { exportHTML, IExportOptions } from "./ExportHTML";
 import { ISlide } from './ISlide';
 
-const markdown = md({
-  html: true,
-  linkify: true,
-  typographer: true
-})
-.use(require('markdown-it-multimd-table'), {enableMultilineRows: true,enableRowspan: true})
-.use(require('markdown-it-attrs'), {
-  // optional, these are default options
-  leftDelimiter: '{',
-  rightDelimiter: '}',
-  allowedAttributes: []  // empty array = all attributes are allowed
-})
-.use(require('markdown-it-imsize'))
-.use(require('markdown-it-task-lists'),{label: true, labelAfter: true})
-.use(require("markdown-it-block-embed"))
-.use(require('markdown-it-github-headings'))
-.use(require('markdown-it-container'), 'block');
-// .use(require('markdown-it-span'));
 
 
 export class RevealServer {
@@ -147,7 +128,7 @@ export class RevealServer {
         // req.headers['if-none-match'] = undefined
 
         const exportPath = this.getExportPath()
-        const opts:ExportOptions = typeof ctx.body === "string"
+        const opts:IExportOptions = typeof ctx.body === "string"
                                    ? { folderPath: exportPath, url: ctx.originalUrl.split('?')[0], srcFilePath: null    , data: ctx.body }
                                    : { folderPath: exportPath, url: ctx.originalUrl.split('?')[0], srcFilePath: ctx.body.path, data: null }
 

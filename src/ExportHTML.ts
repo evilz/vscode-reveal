@@ -4,14 +4,14 @@ import * as path from 'path'
 
 import * as jetpack from "fs-jetpack";
 
-export interface ExportOptions {
+export interface IExportOptions {
   folderPath: string,
   url: string,
   data: string | null
   srcFilePath: string | null
 }
 
-export const exportHTML = async (options: ExportOptions) => {
+export const exportHTML = async (options: IExportOptions) => {
   const { folderPath, url, data, srcFilePath } = options
 
   const file = url.endsWith('/') ? `${url}index.html` : url
