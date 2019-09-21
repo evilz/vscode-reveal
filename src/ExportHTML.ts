@@ -14,7 +14,7 @@ export const exportHTML = async (options: IExportOptions) => {
 
   const file = url.endsWith('/') ? `${url}index.html` : url
   const filePath = path.join(folderPath ? folderPath  : ".", file)
-  
+
   if (data) {
     try {
       await jetpack.writeAsync(filePath, data)
@@ -33,5 +33,4 @@ export const exportHTML = async (options: IExportOptions) => {
       console.error(error)
     }
   }
-
 }

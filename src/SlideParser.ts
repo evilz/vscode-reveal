@@ -34,7 +34,6 @@ export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, ver
   const verticalSeparatorHeight = lineInSeparator(slidifyOptions.verticalSeparator)
   return slides.slice(0, stopSlideIndex).reduce((lines, slide) => {
 
-    const lineInSlide = countLines(slide.text)
     const count = lines + countLines(slide.text) + separatorHeight
 
     return slide.verticalChildren
