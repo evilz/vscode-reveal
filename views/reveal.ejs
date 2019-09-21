@@ -1,12 +1,20 @@
 <% slides.forEach(function(slide){ %>
 
+
     <% if (slide.children.length === 0){ %>
-        <%- slide.html %>
+        <%- "<section " + slide.attributes + ">" %>
+            
+            <%- slide.html %>
+            <%- "</section>" %>
     <% } else {%>
     <section>
-        <%- slide.html %>
+        <%- "<section " + slide.attributes + ">" %>
+            <%- slide.html %>
+            <%- "</section>" %>
         <% slide.children.forEach(function(child){ %>
-        <%- child.html %>
+            <%- "<section " + child.attributes + ">" %>
+                <%- child.html %>
+            <%- "</section>" %>
         <% }) %>
 
     </section>

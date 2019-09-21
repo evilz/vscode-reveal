@@ -16,12 +16,10 @@ import {
 import * as jetpack from "fs-jetpack";
 import * as path from 'path'
 
-import { debounce } from 'lodash'
 import { SHOW_REVEALJS } from './commands/showRevealJS'
 import { Configuration, getDocumentOptions } from './Configuration'
 import { extensionId } from './constants'
 import { EditorContext } from './EditorContext'
-import { exportHTML, ExportOptions } from './ExportHTML'
 import { ISlide } from './ISlide'
 import { Logger } from './Logger'
 import { RevealServer } from './RevealServer'
@@ -85,7 +83,7 @@ export default class Container {
     this.logger.LogLevel = this._configuration.logLevel
   }
 
-  public constructor(private readonly loadConfiguration: () => Configuration, private readonly logger: Logger, private extensionContext: ExtensionContext) {
+  public constructor(private readonly loadConfiguration: () => Configuration, private readonly logger: Logger, private readonly extensionContext: ExtensionContext) {
     this._configuration = this.loadConfiguration()
 
     this.editorContext = null
@@ -125,9 +123,7 @@ export default class Container {
   private exportTimeout: NodeJS.Timeout | null = null
   public export = async () =>  {
     
-        // try {
-          if(this.exportTimeout !== null)
-          {
+          if(this.exportTimeout !== null) {
             clearTimeout(this.exportTimeout)
           }
           await jetpack.removeAsync(this.exportPath)
@@ -170,8 +166,9 @@ export default class Container {
   }
 
   public get exportPath():string {
-    const finalPath = path.isAbsolute(this.configuration.exportHTMLPath) ? this.configuration.exportHTMLPath : path.join(this.rootDir, this.configuration.exportHTMLPath)
-    return finalPath
+    return path.isAbsolute(this.configuration.exportHTMLPath) 
+            ? this.configuration.exportHTMLPath 
+            : path.join(this.rootDir, this.configuration.exportHTMLPath)
   } 
 
   public isMarkdownFile() {

@@ -24,6 +24,5 @@
         "projectKey": "evilz_vscode-reveal",
         "serverId": "evilz-github"
     },
-    
-
+    "tslint.autoFixOnSave": true,
 }

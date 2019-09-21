@@ -1,4 +1,3 @@
-import * as es6Renderer from 'express-es6-template-engine'
 import * as http from 'http'
 import * as Koa from 'koa'
 import * as render from 'koa-ejs'
@@ -7,11 +6,13 @@ import * as Router from 'koa-router'
 import * as koastatic from 'koa-static'
 import * as path from 'path'
 
-import revealCnverter from './showdown-reveal'
+import markdown from './Markdown-it'
 
 import { Configuration } from './Configuration'
-import { exportHTML, ExportOptions } from "./ExportHTML";
+import { exportHTML, IExportOptions } from "./ExportHTML";
 import { ISlide } from './ISlide';
+
+
 
 export class RevealServer {
   private readonly app = new Koa();
@@ -82,10 +83,12 @@ export class RevealServer {
     const router = new Router();
     router.get('/', async (ctx, next) => {
 
+      
       const htmlSlides = this.getSlides().map(s => (
         {
-          html: revealCnverter.makeHtml(s.text),
-          children: s.verticalChildren.map(c => ({ html: revealCnverter.makeHtml(c.text) }))
+          ...s,
+          html: markdown.render(s.text),
+          children: s.verticalChildren.map(c => ( {...c, html:  markdown.render(c.text) }))
         }))
 
       ctx.state = { slides: htmlSlides, ...this.getConfiguration() }
@@ -120,11 +123,9 @@ export class RevealServer {
     return async (ctx: Koa.Context, next) => {
       await next()
       if (isInExport()) {
-        // req.headers['if-modified-since'] = undefined
-        // req.headers['if-none-match'] = undefined
 
         const exportPath = this.getExportPath()
-        const opts:ExportOptions = typeof ctx.body === "string"
+        const opts:IExportOptions = typeof ctx.body === "string"
                                    ? { folderPath: exportPath, url: ctx.originalUrl.split('?')[0], srcFilePath: null    , data: ctx.body }
                                    : { folderPath: exportPath, url: ctx.originalUrl.split('?')[0], srcFilePath: ctx.body.path, data: null }
 

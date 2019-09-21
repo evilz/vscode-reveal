@@ -50,7 +50,8 @@ test('Check slide 1', () => {
 
 content here `,
         title: 'Title One',
-        verticalChildren: []
+        verticalChildren: [],
+        attributes:''
     }
     expect(slides[0]).toEqual(expected)
 })
@@ -65,7 +66,8 @@ Some
 other 
 content !`,
         title: 'Title 2',
-        verticalChildren: []
+        verticalChildren: [],
+        attributes:''
     }
     expect(slides[1]).toEqual(expected)
 })
@@ -76,19 +78,23 @@ test('Check slide 3.0', () => {
         index: 2,
         text: `# With sub slides`,
         title: 'With sub slides',
+        attributes:'',
         verticalChildren: [{
             index: 1,
             text:
                 `## Sub one`,
             title: 'Sub one',
-            verticalChildren: []
+            verticalChildren: [],
+            attributes:''
         },
         {
             index: 2,
             text:
                 `## Sub Two`,
             title: 'Sub Two',
-            verticalChildren: []
+            verticalChildren: [],
+            attributes:''
+
         }]
     }
     expect(slides[2]).toEqual(expected)
@@ -153,4 +159,24 @@ test('Count line to slide 3.1', () => {
 test('Count line to slide 3.2', () => {
     const lineToSlide = countLinesToSlide(slides, 2, 2, config)
     expect(lineToSlide).toBe(23)
+})
+
+test('Extract slide attributes', () => {
+
+    const content = `<!-- .slide: class="toto" data-something -->
+# title`
+
+    const s = parseSlides(content,config);
+
+    expect(s[0]).toEqual(
+        {
+            index: 0,
+            text:`<!-- .slide: class="toto" data-something -->
+# title`,
+            title: 'title',
+            verticalChildren: [],
+            attributes:'class="toto" data-something'
+        }
+    )
+
 })

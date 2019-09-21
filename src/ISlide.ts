@@ -3,4 +3,5 @@ export interface ISlide {
   index: number
   text: string
   verticalChildren: ISlide[] // Rem : child can't have child
+  attributes: string
 }
