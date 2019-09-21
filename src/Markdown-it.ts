@@ -21,6 +21,6 @@ export default md({
     .use(imsize)
     .use(taskLists, { label: true, labelAfter: true })
     .use(blockEmbed)
-    .use(githubHeadings)
+    .use(githubHeadings,{enableHeadingLinkIcons:false})
     .use(container, 'block');
 // .use(require('markdown-it-span'));

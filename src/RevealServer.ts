@@ -86,7 +86,6 @@ export class RevealServer {
       
       const htmlSlides = this.getSlides().map(s => (
         {
-          // html: revealCnverter.makeHtml(s.text),
           ...s,
           html: markdown.render(s.text),
           children: s.verticalChildren.map(c => ( {...c, html:  markdown.render(c.text) }))
@@ -124,8 +123,6 @@ export class RevealServer {
     return async (ctx: Koa.Context, next) => {
       await next()
       if (isInExport()) {
-        // req.headers['if-modified-since'] = undefined
-        // req.headers['if-none-match'] = undefined
 
         const exportPath = this.getExportPath()
         const opts:IExportOptions = typeof ctx.body === "string"

@@ -686,12 +686,15 @@ A plugin that allows focusing on specific lines of code blocks.
 </section>
 ```
 
-This section is a slide. <!-- .element: class="fragment current-only" data-code-focus="1-12" -->
-<p class="fragment current-only" data-code-focus="1-12">This section is a slide.</p>
-<span class="fragment current-only" data-code-focus="2-5">This will be highlighted by `highlight.js`.</span>
-<span class="fragment current-only" data-code-focus="6-8">This fragment focuses on the first line.</span>
-<span class="fragment current-only" data-code-focus="9-11">This fragment focuses on lines 1 and 2.</span>
-<span class="fragment current-only" data-code-focus="1-12">See the next slide for a demo with the contents of this code block.</span>
+This section is a slide. {.fragment .current-only data-code-focus=1-12}
+
+This will be highlighted by `highlight.js`. {.fragment .current-only data-code-focus=2-5}
+
+This fragment focuses on the first line. {.fragment .current-only data-code-focus=6-8}
+
+This fragment focuses on lines 1 and 2. {.fragment .current-only data-code-focus=9-11}
+
+See the next slide for a demo with the contents of this code block. {.fragment .current-only data-code-focus=1-12}
 
 ---
 
