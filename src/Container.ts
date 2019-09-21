@@ -89,6 +89,7 @@ export default class Container {
     this.editorContext = null
 
     this.server = new RevealServer(
+      this.logger,
       () => this.rootDir,
       () => this.slides,
       () => this.configuration,

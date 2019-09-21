@@ -11,6 +11,7 @@ import markdown from './Markdown-it'
 import { Configuration } from './Configuration'
 import { exportHTML, IExportOptions } from "./ExportHTML";
 import { ISlide } from './ISlide';
+import { Logger } from './Logger'
 
 
 
@@ -20,6 +21,7 @@ export class RevealServer {
   private readonly host = 'localhost'
 
   constructor(
+    private readonly logger: Logger,
     private readonly getRootDir: () => string,
     private readonly getSlides: () => ISlide[],
     private readonly getConfiguration: () => Configuration,
@@ -63,7 +65,7 @@ export class RevealServer {
     const app = this.app
 
     // LOG REQUEST
-    app.use(koalogger())
+    app.use(koalogger((str, args) => {this.logger.log(str)}))
     app.use(this.exportMiddleware(exportHTML, () => this.isInExport()))
 
     // For static media or else
@@ -98,17 +100,10 @@ export class RevealServer {
     const libsPAth = path.join(this.extensionPath, 'libs')
     router.get('/libs', koastatic(libsPAth));
 
-    // TODO : make middleware
-    //   this.app.get('/markdown.md', (req, res) => {
-    //     res.send(this.getSlideContent())
-    //   })
-
     app.use(router.routes());
 
-    // Error Handling
     app.on('error', err => {
-      // todo use logger 
-      console.error('server error', err)
+      this.logger.error(err)
     })
 
     this.server = app.listen();
