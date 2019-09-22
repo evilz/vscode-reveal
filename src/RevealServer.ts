@@ -2,8 +2,7 @@ import * as http from 'http'
 import * as Koa from 'koa'
 import * as render from 'koa-ejs'
 import * as koalogger from 'koa-logger'
-import * as Router from 'koa-router'
-import * as koastatic from 'koa-static'
+import * as serve from 'koa-static-server'
 import * as path from 'path'
 
 import markdown from './Markdown-it'
@@ -66,14 +65,11 @@ export class RevealServer {
 
     // LOG REQUEST
     app.use(koalogger((str, args) => {this.logger.log(str)}))
+
+    // EXPORT
     app.use(this.exportMiddleware(exportHTML, () => this.isInExport()))
 
-    // For static media or else
-    const rootDir = this.getRootDir()
-    if (rootDir) {
-      app.use(koastatic(rootDir));
-    }
-
+    // EJS VIEW engine
     render(app, {
       root: path.resolve(this.extensionPath, 'views'),
       layout: 'template',
@@ -82,9 +78,11 @@ export class RevealServer {
       debug: true
     });
 
-    const router = new Router();
-    router.get('/', async (ctx, next) => {
+    
+    // MAIN FILE
+    app.use( async (ctx, next) => {
 
+      if(ctx.path !== '/') { return next()}
       
       const htmlSlides = this.getSlides().map(s => (
         {
@@ -92,16 +90,24 @@ export class RevealServer {
           html: markdown.render(s.text),
           children: s.verticalChildren.map(c => ( {...c, html:  markdown.render(c.text) }))
         }))
-
       ctx.state = { slides: htmlSlides, ...this.getConfiguration() }
       await ctx.render('reveal');
     });
 
+    
+    // STATIC LIBS
     const libsPAth = path.join(this.extensionPath, 'libs')
-    router.get('/libs', koastatic(libsPAth));
+    app.use(serve({ rootDir:libsPAth,  rootPath: '/libs' }))
 
-    app.use(router.routes());
+    
+     // STATIC RELATIVE TO MD FILE
+     const rootDir = this.getRootDir()
+     if (rootDir) {
+       app.use(serve({rootDir, rootPath : '/' }))
+     }
+ 
 
+    // ERROR HANDLER
     app.on('error', err => {
       this.logger.error(err)
     })
