@@ -401,7 +401,7 @@
     "@types/opn": "^5.5.0",
     "@types/request": "^2.48.2",
     "@types/showdown": "^1.9.3",
-    "@types/webpack": "^4.32.1",
+    "@types/webpack": "^4.39.2",
     "jest": "^24.9.0",
     "jest-junit": "^8.0.0",
     "mocha": "^6.2.0",
