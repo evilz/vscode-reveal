@@ -13,6 +13,8 @@ import {
   Webview
 } from 'vscode'
 
+import * as http from 'http'
+
 import * as jetpack from "fs-jetpack";
 import * as path from 'path'
 
@@ -135,6 +137,7 @@ export default class Container {
             
             })
             this.webView ? this.refreshWebView() : await commands.executeCommand(SHOW_REVEALJS)
+            http.get(this.getUri(false) + "libs/reveal.js/3.8.0/plugin/notes/notes.html");
           
           return promise
       //   } catch (e) {

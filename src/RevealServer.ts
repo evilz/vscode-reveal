@@ -5,13 +5,12 @@ import * as koalogger from 'koa-logger'
 import * as serve from 'koa-static-server'
 import * as path from 'path'
 
-import markdown from './Markdown-it'
+import markdownit from './Markdown-it'
 
 import { Configuration } from './Configuration'
 import { exportHTML, IExportOptions } from "./ExportHTML";
 import { ISlide } from './ISlide';
 import { Logger } from './Logger'
-
 
 
 export class RevealServer {
@@ -84,6 +83,8 @@ export class RevealServer {
 
       if(ctx.path !== '/') { return next()}
       
+
+      const markdown = markdownit(this.getConfiguration())
       const htmlSlides = this.getSlides().map(s => (
         {
           ...s,
