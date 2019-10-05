@@ -10,7 +10,7 @@ import * as path from 'path'
 
 const WIN_APPDATA = process.env.LOCALAPPDATA || '/'
 
-const DEFAULT_CHROME_PATH = {
+export const DEFAULT_CHROME_PATH = {
   LINUX: '/usr/bin/google-chrome',
   OSX: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   WIN: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
