@@ -1,6 +1,6 @@
 import * as fs from 'fs'
-import * as os from 'os'
 import * as opn from 'opn'
+import * as os from 'os'
 import { DEFAULT_CHROME_PATH, getChromePath, openInBrowser } from '../src/BrowserHelper'
 
 jest.mock('os');

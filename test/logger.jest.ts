@@ -1,4 +1,4 @@
-import { LogLevel, Logger } from '../src/Logger'
+import { Logger, LogLevel } from '../src/Logger'
 
 
 test('Logger should log error when level is error', () => {

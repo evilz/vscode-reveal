@@ -1,5 +1,5 @@
 
-import { loadConfiguration, defaultConfiguration } from '../src/Configuration'
+import { defaultConfiguration, loadConfiguration } from '../src/Configuration'
 import { LogLevel } from '../src/Logger'
 
 
