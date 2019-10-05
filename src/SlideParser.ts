@@ -81,7 +81,7 @@ const getVerticalSlides = (slideContent: string, documentOption: IDocumentOption
 }
 
 const findSlideAttributes = (text: string) => {
-  const regex = /<!-- .slide:(.*) -->/gm
+  const regex = /<!--[ ]*.slide:(.*)[ ]*-->/gm
   const m = regex.exec(text)
   return m === null 
     ? ''
