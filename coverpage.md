@@ -1,7 +1,7 @@
 
 # vscode-reveal
 
-<img src="/assets/screenshot1-800.png" data-origin="assets/screenshot1-800.png" alt="demo" style="-webkit-box-shadow:0 0 10px rgba(0, 0, 0, 0.5);
+<img src="assets/screenshot1-800.png" data-origin="assets/screenshot1-800.png" alt="demo" style="-webkit-box-shadow:0 0 10px rgba(0, 0, 0, 0.5);
 	-moz-box-shadow:0 0 10px rgba(0, 0, 0, 0.5);
 	box-shadow:0 0 10px rgba(0, 0, 0, 0.5);" title="vs code">
 
