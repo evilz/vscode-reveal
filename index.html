@@ -6,6 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Show markdown as revealJs presentation">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <script src="https://kit.fontawesome.com/3b829f5013.js" crossorigin="anonymous"></script>
+
   <!-- Theme: Simple -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
   <link rel="stylesheet" href="//unpkg.com/docsify-gifcontrol/dist/docsify-gifcontrol.css">
@@ -13,12 +15,20 @@
     :root {
       /* Reduce the font size */
       --base-font-size: 14px;
+      --base-font-family     :  "Segoe UI","Helvetica Neue","Helvetica",Arial,sans-serif;
+      --base-font-weight     : 100;
   
       /* Change the theme color hue */
       --theme-color   : #0066B8;
-  
+/*       
+      --base-font-family : "Segoe UI","Helvetica Neue","Helvetica",Arial,sans-serif; */
 
+      --cover-heading-color: var(--cover-blockquote-color);
+      --cover-heading-font-weight: 100;
+      --cover-button-border-radius : 0;
+      --cover-max-width : 100em;
     }
+
 
     /* Plugin: Copy Code
     ============================================================================= */
