@@ -22,7 +22,7 @@
 
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="libs/reveal.js/3.8.0/lib/css/zenburn.css">
-    <link rel="stylesheet" href="libs/highlight.js/9.12.0/${highlightTheme}.css">
+    <link rel="stylesheet" href="libs/highlight.js/9.15.10/${highlightTheme}.css">
 
      ${customTheme ? `<link rel="stylesheet" href="${customTheme}.css">` : ''}
 
@@ -204,20 +204,18 @@
                 
                 
                 { src: 'libs/reveal.js/3.8.0/plugin/math/math.js', async: true },
-                { src: 'libs/highlight.js/9.12.0/highlight.js', async: true },
+                { src: 'libs/highlight.js/9.15.10/highlight.js', async: true },
 
                 ${enableTitleFooter ? `{ src: 'libs/reveal.js/3.8.0/plugin/title-footer/title-footer.js', async: true, callback: function() { title_footer.initialize(); } },` : ''}
                 
                 
 		
-                { src: 'libs/highlight.js/9.12.0/reveal-code-focus-1.0.0-mod.js',
+                { src: 'libs/highlight.js/9.15.10/reveal-code-focus-1.0.0-mod.js',
                   async: true,
                   callback: function() {
                     RevealCodeFocus();
                   }
                 },
-                // { src: 'libs/reveal.js/3.8.0/plugin/reveal-code-focus/highlight.pack.js' },
-                // { src: 'libs/reveal.js/3.8.0/plugin/reveal-code-focus/reveal-code-focus.js', async: true, callback: function() { RevealCodeFocus(); } },
                // {src: 'libs/reveal.js/3.8.0/plugin/line-numbers/line-numbers.js'}
             ]
             ,

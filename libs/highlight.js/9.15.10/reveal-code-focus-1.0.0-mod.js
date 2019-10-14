@@ -153,7 +153,7 @@
         if (line.classList.contains('focus')) {
           line.style.opacity = 1.0
         } else {
-          line.style.opacity = 0.2
+          line.style.opacity = 0.6
         }
       })
     }
