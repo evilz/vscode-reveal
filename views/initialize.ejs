@@ -45,13 +45,12 @@
             // { src: 'libs/reveal.js/3.8.0/lib/js/classList.js', condition: function () { return !document.body.classList; } },
             // { src: 'libs/reveal.js/3.8.0/plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
             // { src: 'libs/reveal.js/3.8.0/plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
-            // { src: 'libs/reveal.js/3.8.0/plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
             { src: 'libs/reveal.js/3.8.0/plugin/notes/notes.js', async: true },
             { src: 'libs/reveal.js/3.8.0/plugin/chart/Chart.min.js' },
             { src: 'libs/reveal.js/3.8.0/plugin/chart/csv2chart.js' },
             { src: 'libs/reveal.js/3.8.0/plugin/embed-tweet/embed-tweet.js' },
             { src: 'libs/reveal.js/3.8.0/plugin/math/math.js', async: true },
-            { src: 'libs/highlight.js/9.12.0/highlight.js', async: true },
+            { src: 'libs/highlight.js/9.15.10/highlight.js', async: true },
             { src: 'libs/reveal.js/3.8.0/plugin/anything/anything.js' },
             { src: 'libs/reveal.js/3.8.0/plugin/mermaid/mermaid.min.js', async: true, callback: function() {mermaid.initialize({startOnLoad:false})} },	
 
@@ -76,14 +75,12 @@
             <% } %>
 
         {
-            src: 'libs/highlight.js/9.12.0/reveal-code-focus-1.0.0-mod.js',
+            src: 'libs/highlight.js/9.15.10/reveal-code-focus-1.0.0-mod.js',
             async: true,
             callback: function () {
                 RevealCodeFocus();
             }
         },
-            // { src: 'libs/reveal.js/3.8.0/plugin/reveal-code-focus/highlight.pack.js' },
-            // { src: 'libs/reveal.js/3.8.0/plugin/reveal-code-focus/reveal-code-focus.js', async: true, callback: function() { RevealCodeFocus(); } },
            // {src: 'libs/reveal.js/3.8.0/plugin/line-numbers/line-numbers.js'}
         ]
         ,

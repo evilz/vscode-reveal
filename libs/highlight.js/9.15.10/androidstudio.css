@@ -9,6 +9,7 @@ Author: Pedro Oliveira <kanytu@gmail . com>
   display: block;
   overflow-x: auto;
   padding: 0.5em;
+  border-radius: 5px;
 }
 
 .hljs-number,
