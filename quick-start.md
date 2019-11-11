@@ -34,3 +34,10 @@ We need to create a second slide to make the magic append !
 
 ### Congratulation ! You have created your first slide show ! 
 
+You should now see the VSCode reveal menu on left
+
+![menu](vs-code-treeview.png)
+
+and this in footer
+
+![menu](2-slides.png)
