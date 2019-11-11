@@ -36,8 +36,8 @@ We need to create a second slide to make the magic append !
 
 You should now see the VSCode reveal menu on left
 
-![menu](vs-code-treeview.png)
+![menu](assets/vs-code-treeview.png)
 
 and this in footer
 
-![menu](2-slides.png)
+![menu](assets/2-slides.png)
