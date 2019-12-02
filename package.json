@@ -405,7 +405,7 @@
     "@types/showdown": "^1.9.3",
     "@types/webpack": "^4.39.2",
     "jest": "^24.9.0",
-    "jest-junit": "^8.0.0",
+    "jest-junit": "^10.0.0",
     "mocha": "^6.2.2",
     "mocha-junit-reporter": "^1.23.1",
     "mocha-multi-reporters": "^1.1.7",
