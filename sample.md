@@ -348,7 +348,7 @@ Code syntax highlighting courtesy of [highlight.js](http://softwaremaniacs.org/s
 
 ---
 
-{.slide id="ClevQuote"}
+{.slide id="ClevQuot"}
 ## Clever Quotes
 
 These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">"The nice thing about standards is that there are so many to choose from"</q> and block:
@@ -361,8 +361,9 @@ These guys come in two forms, inline: <q cite="http://searchservervirtualization
 
 You can link between slides internally, [like this](#/2/3).
 
-You can also link to slides by an ID, e.g., [Clever Quotes](#ClevQuot). 
-However, you must have set the ID for the destination slide using, e.g., `{.slide id="ClevQuote"}`
+Link to slides by an ID, e.g., [Clever Quotes](#ClevQuot).  
+However, you must have set the ID at the destination slide using:  
+`{.slide id="UniqueID"}`
 
 ---
 
