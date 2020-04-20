@@ -412,7 +412,7 @@
     "nyc": "^14.1.1",
     "request": "^2.88.0",
     "sonarqube-scanner": "^2.5.0",
-    "source-map-support": "^0.5.13",
+    "source-map-support": "^0.5.17",
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.2.0",
     "ts-node": "^8.3.0",
