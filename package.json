@@ -425,7 +425,7 @@
     "typescript-tslint-plugin": "^0.5.4",
     "vscode": "^1.1.36",
     "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.9",
+    "webpack-cli": "^3.3.12",
     "webpack-node-externals": "^1.7.2"
   }
 }
