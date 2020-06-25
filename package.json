@@ -399,7 +399,7 @@
     "@types/markdown-it": "0.0.9",
     "@types/marked": "^0.6.5",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^10.14.15",
+    "@types/node": "^14.0.14",
     "@types/opn": "^5.5.0",
     "@types/request": "^2.48.2",
     "@types/showdown": "^1.9.3",
