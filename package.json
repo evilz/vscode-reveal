@@ -382,7 +382,7 @@
     "markdown-it-container": "^2.0.0",
     "markdown-it-github-headings": "^1.1.2",
     "markdown-it-imsize": "^2.0.1",
-    "markdown-it-multimd-table": "^3.2.3",
+    "markdown-it-multimd-table": "^4.0.3",
     "markdown-it-regexp": "^0.4.0",
     "markdown-it-span": "^1.0.0",
     "markdown-it-task-lists": "^2.1.1",
