@@ -414,7 +414,7 @@
     "sonarqube-scanner": "^2.5.0",
     "source-map-support": "^0.5.13",
     "ts-jest": "^24.0.2",
-    "ts-loader": "^6.2.0",
+    "ts-loader": "^8.0.9",
     "ts-node": "^8.3.0",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
