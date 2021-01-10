@@ -495,7 +495,7 @@ Add chart from simple string
    }
   ]
  }, 
- "options": { "responsive": "true" }
+ "options": { "responsive": true }
 }
 -->
 </canvas>
