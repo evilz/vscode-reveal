@@ -531,13 +531,47 @@ My second dataset, 28, 48, 40, 19, 86, 27, 90
 --
 
 ### Stacked bar chart from CSV file with JSON configuration
+<!-- By default, chart axes don't "beginAtZero" -->
 <canvas class="stretch" data-chart="bar" data-chart-src="https://rajgoel.github.io/reveal.js-demos/chart/data.csv">
 <!-- 
 {
-"data" : {
-"datasets" : [{ "backgroundColor": "#0f0" }, { "backgroundColor": "#0ff" } ]
-},
-"options": { "responsive": true, "scales": { "xAxes": [{ "stacked": true }], "yAxes": [{ "stacked": true }] } }
+  "data" : {
+    "datasets" : [
+      {"backgroundColor": "#0f0"}, 
+      {"backgroundColor": "#0ff" }
+    ]
+  },
+  "options": { 
+    "animation": {"easing": "easeOutElastic"},
+    "legend": {
+      "display": true,
+      "labels": {
+        "fontColor": "rgb(200, 0, 0)"
+      }
+    },
+    "responsive": true, 
+    "scales": { 
+      "xAxes": [{
+        "ticks": {
+          "fontColor" : "rgba(255,255,152,.8)"
+        },
+        "gridLines" : {
+          "color" : "rgba(255,255,152,.8)"
+        },
+        "stacked": true
+        }],
+      "yAxes": [{
+        "ticks": {
+          "beginAtZero": true,
+          "fontColor" : "rgba(100,100,255,.8)"
+        },
+        "stacked": true,
+        "gridLines" : {
+          "color" : "rgba(100,100,255,.8)"
+        }
+      }] 
+    }
+  }
 }
 -->
 </canvas>
