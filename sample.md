@@ -487,15 +487,15 @@ Add chart from simple string
   "datasets":[
    {
     "data":[65,59,80,81,56,55,40],
-    "label":"My first dataset","backgroundColor":"rgba(20,220,220,.8)"
+    "label":"My first dataset","backgroundColor":"rgba(120,120,255,.8)"
    },
    {
     "data":[28,48,40,19,86,27,90],
-    "label":"My second dataset","backgroundColor":"rgba(220,120,120,.8)"
+    "label":"My second dataset","backgroundColor":"rgba(255,120,120,.8)"
    }
   ]
  }, 
- "options": { "responsive": "true" }
+ "options": { "responsive": true }
 }
 -->
 </canvas>
@@ -530,14 +530,53 @@ My second dataset, 28, 48, 40, 19, 86, 27, 90
 
 --
 
+<!-- .slide: data-background="#aaaaaa" -->
 ### Stacked bar chart from CSV file with JSON configuration
+<!-- By default, chart axes don't "beginAtZero", so set it to true below -->
+<!-- Hover events are broken inside reveal https://github.com/chartjs/Chart.js/issues/7178 so "events" : [""] turns it off-->
 <canvas class="stretch" data-chart="bar" data-chart-src="https://rajgoel.github.io/reveal.js-demos/chart/data.csv">
 <!-- 
 {
-"data" : {
-"datasets" : [{ "backgroundColor": "#0f0" }, { "backgroundColor": "#0ff" } ]
-},
-"options": { "responsive": true, "scales": { "xAxes": [{ "stacked": true }], "yAxes": [{ "stacked": true }] } }
+  "data" : {
+    "datasets" : [
+      {"backgroundColor": "#0f0"}, 
+      {"backgroundColor": "#0ff" }
+    ]
+  },
+  "options": {
+    "events": [""],
+    "animation": {"easing": "easeOutElastic"},
+    "legend": {
+      "display": true,
+      "labels": {
+        "fontColor": "rgb(200, 0, 0)"
+      }
+    },
+    "responsive": true, 
+    "scales": { 
+      "xAxes": [{
+        "ticks": {
+          "fontColor" : "rgba(100,100,255,.8)"
+        },
+        "gridLines" : {
+          "color" : "rgba(100,100,255,.8)",
+          "zeroLineColor": "transparent"
+        },
+        "stacked": true
+        }],
+      "yAxes": [{
+        "ticks": {
+          "beginAtZero": true,
+          "fontColor" : "rgba(100,100,255,.8)"
+        },
+        "stacked": true,
+        "gridLines" : {
+          "color" : "rgba(100,100,255,.8)",
+          "zeroLineColor": "transparent"
+        }
+      }] 
+    }
+  }
 }
 -->
 </canvas>
