@@ -74,17 +74,17 @@ If the preview is opened it will also show the selected slide on it.
 ## <a id="theme"></a> Theme
 
 reveal.js comes with a few themes built in:
-- Black (default)
-- White
-- League
-- Sky
-- Beige
-- Simple
-- Serif
-- Blood
-- Night
-- Moon
-- Solarized
+- black - Black background, white text, blue links (default)
+- white - White background, black text, blue links
+- league - Gray background, white text, blue links
+- beige - Beige background, dark text, brown links
+- sky - Blue background, thin dark text, blue links
+- night - Black background, thick white text, orange links
+- serif - Cappuccino background, gray text, brown links
+- simple - White background, black text, blue links
+- solarized - Cream-colored background, dark green text, blue links
+- blood - Dark background, thick white text, red links
+- moon - Dark blue background, thick grey text, blue link
 
 You can set it using `revealjs.theme` parameter in Vs code config or in the document itself using front matter.
 
