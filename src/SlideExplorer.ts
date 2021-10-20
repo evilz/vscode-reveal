@@ -3,15 +3,16 @@ import * as vscode from 'vscode'
 import { GO_TO_SLIDE } from './commands/goToSlide'
 import { ISlide } from './ISlide'
 
+
 export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
   private readonly _onDidChangeTreeData: vscode.EventEmitter<SlideNode | null> = new vscode.EventEmitter<SlideNode | null>()
 
   public readonly onDidChangeTreeData: vscode.Event<SlideNode | null> = this._onDidChangeTreeData.event
 
-  constructor(private readonly getSlide: () => ISlide[]) {}
+  constructor(private readonly getSlide: () => ISlide[]) { }
 
   public update() {
-    this._onDidChangeTreeData.fire()
+    this._onDidChangeTreeData.fire(null)
   }
 
   public register() {
