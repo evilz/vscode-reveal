@@ -4,7 +4,8 @@
  */
 
 import * as fs from 'fs'
-import * as opn from 'opn'
+//import * as opn from 'opn'
+import * as open from 'open'
 import * as os from 'os'
 import * as path from 'path'
 
@@ -81,11 +82,11 @@ export function getChromePath(): string | null {
 export const openInBrowser = async (browserPath: string, url: string, headless = false) => {
   try {
     if (headless) {
-      return await opn(url, { app: [browserPath, '--headless'] })
+      return await open(url, { app: { name: 'google chrome', arguments: ['--headless'] } });
     }
-    return await opn(url, { app: browserPath })
+    return await open(url, { app: { name: 'google chrome' } });
   } catch (error) {
-    await opn(url)
+    await open(url)
     throw new Error('Can find Chrome on your computer, try with default browser...')
   }
 }
