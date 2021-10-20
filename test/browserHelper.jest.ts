@@ -5,6 +5,9 @@ import { DEFAULT_CHROME_PATH, getChromePath, openInBrowser } from '../src/Browse
 import { mocked } from 'ts-jest/utils'
 
 
+test('TODO again ...', () => {
+    expect(true).toBe(true)
+})
 
 // jest.mock('os');
 // jest.mock('fs');
