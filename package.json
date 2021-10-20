@@ -385,8 +385,7 @@
     "markdown-it-regexp": "^0.4.0",
     "markdown-it-span": "^1.0.0",
     "markdown-it-task-lists": "^2.1.1",
-    "opn": "^6.0.0",
-    "os": "^0.1.1"
+    "opn": "^6.0.0"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",
@@ -412,6 +411,7 @@
     "mocha-multi-reporters": "^1.1.7",
     "nyc": "^14.1.1",
     "open": "^8.3.0",
+    "os": "^0.1.2",
     "request": "^2.88.0",
     "sonarqube-scanner": "^2.5.0",
     "source-map-support": "^0.5.13",
