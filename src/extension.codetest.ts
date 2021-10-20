@@ -10,7 +10,7 @@ suite('Extension Tests', function () {
 
     const vscodereveal = vscode.extensions.getExtension('evilz.vscode-reveal')
 
-    //vscodereveal!.should.exist('vscode extension')
+    // vscodereveal!.should.exist('vscode extension')
 
     const started = vscodereveal!.isActive
     assert.equal(started, true)

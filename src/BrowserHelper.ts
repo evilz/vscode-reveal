@@ -4,7 +4,7 @@
  */
 
 import * as fs from 'fs'
-//import * as opn from 'opn'
+// import * as opn from 'opn'
 import * as open from 'open'
 import * as os from 'os'
 import * as path from 'path'
