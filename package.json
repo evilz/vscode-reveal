@@ -338,7 +338,7 @@
     "verbose": true,
     "preset": "ts-jest",
     "testMatch": [
-      "**/test/**/*.jest.ts"
+      "**/*.jest.ts"
     ],
     "coverageReporters": [
       "lcov",
