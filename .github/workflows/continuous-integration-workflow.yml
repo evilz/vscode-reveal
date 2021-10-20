@@ -4,31 +4,23 @@ on: [push]
 
 jobs:
   build:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        node_version: [ 12]
-        os: [ubuntu-latest, windows-latest]
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: Detect Node version from .nvmrc
+        id: node_version
+        run: echo "::set-output name=nvmrc::$(cat .nvmrc)"
+
+      - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: ${{ steps.node_version.outputs.nvmrc }}
 
-      - name: npm install
-        run:
-          npm install
+      - run: npm ci
 
       - name: build
-        run:
-          npm run vscode:prepublish
-          
+        run: npm run vscode:prepublish
 
       - name: test
-        run:
-          npm run coverage
+        run: npm run coverage
