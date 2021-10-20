@@ -34,7 +34,7 @@ export default class Container {
   private readonly slidesExplorer: SlideTreeProvider
   private editorContext: EditorContext | null
   private _configuration: Configuration
-  private webView: Webview | null
+  private webView: Webview | null = null
 
   public onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent) {
     if (this.editorContext === null) {
@@ -124,29 +124,29 @@ export default class Container {
   public get isInExport() { return this.exportTimeout !== null }
 
   private exportTimeout: NodeJS.Timeout | null = null
-  public export = async () =>  {
-    
-          if(this.exportTimeout !== null) {
-            clearTimeout(this.exportTimeout)
-          }
-          await jetpack.removeAsync(this.exportPath)
-          
+  public export = async () => {
 
-          const promise = new Promise<string>((resolve) => { 
-            this.exportTimeout = setTimeout(() => resolve(this.exportPath), 5000)
-            
-            })
-            this.webView ? this.refreshWebView() : await commands.executeCommand(SHOW_REVEALJS)
-            http.get(this.getUri(false) + "libs/reveal.js/3.8.0/plugin/notes/notes.html");
-          
-          return promise
-      //   } catch (e) {
-      //     return this.configuration.exportHTMLPath;
-      //     console.error(e);
+    if (this.exportTimeout !== null) {
+      clearTimeout(this.exportTimeout)
+    }
+    await jetpack.removeAsync(this.exportPath)
 
-      // }
-    
-    
+
+    const promise = new Promise<string>((resolve) => {
+      this.exportTimeout = setTimeout(() => resolve(this.exportPath), 5000)
+
+    })
+    this.webView ? this.refreshWebView() : await commands.executeCommand(SHOW_REVEALJS)
+    http.get(this.getUri(false) + "libs/reveal.js/3.8.0/plugin/notes/notes.html");
+
+    return promise
+    //   } catch (e) {
+    //     return this.configuration.exportHTMLPath;
+    //     console.error(e);
+
+    // }
+
+
   }
 
 
@@ -169,11 +169,11 @@ export default class Container {
     return withPosition ? `${serverUri}#/${slidepos.horizontal}/${slidepos.vertical}/${Date.now()}` : `${serverUri}`
   }
 
-  public get exportPath():string {
-    return path.isAbsolute(this.configuration.exportHTMLPath) 
-            ? this.configuration.exportHTMLPath 
-            : path.join(this.rootDir, this.configuration.exportHTMLPath)
-  } 
+  public get exportPath(): string {
+    return path.isAbsolute(this.configuration.exportHTMLPath)
+      ? this.configuration.exportHTMLPath
+      : path.join(this.rootDir, this.configuration.exportHTMLPath)
+  }
 
   public isMarkdownFile() {
     return this.editorContext === null ? false : this.editorContext.isMarkdownFile

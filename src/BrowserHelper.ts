@@ -82,9 +82,9 @@ export function getChromePath(): string | null {
 export const openInBrowser = async (browserPath: string, url: string, headless = false) => {
   try {
     if (headless) {
-      return await open(url, { app: { name: 'google chrome', arguments: ['--headless'] } });
+      return await open(url, { app: { name: open.apps.chrome, arguments: ['--headless'] } });
     }
-    return await open(url, { app: { name: 'google chrome' } });
+    return await open(url, { app: { name: open.apps.chrome } });
   } catch (error) {
     await open(url)
     throw new Error('Can find Chrome on your computer, try with default browser...')

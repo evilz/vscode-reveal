@@ -29,7 +29,7 @@
     "onCommand:vscode-revealjs.showRevealJS",
     "onCommand:vscode-revealjs.showRevealJSInBrowser"
   ],
-  "main": "./dist/extension",
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
@@ -319,12 +319,14 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "webpack --mode production",
+    "build": "webpack --env production",
+    "watch": "webpack --watch ",
+    "vscode:prepublish": "npm run package",
+    "package": "webpack --mode production --devtool hidden-source-map",
     "webpack": "webpack --mode development",
     "webpack-dev": "webpack --mode development --watch",
     "test-compile": "tsc -p ./",
     "compile": "tsc -watch -p ./",
-    "build": "tsc -p ./",
     "test:vscode": "node ./node_modules/vscode/bin/test",
     "test": "jest",
     "coverage": "jest --coverage",
@@ -404,6 +406,8 @@
     "@types/vscode": "^1.61.0",
     "@types/webpack": "^4.39.2",
     "@vscode/test-web": "^0.0.15",
+    "esbuild": "^0.13.8",
+    "esbuild-loader": "^2.16.0",
     "jest": "^24.9.0",
     "jest-junit": "^8.0.0",
     "mocha": "^6.2.2",

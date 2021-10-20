@@ -15,7 +15,7 @@ import { Logger } from './Logger'
 
 export class RevealServer {
   private readonly app = new Koa();
-  private server: http.Server | null
+  private server: http.Server | null = null
   private readonly host = 'localhost'
 
   constructor(
@@ -63,7 +63,7 @@ export class RevealServer {
     const app = this.app
 
     // LOG REQUEST
-    app.use(koalogger((str, args) => {this.logger.log(str)}))
+    app.use(koalogger((str, args) => { this.logger.log(str) }))
 
     // EXPORT
     app.use(this.exportMiddleware(exportHTML, () => this.isInExport()))
@@ -77,36 +77,36 @@ export class RevealServer {
       debug: true
     });
 
-    
-    // MAIN FILE
-    app.use( async (ctx, next) => {
 
-      if(ctx.path !== '/') { return next()}
-      
+    // MAIN FILE
+    app.use(async (ctx, next) => {
+
+      if (ctx.path !== '/') { return next() }
+
 
       const markdown = markdownit(this.getConfiguration())
       const htmlSlides = this.getSlides().map(s => (
         {
           ...s,
           html: markdown.render(s.text),
-          children: s.verticalChildren.map(c => ( {...c, html:  markdown.render(c.text) }))
+          children: s.verticalChildren.map(c => ({ ...c, html: markdown.render(c.text) }))
         }))
       ctx.state = { slides: htmlSlides, ...this.getConfiguration() }
       await ctx.render('reveal');
     });
 
-    
+
     // STATIC LIBS
     const libsPAth = path.join(this.extensionPath, 'libs')
-    app.use(serve({ rootDir:libsPAth,  rootPath: '/libs' }))
+    app.use(serve({ rootDir: libsPAth, rootPath: '/libs' }))
 
-    
-     // STATIC RELATIVE TO MD FILE
-     const rootDir = this.getRootDir()
-     if (rootDir) {
-       app.use(serve({rootDir, rootPath : '/' }))
-     }
- 
+
+    // STATIC RELATIVE TO MD FILE
+    const rootDir = this.getRootDir()
+    if (rootDir) {
+      app.use(serve({ rootDir, rootPath: '/' }))
+    }
+
 
     // ERROR HANDLER
     app.on('error', err => {
@@ -117,24 +117,24 @@ export class RevealServer {
   }
 
 
-  private readonly exportMiddleware = (exportfn: (ExportOptions)=>Promise<void>, isInExport) => {
+  private readonly exportMiddleware = (exportfn: (ExportOptions) => Promise<void>, isInExport) => {
 
-    
-  
+
+
 
     return async (ctx: Koa.Context, next) => {
       await next()
       if (isInExport()) {
 
         const exportPath = this.getExportPath()
-        const opts:IExportOptions = typeof ctx.body === "string"
-                                   ? { folderPath: exportPath, url: ctx.originalUrl.split('?')[0], srcFilePath: null    , data: ctx.body }
-                                   : { folderPath: exportPath, url: ctx.originalUrl.split('?')[0], srcFilePath: ctx.body.path, data: null }
+        const opts: IExportOptions = typeof ctx.body === "string"
+          ? { folderPath: exportPath, url: ctx.originalUrl.split('?')[0], srcFilePath: null, data: ctx.body }
+          : { folderPath: exportPath, url: ctx.originalUrl.split('?')[0], srcFilePath: ctx.body.path, data: null }
 
         await exportfn(opts)
 
       }
-     
+
     }
   }
 }

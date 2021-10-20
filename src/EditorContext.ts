@@ -16,7 +16,7 @@ export class EditorContext {
     this.refresh()
   }
 
-  private _slides: ISlide[]
+  private _slides: ISlide[] = []
   private _position: ISlidePosition = { horizontal: 0, vertical: 0 }
 
   public refresh() {

@@ -1,6 +1,6 @@
 
-import { defaultConfiguration, loadConfiguration } from '../src/Configuration'
-import { LogLevel } from '../src/Logger'
+import { defaultConfiguration, loadConfiguration } from './Configuration'
+import { LogLevel } from './Logger'
 
 
 test('Loaded configuration should override default configuration', () => {

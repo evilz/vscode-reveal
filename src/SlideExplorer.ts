@@ -41,7 +41,7 @@ export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
           s,
           parentIndex !== undefined,
           `${s.index} : ${s.title}`,
-          s.verticalChildren ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None,
+          s.verticalChildren.length > 0 ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None,
           {
             arguments: [parentIndex === undefined ? { horizontal: s.index, vertical: 0 } : { horizontal: parentIndex, vertical: s.index }],
             command: GO_TO_SLIDE,
@@ -58,8 +58,8 @@ class SlideNode extends vscode.TreeItem {
   }
 
   public iconPath = {
-    dark: path.join(__filename, '..', '..', '..', 'resources', this.iconName),
-    light: path.join(__filename, '..', '..', '..', 'resources', this.iconName)
+    dark: path.join(__filename, '..', '..', 'resources', this.iconName),
+    light: path.join(__filename, '..', '..', 'resources', this.iconName)
   }
   constructor(
     public readonly slide: ISlide,

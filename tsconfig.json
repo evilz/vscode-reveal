@@ -1,29 +1,21 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "target": "es2018",
-        "outDir": "dist",
-        "lib": [
-            "es2018"
-        ],
-        "sourceMap": true,
-        "rootDir": ".",
-        "strictNullChecks": true,
-        "plugins": [
-            {
-                "name": "typescript-tslint-plugin"
-            }
-        ],
-        "types": [
-            "jest",
-            "node"
-
-        ]
-    },
-    "exclude": [
-        "node_modules",
-        ".vscode-test",
-        "test"
-    ]
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "ES2020",
+		"lib": [
+			"ES2020"
+		],
+		"sourceMap": true,
+		"rootDir": "src",
+		"strict": true, /* enable all strict type-checking options */
+		/* Additional Checks */
+		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
+		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
+		// "noUnusedParameters": true,  /* Report errors on unused parameters. */
+		"noImplicitAny": false
+	},
+	"exclude": [
+		"node_modules",
+		".vscode-test"
+	]
 }

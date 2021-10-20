@@ -69,13 +69,13 @@ const getVerticalSlides = (slideContent: string, documentOption: IDocumentOption
 
   return slides.map((s, i) => {
     const content = trimFirstLastEmptyLine(s)
-    return { 
-      title: findTitle(content), 
-      index: i, 
-      text: content, 
-      verticalChildren: [], 
-      attributes: findSlideAttributes(content) 
-    
+    return {
+      title: findTitle(content),
+      index: i,
+      text: content,
+      verticalChildren: [],
+      attributes: findSlideAttributes(content)
+
     }
   })
 }
@@ -83,7 +83,7 @@ const getVerticalSlides = (slideContent: string, documentOption: IDocumentOption
 const findSlideAttributes = (text: string) => {
   const regex = /<!--[ ]*.slide:(.*)[ ]*-->/gm
   const m = regex.exec(text)
-  return m === null 
+  return m === null
     ? ''
     : m[1].trim()
 }

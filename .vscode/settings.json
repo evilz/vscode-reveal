@@ -6,9 +6,11 @@
     "search.exclude": {
         "out": true // set this to false to include "out" folder in search results
     },
-    "typescript.tsdk": "./node_modules/typescript/lib",
+    "typescript.tsc.autoDetect": "off",
     "mocha.files.glob": "./test/**/*test.ts",
-    "mocha.requires": ["ts-node/register"],
+    "mocha.requires": [
+        "ts-node/register"
+    ],
     "mocha.options": {
         "compilers": "ts-node/register"
     },
