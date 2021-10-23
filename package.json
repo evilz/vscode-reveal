@@ -386,8 +386,7 @@
     "markdown-it-multimd-table": "^3.2.3",
     "markdown-it-regexp": "^0.4.0",
     "markdown-it-span": "^1.0.0",
-    "markdown-it-task-lists": "^2.1.1",
-    "opn": "^6.0.0"
+    "markdown-it-task-lists": "^2.1.1"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",

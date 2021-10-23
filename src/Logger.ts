@@ -1,6 +1,6 @@
 export enum LogLevel {
   Error,
-  Verbose
+  Verbose,
 }
 
 export class Logger {

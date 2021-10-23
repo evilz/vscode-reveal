@@ -10,12 +10,12 @@ import {
   TextDocumentChangeEvent,
   TextEditor,
   TextEditorSelectionChangeEvent,
-  Webview
+  Webview,
 } from 'vscode'
 
 import * as http from 'http'
 
-import * as jetpack from "fs-jetpack";
+import * as jetpack from 'fs-jetpack'
 import * as path from 'path'
 
 import { SHOW_REVEALJS } from './commands/showRevealJS'
@@ -58,8 +58,10 @@ export default class Container {
     if (editor && editor.document.languageId === 'markdown') {
       this.editorContext = new EditorContext(editor, getDocumentOptions(this.configuration))
     }
-    this.server.start()
-    this.refreshWebView()
+    if (this.webView) {
+      this.server.start()
+      this.refreshWebView()
+    }
     this.statusBarController.update()
     this.slidesExplorer.update()
   }
@@ -85,7 +87,11 @@ export default class Container {
     this.logger.LogLevel = this._configuration.logLevel
   }
 
-  public constructor(private readonly loadConfiguration: () => Configuration, private readonly logger: Logger, private readonly extensionContext: ExtensionContext) {
+  public constructor(
+    private readonly loadConfiguration: () => Configuration,
+    private readonly logger: Logger,
+    private readonly extensionContext: ExtensionContext
+  ) {
     this._configuration = this.loadConfiguration()
 
     this.editorContext = null
@@ -100,7 +106,10 @@ export default class Container {
       () => this.exportPath
     )
 
-    this.statusBarController = new StatusBarController(() => this.server.uri, () => this.slideCount)
+    this.statusBarController = new StatusBarController(
+      () => this.server.uri,
+      () => this.slideCount
+    )
     this.statusBarController.update()
 
     this.slidesExplorer = new SlideTreeProvider(() => this.slides)
@@ -117,38 +126,29 @@ export default class Container {
   public get configuration() {
     return this.editorContext !== null && this.editorContext.hasfrontConfig
       ? // tslint:disable-next-line:no-object-literal-type-assertion
-      ({ ...this._configuration, ...this.editorContext.documentOptions } as Configuration)
+        ({ ...this._configuration, ...this.editorContext.documentOptions } as Configuration)
       : this._configuration
   }
 
-  public get isInExport() { return this.exportTimeout !== null }
+  public get isInExport() {
+    return this.exportTimeout !== null
+  }
 
   private exportTimeout: NodeJS.Timeout | null = null
   public export = async () => {
-
     if (this.exportTimeout !== null) {
       clearTimeout(this.exportTimeout)
     }
     await jetpack.removeAsync(this.exportPath)
 
-
     const promise = new Promise<string>((resolve) => {
       this.exportTimeout = setTimeout(() => resolve(this.exportPath), 5000)
-
     })
     this.webView ? this.refreshWebView() : await commands.executeCommand(SHOW_REVEALJS)
-    http.get(this.getUri(false) + "libs/reveal.js/3.8.0/plugin/notes/notes.html");
+    http.get(this.getUri(false) + 'libs/reveal.js/3.8.0/plugin/notes/notes.html')
 
     return promise
-    //   } catch (e) {
-    //     return this.configuration.exportHTMLPath;
-    //     console.error(e);
-
-    // }
-
-
   }
-
 
   get slides(): ISlide[] {
     return this.editorContext === null ? [] : this.editorContext.slides
@@ -159,8 +159,10 @@ export default class Container {
   }
 
   public getUri(withPosition = true): string | null {
-    if (!this.server.isListening || this.editorContext === null) {
-      return null
+    if (this.editorContext === null) return null
+
+    if (!this.server.isListening) {
+      this.server.start()
     }
 
     const serverUri = this.server.uri

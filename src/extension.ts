@@ -1,7 +1,6 @@
 'use strict'
 
 import { commands, ExtensionContext, window, workspace } from 'vscode'
-import { getChromePath } from './BrowserHelper'
 import { EXPORT_HTML, exportHTML } from './commands/exportHTML'
 import { EXPORT_PDF, exportPDF } from './commands/exportPDF'
 import { GO_TO_SLIDE } from './commands/goToSlide'
@@ -20,10 +19,10 @@ export function activate(context: ExtensionContext) {
   }
 
   const loadConfigurationFn = () => loadConfiguration(() => workspace.getConfiguration(extensionId) as any)
+  
   const startingConfig = loadConfigurationFn()
 
   const outputChannel = window.createOutputChannel(extensionId)
-
   const appendLine = (value: string) => outputChannel.appendLine(value)
 
   const logger = new Logger(startingConfig.logLevel, appendLine)
@@ -32,20 +31,15 @@ export function activate(context: ExtensionContext) {
 
   container.onDidChangeActiveTextEditor(window.activeTextEditor)
 
-  const getBrowser = () => {
-    const fromConf = container.configuration.browserPath
-    return fromConf === null ? getChromePath() : fromConf
-  }
-
   logger.log('"vscode-reveal" is now active')
   commands.executeCommand('setContext', 'slideExplorerEnabled', container.configuration.slideExplorerEnabled)
 
   registerCommand(SHOW_REVEALJS, showRevealJS(view => container.refreshWebView(view)))
-  registerCommand(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() => container.getUri(), getBrowser))
+  registerCommand(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() => container.getUri()))
   registerCommand(STOP_REVEALJS_SERVER, () => container.stopServer())
 
   registerCommand(GO_TO_SLIDE, arg => container.goToSlide(arg.horizontal, arg.vertical))
-  registerCommand(EXPORT_PDF, exportPDF(() => container.getUri(false), getBrowser))
+  registerCommand(EXPORT_PDF, exportPDF(() => container.getUri(false)))
   registerCommand(
     EXPORT_HTML,
     exportHTML(logger, container.export, () => container.configuration.openFilemanagerAfterHTMLExport)
