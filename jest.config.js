@@ -2,7 +2,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: [ "**/*.jesty.ts" ],
+  testMatch: [ "**/*.jest.ts" ],
   verbose: true
 };
 
