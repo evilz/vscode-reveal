@@ -43,7 +43,9 @@ export class RevealServer {
     }
 
     const addr = this.server.address()
-    return typeof addr === 'string' ? addr : `http://${this.host}:${addr.port}/`
+    if (typeof addr === "string" ) { return addr; }
+    if (addr === null) {return ""};
+    return `http://${this.host}:${addr.port}/`;
   }
   public start() {
     try {
@@ -113,7 +115,7 @@ export class RevealServer {
   }
 
   private readonly exportMiddleware = (exportfn: (ExportOptions) => Promise<void>, isInExport) => {
-    return async (ctx: Koa.Context, next) => {
+    return async (ctx: Koa.ParameterizedContext<Koa.DefaultState,Koa.DefaultContext,{path:string} > , next) => {
       await next()
       if (isInExport()) {
         const exportPath = this.getExportPath()

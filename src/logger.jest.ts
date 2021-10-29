@@ -9,7 +9,7 @@ test('Logger should log error when level is error', () => {
   logger.error('text1')
 
   expect(output).not.toEqual('')
-})
+});
 
 test('Logger should NOT log when level is error', () => {
   let output = ''
@@ -20,7 +20,7 @@ test('Logger should NOT log when level is error', () => {
   logger.log('text1')
 
   expect(output).toEqual('')
-})
+});
 
 test('Logger should log error when level is verbose', () => {
   let output = ''
@@ -31,7 +31,7 @@ test('Logger should log error when level is verbose', () => {
   logger.error('text1')
 
   expect(output).not.toEqual('')
-})
+});
 
 test('Logger should log when level is verbose', () => {
   let output = ''
@@ -42,7 +42,7 @@ test('Logger should log when level is verbose', () => {
   logger.log('text1')
 
   expect(output).not.toEqual('')
-})
+});
 
 test('Logger should Not log when level is verbose', () => {
   let output = ''
@@ -53,4 +53,4 @@ test('Logger should Not log when level is verbose', () => {
   logger.log('text1')
 
   expect(output).not.toEqual('')
-})
+});

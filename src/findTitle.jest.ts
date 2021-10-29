@@ -8,5 +8,5 @@ test('Should retrieve title from content', () => {
 
     const slides = parseSlides(content, defaultConfiguration)
     expect(slides[0].title).toBe("just first line")
-})
+});
 

@@ -40,7 +40,7 @@ test('Parse Slide content', () =>{
     
 const allslides = parseSlides(slideContent, config)
 expect(allslides.length).toBe(3)
-})
+});
 
 test('Check slide 1', () => {
     const expected = {
@@ -54,7 +54,7 @@ content here `,
         attributes:''
     }
     expect(slides[0]).toEqual(expected)
-})
+});
 
 test('Check slide 2', () => {
     const expected = {
@@ -70,7 +70,7 @@ content !`,
         attributes:''
     }
     expect(slides[1]).toEqual(expected)
-})
+});
 
 
 test('Check slide 3.0', () => {
@@ -98,12 +98,12 @@ test('Check slide 3.0', () => {
         }]
     }
     expect(slides[2]).toEqual(expected)
-})
+});
 
 
 test('Should count horizontal slides', () => {
     expect(slides.length).toBe(3)
-})
+});
 
 
 test('Should count vertical slides', () => {
@@ -112,7 +112,7 @@ test('Should count vertical slides', () => {
     if (subslides) {
         expect(subslides.length).toBe(2)
     }
-})
+});
 
 test('Slides should have correct number of lines', () => {
 
@@ -129,37 +129,37 @@ test('Slides should have correct number of lines', () => {
         expect(countLines(subslides[1].text)).toBe(1)
     }
 
-})
+});
 
 
 
 test('Count line to slide 1', () => {
     const lineToSlide = countLinesToSlide(slides, 0, 0, config)
     expect(lineToSlide).toBe(1)
-})
+});
 
 
 test('Count line to slide 2', () => {
     const lineToSlide = countLinesToSlide(slides, 1, 0, config)
     expect(lineToSlide).toBe(7)
-})
+});
 
 
 test('Count line to slide 3', () => {
     const lineToSlide = countLinesToSlide(slides, 2, 0, config)
     expect(lineToSlide).toBe(15)
-})
+});
 
 test('Count line to slide 3.1', () => {
     const lineToSlide = countLinesToSlide(slides, 2, 1, config)
     expect(lineToSlide).toBe(19)
-})
+});
 
 
 test('Count line to slide 3.2', () => {
     const lineToSlide = countLinesToSlide(slides, 2, 2, config)
     expect(lineToSlide).toBe(23)
-})
+});
 
 test('Extract slide attributes', () => {
 
@@ -179,4 +179,4 @@ test('Extract slide attributes', () => {
         }
     )
 
-})
+});
