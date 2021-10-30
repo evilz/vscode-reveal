@@ -24,3 +24,6 @@ jobs:
 
       - name: test
         run: npm run coverage
+
+      - name: integration test
+        run: npm run integration-test
