@@ -26,4 +26,4 @@ jobs:
         run: npm run coverage
 
       - name: integration test
-        run: npm run integration-test
+        run: xvfb-run -a npm run ui-test

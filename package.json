@@ -336,7 +336,7 @@
     "preview": "vite preview",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "integration-test": "node ./dist/test/runTest.js"
+    "ui-test": "node ./dist/test/runTest.js"
   },
   "nyc": {
     "extension": [
