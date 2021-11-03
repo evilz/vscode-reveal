@@ -12,14 +12,14 @@ config.verticalSeparator = '^\\r?\\n--\\r?\\n$'
 
 const slideContent = `# Title One
 
-content here 
+content here
 
 ---
 
 # Title 2
 
 Some
-other 
+other
 content !
 
 ---
@@ -60,7 +60,7 @@ test('Check slide 2', () => {
     text: `# Title 2
 
 Some
-other 
+other
 content !`,
     title: 'Title 2',
     verticalChildren: [],
