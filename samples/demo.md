@@ -1,5 +1,7 @@
-
-
+---
+theme: Sky
+enableMenu: false
+---
 
 [![reveal.js logo](https://static.slid.es/reveal/logo-v1/reveal-white-text.svg =x180)](https://revealjs.com)
 

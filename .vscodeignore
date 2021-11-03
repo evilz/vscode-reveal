@@ -1,4 +1,4 @@
-node_modules/**
+
 webpack.config.js
 .vscode/**
 .vscode-test/**

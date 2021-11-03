@@ -18,14 +18,37 @@
 	<link rel="stylesheet" href="libs/reveal.js/4.1.3/reveal.css">
 
 	
-	<link rel="stylesheet" href="libs/reveal.js/4.1.3/theme/black.css" id="theme">
+	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 	<!-- Theme used for syntax highlighting of code -->
 	<link rel="stylesheet" href="libs/reveal.js/4.1.3/plugin/highlight/monokai.css">
 		
 	<link rel="stylesheet" href="libs/reveal.js/4.1.3/plugin/chalkboard/style.css">
-	<link rel="stylesheet" href="libs/reveal.js/4.1.3/plugin/customcontrols/style.css">
+	
+	
+	<% if (enableMenu ) { %>
+		<link rel="stylesheet" href="libs/reveal.js/4.1.3/plugin/customcontrols/style.css">
+	<%}%>
+	<link rel="stylesheet" href="libs/styles/tasklist.css">
+
+
+
+  <!-- Revealjs Theme -->
+  <% if (theme) { %>
+  	<link rel="stylesheet" href="libs/reveal.js/4.1.3/theme/<%=theme%>.css" id="theme">
+  <%}%>
+  <% if (!theme) { %>
+  	<link rel="stylesheet" href="libs/reveal.js/4.1.3/theme/black.css" id="theme">
+  <%}%>
+
+
+  <!-- Revealjs Theme -->
+  <% if (customTheme) { %>
+  	<link rel="stylesheet" href="<%=customTheme%>.css">
+  <%}%>
+
+ 
 </head>
 
 <body>
@@ -47,6 +70,8 @@
 
 
   </div>
+
+  	
 	<script src="libs/reveal.js/4.1.3/reveal.js"></script>
 	<script src="libs/reveal.js/4.1.3/plugin/zoom/zoom.js"></script>
 	<script src="libs/reveal.js/4.1.3/plugin/notes/notes.js"></script>
@@ -71,6 +96,23 @@
 	<script src="libs/reveal.js/4.1.3/plugin/chart/plugin.js"></script>
 
   <script>
+
+	 	let plugins = [RevealZoom, 
+				RevealNotes, 
+				RevealSearch, 
+				RevealMarkdown, 
+				RevealHighlight,
+				RevealMenu,
+				RevealAnimate,
+				//RevealAnything,
+				//RevealAudioSlideshow,
+				RevealAudioRecorder,
+				RevealChalkboard,
+				RevealCustomControls,
+				RevealChart ];
+		if (window.location.search.match(/print-pdf/gi)) {
+      		plugins = [];
+    	}
 
 		// Also available as an ES module, see:
 		// https://revealjs.com/initialization/
@@ -132,21 +174,7 @@
 					radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
 			},
 			// Learn about plugins: https://revealjs.com/plugins/
-			plugins: [
-				RevealZoom, 
-				RevealNotes, 
-				RevealSearch, 
-				RevealMarkdown, 
-				RevealHighlight,
-				RevealMenu,
-				RevealAnimate,
-				//RevealAnything,
-				//RevealAudioSlideshow,
-				RevealAudioRecorder,
-				RevealChalkboard,
-				RevealCustomControls,
-				RevealChart 
-   			]
+			plugins: plugins
 		});
 
 

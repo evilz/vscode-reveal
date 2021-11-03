@@ -1,4 +1,4 @@
-import * as attrs from '@evilz/markdown-it-attrs'
+import * as attrs from 'markdown-it-attrs'
 import * as md from 'markdown-it'
 import * as blockEmbed from 'markdown-it-block-embed'
 import * as container from 'markdown-it-container'
@@ -7,6 +7,10 @@ import * as imsize from 'markdown-it-imsize'
 import * as multimdTable from 'markdown-it-multimd-table'
 import * as taskLists from 'markdown-it-task-lists'
 import { Configuration } from './Configuration'
+
+import * as pako from 'pako'
+
+import * as encoder from 'plantuml-encoder'
 
 // const note = regex(
 //     // regexp to match
@@ -48,12 +52,181 @@ const note = (markdown, config) => {
   }
 }
 
+const preProcess = (/** @type {string} */ source) => source.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+const mermaidContainer = () => {
+  const pluginKeyword = 'mermaid'
+  const tokenTypeInline = 'inline'
+  const ttContainerOpen = 'container_' + pluginKeyword + '_open'
+  const ttContainerClose = 'container_' + pluginKeyword + '_close'
+  const empty = []
+  return {
+    marker: '`',
+    anyClass: true,
+    validate: (info) => {
+      return info.trim() === pluginKeyword
+    },
+
+    render: (tokens, idx) => {
+      const token = tokens[idx]
+
+      let src = ''
+      if (token.type === ttContainerOpen) {
+        for (let i = idx + 1; i < tokens.length; i++) {
+          const value = tokens[i]
+          if (value === undefined || value.type === ttContainerClose) {
+            break
+          }
+          src += value.content
+          if (value.block && value.nesting <= 0) {
+            src += '\n'
+          }
+          // Clear these out so markdown-it doesn't try to render them
+          value.tag = ''
+          value.type = tokenTypeInline
+          value.content = ''
+          value.children = empty
+        }
+      }
+
+      if (token.nesting === 1) {
+        return `<div data="coucou" class="${pluginKeyword}">${preProcess(src)}`
+      } else {
+        return '</div>'
+      }
+    },
+  }
+}
+
+const plantUmlContainer = () => {
+  const pluginKeyword = 'plantuml'
+  const tokenTypeInline = 'inline'
+  const ttContainerOpen = 'container_' + pluginKeyword + '_open'
+  const ttContainerClose = 'container_' + pluginKeyword + '_close'
+  const empty = []
+  const server = '//www.plantuml.com/plantuml/svg/' //TODO config.serverPath || '//www.plantuml.com/plantuml/svg/';
+  return {
+    marker: '`',
+    anyClass: true,
+    validate: (info) => {
+      return info.trim() === pluginKeyword
+    },
+
+    render: (tokens, idx) => {
+      const token = tokens[idx]
+
+      let src = ''
+      if (token.type === ttContainerOpen) {
+        for (let i = idx + 1; i < tokens.length; i++) {
+          const value = tokens[i]
+          if (value === undefined || value.type === ttContainerClose) {
+            break
+          }
+          src += value.content
+          if (value.block && value.nesting <= 0) {
+            src += '\n'
+          }
+          // Clear these out so markdown-it doesn't try to render them
+          value.tag = ''
+          value.type = tokenTypeInline
+          value.content = ''
+          value.children = empty
+        }
+      }
+
+      if (token.nesting === 1) {
+        return `<img class="${pluginKeyword}" src="${server}${encoder.encode(src)}" />`
+      } else {
+        return ''
+      }
+    },
+  }
+}
+
+const krokiContainer = () => {
+  const pluginKeyword = 'kroki'
+  const tokenTypeInline = 'inline'
+  const ttContainerOpen = 'container_' + pluginKeyword + '_open'
+  const ttContainerClose = 'container_' + pluginKeyword + '_close'
+  const empty = []
+  const server = 'https://kroki.io' //TODO config.serverPath || '//www.plantuml.com/plantuml/svg/';
+  let diagramsType = ''
+  return {
+    marker: '`',
+    anyClass: true,
+    validate: (info: string) => {
+      const isValid = info.indexOf(pluginKeyword) == 0
+      diagramsType = info.replace(pluginKeyword, '').trim()
+      return isValid
+    },
+
+    render: (tokens, idx) => {
+      const token = tokens[idx]
+
+      let src = ''
+      if (token.type === ttContainerOpen) {
+        for (let i = idx + 1; i < tokens.length; i++) {
+          const value = tokens[i]
+          if (value === undefined || value.type === ttContainerClose) {
+            break
+          }
+          src += value.content
+          if (value.block && value.nesting <= 0) {
+            src += '\n'
+          }
+          // Clear these out so markdown-it doesn't try to render them
+          value.tag = ''
+          value.type = tokenTypeInline
+          value.content = ''
+          value.children = empty
+        }
+      }
+
+      if (token.nesting === 1) {
+        const data = Buffer.from(src, 'utf8')
+        const compressed = pako.deflate(data, { level: 9 })
+        const result = Buffer.from(compressed).toString('base64').replace(/\+/g, '-').replace(/\//g, '_')
+        return `<img class="${pluginKeyword}" src="${server}/${diagramsType}/svg/${result}" />`
+      } else {
+        return ''
+      }
+    },
+  }
+}
+
+const diagramTypes = [
+  'blockdiag',
+  'bpmn',
+  'bytefield',
+  'seqdiag',
+  'actdiag',
+  'nwdiag',
+  'packetdiag',
+  'rackdiag',
+  'ditaa',
+  'erd',
+  'excalidraw',
+  'graphviz',
+  'mermaid',
+  'nomnoml',
+  'pikchr',
+  'plantuml',
+  'svgbob',
+  'umlet',
+  'vega',
+  'vega-lite',
+  'wavedrom',
+]
+
 export default (config: Configuration) => {
-  return md({
+  const markdown = md({
     html: true,
     linkify: true,
     typographer: true,
   })
+    //.use(container, 'mermaid', mermaidContainer())
+    //.use(container, 'plantuml', plantUmlContainer())
+    ///.use(container, 'kroki', krokiContainer())
     .use(multimdTable, { enableMultilineRows: true, enableRowspan: true })
     .use(attrs)
     .use(attrs, { leftDelimiter: '<!-- .element:', rightDelimiter: '-->' })
@@ -62,5 +235,25 @@ export default (config: Configuration) => {
     .use(blockEmbed)
     .use(githubHeadings, { enableHeadingLinkIcons: false })
     .use(container, 'block')
+    //.use(textualUml)
     .use(note, { notesSeparator: config.notesSeparator })
+
+  const highlight = markdown.options.highlight
+  //markdown.options.langPrefix = ''
+  markdown.options.highlight = (code, lang, attr) => {
+    const server = 'https://kroki.io' //TODO config.serverPath || '//www.plantuml.com/plantuml/svg/';
+
+    if (lang && diagramTypes.indexOf(lang.toLowerCase()) >= 0) {
+      const data = Buffer.from(code, 'utf8')
+      const compressed = pako.deflate(data, { level: 9 })
+      const result = Buffer.from(compressed).toString('base64').replace(/\+/g, '-').replace(/\//g, '_')
+      return `<pre style="all:unset;"><div><img class="${lang}" src="${server}/${lang}/svg/${result}" /></div></pre>`
+    }
+    if (highlight !== null && highlight !== undefined) {
+      return highlight(code, lang, attr)
+    }
+
+    return ''
+  }
+  return markdown
 }
