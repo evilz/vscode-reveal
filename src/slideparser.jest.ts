@@ -46,7 +46,7 @@ test('Check slide 1', () => {
     index: 0,
     text: `# Title One
 
-content here `,
+content here`,
     title: 'Title One',
     verticalChildren: [],
     attributes: '',
