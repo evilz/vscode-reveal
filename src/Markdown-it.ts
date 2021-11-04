@@ -1,16 +1,14 @@
-import * as attrs from 'markdown-it-attrs'
-import * as md from 'markdown-it'
-import * as blockEmbed from 'markdown-it-block-embed'
-import * as container from 'markdown-it-container'
-import * as githubHeadings from 'markdown-it-github-headings'
-import * as imsize from 'markdown-it-imsize'
-import * as multimdTable from 'markdown-it-multimd-table'
-import * as taskLists from 'markdown-it-task-lists'
+import attrs from 'markdown-it-attrs'
+import md from 'markdown-it'
+import blockEmbed from 'markdown-it-block-embed'
+import container from 'markdown-it-container'
+import multimdTable from 'markdown-it-multimd-table'
+import taskLists from 'markdown-it-task-lists'
 import { Configuration } from './Configuration'
 
-import * as pako from 'pako'
+import pako from 'pako'
 
-import * as encoder from 'plantuml-encoder'
+import encoder from 'plantuml-encoder'
 
 // const note = regex(
 //     // regexp to match
@@ -230,10 +228,8 @@ export default (config: Configuration) => {
     .use(multimdTable, { enableMultilineRows: true, enableRowspan: true })
     .use(attrs)
     .use(attrs, { leftDelimiter: '<!-- .element:', rightDelimiter: '-->' })
-    .use(imsize)
     .use(taskLists, { label: true, labelAfter: true })
     .use(blockEmbed)
-    .use(githubHeadings, { enableHeadingLinkIcons: false })
     .use(container, 'block')
     //.use(textualUml)
     .use(note, { notesSeparator: config.notesSeparator })

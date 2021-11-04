@@ -27,3 +27,8 @@ image-placeholder.png
 junit.xml
 math.md
 tslint.json
+coverage/**
+samples/**
+node_modules/**
+jest.config.js
+sourceMap

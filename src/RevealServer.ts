@@ -1,8 +1,8 @@
 import * as http from 'http'
-import * as Koa from 'koa'
-import * as render from 'koa-ejs'
-import * as koalogger from 'koa-logger'
-import * as serve from 'koa-static-server'
+import Koa from 'koa'
+import render from 'koa-ejs'
+import koalogger from 'koa-logger'
+import serve from 'koa-static-server'
 import * as path from 'path'
 
 import markdownit from './Markdown-it'
@@ -43,9 +43,13 @@ export class RevealServer {
     }
 
     const addr = this.server.address()
-    if (typeof addr === "string" ) { return addr; }
-    if (addr === null) {return ""};
-    return `http://${this.host}:${addr.port}/`;
+    if (typeof addr === 'string') {
+      return addr
+    }
+    if (addr === null) {
+      return ''
+    }
+    return `http://${this.host}:${addr.port}/`
   }
   public start() {
     try {
@@ -115,7 +119,7 @@ export class RevealServer {
   }
 
   private readonly exportMiddleware = (exportfn: (ExportOptions) => Promise<void>, isInExport) => {
-    return async (ctx: Koa.ParameterizedContext<Koa.DefaultState,Koa.DefaultContext,{path:string} > , next) => {
+    return async (ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, { path: string }>, next) => {
       await next()
       if (isInExport()) {
         const exportPath = this.getExportPath()

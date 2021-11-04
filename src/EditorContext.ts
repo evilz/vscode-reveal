@@ -1,4 +1,4 @@
-import * as matter from 'gray-matter'
+import matter from 'gray-matter'
 import * as path from 'path'
 import { Position, Range, Selection, TextEditor } from 'vscode'
 import { IDocumentOptions } from './Configuration'
@@ -64,7 +64,7 @@ export class EditorContext {
   }
 
   get hasfrontConfig(): boolean {
-    return (matter.test(this.getDocumentText()) as any) as boolean // bad d.ts file
+    return matter.test(this.getDocumentText()) as any as boolean // bad d.ts file
   }
 
   get frontMatter(): any {

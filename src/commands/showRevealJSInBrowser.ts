@@ -1,4 +1,4 @@
-import * as open from 'open'
+import open from 'open'
 
 export const SHOW_REVEALJS_IN_BROWSER = 'vscode-revealjs.showRevealJSInBrowser'
 export type SHOW_REVEALJS_IN_BROWSER = typeof SHOW_REVEALJS_IN_BROWSER

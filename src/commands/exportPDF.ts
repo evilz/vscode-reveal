@@ -1,4 +1,4 @@
-import * as open from 'open'
+import open from 'open'
 
 export const EXPORT_PDF = 'vscode-revealjs.exportPDF'
 export type EXPORT_PDF = typeof EXPORT_PDF

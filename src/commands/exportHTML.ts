@@ -1,4 +1,4 @@
-import * as open from 'open'
+import open from 'open'
 import { Logger } from '../Logger'
 
 import { window, ProgressLocation } from 'vscode'
