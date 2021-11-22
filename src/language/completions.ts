@@ -11,7 +11,7 @@ const configDefinition = [
 ]
 
 //provideCompletionItems
-const enumValueProvider = (prefix:string, values: string[]) => { 
+const enumValueProvider = (prefix:string, values: string[]) => {
     return {
         provideCompletionItems (document: TextDocument, position: Position) {
 
@@ -41,7 +41,7 @@ export const registerCompletionProvider = (context:ExtensionContext) => {
             if(prop.default) { completionItem.documentation = new MarkdownString(`Default value:  ${prop.default}`);}
 
             switch (prop.type) {
-                case 'string': 
+                case 'string':
                     if(prop.enum && prop.enum.length > 0) {
                         context.subscriptions.push(languages.registerCompletionItemProvider('markdown',enumValueProvider(label, prop.enum)));
                     }
