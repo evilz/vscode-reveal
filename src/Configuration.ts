@@ -1,4 +1,6 @@
 import { LogLevel } from './Logger'
+import fs from 'fs'
+import path from 'path'
 
 /**
  * @file Manages the configuration settings for the extension.
@@ -85,7 +87,7 @@ export const getExtensionOptions = (configuration: Configuration) => {
 
 export const defaultConfiguration: Configuration = {
   layout: '',
-  title: 'title',
+  title: "Reveal JS presentation",
   // tslint:disable-next-line:object-literal-sort-keys
   logoImg: null,
   description: '',

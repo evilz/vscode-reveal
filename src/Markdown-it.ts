@@ -4,6 +4,10 @@ import blockEmbed from 'markdown-it-block-embed'
 import container from 'markdown-it-container'
 import multimdTable from 'markdown-it-multimd-table'
 import taskLists from 'markdown-it-task-lists'
+import containerPandoc from 'markdown-it-container-pandoc'
+import markdownPlayground from 'markdown-it-playground'
+import markdownDiv from 'markdown-it-div'
+import markdownIframe from 'markdown-it-iframe'
 import { Configuration } from './Configuration'
 
 import pako from 'pako'
@@ -141,6 +145,12 @@ const plantUmlContainer = () => {
   }
 }
 
+const twitterService = {
+  name: 'twitter',
+  option: {},
+  env: {},
+}
+
 const krokiContainer = () => {
   const pluginKeyword = 'kroki'
   const tokenTypeInline = 'inline'
@@ -216,21 +226,32 @@ const diagramTypes = [
   'wavedrom',
 ]
 
+// const rStackContainer = () => ({
+//   validate: function (params) {
+//     return params.trim().match(/^r-stack\s+(.*)$/)
+//   },
+
+//   render: function (tokens, idx) {
+//     return md.renderInline(tokens)
+//   },
+// })
+
 export default (config: Configuration) => {
   const markdown = md({
     html: true,
     linkify: true,
     typographer: true,
   })
-    //.use(container, 'mermaid', mermaidContainer())
-    //.use(container, 'plantuml', plantUmlContainer())
-    ///.use(container, 'kroki', krokiContainer())
     .use(multimdTable, { enableMultilineRows: true, enableRowspan: true })
     .use(attrs)
     .use(attrs, { leftDelimiter: '<!-- .element:', rightDelimiter: '-->' })
     .use(taskLists, { label: true, labelAfter: true })
+    .use(markdownIframe)
     .use(blockEmbed)
-    .use(container, 'block')
+    .use(markdownPlayground)
+    //.use(container, 'block')
+    //.use(containerPandoc)
+    .use(markdownDiv)
     //.use(textualUml)
     .use(note, { notesSeparator: config.notesSeparator })
 

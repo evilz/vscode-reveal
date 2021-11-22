@@ -10,7 +10,7 @@ import {
   TextDocumentChangeEvent,
   TextEditor,
   TextEditorSelectionChangeEvent,
-  Webview,
+  WebviewPanel,
 } from 'vscode'
 
 import * as http from 'http'
@@ -34,7 +34,7 @@ export default class Container {
   private readonly slidesExplorer: SlideTreeProvider
   private editorContext: EditorContext | null
   private _configuration: Configuration
-  private webView: Webview | null = null
+  private webviewPanel: WebviewPanel | null = null
 
   public onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent) {
     if (this.editorContext === null) {
@@ -58,9 +58,9 @@ export default class Container {
     if (editor && editor.document.languageId === 'markdown') {
       this.editorContext = new EditorContext(editor, getDocumentOptions(this.configuration))
     }
-    if (this.webView) {
+    if (this.webviewPanel) {
       this.server.start()
-      this.refreshWebView()
+      this.refreshWebView(this.webviewPanel)
     }
     this.statusBarController.update()
     this.slidesExplorer.update()
@@ -144,7 +144,7 @@ export default class Container {
     const promise = new Promise<string>((resolve) => {
       this.exportTimeout = setTimeout(() => resolve(this.exportPath), 5000)
     })
-    this.webView ? this.refreshWebView() : await commands.executeCommand(SHOW_REVEALJS)
+    this.webviewPanel ? this.refreshWebView(this.webviewPanel) : await commands.executeCommand(SHOW_REVEALJS)
     http.get(this.getUri(false) + 'libs/reveal.js/3.8.0/plugin/notes/notes.html')
 
     return promise
@@ -194,14 +194,56 @@ export default class Container {
     this.statusBarController.update()
   }
 
-  public refreshWebView(view?: Webview) {
-    if (view) {
-      this.webView = view
+  public refreshWebView(webviewPanel?: WebviewPanel) {
+    if (this.editorContext === null) {
+      return
+    }
+    if (webviewPanel) {
+      this.webviewPanel = webviewPanel
     }
 
-    if (this.webView) {
-      this.webView.html = `<style>html, body, iframe { height: 100% }</style>
-      <iframe src="${this.getUri()}" frameBorder="0" style="width: 100%; height: 100%" />`
+    if (this.webviewPanel) {
+      this.webviewPanel.webview.postMessage({ command: 'refactor' })
+      this.webviewPanel.title = this.editorContext.title
+
+      this.webviewPanel.webview.html = `
+<!doctype html>
+<html lang="en">
+<head>
+      <style>html, body, iframe { height: 100% }</style>
+</head>
+<body>
+      <iframe id="revealIframe" src="${this.getUri()}" frameBorder="0" style="width: 100%; height: 100%" />
+</body>
+</html>
+      `
+
+      // Code without iframe
+      // const uri = this.getUri(false)
+      // if (uri !== null) {
+      //   http.get(uri, (res) => {
+      //     res.setEncoding('utf8')
+      //     let body = ''
+      //     res.on('data', (data) => {
+      //       body += data
+      //     })
+      //     res.on('end', () => {
+      //       if (this.webviewPanel) {
+      //         this.webviewPanel.webview.html = body
+      //       }
+      //     })
+      //   })
+      // }
+
+      // Handle messages from the webview
+      // this.webviewPanel.webview.onDidReceiveMessage((message) => {
+      //   switch (message.command) {
+      //     case 'getSlides':
+      //       window.showInformationMessage(message.text)
+      //       window.showInformationMessage(message.slides.length.toString())
+      //       return
+      //   }
+      // }, null)
     }
   }
 }

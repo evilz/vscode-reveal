@@ -60,3 +60,10 @@
     border-bottom-color: #95a5a6;
     border-right-color: #95a5a6;
 }
+
+
+
+.reveal .container{
+    display: grid;
+  grid-auto-flow: column;
+}

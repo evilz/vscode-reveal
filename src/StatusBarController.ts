@@ -59,12 +59,7 @@ export class StatusBarController {
   }
 
   private updateCount(slideCount: number) {
-    if (slideCount < 2) {
-      this.countItem.text = ''
-      this.countItem.hide()
-    } else {
-      this.countItem.text = `$(note) ${slideCount} Slides`
-      this.countItem.show()
-    }
+    this.countItem.text = `$(note) ${slideCount} Slides`
+    this.countItem.show()
   }
 }

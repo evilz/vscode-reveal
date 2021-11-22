@@ -1,5 +1,6 @@
 import * as http from 'http'
 import Koa from 'koa'
+import cors from '@koa/cors'
 import render from 'koa-ejs'
 import koalogger from 'koa-logger'
 import serve from 'koa-static-server'
@@ -65,6 +66,7 @@ export class RevealServer {
   private configure() {
     const app = this.app
 
+    app.use(cors())
     // LOG REQUEST
     app.use(
       koalogger((str, args) => {
@@ -96,7 +98,7 @@ export class RevealServer {
         html: markdown.render(s.text),
         children: s.verticalChildren.map((c) => ({ ...c, html: markdown.render(c.text) })),
       }))
-      ctx.state = { slides: htmlSlides, ...this.getConfiguration() }
+      ctx.state = { slides: htmlSlides, ...this.getConfiguration(), rootUrl: this.uri }
       await ctx.render('reveal')
     })
 

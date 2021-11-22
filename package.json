@@ -2,7 +2,7 @@
   "name": "vscode-reveal-preview",
   "displayName": "vscode-reveal (PREVIEW)",
   "description": "Show markdown as revealJs presentation",
-  "version": "4.0.8",
+  "version": "4.0.9",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
@@ -31,6 +31,17 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "colors": [
+      {
+        "id": "revealjs.configKeyForeground",
+        "description": "Forground decoration color for the key of config in front matter",
+        "defaults": {
+          "dark": "#67b8e3ff",
+          "light": "#0288d1ff",
+          "highContrast": "#67b8e3ff"
+        }
+      }
+    ],
     "commands": [
       {
         "command": "vscode-revealjs.showRevealJS",
@@ -71,6 +82,14 @@
           "light": "resources/light/html.svg",
           "dark": "resources/dark/html.svg"
         }
+      },
+      {
+        "command": "vscode-revealjs.showSample",
+        "title": "Revealjs: Open a sample",
+        "icon": {
+          "light": "resources/light/html.svg",
+          "dark": "resources/dark/html.svg"
+        }
       }
     ],
     "configuration": {
@@ -99,8 +118,77 @@
         },
         "revealjs.highlightTheme": {
           "type": "string",
-          "default": "Zenburn",
-          "description": "highlight.js Theme (Default, Agate, Androidstudio, Arduino Light, Arta, Ascetic, Atelier Cave Dark, Atelier Cave Light, Atelier Dune Dark, Atelier Dune Light, Atelier Estuary Dark, Atelier Estuary Light, Atelier Forest Dark, Atelier Forest Light, Atelier Heath Dark, Atelier Heath Light, Atelier Lakeside Dark, Atelier Lakeside Light, Atelier Plateau Dark, Atelier Plateau Light, Atelier Savanna Dark, Atelier Savanna Light, Atelier Seaside Dark, Atelier Seaside Light, Atelier Sulphurpool Dark, Atelier Sulphurpool Light, Atom One Dark, Atom One Light,Brown Paper, Codepen Embed, Color Brewer, Darcula, Dark, Darkula, Docco, Dracula, Far, Foundation, Github Gist, Github, Googlecode, Grayscale, Gruvbox Dark, Gruvbox Light, Hopscotch, Hybrid, Idea, Ir Black, Kimbie Dark, Kimbie Light, Magula, Mono Blue, Monokai Sublime, Monokai, Obsidian,Ocean, Paraiso Dark, Paraiso Light, Pojoaque, Purebasic, Qtcreator Dark, Qtcreator Light, Railscasts, Rainbow, School Book, Solarized Dark, Solarized Light, Sunburst, Tomorrow Night Blue, Tomorrow Night Bright, Tomorrow Night Eighties, Tomorrow Night, Tomorrow, Vs, Xcode, Xt 256, Zenburn"
+          "enum": [
+            "a11y-dark",
+            "a11y-light",
+            "agate",
+            "an-old-hope",
+            "androidstudio",
+            "arduino-light",
+            "arta",
+            "ascetic",
+            "atom-one-dark-reasonable",
+            "atom-one-dark",
+            "atom-one-light",
+            "brown-paper",
+            "brown-papersq.png",
+            "codepen-embed",
+            "color-brewer",
+            "dark",
+            "devibeans",
+            "docco",
+            "far",
+            "foundation",
+            "github-dark-dimmed",
+            "github-dark",
+            "github",
+            "gml",
+            "googlecode",
+            "gradient-dark",
+            "gradient-light",
+            "grayscale",
+            "hybrid",
+            "idea",
+            "ir-black",
+            "isbl-editor-dark",
+            "isbl-editor-light",
+            "kimbie-dark",
+            "kimbie-light",
+            "lightfair",
+            "lioshi",
+            "magula",
+            "mono-blue",
+            "monokai-sublime",
+            "monokai",
+            "night-owl",
+            "nnfx-dark",
+            "nnfx-light",
+            "nord",
+            "obsidian",
+            "paraiso-dark",
+            "paraiso-light",
+            "pojoaque.jpg",
+            "pojoaque",
+            "purebasic",
+            "qtcreator-dark",
+            "qtcreator-light",
+            "rainbow",
+            "routeros",
+            "school-book",
+            "shades-of-purple",
+            "srcery",
+            "stackoverflow-dark",
+            "stackoverflow-light",
+            "sunburst",
+            "tomorrow-night-blue",
+            "tomorrow-night-bright",
+            "vs",
+            "vs2015",
+            "xcode",
+            "xt256"
+          ],
+          "default": "monokai",
+          "description": "highlight.js Theme"
         },
         "revealjs.controls": {
           "type": "boolean",
@@ -316,7 +404,13 @@
           "when": "view == slidesExplorer && viewItem == slideNode"
         }
       ]
-    }
+    },
+    "snippets": [
+      {
+        "language": "markdown",
+        "path": "./snippets.json"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run -S esbuild-base -- --minify",
@@ -354,6 +448,7 @@
     "all": true
   },
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "fs-jetpack": "^4.2.0",
     "gray-matter": "^4.0.3",
     "koa": "^2.13.4",
@@ -364,7 +459,11 @@
     "markdown-it-attrs": "^4.1.0",
     "markdown-it-block-embed": "0.0.3",
     "markdown-it-container": "^3.0.0",
+    "markdown-it-container-pandoc": "^1.0.0",
+    "markdown-it-div": "^1.1.0",
+    "markdown-it-iframe": "^1.0.0",
     "markdown-it-multimd-table": "^4.1.1",
+    "markdown-it-playground": "^0.0.5",
     "markdown-it-regexp": "^0.4.0",
     "markdown-it-span": "^1.0.0",
     "markdown-it-task-lists": "^2.1.1",

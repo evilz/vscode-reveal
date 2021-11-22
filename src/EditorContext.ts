@@ -51,8 +51,7 @@ export class EditorContext {
   }
 
   get title(): string {
-    // TODO : add frontConf title property
-    return `RevealJS : ${this.editor.document.fileName}`
+    return this.documentOptions.title
   }
 
   get slideContent(): string {

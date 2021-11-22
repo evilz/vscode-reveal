@@ -1,9 +1,13 @@
 ---
-theme: Sky
+theme: black
 enableMenu: false
+parallaxBackgroundImage: https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg
+parallaxBackgroundSize: 2100px 900px
+parallaxBackgroundHorizontal: 200
+parallaxBackgroundVertical: 50
 ---
 
-[![reveal.js logo](https://static.slid.es/reveal/logo-v1/reveal-white-text.svg =x180)](https://revealjs.com)
+[![reveal.js logo](https://static.slid.es/reveal/logo-v1/reveal-white-text.svg)](https://revealjs.com) {style="height: 180px; margin: 0 auto 4rem auto; background: transparent;"}
 
 ### The HTML Presentation Framework
 
