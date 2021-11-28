@@ -5,14 +5,14 @@ import container from 'markdown-it-container'
 import multimdTable from 'markdown-it-multimd-table'
 import taskLists from 'markdown-it-task-lists'
 import containerPandoc from 'markdown-it-container-pandoc'
-import markdownPlayground from 'markdown-it-playground'
 import markdownDiv from 'markdown-it-div'
 import markdownIframe from 'markdown-it-iframe'
 import { Configuration } from './Configuration'
+import {notesSeparator} from './utils'
 
 import pako from 'pako'
 
-import encoder from 'plantuml-encoder'
+//import encoder from 'plantuml-encoder'
 
 // const note = regex(
 //     // regexp to match
@@ -95,51 +95,6 @@ const mermaidContainer = () => {
         return `<div data="coucou" class="${pluginKeyword}">${preProcess(src)}`
       } else {
         return '</div>'
-      }
-    },
-  }
-}
-
-const plantUmlContainer = () => {
-  const pluginKeyword = 'plantuml'
-  const tokenTypeInline = 'inline'
-  const ttContainerOpen = 'container_' + pluginKeyword + '_open'
-  const ttContainerClose = 'container_' + pluginKeyword + '_close'
-  const empty = []
-  const server = '//www.plantuml.com/plantuml/svg/' //TODO config.serverPath || '//www.plantuml.com/plantuml/svg/';
-  return {
-    marker: '`',
-    anyClass: true,
-    validate: (info) => {
-      return info.trim() === pluginKeyword
-    },
-
-    render: (tokens, idx) => {
-      const token = tokens[idx]
-
-      let src = ''
-      if (token.type === ttContainerOpen) {
-        for (let i = idx + 1; i < tokens.length; i++) {
-          const value = tokens[i]
-          if (value === undefined || value.type === ttContainerClose) {
-            break
-          }
-          src += value.content
-          if (value.block && value.nesting <= 0) {
-            src += '\n'
-          }
-          // Clear these out so markdown-it doesn't try to render them
-          value.tag = ''
-          value.type = tokenTypeInline
-          value.content = ''
-          value.children = empty
-        }
-      }
-
-      if (token.nesting === 1) {
-        return `<img class="${pluginKeyword}" src="${server}${encoder.encode(src)}" />`
-      } else {
-        return ''
       }
     },
   }
@@ -236,8 +191,7 @@ const diagramTypes = [
 //   },
 // })
 
-export default (config: Configuration) => {
-  const markdown = md({
+const markdown = md({
     html: true,
     linkify: true,
     typographer: true,
@@ -248,15 +202,13 @@ export default (config: Configuration) => {
     .use(taskLists, { label: true, labelAfter: true })
     .use(markdownIframe)
     .use(blockEmbed)
-    .use(markdownPlayground)
     //.use(container, 'block')
     //.use(containerPandoc)
     .use(markdownDiv)
     //.use(textualUml)
-    .use(note, { notesSeparator: config.notesSeparator })
+    .use(note, { notesSeparator })
 
   const highlight = markdown.options.highlight
-  //markdown.options.langPrefix = ''
   markdown.options.highlight = (code, lang, attr) => {
     const server = 'https://kroki.io' //TODO config.serverPath || '//www.plantuml.com/plantuml/svg/';
 
@@ -272,5 +224,5 @@ export default (config: Configuration) => {
 
     return ''
   }
-  return markdown
-}
+
+export default markdown

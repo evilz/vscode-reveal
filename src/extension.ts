@@ -1,6 +1,6 @@
 'use strict'
 
-import { commands, ExtensionContext, window, workspace, extensions } from 'vscode'
+import { commands, ExtensionContext, window, workspace } from 'vscode'
 import { EXPORT_HTML, exportHTML } from './commands/exportHTML'
 import { EXPORT_PDF, exportPDF } from './commands/exportPDF'
 import { GO_TO_SLIDE } from './commands/goToSlide'
@@ -8,67 +8,49 @@ import { SHOW_REVEALJS, showRevealJS } from './commands/showRevealJS'
 import { SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser } from './commands/showRevealJSInBrowser'
 import { showSample, SHOW_SAMPLE } from './commands/showSample'
 import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
-import { registerCompletionProvider } from './language/provider'
-import { getConfigurationDefinition, loadConfiguration } from './Configuration'
-import { extensionId } from './constants'
-import Container from './Container'
+import languageCompletion from './CompletionItemProvider'
+import MainController from './MainController'
 import { Logger } from './Logger'
+import { extensionId } from './utils'
+import {getConfigurationDescription} from './Configuration'
 
 export function activate(context: ExtensionContext) {
-  const registerCommand = (command: string, callback: (...args: any[]) => any, thisArg?: any) => {
-    const disposable = commands.registerCommand(command, callback, thisArg)
-    context.subscriptions.push(disposable)
-  }
-
-  const loadConfigurationFn = () => loadConfiguration(() => workspace.getConfiguration(extensionId) as any)
-
-  const startingConfig = loadConfigurationFn()
-
-  const outputChannel = window.createOutputChannel(extensionId)
-  const appendLine = (value: string) => outputChannel.appendLine(value)
-
-  const logger = new Logger(startingConfig.logLevel, appendLine)
-
-  const container = new Container(loadConfigurationFn, logger, context)
-
-  container.onDidChangeActiveTextEditor(window.activeTextEditor)
-
+  
+  const outputChannel = window.createOutputChannel(extensionId) 
+  const logger = new Logger( (s) => outputChannel.appendLine(s) )
+  logger.on('levelChanged', level => logger.log(`log levelChanged to ${level} `))
   logger.log('"vscode-reveal" is now active')
-  commands.executeCommand('setContext', 'slideExplorerEnabled', container.configuration.slideExplorerEnabled)
+
+  const configDesc = getConfigurationDescription(context.extension.packageJSON.contributes.configuration.properties)
+
+  const main = new MainController(logger, context, configDesc, window.activeTextEditor)
+
+  
+  commands.executeCommand('setContext', 'slideExplorerEnabled', main.configuration.slideExplorerEnabled)
 
 
+  context.subscriptions.push( 
+    commands.registerCommand(SHOW_REVEALJS, showRevealJS((panel) => main.showWebViewPane(panel))  ),
+    commands.registerCommand(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() => main.ServerUri) ),
+    commands.registerCommand(STOP_REVEALJS_SERVER, () => main.stopServer()),
+    commands.registerCommand(SHOW_SAMPLE, () => showSample(context.extensionPath)),
+    commands.registerCommand(GO_TO_SLIDE, (arg) => main.goToSlide(arg.horizontal, arg.vertical)),
+    commands.registerCommand(EXPORT_PDF,exportPDF(() => main.ServerUri)),
+    commands.registerCommand(EXPORT_HTML,exportHTML(logger, main.export, () => main.configuration.openFilemanagerAfterHTMLExport)),
+
+    window.onDidChangeTextEditorSelection((e) => main.onDidChangeTextEditorSelection(e)),
+    window.onDidChangeActiveTextEditor((e) => main.onDidChangeActiveTextEditor(e)),
+    workspace.onDidChangeTextDocument((e) => main.onDidChangeTextDocument(e)),
+    workspace.onDidSaveTextDocument((e) => main.onDidSaveTextDocument(e)),
+    workspace.onDidCloseTextDocument((e) => main.onDidCloseTextDocument(e)),
+    workspace.onDidChangeConfiguration((e) => main.onDidChangeConfiguration(e)),
+
+    ...languageCompletion(configDesc)
+  );
 
 
-  registerCommand(
-    SHOW_REVEALJS,
-    showRevealJS((panel) => container.refreshWebView(panel))
-  )
-  registerCommand(
-    SHOW_REVEALJS_IN_BROWSER,
-    showRevealJSInBrowser(() => container.getUri())
-  )
-  registerCommand(STOP_REVEALJS_SERVER, () => container.stopServer())
+  setTimeout(() => main.refresh(0),500)
 
-  registerCommand(SHOW_SAMPLE, () => showSample(context.extensionPath))
-
-  registerCommand(GO_TO_SLIDE, (arg) => container.goToSlide(arg.horizontal, arg.vertical))
-  registerCommand(
-    EXPORT_PDF,
-    exportPDF(() => container.getUri(false))
-  )
-  registerCommand(
-    EXPORT_HTML,
-    exportHTML(logger, container.export, () => container.configuration.openFilemanagerAfterHTMLExport)
-  )
-
-  registerCompletionProvider(context)
-
-  window.onDidChangeTextEditorSelection((e) => container.onDidChangeTextEditorSelection(e))
-  window.onDidChangeActiveTextEditor((e) => container.onDidChangeActiveTextEditor(e))
-  workspace.onDidChangeTextDocument((e) => container.onDidChangeTextDocument(e))
-  workspace.onDidSaveTextDocument((e) => container.onDidSaveTextDocument(e))
-  workspace.onDidCloseTextDocument((e) => container.onDidCloseTextDocument(e))
-  workspace.onDidChangeConfiguration((e) => container.onDidChangeConfiguration(e))
 }
 
 // this method is called when your extension is deactivated

@@ -9,7 +9,7 @@
     "Fullscreen slide": {
         "prefix": ".fullcreen",
         "body": [
-            "<!-- .slide: data-fullscreen-->"
+            "<!-- .slide: data-fullscreen -->"
         ],
         "description": "Add data-fullscreen"
     }

@@ -12,8 +12,16 @@ import { Configuration } from './Configuration'
 import { exportHTML, IExportOptions } from './ExportHTML'
 import { ISlide } from './ISlide'
 import { Logger } from './Logger'
+import EventEmitter from "events"
+import TypedEmitter from "typed-emitter"
+interface RevealServerEvents {
+  started: (uri: string) => void,
+  stopped: () => void
+  error: (error: Error) => void
+  
+}
 
-export class RevealServer {
+export class RevealServer extends (EventEmitter as new () => TypedEmitter<RevealServerEvents>){
   private readonly app = new Koa()
   private server: http.Server | null = null
   private readonly host = 'localhost'
@@ -26,7 +34,9 @@ export class RevealServer {
     private readonly extensionPath: string,
     private readonly isInExport: () => boolean,
     private readonly getExportPath: () => string
-  ) {}
+  ) {
+    super()
+  }
 
   public get isListening() {
     return this.server ? this.server.listening : false
@@ -35,12 +45,13 @@ export class RevealServer {
   public stop() {
     if (this.isListening && this.server) {
       this.server.close()
+      this.emit("stopped")
     }
   }
 
   public get uri() {
     if (!this.isListening || this.server === null) {
-      return null
+      return ""
     }
 
     const addr = this.server.address()
@@ -52,14 +63,19 @@ export class RevealServer {
     }
     return `http://${this.host}:${addr.port}/`
   }
+
   public start() {
     try {
       if (!this.isListening && this.getRootDir()) {
         this.configure()
         this.server = this.app.listen(0)
+        this.emit("started", this.uri)
+        return this.uri
       }
     } catch (err) {
-      throw new Error(`Cannot start server: ${err}`)
+      const error = new Error(`Cannot start server: ${err}`)
+      this.emit("error", error)
+      throw error
     }
   }
 
@@ -92,11 +108,10 @@ export class RevealServer {
         return next()
       }
 
-      const markdown = markdownit(this.getConfiguration())
       const htmlSlides = this.getSlides().map((s) => ({
         ...s,
-        html: markdown.render(s.text),
-        children: s.verticalChildren.map((c) => ({ ...c, html: markdown.render(c.text) })),
+        html: markdownit.render(s.text),
+        children: s.verticalChildren.map((c) => ({ ...c, html: markdownit.render(c.text) })),
       }))
       ctx.state = { slides: htmlSlides, ...this.getConfiguration(), rootUrl: this.uri }
       await ctx.render('reveal')
@@ -119,6 +134,7 @@ export class RevealServer {
 
     this.server = app.listen()
   }
+
 
   private readonly exportMiddleware = (exportfn: (ExportOptions) => Promise<void>, isInExport) => {
     return async (ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, { path: string }>, next) => {

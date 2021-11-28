@@ -3,13 +3,26 @@ import * as vscode from 'vscode'
 import { GO_TO_SLIDE } from './commands/goToSlide'
 import { ISlide } from './ISlide'
 
+import EventEmitter from "events"
+import TypedEmitter from "typed-emitter"
 
-export class SlideTreeProvider implements vscode.TreeDataProvider<SlideNode> {
+interface SlideTreeProviderEvents {
+  updated: () => void,
+  error: (error: Error) => void
+  
+}
+
+
+export class SlideTreeProvider 
+  implements vscode.TreeDataProvider<SlideNode>  
+{
   private readonly _onDidChangeTreeData: vscode.EventEmitter<SlideNode | null> = new vscode.EventEmitter<SlideNode | null>()
 
   public readonly onDidChangeTreeData: vscode.Event<SlideNode | null> = this._onDidChangeTreeData.event
 
-  constructor(private readonly getSlide: () => ISlide[]) { }
+  constructor(private readonly getSlide: () => ISlide[]) {
+   
+  }
 
   public update() {
     this._onDidChangeTreeData.fire(null)

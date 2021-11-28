@@ -1,14 +1,10 @@
-import { defaultConfiguration, getDocumentOptions, IDocumentOptions } from '../src/Configuration'
-import { countLines, countLinesToSlide, parseSlides } from '../src/SlideParser'
-import { ISlide } from './../src/ISlide'
+import { countLines, countLinesToSlide } from '../src/utils'
+import SlideParser from '../src/SlideParser'
 
 // const sampleFile = fs.readFileSync('../sample.md').toString()
 
-const config = getDocumentOptions(defaultConfiguration)
 
-config.notesSeparator = 'note:'
-config.separator = '^\\r?\\n---\\r?\\n$'
-config.verticalSeparator = '^\\r?\\n--\\r?\\n$'
+const parser = new SlideParser()
 
 const slideContent = `# Title One
 
@@ -34,11 +30,10 @@ content !
 
 ## Sub Two`
 
-const slides = parseSlides(slideContent, config)
+const {frontmatter, slides} = parser.parse(slideContent)
 
 test('Parse Slide content', () => {
-  const allslides = parseSlides(slideContent, config)
-  expect(allslides.length).toBe(3)
+  expect(slides.length).toBe(3)
 })
 
 test('Check slide 1', () => {
@@ -119,27 +114,27 @@ test('Slides should have correct number of lines', () => {
 })
 
 test('Count line to slide 1', () => {
-  const lineToSlide = countLinesToSlide(slides, 0, 0, config)
+  const lineToSlide = countLinesToSlide(slides, 0, 0)
   expect(lineToSlide).toBe(1)
 })
 
 test('Count line to slide 2', () => {
-  const lineToSlide = countLinesToSlide(slides, 1, 0, config)
+  const lineToSlide = countLinesToSlide(slides, 1, 0)
   expect(lineToSlide).toBe(7)
 })
 
 test('Count line to slide 3', () => {
-  const lineToSlide = countLinesToSlide(slides, 2, 0, config)
+  const lineToSlide = countLinesToSlide(slides, 2, 0)
   expect(lineToSlide).toBe(15)
 })
 
 test('Count line to slide 3.1', () => {
-  const lineToSlide = countLinesToSlide(slides, 2, 1, config)
+  const lineToSlide = countLinesToSlide(slides, 2, 1)
   expect(lineToSlide).toBe(19)
 })
 
 test('Count line to slide 3.2', () => {
-  const lineToSlide = countLinesToSlide(slides, 2, 2, config)
+  const lineToSlide = countLinesToSlide(slides, 2, 2)
   expect(lineToSlide).toBe(23)
 })
 
@@ -147,9 +142,9 @@ test('Extract slide attributes', () => {
   const content = `<!-- .slide: class="toto" data-something -->
 # title`
 
-  const s = parseSlides(content, config)
+  const {frontmatter,slides} = parser.parse(content)
 
-  expect(s[0]).toEqual({
+  expect(slides[0]).toEqual({
     index: 0,
     text: `<!-- .slide: class="toto" data-something -->
 # title`,

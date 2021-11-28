@@ -286,7 +286,12 @@
         //     }
         // });
 
-		
+		if (window.location.search.match(/print-pdf-now/gi)) {
+      		setTimeout(() => {
+				window.print();
+			  }, 2500);
+			
+    }
 		
 
 	</script>

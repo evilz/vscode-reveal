@@ -2,7 +2,7 @@
   "name": "vscode-reveal-preview",
   "displayName": "vscode-reveal (PREVIEW)",
   "description": "Show markdown as revealJs presentation",
-  "version": "4.0.9",
+  "version": "4.0.10",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
@@ -114,7 +114,18 @@
         "revealjs.theme": {
           "type": "string",
           "default": "black",
-          "description": "Revealjs Theme (black, white, league, beige, sky, night, serif, simple, solarized"
+          "description": "Revealjs Theme",
+          "enum": [
+            "black", 
+            "white",
+            "league",
+            "beige",
+            "sky",
+            "night",
+            "serif",
+            "simple",
+            "solarized"
+          ]
         },
         "revealjs.highlightTheme": {
           "type": "string",
@@ -449,6 +460,7 @@
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",
+    "front-matter": "4.0.2",
     "fs-jetpack": "^4.2.0",
     "gray-matter": "^4.0.3",
     "koa": "^2.13.4",
@@ -463,14 +475,13 @@
     "markdown-it-div": "^1.1.0",
     "markdown-it-iframe": "^1.0.0",
     "markdown-it-multimd-table": "^4.1.1",
-    "markdown-it-playground": "^0.0.5",
     "markdown-it-regexp": "^0.4.0",
     "markdown-it-span": "^1.0.0",
     "markdown-it-task-lists": "^2.1.1",
     "open": "^8.4.0",
     "pako": "^2.0.4",
-    "plantuml-encoder": "^1.4.0",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "typed-emitter": "^1.4.0"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",

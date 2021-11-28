@@ -1,12 +1,11 @@
-import { parseSlides } from '../src/SlideParser'
-import { defaultConfiguration } from './../src/Configuration';
+import SlideParser from '../src/SlideParser'
 
 
 test('Should retrieve title from content', () => {
 
     const content = "just first line"
 
-    const slides = parseSlides(content, defaultConfiguration)
+    const {frontmatter,slides} = new SlideParser().parse(content)
     expect(slides[0].title).toBe("just first line")
 });
 

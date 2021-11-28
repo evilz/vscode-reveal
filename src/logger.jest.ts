@@ -2,7 +2,7 @@ import { Logger, LogLevel } from '../src/Logger'
 
 test('Logger should log error when level is error', () => {
   let output = ''
-  const logger = new Logger(LogLevel.Error, (s) => {
+  const logger = new Logger((s) => {
     output = s
   })
 
@@ -13,9 +13,9 @@ test('Logger should log error when level is error', () => {
 
 test('Logger should NOT log when level is error', () => {
   let output = ''
-  const logger = new Logger(LogLevel.Error, (s) => {
+  const logger = new Logger((s) => {
     output = s
-  })
+  }, LogLevel.Error)
 
   logger.log('text1')
 
@@ -24,7 +24,7 @@ test('Logger should NOT log when level is error', () => {
 
 test('Logger should log error when level is verbose', () => {
   let output = ''
-  const logger = new Logger(LogLevel.Verbose, (s) => {
+  const logger = new Logger((s) => {
     output = s
   })
 
@@ -35,7 +35,7 @@ test('Logger should log error when level is verbose', () => {
 
 test('Logger should log when level is verbose', () => {
   let output = ''
-  const logger = new Logger(LogLevel.Verbose, (s) => {
+  const logger = new Logger( (s) => {
     output = s
   })
 
@@ -46,7 +46,7 @@ test('Logger should log when level is verbose', () => {
 
 test('Logger should Not log when level is verbose', () => {
   let output = ''
-  const logger = new Logger(LogLevel.Verbose, (s) => {
+  const logger = new Logger((s) => {
     output = s
   })
 
