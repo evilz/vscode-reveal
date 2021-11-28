@@ -8,7 +8,7 @@ export enum LogLevel {
 
 
 interface LoggerEvents {
-  levelChanged: (LogLevel) => void,  
+  levelChanged: (LogLevel) => void,
 }
 
 export class Logger  extends (EventEmitter as new () => TypedEmitter<LoggerEvents>) {

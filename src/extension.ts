@@ -16,7 +16,7 @@ import {getConfigurationDescription} from './Configuration'
 
 export function activate(context: ExtensionContext) {
   
-  const outputChannel = window.createOutputChannel(extensionId) 
+  const outputChannel = window.createOutputChannel(extensionId)
   const logger = new Logger( (s) => outputChannel.appendLine(s) )
   logger.on('levelChanged', level => logger.log(`log levelChanged to ${level} `))
   logger.log('"vscode-reveal" is now active')
@@ -29,7 +29,7 @@ export function activate(context: ExtensionContext) {
   commands.executeCommand('setContext', 'slideExplorerEnabled', main.configuration.slideExplorerEnabled)
 
 
-  context.subscriptions.push( 
+  context.subscriptions.push(
     commands.registerCommand(SHOW_REVEALJS, showRevealJS((panel) => main.showWebViewPane(panel))  ),
     commands.registerCommand(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() => main.ServerUri) ),
     commands.registerCommand(STOP_REVEALJS_SERVER, () => main.stopServer()),

@@ -73,7 +73,7 @@ export class StatusBarController extends (EventEmitter as new () => TypedEmitter
     if(this.#currentCount && this.#currentCount > 0) {
       this.#countItem.text = `$(note) ${this.#currentCount} Slides`
       this.#countItem.show()
-    } 
+    }
     else
     {
       this.#countItem.text = ""

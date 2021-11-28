@@ -159,7 +159,7 @@ export interface ConfigurationDescription {
 }
 export const getConfigurationDescription = (properties:object) => {
 
-  const allProps:ConfigurationDescription[] = 
+  const allProps:ConfigurationDescription[] =
     Object.keys(properties)
     .map(key => ({ label: key.substr(9),
                   detail: properties[key].description,

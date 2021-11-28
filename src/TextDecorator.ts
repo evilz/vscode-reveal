@@ -9,7 +9,7 @@ const revealjsConfigKeyForeground = window.createTextEditorDecorationType({
     color: new ThemeColor('revealjs.configKeyForeground'),
   })
   
-export default class TextDecorator { 
+export default class TextDecorator {
 
 
     propertiesRegex: RegExp
@@ -31,10 +31,10 @@ export default class TextDecorator {
 
             const item = this.configDesc.find(x => x.label === match[1]);
             let hoverMessage: MarkdownString = new MarkdownString();
-            if (item) { 
+            if (item) {
                 hoverMessage =  new MarkdownString('$(symbol-enum) ' +item.detail + '\n\n' + item.documentation)
                 hoverMessage.isTrusted = true
-                hoverMessage.supportThemeIcons =true 
+                hoverMessage.supportThemeIcons =true
             }
 			const decoration = { range: new Range(startPos, endPos), hoverMessage: hoverMessage };
 			decorations.push(decoration);

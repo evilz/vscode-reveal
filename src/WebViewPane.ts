@@ -8,7 +8,7 @@ interface WebviewPaneEvents {
     
   }
 
-export default class WebviewPane 
+export default class WebviewPane
     extends (EventEmitter as new () => TypedEmitter<WebviewPaneEvents>){
 
     constructor(private webview:WebviewPanel) {

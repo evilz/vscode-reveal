@@ -39,7 +39,7 @@ const findTitle = (text: string) => {
 }
 
 interface SlideParserEvents {
-  parsed: (frontmatter:FrontMatterResult<Configuration>, slides:ISlide[]) => void  
+  parsed: (frontmatter:FrontMatterResult<Configuration>, slides:ISlide[]) => void
 }
 
 export default class SlideParser extends (EventEmitter as new () => TypedEmitter<SlideParserEvents>){

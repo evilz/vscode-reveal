@@ -13,8 +13,8 @@ interface SlideTreeProviderEvents {
 }
 
 
-export class SlideTreeProvider 
-  implements vscode.TreeDataProvider<SlideNode>  
+export class SlideTreeProvider
+  implements vscode.TreeDataProvider<SlideNode>
 {
   private readonly _onDidChangeTreeData: vscode.EventEmitter<SlideNode | null> = new vscode.EventEmitter<SlideNode | null>()
 

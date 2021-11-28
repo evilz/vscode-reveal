@@ -190,7 +190,7 @@ export default class MainController {
       this.#exportTimeout = setTimeout(() => resolve(this.exportPath), 5000)
     })
     this.#webViewPane
-     ? this.refreshWebViewPane() 
+     ? this.refreshWebViewPane()
      : await commands.executeCommand(SHOW_REVEALJS)
    
 
@@ -232,7 +232,7 @@ export default class MainController {
       : { horizontal: slides.length - 1, vertical: 0 }
   }
 
-  get uri() { 
+  get uri() {
     const {horizontal,vertical} = this.#position
     return `${this.#server.uri}#/${horizontal}/${vertical}/${Date.now()}`
   }
