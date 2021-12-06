@@ -59,8 +59,7 @@ export interface IDocumentOptions {
   parallaxBackgroundHorizontal: number | null
   parallaxBackgroundVertical: number | null
 
-  title: string // TODO : should take first big title or can be set
-  layout: string
+  title: string
   logoImg: string | null
   description: string
   author: string
@@ -88,7 +87,6 @@ export const getExtensionOptions = (configuration: Configuration) => {
 }
 
 export const defaultConfiguration: Configuration = {
-  layout: '',
   title: 'Reveal JS presentation',
   // tslint:disable-next-line:object-literal-sort-keys
   logoImg: null,

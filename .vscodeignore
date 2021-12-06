@@ -32,3 +32,5 @@ samples/**
 node_modules/**
 jest.config.js
 sourceMap
+.ionide/**
+docs/**

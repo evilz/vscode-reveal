@@ -78,12 +78,12 @@
 
   	
 	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/reveal.js"></script>
-	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/zoom/zoom.js"></script>
+	<% if(enableZoom) {%><script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/zoom/zoom.js"></script><%}%>
 	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/notes/notes.js"></script>
-	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/search/search.js"></script>
+	<% if(enableSearch) {%><script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/search/search.js"></script><%}%>
 	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/markdown/markdown.js"></script>
 	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/highlight/highlight.js"></script>
-	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/menu/menu.js"></script>
+	<% if(enableMenu) {%><script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/menu/menu.js"></script><%}%>
 	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/math/math.js"></script>
 
 	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/fullscreen/plugin.js"></script>
@@ -97,7 +97,7 @@
 <!--	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/audio-slideshow/recorder.js"></script>-->
 <!--	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/audio-slideshow/RecordRTC.js"></script>-->
 
-	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/chalkboard/plugin.js"></script>
+<% if(enableChalkboard) {%><script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/chalkboard/plugin.js"></script><%}%>
 	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/customcontrols/plugin.js"></script>
 	<script src="<%= rootUrl %>libs/reveal.js/4.1.3/plugin/embed-tweet/plugin.js"></script>
 
@@ -111,16 +111,15 @@
 			RevealHighlight,
 			RevealMath,
 			RevealAnimate,
-			RevealChalkboard,
+			<% if(enableChalkboard) {%>RevealChalkboard, <%}%>
 			RevealEmbedTweet,
 			RevealChart,
 		];
 
 		const plugins =  [...printPlugins,
-				RevealZoom, 
-				RevealSearch, 
+		<% if(enableZoom) {%>RevealZoom, <%}%>
+		<% if(enableSearch) {%>RevealSearch, <%}%>
 				RevealMarkdown, 
-				RevealHighlight,
 				<% if(enableMenu) {%>RevealMenu, <%}%>
 				RevealFullscreen,
 				//RevealAnything,
@@ -218,11 +217,12 @@
 				playerStyle: 'position: fixed; bottom: 4px; left: 25%; width: 50%; height:75px; z-index: 33;', // style used for container of audio controls
 				startAtFragment: false, // when moving to a slide, start at the current fragment or at the start of the slide
 			},
+			<% if(enableChalkboard) {%>
 			chalkboard: { // font-awesome.min.css must be available
 					//src: "chalkboard/chalkboard.json",
 					storage: "chalkboard-demo",
-					colorButtons: 5
 				},
+			<%}%>
 			customcontrols: {
 					controls: [
       						{
@@ -230,7 +230,8 @@
 						  title: 'Toggle overview (O)',
 						  icon: '<i class="fa fa-th"></i>',
 						  action: 'Reveal.toggleOverview();'
-						},
+						}
+						<% if(enableChalkboard) {%>,
 						{ icon: '<i class="fa fa-pen-square"></i>',
 						  title: 'Toggle chalkboard (B)',
 						  action: 'RevealChalkboard.toggleChalkboard();'
@@ -238,7 +239,7 @@
 						{ icon: '<i class="fa fa-pen"></i>',
 						  title: 'Toggle notes canvas (C)',
 						  action: 'RevealChalkboard.toggleNotesCanvas();'
-						}
+						}<%}%>
 				]
 			},
 			chart: {

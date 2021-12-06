@@ -2,9 +2,9 @@
 
 
 
-## Why VSCODE Reveal ?
+## Why VSCode Reveal ?
 
-Create awesome presentations base on Reveal.Js framework in pure markdown without leaving your IDE.
+With VSCode Reveal you will create awesome presentations based on Reveal.Js framework in pure markdown without leaving your IDE !
 
 ![demo](https://github.com/evilz/vscode-reveal/raw/master/images/demo2.0-bis.gif)
 

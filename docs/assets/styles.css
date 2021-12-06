@@ -85,10 +85,8 @@
     position: fixed;
     display: flex;
     align-items: center;
-    background: #ffffff;
     bottom: 0;
     left: 0;
-    width: 100%;
     padding: 40px;
     z-index: 5;
   }

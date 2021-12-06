@@ -1,8 +1,8 @@
 {
-  "name": "vscode-reveal-preview",
-  "displayName": "vscode-reveal (PREVIEW)",
+  "name": "vscode-reveal",
+  "displayName": "vscode-reveal",
   "description": "Show markdown as revealJs presentation",
-  "version": "4.0.10",
+  "version": "4.1.0",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
@@ -96,27 +96,48 @@
       "type": "object",
       "title": "Reveal JS Option Configuration",
       "properties": {
-        "revealjs.notesSeparator": {
-          "type": "string",
-          "default": "note:",
-          "description": "Revealjs markdown note delimiter"
+        "revealjs.controlsTutorial": {
+          "type": "boolean",
+          "default": true,
+          "description": "Help the user learn the controls by providing hints"
         },
-        "revealjs.separator": {
+        "revealjs.controlsLayout": {
           "type": "string",
-          "default": "^\\r?\\n---\\r?\\n$",
-          "description": "Revealjs markdown slide separator"
+          "default": "bottom-right",
+          "description": "Determines where controls appear",
+          "enum": [
+            "bottom-right",
+            "edge"]
         },
-        "revealjs.verticalSeparator": {
+        "revealjs.controlsBackArrows": {
           "type": "string",
-          "default": "^\\r?\\n--\\r?\\n$",
-          "description": "Revealjs markdown vertical separator"
+          "default": "faded",
+          "description": "Visibility rule for backwards navigation arrows",
+          "enum": [
+            "faded",
+            "hidden",
+            "visible"]
+        },
+        "revealjs.showSlideNumber": {
+          "type": "string",
+          "default": "all",
+          "description": "Can be used to limit the contexts in which the slide number appears",
+          "enum": [
+            "all",
+            "print",
+            "speaker"]
+        },
+        "revealjs.hashOneBasedIndex": {
+          "type": "boolean",
+          "default": false,
+          "description": "Use 1 based indexing for # links to match slide number"
         },
         "revealjs.theme": {
           "type": "string",
           "default": "black",
           "description": "Revealjs Theme",
           "enum": [
-            "black", 
+            "black",
             "white",
             "league",
             "beige",
@@ -308,18 +329,39 @@
         },
         "revealjs.transition": {
           "type": "string",
-          "default": "default",
-          "description": "Transition style (none/fade/slide/convex/concave/zoom)"
+          "default": "slide",
+          "description": "Transition style",
+          "enum": [
+            "none",
+            "fade",
+            "slide",
+            "convex",
+            "concave",
+            "zoom"
+          ]
         },
         "revealjs.transitionSpeed": {
           "type": "string",
           "default": "default",
-          "description": "Transition speed (default/fast/slow)"
+          "description": "Transition speed",
+          "enum": [
+            "default",
+            "fast",
+            "slow"
+          ]
         },
         "revealjs.backgroundTransition": {
           "type": "string",
-          "default": "default",
-          "description": "Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom)"
+          "default": "fade",
+          "description": "Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom)",
+          "enum": [
+            "none",
+            "fade",
+            "slide",
+            "convex",
+            "concave",
+            "zoom"
+          ]
         },
         "revealjs.viewDistance": {
           "type": "number",
@@ -365,6 +407,26 @@
           "type": "boolean",
           "default": true,
           "description": "Open the file manager after HTML export"
+        },
+        "revealjs.enableMenu": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the menu"
+        },
+        "revealjs.enableChalkboard": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the chalkboard"
+        },
+        "revealjs.enableZoom": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the zoom plugin"
+        },
+        "revealjs.enableSearch": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the search in slides"
         }
       }
     },
@@ -463,24 +525,33 @@
     "front-matter": "4.0.2",
     "fs-jetpack": "^4.2.0",
     "gray-matter": "^4.0.3",
+    "i": "^0.3.7",
     "koa": "^2.13.4",
     "koa-ejs": "^4.3.0",
     "koa-logger": "^3.2.1",
     "koa-static-server": "^1.5.2",
     "markdown-it": "^12.2.0",
+    "markdown-it-abbr": "^1.0.4",
+    "markdown-it-attribution": "^0.1.4",
     "markdown-it-attrs": "^4.1.0",
     "markdown-it-block-embed": "0.0.3",
-    "markdown-it-container": "^3.0.0",
-    "markdown-it-container-pandoc": "^1.0.0",
+    "markdown-it-deflist": "^2.1.0",
     "markdown-it-div": "^1.1.0",
+    "markdown-it-fontawesome": "^0.3.0",
     "markdown-it-iframe": "^1.0.0",
+    "markdown-it-ins": "^3.0.1",
+    "markdown-it-kbd": "^2.2.2",
+    "markdown-it-mark": "^3.0.1",
     "markdown-it-multimd-table": "^4.1.1",
     "markdown-it-regexp": "^0.4.0",
+    "markdown-it-samp": "^0.0.4",
     "markdown-it-span": "^1.0.0",
+    "markdown-it-sub": "^1.0.0",
+    "markdown-it-sup": "^1.0.0",
     "markdown-it-task-lists": "^2.1.1",
+    "npm": "^8.1.4",
     "open": "^8.4.0",
     "pako": "^2.0.4",
-    "request": "^2.88.2",
     "typed-emitter": "^1.4.0"
   },
   "devDependencies": {
