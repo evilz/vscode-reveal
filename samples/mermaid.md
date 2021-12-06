@@ -8,7 +8,7 @@ Bob -> Alice : hello
 
 # dot
 
-```dot 
+```dot
 digraph example1 {
     1 -> 2 -> { 4, 5 };
     1 -> 3 -> { 6, 7 };
