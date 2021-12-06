@@ -74,7 +74,7 @@ export class StatusBarController extends (EventEmitter as new () => TypedEmitter
       const slideWord = this.#currentCount === 1 ? 'slide' : 'slides'
       this.#countItem.text = `$(note) ${this.#currentCount} ${slideWord}`
       this.#countItem.show()
-    } 
+    }
     else
     {
       this.#countItem.text = ""

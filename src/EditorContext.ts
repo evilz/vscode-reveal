@@ -20,7 +20,7 @@
 
 //   private _slides: ISlide[] = []
 //   private _position: ISlidePosition = { horizontal: 0, vertical: 0 }
-//   private _frontmatter?:FrontMatterResult<any> = 
+//   private _frontmatter?:FrontMatterResult<any> =
 
 //   public refresh() {
 //     this. _frontmatter = frontmatter(this.getDocumentText());
