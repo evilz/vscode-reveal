@@ -4,7 +4,11 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
@@ -13,14 +17,26 @@ jobs:
         id: node_version
         run: echo "::set-output name=nvmrc::$(cat .nvmrc)"
 
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ steps.node_version.outputs.nvmrc }}
 
-      - run: npm ci
+      - name: npm-ci
+        run: npm ci
 
       - name: build
         run: npm run vscode:prepublish
 
       - name: test
         run: npm run coverage
+
+      # - name: ui-test linux
+      #   if: runner.os == 'Linux'
+      # #  run: xvfb-run -a npm run ui-test
+      #   uses: GabrielBB/xvfb-action@v1
+      #   with:
+      #     run: npm run ui-test
+      
+      # - name: ui-test linux
+      #   if: runner.os != 'Linux'
+      #   run: npm run ui-test

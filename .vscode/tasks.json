@@ -1,27 +1,39 @@
-// Available variables which can be used inside of strings.
-// ${workspaceRoot}: the root folder of the team
-// ${file}: the current opened file
-// ${fileBasename}: the current opened file's basename
-// ${fileDirname}: the current opened file's dirname
-// ${fileExtname}: the current opened file's extension
-// ${cwd}: the current working directory of the spawned process
-// A task runner that calls a custom npm script that compiles the extension.
+// See https://go.microsoft.com/fwlink/?LinkId=733558
+// for the documentation about the tasks.json format
 {
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "npm: webpack",
-            "type": "shell",
-            "command": "npm",
-            "group": "build",
+            "type": "npm",
+            "script": "watch",
+            "isBackground": true,
             "presentation": {
-                "reveal": "always",
-                "panel": "new"
+                "reveal": "never",
+                "group": "watchers"
             },
-            "args": [
-                "run",
-                "webpack"
-            ]
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "npm",
+            "script": "watch-tests",
+            "problemMatcher": "$tsc-watch",
+            "isBackground": true,
+            "presentation": {
+                "reveal": "never",
+                "group": "watchers"
+            },
+            "group": "build"
+        },
+        {
+            "label": "tasks: watch-tests",
+            "dependsOn": [
+                "npm: watch",
+                "npm: watch-tests"
+            ],
+            "problemMatcher": []
         }
     ]
 }

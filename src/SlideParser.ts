@@ -1,9 +1,10 @@
-import { IDocumentOptions } from './Configuration';
+import { Configuration} from './Configuration';
 import { ISlide } from './ISlide';
+import frontmatter, { FrontMatterResult } from 'front-matter'
+import {separator, verticalSeparator} from './utils'
 
-export const countLines = text => {
-  return text.split("\n").length
-}
+import EventEmitter from "events"
+import TypedEmitter from "typed-emitter"
 
 const trimFirstLastEmptyLine = (s) => {
   let content = s
@@ -15,75 +16,12 @@ const trimFirstLastEmptyLine = (s) => {
   return content
 }
 
-export const parseSlides = (slideContent: string, slidifyOptions: IDocumentOptions): ISlide[] => {
-  const regex = new RegExp(slidifyOptions.separator, 'gm')
-  const slides = slideContent.split(regex)
-  // TODO : do dirty remove first or last line !
-  return slides.map((s, i) => {
 
-    return parseSlide(trimFirstLastEmptyLine(s), i, slidifyOptions)
-
-  })
-}
-
-const lineInSeparator = (separator: string) => (separator.match(/\\n/gm) || []).length + 1
-
-export const countLinesToSlide = (slides: ISlide[], horizontalIndex: number, verticalIndex: number, slidifyOptions: IDocumentOptions) => {
-  const stopSlideIndex = verticalIndex > 0 ? horizontalIndex + 1 : horizontalIndex
-  const separatorHeight = lineInSeparator(slidifyOptions.separator)
-  const verticalSeparatorHeight = lineInSeparator(slidifyOptions.verticalSeparator)
-  return slides.slice(0, stopSlideIndex).reduce((lines, slide) => {
-
-    const count = lines + countLines(slide.text) + separatorHeight
-
-    return slide.verticalChildren
-      ? count + addChildrenSlideLines(slide, horizontalIndex, verticalIndex, verticalSeparatorHeight)
-      : count
-  }, 1)
-}
-
-const addChildrenSlideLines = (slide, horizontalIndex, verticalIndex, verticalSeparatorHeight) => {
-  const stopVerticalAt = slide.index === horizontalIndex ? verticalIndex - 1 : slide.verticalChildren.length
-
-  return slide.verticalChildren
-    ? slide.verticalChildren.slice(0, stopVerticalAt).reduce((innerLines, innerSlide) => {
-      return innerLines + countLines(innerSlide.text) + verticalSeparatorHeight
-    }, 0)
-    : 0
-}
-
-const parseSlide = (slideContent: string, index: number, documentOption: IDocumentOptions): ISlide => {
-  const verticalSlides = getVerticalSlides(slideContent, documentOption)
-  const currentSlide = verticalSlides[0]
-
-  return {
-    ...currentSlide,
-    index,
-    verticalChildren: verticalSlides.length > 1 ? verticalSlides.slice(1) : []
-  }
-}
-
-const getVerticalSlides = (slideContent: string, documentOption: IDocumentOptions): ISlide[] => {
-  const regex = new RegExp(documentOption.verticalSeparator, 'gm')
-  const slides = slideContent.split(regex)
-
-  return slides.map((s, i) => {
-    const content = trimFirstLastEmptyLine(s)
-    return { 
-      title: findTitle(content), 
-      index: i, 
-      text: content, 
-      verticalChildren: [], 
-      attributes: findSlideAttributes(content) 
-    
-    }
-  })
-}
 
 const findSlideAttributes = (text: string) => {
   const regex = /<!--[ ]*.slide:(.*)[ ]*-->/gm
   const m = regex.exec(text)
-  return m === null 
+  return m === null
     ? ''
     : m[1].trim()
 }
@@ -100,4 +38,68 @@ const findTitle = (text: string) => {
   return lines[0].trim()
 }
 
+interface SlideParserEvents {
+  parsed: (frontmatter:FrontMatterResult<Configuration>, slides:ISlide[]) => void
+}
+
+export default class SlideParser extends (EventEmitter as new () => TypedEmitter<SlideParserEvents>){
+
+  constructor() {
+    super()
+  }
+
+  public parse(text: string, doEmit = true) {
+    const result = frontmatter<Configuration>(text)
+    const slides = this.#parseSlides(result.body)
+    if(doEmit) { this.emit('parsed', result, slides) } // dont emit if called for partial document
+    return {frontmatter:result, slides}
+  }
+
+  
+  #parseSlide = (slideContent: string, index: number): ISlide => {
+  const verticalSlides = this.#getVerticalSlides(slideContent)
+  const currentSlide = verticalSlides[0]
+  return {
+    ...currentSlide,
+    index,
+    verticalChildren: verticalSlides.length > 1 ? verticalSlides.slice(1) : []
+  }
+}
+
+
+  #parseSlides = (slideContent: string): ISlide[] => {
+  const regex = new RegExp(separator, 'gm')
+  const slides = slideContent.split(regex)
+  // TODO : do dirty remove first or last line !
+  return slides.map((s, i) => {
+
+    return this.#parseSlide(trimFirstLastEmptyLine(s), i)
+
+  })
+}
+
+
+  #getVerticalSlides = (slideContent: string): ISlide[] => {
+  const regex = new RegExp(verticalSeparator, 'gm')
+  const slides = slideContent.split(regex)
+
+  return slides.map((s, i) => {
+    const content = trimFirstLastEmptyLine(s)
+    return {
+      title: findTitle(content),
+      index: i,
+      text: content,
+      verticalChildren: [],
+      attributes: findSlideAttributes(content)
+
+    }
+  })
+}
+  
+
+
+
+
+
+}
 

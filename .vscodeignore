@@ -1,4 +1,4 @@
-node_modules/**
+
 webpack.config.js
 .vscode/**
 .vscode-test/**
@@ -27,3 +27,10 @@ image-placeholder.png
 junit.xml
 math.md
 tslint.json
+coverage/**
+samples/**
+node_modules/**
+jest.config.js
+sourceMap
+.ionide/**
+docs/**

@@ -1,21 +1,19 @@
 # vscode-reveal [![](https://img.shields.io/visual-studio-marketplace/v/evilz.vscode-reveal)](https://marketplace.visualstudio.com/items?itemName=evilz.vscode-reveal) ![install](https://img.shields.io/visual-studio-marketplace/i/evilz.vscode-reveal)
 
 
-
-![Codecov](https://img.shields.io/codecov/c/github/evilz/vscode-reveal)
+<!-- 
+![Codecov](https://img.shields.io/codecov/c/github/evilz/vscode-reveal) -->
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=evilz_vscode-reveal&metric=alert_status)](https://sonarcloud.io/dashboard?id=evilz_vscode-reveal)
+<!-- 
 
-[![Azure Pipeline](https://evilz.visualstudio.com/vscode-reveal/_apis/build/status/2)](https://evilz.visualstudio.com/vscode-reveal/_build?definitionId=2)
-
-[![NODE.JS DEPENDENCIES](https://david-dm.org/evilz/vscode-reveal/status.svg)](https://david-dm.org/evilz/vscode-reveal)
-[![NODE.JS DEV DEPENDENCIES](https://david-dm.org/evilz/vscode-reveal/dev-status.svg)](https://david-dm.org/evilz/vscode-reveal?type=dev)
-
-[![Known Vulnerabilities](https://snyk.io/test/github/evilz/vscode-reveal/badge.svg?targetFile=package.json)](https://snyk.io/test/github/evilz/vscode-reveal?targetFile=package.json)
+[![Known Vulnerabilities](https://snyk.io/test/github/evilz/vscode-reveal/badge.svg?targetFile=package.json)](https://snyk.io/test/github/evilz/vscode-reveal?targetFile=package.json) -->
 
 This extension let you display a reveal.js presentation directly from an opened markdown document.
 
 ![demo](https://github.com/evilz/vscode-reveal/raw/master/images/demo2.0-bis.gif)
+
+> Full documentation [here](https://www.evilznet.com/vscode-reveal)
 
 ## Features
 

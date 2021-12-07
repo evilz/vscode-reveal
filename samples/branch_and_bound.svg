@@ -1,0 +1,222 @@
+<svg width="800" height="700" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" style="background-color:white">
+<!-- Grid -->
+<path stroke="#808080" stroke-width="0.4" id="horizontal_gridline1" d="M 0,50 L 800,50"/>
+<path stroke="#808080" stroke-width="0.4" id="horizontal_gridline3" d="M 0,150 L 800,150"/>
+<path stroke="#808080" stroke-width="0.4" id="horizontal_gridline5" d="M 0,250 L 800,250"/>
+<path stroke="#808080" stroke-width="0.4" id="horizontal_gridline7" d="M 0,350 L 800,350"/>
+<path stroke="#808080" stroke-width="0.4" id="horizontal_gridline9" d="M 0,450 L 800,450"/>
+<path stroke="#808080" stroke-width="0.4" id="horizontal_gridline11" d="M 0,550 L 800,550"/>
+<path stroke="#808080" stroke-width="0.4" id="horizontal_gridline13" d="M 0,650 L 800,650"/>
+<path stroke="#808080" stroke-width="0.4" id="vertical_gridline1" d="M 50,0 L 50,700"/>
+<path stroke="#808080" stroke-width="0.4" id="vertical_gridline3" d="M 150,0 L 150,700"/>
+<path stroke="#808080" stroke-width="0.4" id="vertical_gridline5" d="M 250,0 L 250,700"/>
+<path stroke="#808080" stroke-width="0.4" id="vertical_gridline7" d="M 350,0 L 350,700"/>
+<path stroke="#808080" stroke-width="0.4" id="vertical_gridline9" d="M 450,0 L 450,700"/>
+<path stroke="#808080" stroke-width="0.4" id="vertical_gridline11" d="M 550,0 L 550,700"/>
+<path stroke="#808080" stroke-width="0.4" id="vertical_gridline13" d="M 650,0 L 650,700"/>
+<path stroke="#808080" stroke-width="0.4" id="vertical_gridline15" d="M 750,0 L 750,700"/>
+<!-- Axis -->
+  <path d="M 150,5 L 150,700" id="y-axis" stroke="#000000" stroke-width="4"/>
+  <path d="M 150,0 L 160,20 L 140,20 L 150,0" id="y-axis" fill="#000000"/>
+  <path d="M 0,550 L 795,550" id="x-axis" stroke="#000000" stroke-width="4"/>
+  <path d="M 800,550 L 780,540 L 780,560 L 800,550" id="y-axis" fill="#000000"/>
+<!-- Axis labels -->
+  <text id="x-axislabel" x="760" y="590" font-size="50" font-family="Times New Roman" font-style="italic">x</text>
+  <text id="y-axislabel" x="110" y="30" font-size="50" font-family="Times New Roman" font-style="italic">y</text>
+<!-- Integer values -->
+<g id="points">
+<circle id="point0-0" cx="50" cy="50" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point1-0" cx="150" cy="50" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point2-0" cx="250" cy="50" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point3-0" cx="350" cy="50" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point4-0" cx="450" cy="50" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point5-0" cx="550" cy="50" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point6-0" cx="650" cy="50" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point7-0" cx="750" cy="50" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point8-0" cx="850" cy="50" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point0-1" cx="50" cy="150" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point1-1" cx="150" cy="150" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point2-1" cx="250" cy="150" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point3-1" cx="350" cy="150" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point4-1" cx="450" cy="150" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point5-1" cx="550" cy="150" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point6-1" cx="650" cy="150" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point7-1" cx="750" cy="150" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point8-1" cx="850" cy="150" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point0-2" cx="50" cy="250" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point1-2" cx="150" cy="250" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point2-2" cx="250" cy="250" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point3-2" cx="350" cy="250" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point4-2" cx="450" cy="250" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point5-2" cx="550" cy="250" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point6-2" cx="650" cy="250" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point7-2" cx="750" cy="250" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point8-2" cx="850" cy="250" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point0-3" cx="50" cy="350" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point1-3" cx="150" cy="350" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point2-3" cx="250" cy="350" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point3-3" cx="350" cy="350" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point4-3" cx="450" cy="350" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point5-3" cx="550" cy="350" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point6-3" cx="650" cy="350" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point7-3" cx="750" cy="350" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point8-3" cx="850" cy="350" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point0-4" cx="50" cy="450" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point1-4" cx="150" cy="450" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point2-4" cx="250" cy="450" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point3-4" cx="350" cy="450" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point4-4" cx="450" cy="450" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point5-4" cx="550" cy="450" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point6-4" cx="650" cy="450" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point7-4" cx="750" cy="450" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point8-4" cx="850" cy="450" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point0-5" cx="50" cy="550" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point1-5" cx="150" cy="550" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point2-5" cx="250" cy="550" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point3-5" cx="350" cy="550" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point4-5" cx="450" cy="550" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point5-5" cx="550" cy="550" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point6-5" cx="650" cy="550" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point7-5" cx="750" cy="550" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point8-5" cx="850" cy="550" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point0-6" cx="50" cy="650" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point1-6" cx="150" cy="650" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point2-6" cx="250" cy="650" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point3-6" cx="350" cy="650" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point4-6" cx="450" cy="650" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point5-6" cx="550" cy="650" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point6-6" cx="650" cy="650" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point7-6" cx="750" cy="650" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point8-6" cx="850" cy="650" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point0-7" cx="50" cy="750" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point1-7" cx="150" cy="750" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point2-7" cx="250" cy="750" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point3-7" cx="350" cy="750" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point4-7" cx="450" cy="750" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point5-7" cx="550" cy="750" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point6-7" cx="650" cy="750" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point7-7" cx="750" cy="750" r="5" stroke="none" fill="#c0c0c0"/>
+<circle id="point8-7" cx="850" cy="750" r="5" stroke="none" fill="#c0c0c0"/>
+</g>
+
+<!-- Add graph content here-->
+<g id="constraints">
+  <g id="y geq 0">
+    <rect width="800" height="150" x="0" y="550" fill="#55aaff" fill-opacity="0.4"/>
+    <path  d="M 0,550 L 800,550"  stroke="#0000ff"  stroke-width="5"/>
+  </g>
+  <g id="x geq 0">
+    <rect  width="150"  height="700"  x="0"  y="0"  fill="#55aaff" fill-opacity="0.4" />
+    <path  d="M 150,0 L 150,700"  stroke="#0000ff"  stroke-width="5"/>
+  </g>
+  <g id="x leq 5">
+    <rect  width="300"  height="700"  x="650"  y="0"  fill="#55aaff" fill-opacity="0.4"/>
+    <path  d="M 650,0 L 650,700"  stroke="#0000ff"  stroke-width="5"/>
+  </g>
+  <g id="-10x+20y leq 22">
+    <path  d="M 0,515 L 800,115 L800,0 L0,0"  fill="#55aaff" fill-opacity="0.4"/>
+    <path  d="M 0,515 L 800,115"  stroke="#0000ff"  stroke-width="5"/>
+  </g>
+  <g id="5x+10y leq 49">
+    <path  d="M 30,0 L 800,385 L800,0"  fill="#55aaff" fill-opacity="0.4"/>
+    <path  d="M 30,0 L 800,385"  stroke="#0000ff"  stroke-width="5"/>
+  </g>
+</g>
+
+<g id="feasible" opacity="0">
+  <circle cx="350" cy="350" r="5" stroke="none" fill="black" />
+  <circle cx="450" cy="350" r="5" stroke="none" fill="black" />
+  <circle cx="550" cy="350" r="5" stroke="none" fill="black" />
+  <circle cx="650" cy="350" r="5" stroke="none" fill="black" />
+
+  <circle cx="150" cy="450" r="5" stroke="none" fill="black" />
+  <circle cx="250" cy="450" r="5" stroke="none" fill="black" />
+  <circle cx="350" cy="450" r="5" stroke="none" fill="black" />
+  <circle cx="450" cy="450" r="5" stroke="none" fill="black" />
+  <circle cx="550" cy="450" r="5" stroke="none" fill="black" />
+  <circle cx="650" cy="450" r="5" stroke="none" fill="black" />
+
+  <circle cx="150" cy="550" r="5" stroke="none" fill="black" />
+  <circle cx="250" cy="550" r="5" stroke="none" fill="black" />
+  <circle cx="350" cy="550" r="5" stroke="none" fill="black" />
+  <circle cx="450" cy="550" r="5" stroke="none" fill="black" />
+  <circle cx="550" cy="550" r="5" stroke="none" fill="black" />
+  <circle cx="650" cy="550" r="5" stroke="none" fill="black" />
+</g>
+
+
+<g id="branch_and_bound">
+<g id="solution_root" opacity="0">
+  <line x1="0" y1="382.5" x2="800" y2="182.5"  stroke="firebrick" stroke-width="5"/>
+  <circle cx="530" cy="250" r="7.5" stroke="none" fill="firebrick" />
+  <text x="510" y="240" font-size="28" font-family="Times New Roman" font-weight="bold" fill="firebrick">8.2</text>
+</g>
+<g id="infeasible_x_3_4" opacity="0">
+    <rect width="100" height="700" x="450" y="0" fill="red" fill-opacity="0.2" />
+</g>
+<g id="branch_x_geq_4" opacity="0">
+    <rect width="550" height="700" x="0" y="0" fill="blueviolet" fill-opacity="0.2" />
+    <line x1="550" y1="0" x2="550" y2="700" stroke="blueviolet" stroke-width="5" />
+</g>
+<g id="solution_x_geq_4" opacity="0">
+  <line x1="0" y1="397.5" x2="800" y2="197.5"  stroke="firebrick" stroke-width="5"/>
+  <circle cx="550" cy="260" r="7.5" stroke="none" fill="firebrick" />
+  <text x="530" y="290" font-size="28" font-family="Times New Roman" font-weight="bold" fill="firebrick">7.6</text>
+</g>
+<g id="infeasible_y_2_3" opacity="0">
+    <rect width="800" height="100" x="0" y="250" fill="red" fill-opacity="0.2" />
+</g>
+<g id="branch_x_any_y_geq_3" opacity="0">
+    <rect width="800" height="450" x="0" y="250" fill="blueviolet" fill-opacity="0.2" />
+    <line x1="0" y1="250" x2="800" y2="250" stroke="blueviolet" stroke-width="5" />
+</g>
+<g id="branch_x_any_y_leq_2" opacity="0">
+    <rect width="800" height="350" x="0" y="0" fill="blueviolet" fill-opacity="0.2" />
+    <line x1="0" y1="350" x2="800" y2="350" stroke="blueviolet" stroke-width="5" />
+</g>
+<g id="solution_x_geq_4_y_leq_2" opacity="0">
+  <line x1="0" y1="487.5" x2="800" y2="287.5"  stroke="firebrick" stroke-width="5"/>
+  <circle cx="550" cy="350" r="7.5" stroke="none" fill="firebrick" />
+  <text x="560" y="380" font-size="28" font-family="Times New Roman" font-weight="bold" fill="firebrick">4.0</text>
+</g>
+<g id="branch_x_leq_3" opacity="0">
+    <rect width="350" height="700" x="450" y="0" fill="blueviolet" fill-opacity="0.2" />
+    <line x1="450" y1="0" x2="450" y2="700" stroke="blueviolet" stroke-width="5" />
+</g>
+<g id="solution_x_leq_3" opacity="0">
+  <line x1="0" y1="402.5" x2="800" y2="202.5"  stroke="firebrick" stroke-width="5"/>
+  <circle cx="450" cy="290" r="7.5" stroke="none" fill="firebrick" />
+  <text x="410" y="280" font-size="28" font-family="Times New Roman" font-weight="bold" fill="firebrick">7.4</text>
+</g>
+<g id="solution_x_leq_3_y_leq_2" opacity="0">
+  <line x1="0" y1="432.5" x2="800" y2="232.5"  stroke="firebrick" stroke-width="5"/>
+  <circle cx="330" cy="350" r="7.5" stroke="none" fill="firebrick" />
+  <text x="290" y="340" font-size="28" font-family="Times New Roman" font-weight="bold" fill="firebrick">6.2</text>
+</g>
+<g id="infeasible_x_1_2" opacity="0">
+    <rect width="100" height="700" x="250" y="0" fill="red" fill-opacity="0.2" />
+</g>
+<g id="branch_x_leq_3_y_leq_2_x_geq_2" opacity="0">
+    <rect width="350" height="700" x="0" y="0" fill="blueviolet" fill-opacity="0.2" />
+    <line x1="350" y1="0" x2="350" y2="700" stroke="blueviolet" stroke-width="5" />
+</g>
+<g id="solution_x_leq_3_y_leq_2_x_geq_2" opacity="0">
+  <line x1="0" y1="437.5" x2="800" y2="237.5"  stroke="firebrick" stroke-width="5"/>
+  <circle cx="350" cy="350" r="7.5" stroke="none" fill="firebrick" />
+  <text x="360" y="380" font-size="28" font-family="Times New Roman" font-weight="bold" fill="firebrick">6.0</text>
+</g>
+<g id="branch_x_leq_3_y_leq_2_x_leq_1" opacity="0">
+    <rect width="550" height="700" x="250" y="0" fill="blueviolet" fill-opacity="0.2" />
+    <line x1="250" y1="0" x2="250" y2="700" stroke="blueviolet" stroke-width="5" />
+</g>
+<g id="solution_x_leq_3_y_leq_2_x_leq_1" opacity="0">
+  <line x1="0" y1="452.5" x2="800" y2="252.5"  stroke="firebrick" stroke-width="5"/>
+  <circle cx="250" cy="390" r="7.5" stroke="none" fill="firebrick" />
+  <text x="210" y="380" font-size="28" font-family="Times New Roman" font-weight="bold" fill="firebrick">5.4</text>
+</g>
+
+<g id="overview">
+</g>
+</g>
+
+</svg>
