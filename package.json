@@ -525,7 +525,6 @@
     "front-matter": "4.0.2",
     "fs-jetpack": "^4.2.0",
     "gray-matter": "^4.0.3",
-    "i": "^0.3.7",
     "koa": "^2.13.4",
     "koa-ejs": "^4.3.0",
     "koa-logger": "^3.2.1",
@@ -549,7 +548,6 @@
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
     "markdown-it-task-lists": "^2.1.1",
-    "npm": "^8.1.4",
     "open": "^8.4.0",
     "pako": "^2.0.4",
     "typed-emitter": "^1.4.0"
