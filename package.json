@@ -581,6 +581,6 @@
     "sonarqube-scanner": "^2.8.1",
     "source-map-support": "^0.5.20",
     "ts-jest": "^27.0.7",
-    "typescript": "^4.4.4"
+    "typescript": "^4.5.3"
   }
 }
