@@ -38,6 +38,9 @@ jobs:
       - name: Install dependencies
         run: npm i
 
+      - name: Install vsce
+        run: npm install -g vsce
+
       - name: Setup package path
         id: setup
         run: echo "::set-output name=packageName::$(node -e "console.log(require('./package.json').name + '-v' + require('./package.json').version + '.vsix')")"
@@ -45,7 +48,7 @@ jobs:
       - name: Package
         env:
           VSIX_PACKAGE_PATH: ${{ steps.setup.outputs.packageName }}
-        run: npx gulp package
+        run: vsce package
       
       - uses: actions/upload-artifact@v2
         with:
