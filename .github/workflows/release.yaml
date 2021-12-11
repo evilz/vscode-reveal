@@ -70,6 +70,9 @@ jobs:
     needs: package
     if: github.event.inputs.publishMS == 'true'
     steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ needs.package.outputs.packageName }}
       - uses: HaaLeo/publish-vscode-extension@v0
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
@@ -83,6 +86,9 @@ jobs:
     needs: package
     if: github.event.inputs.publishOVSX == 'true'
     steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ needs.package.outputs.packageName }}
       - uses: HaaLeo/publish-vscode-extension@v0
         with:
           pat: ${{ secrets.OPEN_VSX_TOKEN }}
