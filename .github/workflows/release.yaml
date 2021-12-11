@@ -75,6 +75,7 @@ jobs:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com
           extensionFile: ${{ needs.package.outputs.packageName }}
+          packagePath: ''
 
   publishOVSX:
     name: Publish to OpenVSX
@@ -82,12 +83,12 @@ jobs:
     needs: package
     if: github.event.inputs.publishOVSX == 'true'
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
+      - uses: HaaLeo/publish-vscode-extension@v0
         with:
-          name: ${{ needs.package.outputs.packageName }}
-      - name: Publish to OpenVSX
-        run: npx ovsx publish ./${{ needs.package.outputs.packageName }} -p ${{ secrets.OVSX_PAT }} 
+          pat: ${{ secrets.OPEN_VSX_TOKEN }}
+          extensionFile: ${{ needs.package.outputs.packageName }}
+          packagePath: ''
+   
   
   publishGH:
     name: Publish to GitHub releases
