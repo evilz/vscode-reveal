@@ -1,0 +1,123 @@
+name: Release
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      publishMS:
+        description: 'Publish to MS marketplace'
+        type: boolean
+        required: true
+        default: "true"
+      publishOVSX:
+        description: 'Publish to OpenVSX'
+        type: boolean
+        required: true
+        default: "true"
+      publishGH:
+        description: 'Publish to GitHub releases'
+        type: boolean
+        required: true
+        default: "true"
+
+jobs:
+  package:
+    name: Package
+    runs-on: ubuntu-latest
+    outputs:
+      packageName: ${{ steps.setup.outputs.packageName }}
+      tag: ${{ steps.setup-tag.outputs.tag }}
+      version: ${{ steps.setup-tag.outputs.version }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Setup package path
+        id: setup
+        run: echo "::set-output name=packageName::$(node -e "console.log(require('./package.json').name + '-v' + require('./package.json').version + '.vsix')")"
+
+      - name: Package
+        env:
+          VSIX_PACKAGE_PATH: ${{ steps.setup.outputs.packageName }}
+        run: npx gulp package
+      
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.setup.outputs.packageName }}
+          path: ${{ steps.setup.outputs.packageName }}
+      
+      - name: Setup tag
+        id: setup-tag
+        run: |
+          $version = (Get-Content ./package.json -Raw | ConvertFrom-Json).version
+          Write-Host "tag: release/$version"
+          Write-Host "::set-output name=tag::release/$version"
+          Write-Host "::set-output name=version::$version"
+        shell: pwsh
+
+  publishMS:
+    name: Publish to MS marketplace
+    runs-on: ubuntu-latest
+    needs: package
+    if: github.event.inputs.publishMS == 'true'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ needs.package.outputs.packageName }}
+      - name: Publish to MS marketplace
+        run: npx vsce publish --packagePath ./${{ needs.package.outputs.packageName }} -p ${{ secrets.VSCE_PAT }} 
+
+  publishOVSX:
+    name: Publish to OpenVSX
+    runs-on: ubuntu-latest
+    needs: package
+    if: github.event.inputs.publishOVSX == 'true'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ needs.package.outputs.packageName }}
+      - name: Publish to OpenVSX
+        run: npx ovsx publish ./${{ needs.package.outputs.packageName }} -p ${{ secrets.OVSX_PAT }} 
+  
+  publishGH:
+    name: Publish to GitHub releases
+    runs-on: ubuntu-latest
+    needs: package
+    if: github.event.inputs.publishGH == 'true'
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ needs.package.outputs.packageName }}
+
+      - name: Commit tagger
+        uses: tvdias/github-tagger@v0.0.2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ needs.package.outputs.tag }}
+          
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ needs.package.outputs.tag }}
+          release_name: Release ${{ needs.package.outputs.version }}
+          draft: false
+          prerelease: false
+          
+      - name: Upload assets to a Release
+        uses: AButler/upload-release-assets@v2.0
+        with:
+          files: ${{ needs.package.outputs.packageName }}
+          release-tag:  ${{ needs.package.outputs.tag }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
