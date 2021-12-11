@@ -529,7 +529,7 @@
     "koa-ejs": "^4.3.0",
     "koa-logger": "^3.2.1",
     "koa-static-server": "^1.5.2",
-    "markdown-it": "^12.2.0",
+    "markdown-it": "^12.3.0",
     "markdown-it-abbr": "^1.0.4",
     "markdown-it-attribution": "^0.1.4",
     "markdown-it-attrs": "^4.1.0",
