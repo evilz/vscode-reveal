@@ -43,7 +43,7 @@ jobs:
 
       - name: Setup package path
         id: setup
-        run: echo "::set-output name=packageName::$(node -e "console.log(require('./package.json').name + require('./package.json').version + '.vsix')")"
+        run: echo "::set-output name=packageName::$(node -e "console.log(require('./package.json').name + '-' + require('./package.json').version + '.vsix')")"
 
       - name: Package
         env:
