@@ -567,7 +567,7 @@
     "@types/request": "^2.48.7",
     "@types/vscode": "^1.61.0",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
-    "@typescript-eslint/parser": "^5.2.0",
+    "@typescript-eslint/parser": "^5.7.0",
     "@vscode/test-electron": "^1.6.2",
     "@vscode/test-web": "^0.0.15",
     "esbuild": "^0.14.3",
