@@ -22,7 +22,7 @@ touch: true
 loop: true
 rtl: true
 #navigationMode: 'default', linear grid
-shuffle: true
+shuffle: false
 fragments: false
 fragmentInURL: true
 embedded: false
@@ -58,17 +58,17 @@ display: grid
 #hideInactiveCursor: true,
 #hideCursorTime: 5000
 
-#width: 960,
-#height: 700,
-#margin: 0.04,
-#minScale: 0.2,
-#maxScale: 2.0
-#disableLayout: false
+width: 400
+height: 1320
+margin: 0.04
+minScale: 0.2
+maxScale: 2.0
+disableLayout: false
 
-parallaxBackgroundImage: https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg
-parallaxBackgroundSize: 2100px 900px
+parallaxBackgroundImage: https://miro.medium.com/max/3622/1*RoXcbaF9lIqwpMjiXg54Vw.png
+parallaxBackgroundSize: 2100px 1320px
 parallaxBackgroundHorizontal: 200
-parallaxBackgroundVertical: 50
+parallaxBackgroundVertical: 150
 
 
 #### VSCODE EXTENSION CONFIG ####
@@ -85,20 +85,16 @@ highlightTheme: hybrid
 
 # hideAddressBar: boolean
 
-
-
-
-# title: string // TODO : should take first big title or can be set
 # layout: string
 # logoImg: string | null
 # description: string
 # author: string
 
-# enableMenu: boolean
-# enableChalkboard: boolean
-# enableTitleFooter: boolean
-# enableZoom: boolean
-# enableSearch: boolean
+enableMenu: false
+enableChalkboard: false
+#enableTitleFooter: boolean
+enableZoom: false
+enableSearch: false
 ---
 
 # front matter ! 
