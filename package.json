@@ -2,12 +2,12 @@
   "name": "vscode-reveal",
   "displayName": "vscode-reveal",
   "description": "Show markdown as revealJs presentation",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
   "icon": "logo.png",
-  "preview": true,
+  "preview": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/evilz/vscode-reveal"
@@ -26,6 +26,7 @@
   ],
   "activationEvents": [
     "onLanguage:markdown",
+    "onCommand:vscode-revealjs.showSample",
     "onCommand:vscode-revealjs.showRevealJS",
     "onCommand:vscode-revealjs.showRevealJSInBrowser"
   ],
@@ -107,7 +108,8 @@
           "description": "Determines where controls appear",
           "enum": [
             "bottom-right",
-            "edge"]
+            "edge"
+          ]
         },
         "revealjs.controlsBackArrows": {
           "type": "string",
@@ -116,7 +118,8 @@
           "enum": [
             "faded",
             "hidden",
-            "visible"]
+            "visible"
+          ]
         },
         "revealjs.showSlideNumber": {
           "type": "string",
@@ -125,7 +128,8 @@
           "enum": [
             "all",
             "print",
-            "speaker"]
+            "speaker"
+          ]
         },
         "revealjs.hashOneBasedIndex": {
           "type": "boolean",
@@ -368,6 +372,36 @@
           "default": 3,
           "description": "Number of slides away from the current that are visible"
         },
+        "revealjs.width": {
+          "type": "number",
+          "default": 960,
+          "description": "Width of the presentation"
+        },
+        "revealjs.height": {
+          "type": "number",
+          "default": 700,
+          "description": "Height of the presentation"
+        },
+        "revealjs.margin": {
+          "type": "number",
+          "default": 0.04,
+          "description": "Factor of the display size that should remain empty around the content"
+        },
+        "revealjs.minScale": {
+          "type": "number",
+          "default": 0.2,
+          "description": "Bounds for smallest possible scale to apply to content"
+        },
+        "revealjs.maxScale": {
+          "type": "number",
+          "default": 2,
+          "description": "Bounds for largest  possible scale to apply to content"
+        },
+        "revealjs.disableLayout": {
+          "type": "boolean",
+          "default": false,
+          "description": "disable the built-in scaling and centering and Bring Your Own Layout"
+        },
         "revealjs.parallaxBackgroundImage": {
           "type": "string",
           "default": "",
@@ -427,6 +461,11 @@
           "type": "boolean",
           "default": true,
           "description": "Enable the search in slides"
+        },
+        "revealjs.title": {
+          "type": "string",
+          "default": "Reveal JS presentation",
+          "description": "Title of your presentation"
         }
       }
     },
@@ -523,7 +562,7 @@
   "dependencies": {
     "@koa/cors": "^3.1.0",
     "front-matter": "4.0.2",
-    "fs-jetpack": "^4.2.0",
+    "fs-jetpack": "^4.3.0",
     "gray-matter": "^4.0.3",
     "koa": "^2.13.4",
     "koa-ejs": "^4.3.0",
@@ -532,7 +571,7 @@
     "markdown-it": "^12.3.0",
     "markdown-it-abbr": "^1.0.4",
     "markdown-it-attribution": "^0.1.4",
-    "markdown-it-attrs": "^4.1.0",
+    "markdown-it-attrs": "^4.1.1",
     "markdown-it-block-embed": "0.0.3",
     "markdown-it-deflist": "^2.1.0",
     "markdown-it-div": "^1.1.0",
@@ -554,33 +593,32 @@
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",
-    "@types/jest": "^27.0.2",
+    "@types/jest": "^27.0.3",
     "@types/koa": "^2.13.4",
     "@types/koa-ejs": "^4.3.0",
     "@types/koa-router": "^7.4.4",
     "@types/koa-static": "^4.0.2",
     "@types/koa-static-server": "^1.5.0",
     "@types/markdown-it": "12.2.3",
-    "@types/marked": "^3.0.2",
-    "@types/node": "^16.11.6",
+    "@types/node": "^17.0.4",
     "@types/plantuml-encoder": "^1.4.0",
     "@types/request": "^2.48.7",
     "@types/vscode": "^1.61.0",
-    "@typescript-eslint/eslint-plugin": "^5.2.0",
-    "@typescript-eslint/parser": "^5.2.0",
-    "@vscode/test-electron": "^1.6.2",
+    "@typescript-eslint/eslint-plugin": "^5.8.0",
+    "@typescript-eslint/parser": "^5.8.0",
+    "@vscode/test-electron": "^2.0.0",
     "@vscode/test-web": "^0.0.15",
-    "esbuild": "^0.14.3",
-    "eslint": "^8.1.0",
+    "esbuild": "^0.14.8",
+    "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-jest": "^25.2.2",
-    "jest": "^27.4.4",
+    "eslint-plugin-jest": "^25.3.0",
+    "jest": "^27.4.5",
     "jest-junit": "^13.0.0",
     "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
     "sonarqube-scanner": "^2.8.1",
-    "source-map-support": "^0.5.20",
-    "ts-jest": "^27.1.1",
-    "typescript": "^4.5.3"
+    "source-map-support": "^0.5.21",
+    "ts-jest": "^27.1.2",
+    "typescript": "^4.5.4"
   }
 }

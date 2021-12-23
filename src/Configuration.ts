@@ -54,6 +54,14 @@ export interface IDocumentOptions {
   transitionSpeed: 'default' | 'fast' | 'slow'
   backgroundTransition: transitions
   viewDistance: number
+
+  width: number,
+  height: number,
+  margin: number,
+  minScale: number,
+  maxScale: number,
+  disableLayout: boolean,
+
   parallaxBackgroundImage: string // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
   parallaxBackgroundSize: string // CSS syntax, e.g. "2100px 900px"
   parallaxBackgroundHorizontal: number | null
@@ -130,6 +138,14 @@ export const defaultConfiguration: Configuration = {
   transitionSpeed: 'default',
   backgroundTransition: 'default',
   viewDistance: 3,
+
+  width: 960,
+  height: 700,
+  margin: 0.04,
+  minScale: 0.2,
+  maxScale: 2.0,
+  disableLayout: false,
+
   parallaxBackgroundImage: '',
   parallaxBackgroundSize: '',
   parallaxBackgroundHorizontal: 0,
@@ -159,7 +175,7 @@ export const getConfigurationDescription = (properties:object) => {
 
   const allProps:ConfigurationDescription[] =
     Object.keys(properties)
-    .map(key => ({ label: key.substr(9),
+    .map(key => ({ label: key.substring(9), // remove "revealjs."
                   detail: properties[key].description,
                   documentation: `Default value:  ${properties[key].default}`,
                   type: properties[key].type,
