@@ -604,7 +604,7 @@
     "@types/plantuml-encoder": "^1.4.0",
     "@types/request": "^2.48.7",
     "@types/vscode": "^1.61.0",
-    "@typescript-eslint/eslint-plugin": "^5.8.0",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.0",
     "@vscode/test-electron": "^2.0.0",
     "@vscode/test-web": "^0.0.15",
