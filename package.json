@@ -580,7 +580,7 @@
     "markdown-it-ins": "^3.0.1",
     "markdown-it-kbd": "^2.2.2",
     "markdown-it-mark": "^3.0.1",
-    "markdown-it-multimd-table": "^4.1.1",
+    "markdown-it-multimd-table": "^4.1.3",
     "markdown-it-regexp": "^0.4.0",
     "markdown-it-samp": "^0.0.4",
     "markdown-it-span": "^1.0.0",
