@@ -589,7 +589,7 @@
     "markdown-it-task-lists": "^2.1.1",
     "open": "^8.4.0",
     "pako": "^2.0.4",
-    "typed-emitter": "^1.4.0"
+    "typed-emitter": "^2.1.0"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",
