@@ -612,7 +612,7 @@
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jest": "^25.3.0",
-    "jest": "^27.4.5",
+    "jest": "^27.5.1",
     "jest-junit": "^13.0.0",
     "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
