@@ -1,5 +1,5 @@
-import { countLines, countLinesToSlide } from '../src/utils'
-import SlideParser from '../src/SlideParser'
+import { countLines, countLinesToSlide } from '../../utils'
+import SlideParser from '../../SlideParser'
 
 // const sampleFile = fs.readFileSync('../sample.md').toString()
 

@@ -1,4 +1,4 @@
-import SlideParser from '../src/SlideParser'
+import SlideParser from '../../SlideParser'
 
 
 test('Should retrieve title from content', () => {

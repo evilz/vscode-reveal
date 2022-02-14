@@ -11,7 +11,7 @@ interface LoggerEvents {
   levelChanged: (LogLevel) => void,
 }
 
-export class Logger  extends (EventEmitter as new () => TypedEmitter<LoggerEvents>) {
+export default class Logger  extends (EventEmitter as new () => TypedEmitter<LoggerEvents>) {
   
   constructor( private readonly appendLine: (string) => void, private logLevel= LogLevel.Verbose) {
     super();

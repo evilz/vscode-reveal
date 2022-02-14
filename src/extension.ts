@@ -10,7 +10,7 @@ import { showSample, SHOW_SAMPLE } from './commands/showSample'
 import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
 import languageCompletion from './CompletionItemProvider'
 import MainController from './MainController'
-import { Logger } from './Logger'
+import Logger from './Logger'
 import { extensionId } from './utils'
 import {getConfigurationDescription} from './Configuration'
 

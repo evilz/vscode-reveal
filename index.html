@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title><%= title %></title>
+	<title>Reveal JS presentation</title>
 
 	<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
 	<meta name="author" content="Hakim El Hattab">
@@ -22,46 +22,36 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 	  <!-- highlight Theme -->
-  	<% if (highlightTheme) { %>
-	  <link rel="stylesheet" href="libs/highlight.js/11.3.1/styles/<%=highlightTheme%>.min.css">
-	<%}%>
-	<% if (highlightTheme == null) { %>
-	<link rel="stylesheet" href="libs/highlight.js/11.3.1/styles/monokai.min.css">
-	<%}%>
+  	
+	  <link rel="stylesheet" href="libs/highlight.js/11.3.1/styles/monokai.min.css">
+	
+	
 		
 	<link rel="stylesheet" href="libs/reveal.js/4.1.3/plugin/chalkboard/style.css">
 	
 	
-	<% if (enableMenu ) { %>
+	
 		<link rel="stylesheet" href="libs/reveal.js/4.1.3/plugin/customcontrols/style.css">
-	<%}%>
+	
 	<link rel="stylesheet" href="libs/styles/tasklist.css">
 
 
 
   <!-- Revealjs Theme -->
-  <% if (theme) { %>
-  	<link rel="stylesheet" href="libs/reveal.js/4.1.3/theme/<%=theme%>.css" id="theme">
-  <%}%>
-  <% if (!theme) { %>
+  
   	<link rel="stylesheet" href="libs/reveal.js/4.1.3/theme/black.css" id="theme">
-  <%}%>
+  
+  
 
 
   <!-- Revealjs Theme -->
-  <% if (customTheme) { %>
-  	<link rel="stylesheet" href="<%=customTheme%>.css">
-  <%}%>
+  
 
  
 </head>
 
 <body>
-  <% if (logoImg) { %>
-    <div id="logo" style="position: fixed; top: 20px; left: 20px; z-index: 1; height:3rem;">
-        <img src="<%=logoImg%>" style="height:100%"/>
-    </div>
-  <% } %>
+  
 
 
   <div class="reveal">
@@ -69,7 +59,7 @@
     <!-- Any section element inside of this container is displayed as a slide -->
     <div class="slides">
 
-      <%- body %>
+      
 
     </div>
 
@@ -78,12 +68,12 @@
 
   	
 	<script src="libs/reveal.js/4.1.3/reveal.js"></script>
-	<% if(enableZoom) {%><script src="libs/reveal.js/4.1.3/plugin/zoom/zoom.js"></script><%}%>
+	<script src="libs/reveal.js/4.1.3/plugin/zoom/zoom.js"></script>
 	<script src="libs/reveal.js/4.1.3/plugin/notes/notes.js"></script>
-	<% if(enableSearch) {%><script src="libs/reveal.js/4.1.3/plugin/search/search.js"></script><%}%>
+	<script src="libs/reveal.js/4.1.3/plugin/search/search.js"></script>
 	<script src="libs/reveal.js/4.1.3/plugin/markdown/markdown.js"></script>
 	<script src="libs/reveal.js/4.1.3/plugin/highlight/highlight.js"></script>
-	<% if(enableMenu) {%><script src="libs/reveal.js/4.1.3/plugin/menu/menu.js"></script><%}%>
+	<script src="libs/reveal.js/4.1.3/plugin/menu/menu.js"></script>
 	<script src="libs/reveal.js/4.1.3/plugin/math/math.js"></script>
 
 	<script src="libs/reveal.js/4.1.3/plugin/fullscreen/plugin.js"></script>
@@ -97,7 +87,7 @@
 <!--	<script src="libs/reveal.js/4.1.3/plugin/audio-slideshow/recorder.js"></script>-->
 <!--	<script src="libs/reveal.js/4.1.3/plugin/audio-slideshow/RecordRTC.js"></script>-->
 
-<% if(enableChalkboard) {%><script src="libs/reveal.js/4.1.3/plugin/chalkboard/plugin.js"></script><%}%>
+<script src="libs/reveal.js/4.1.3/plugin/chalkboard/plugin.js"></script>
 	<script src="libs/reveal.js/4.1.3/plugin/customcontrols/plugin.js"></script>
 	<script src="libs/reveal.js/4.1.3/plugin/embed-tweet/plugin.js"></script>
 
@@ -111,21 +101,21 @@
 			RevealHighlight,
 			RevealMath,
 			RevealAnimate,
-			<% if(enableChalkboard) {%>RevealChalkboard, <%}%>
+			RevealChalkboard, 
 			RevealEmbedTweet,
 			RevealChart,
 		];
 
 		const plugins =  [...printPlugins,
-		<% if(enableZoom) {%>RevealZoom, <%}%>
-		<% if(enableSearch) {%>RevealSearch, <%}%>
+		RevealZoom, 
+		RevealSearch, 
 				RevealMarkdown, 
-				<% if(enableMenu) {%>RevealMenu, <%}%>
+				RevealMenu, 
 				RevealFullscreen,
 				//RevealAnything,
 				//RevealAudioSlideshow,
 				//RevealAudioRecorder,
-				<% if(enableMenu) {%>RevealCustomControls, <%}%>
+				RevealCustomControls, 
 				// poll
 				// question
 				// seminar
@@ -135,32 +125,32 @@
 		// Also available as an ES module, see:
 		// https://revealjs.com/initialization/
 		Reveal.initialize({
-			controls: <%= controls %>,
-			controlsTutorial: <%= controlsTutorial %>,
-			controlsLayout: '<%= controlsLayout %>',
-			controlsBackArrows: '<%= controlsBackArrows %>',
-			progress: <%= progress %>,
-			slideNumber: <%= slideNumber %>,
+			controls: true,
+			controlsTutorial: true,
+			controlsLayout: 'bottom-right',
+			controlsBackArrows: 'faded',
+			progress: true,
+			slideNumber: false,
 			//#showSlideNumber "all" "print" "speaker"
 			hash: true,//#  hash: false,
 			//# respondToHashChanges: true,
 			//# history: false,
-			keyboard: <%= keyboard %>,
+			keyboard: true,
 			//#keyboardCondition: null,
-			overview: <%= overview %>,
-			center: <%= center %>,
-			touch: <%= touch %>,
-			loop: <%= loop %>,
-			rtl: <%= rtl %>,
+			overview: true,
+			center: true,
+			touch: true,
+			loop: false,
+			rtl: false,
 			//#navigationMode: 'default', linear grid
-			shuffle: <%= shuffle %>,
-			fragments: <%= fragments %>,
-			fragmentInURL: <%= fragmentInURL %>,
-			embedded: <%= embedded %>,
-			help: <%= help %>,
+			shuffle: false,
+			fragments: true,
+			fragmentInURL: false,
+			embedded: false,
+			help: true,
 			//#pause: true
-			showNotes: <%= showNotes %>,
-			autoPlayMedia: <%= autoPlayMedia %>, // TODO fix this to a nullable value
+			showNotes: false,
+			autoPlayMedia: false, // TODO fix this to a nullable value
 			//#preloadIframes: null. true false
 			//#autoAnimate: true
 			//#autoAnimateMatcher: null,
@@ -168,40 +158,40 @@
 			//autoAnimateDuration: 1.0,
 			//#autoAnimateUnmatched: true
 			//#autoAnimateStyles: []
-			autoSlide: <%= autoSlide %>, // TODO fix this to a falseable value
-			autoSlideStoppable: <%= autoSlideStoppable %>,
-			autoSlideMethod: '<%= autoSlide %>',
-			defaultTiming: <%= defaultTiming %>,
-			mouseWheel: <%= mouseWheel %>,
+			autoSlide: 0, // TODO fix this to a falseable value
+			autoSlideStoppable: true,
+			autoSlideMethod: '0',
+			defaultTiming: 120,
+			mouseWheel: false,
 			//#previewLinks: false
 			//#postMessage: true,  // TODO : this can cause issues with the vscode api ???
 			//#postMessageEvents: false,
 			//#focusBodyOnPageVisibilityChange: true,
-			transition: '<%= transition %>',
-			transitionSpeed: '<%= transitionSpeed %>',
-			backgroundTransition: '<%= backgroundTransition %>',
+			transition: 'default',
+			transitionSpeed: 'default',
+			backgroundTransition: 'default',
 			//#pdfMaxPagesPerSlide: Number.POSITIVE_INFINITY,
 			//#pdfSeparateFragments: true,
 			//#pdfPageHeightOffset: -1,
-			viewDistance: <%= viewDistance %>,
+			viewDistance: 3,
 			//#mobileViewDistance: 2,
-			display: '<%= display %>',
+			display: 'block',
 			//#hideInactiveCursor: true,
 			//#hideCursorTime: 5000
 
 			// Parallax Background
-			parallaxBackgroundImage: '<%= parallaxBackgroundImage %>',
-			parallaxBackgroundSize: '<%= parallaxBackgroundSize %>',
-			parallaxBackgroundHorizontal: <%= parallaxBackgroundHorizontal %>,
-			parallaxBackgroundVertical: <%= parallaxBackgroundVertical %>,
+			parallaxBackgroundImage: '',
+			parallaxBackgroundSize: '',
+			parallaxBackgroundHorizontal: 0,
+			parallaxBackgroundVertical: 0,
 			
 			//Presentation Size
-			width: <%= width %>,
-			height: <%= height %>,
-			margin: <%= margin %>,
-			minScale: <%= minScale %>,
-			maxScale: <%= maxScale %>,
-			disableLayout: <%= disableLayout %>,
+			width: 960,
+			height: 700,
+			margin: 0.04,
+			minScale: 0.2,
+			maxScale: 2,
+			disableLayout: false,
 
 			audio: {
 				prefix: 'audio/', 	// audio files are stored in the "audio" folder
@@ -217,12 +207,12 @@
 				playerStyle: 'position: fixed; bottom: 4px; left: 25%; width: 50%; height:75px; z-index: 33;', // style used for container of audio controls
 				startAtFragment: false, // when moving to a slide, start at the current fragment or at the start of the slide
 			},
-			<% if(enableChalkboard) {%>
+			
 			chalkboard: { // font-awesome.min.css must be available
 					//src: "chalkboard/chalkboard.json",
 					storage: "chalkboard-demo",
 				},
-			<%}%>
+			
 			customcontrols: {
 					controls: [
       						{
@@ -231,7 +221,7 @@
 						  icon: '<i class="fa fa-th"></i>',
 						  action: 'Reveal.toggleOverview();'
 						}
-						<% if(enableChalkboard) {%>,
+						,
 						{ icon: '<i class="fa fa-pen-square"></i>',
 						  title: 'Toggle chalkboard (B)',
 						  action: 'RevealChalkboard.toggleChalkboard();'
@@ -239,7 +229,7 @@
 						{ icon: '<i class="fa fa-pen"></i>',
 						  title: 'Toggle notes canvas (C)',
 						  action: 'RevealChalkboard.toggleNotesCanvas();'
-						}<%}%>
+						}
 				]
 			},
 			chart: {

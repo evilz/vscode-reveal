@@ -11,18 +11,14 @@ import markdownit from './Markdown-it'
 import { Configuration } from './Configuration'
 import { exportHTML, IExportOptions } from './ExportHTML'
 import { ISlide } from './ISlide'
-import { Logger } from './Logger'
-import EventEmitter from "events"
-import TypedEmitter from "typed-emitter"
-interface RevealServerEvents {
-  started: (uri: string) => void,
-  stopped: () => void
-  error: (error: Error) => void
-  
-}
+import Logger from './Logger'
+//import EventEmitter from "events"
+import {EventEmitter} from "vscode"
+import {Disposable} from './dispose'
 
-export class RevealServer extends (EventEmitter as new () => TypedEmitter<RevealServerEvents>){
-  private readonly app = new Koa()
+/** Http server to serve reveal presentation */
+export class RevealServer extends Disposable{
+  public readonly app = new Koa()
   private server: http.Server | null = null
   private readonly host = 'localhost'
 
@@ -36,19 +32,53 @@ export class RevealServer extends (EventEmitter as new () => TypedEmitter<Reveal
     private readonly getExportPath: () => string
   ) {
     super()
+    this.configure()
   }
 
+  readonly #onDidError = this._register(new EventEmitter<Error>());
+	/**
+	 * Fired when the server got an error.
+	 */
+	public readonly onDidError = this.#onDidError.event;
+
+  readonly #onDidStart = this._register(new EventEmitter<string>());
+	/**
+	 * Fired when the server did start and send uri.
+	 */
+	public readonly onDidStart = this.#onDidStart.event;
+
+  public start() {
+    try {
+      if (!this.isListening && this.getRootDir()) {
+        this.server = this.app.listen(0)
+        this.#onDidStart.fire(this.uri)
+        return this.uri
+      }
+    } catch (err) {
+      const error = new Error(`Cannot start server: ${err}`)
+      this.#onDidError.fire(error)
+      throw error
+    }
+  }
+ 
+  /** True if server is currently listening*/
   public get isListening() {
     return this.server ? this.server.listening : false
   }
 
-  public stop() {
+  readonly #onDidStop = this._register(new EventEmitter<void>());
+	/** Fired when the server did stop. */
+	public readonly onDidStop = this.#onDidStop.event;
+
+  /** Stop listening */
+  stop(): void {
     if (this.isListening && this.server) {
       this.server.close()
-      this.emit("stopped")
+      this.#onDidStop.fire()
     }
   }
 
+  /** Current uri for this server, empty is not listening */
   public get uri() {
     if (!this.isListening || this.server === null) {
       return ""
@@ -62,21 +92,6 @@ export class RevealServer extends (EventEmitter as new () => TypedEmitter<Reveal
       return ''
     }
     return `http://${this.host}:${addr.port}/`
-  }
-
-  public start() {
-    try {
-      if (!this.isListening && this.getRootDir()) {
-        this.configure()
-        this.server = this.app.listen(0)
-        this.emit("started", this.uri)
-        return this.uri
-      }
-    } catch (err) {
-      const error = new Error(`Cannot start server: ${err}`)
-      this.emit("error", error)
-      throw error
-    }
   }
 
   private configure() {
@@ -131,8 +146,6 @@ export class RevealServer extends (EventEmitter as new () => TypedEmitter<Reveal
     app.on('error', (err) => {
       this.logger.error(err)
     })
-
-    this.server = app.listen()
   }
 
 
@@ -150,4 +163,22 @@ export class RevealServer extends (EventEmitter as new () => TypedEmitter<Reveal
       }
     }
   }
+
+  private readonly _onDidDispose = this._register(new EventEmitter<void>());
+	/**
+	 * Fired when the document is disposed of.
+	 */
+	public readonly onDidDispose = this._onDidDispose.event;
+
+  /**
+	 * Called by VS Code when there are no more references to the document.
+	 *
+	 * This happens when all editors for it have been closed.
+	 */
+	dispose(): void {
+    this.stop()
+    this.server = null
+		this._onDidDispose.fire();
+		super.dispose();
+	}
 }

@@ -1,4 +1,4 @@
-import { Logger, LogLevel } from '../src/Logger'
+import Logger, { LogLevel } from '../../Logger'
 
 test('Logger should log error when level is error', () => {
   let output = ''

@@ -1,7 +1,5 @@
 import { ISlide } from "./ISlide";
 
-
-
 export const extensionId = "revealjs"
 
 export const notesSeparator= 'note:'
@@ -11,10 +9,7 @@ export const verticalSeparator= '^\\r?\\n--\\r?\\n$'
 
 export const countLines = (text:string) => text.split("\n").length
   
-
 const lineInSeparator = (separator: string) => (separator.match(/\\n/gm) || []).length + 1
-
-
 
 const addChildrenSlideLines = (slide, horizontalIndex, verticalIndex, verticalSeparatorHeight) => {
   const stopVerticalAt = slide.index === horizontalIndex ? verticalIndex - 1 : slide.verticalChildren.length
