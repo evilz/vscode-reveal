@@ -1,22 +1,29 @@
-import EventEmitter from "events"
-import TypedEmitter from "typed-emitter"
-import { WebviewPanel } from "vscode";
-
-interface WebviewPaneEvents {
-    disposed: () => void,
-    updated: () => void
-    
-  }
+import { EventEmitter, WebviewPanel } from "vscode";
+import { Disposable } from "./dispose";
 
 export default class WebviewPane
-    extends (EventEmitter as new () => TypedEmitter<WebviewPaneEvents>){
+    extends Disposable {
+    //extends (EventEmitter as new () => TypedEmitter<WebviewPaneEvents>){
 
     constructor(private webview:WebviewPanel) {
         super()
-        this.webview.onDidDispose(() => { this.emit("disposed") })
+        this.webview.onDidDispose(() => { this.#onDidDispose.fire() })
     }
-    
 
+    readonly #onDidDispose = this._register(new EventEmitter<void>());
+	/**
+	 * Fired when the WebView is disposed.
+	 */
+	public readonly onDidDispose = this.#onDidDispose.event;
+
+    readonly #onDidUpdate = this._register(new EventEmitter<void>());
+	/**
+	 * Fired when the WebView is update.
+	 */
+	public readonly onDidUpdate = this.#onDidUpdate.event;
+
+
+    /** Set title of web pane */
     public set title(title:string) {
         this.webview.title = title;
     }
@@ -35,7 +42,7 @@ export default class WebviewPane
               `;
 
 
-        this.emit("updated")
+        this.#onDidUpdate.fire()
     }
  // Code without iframe
       // const uri = this.getUri(false)
@@ -66,7 +73,7 @@ export default class WebviewPane
   
     public dispose() {
         const d = this.webview.dispose()
-        this.emit("disposed")
+        this.#onDidDispose.fire()
         return d
     }
 }
