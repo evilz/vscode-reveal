@@ -1,9 +1,7 @@
 # vscode-reveal [![](https://img.shields.io/visual-studio-marketplace/v/evilz.vscode-reveal)](https://marketplace.visualstudio.com/items?itemName=evilz.vscode-reveal) ![install](https://img.shields.io/visual-studio-marketplace/i/evilz.vscode-reveal)
 
 
-<!-- 
-![Codecov](https://img.shields.io/codecov/c/github/evilz/vscode-reveal) -->
-
+[![codecov](https://codecov.io/gh/evilz/vscode-reveal/branch/master/graph/badge.svg?token=Ff2zjHz6lR)](https://codecov.io/gh/evilz/vscode-reveal)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=evilz_vscode-reveal&metric=alert_status)](https://sonarcloud.io/dashboard?id=evilz_vscode-reveal)
 <!-- 
 
