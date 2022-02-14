@@ -1,6 +1,7 @@
 // AVANT
 jest.mock("fs-jetpack");
 
+
 import { RevealServer } from '../../RevealServer'
 import Logger , {LogLevel} from '../../Logger';
 import {defaultConfiguration} from "../../Configuration"
@@ -20,18 +21,21 @@ const getExportPath=jest.fn();
 const logger =  new Logger(s => s,LogLevel.Error )
 
 
-const createServer = () =>new RevealServer(logger,getRootDir, getSlides,getConfiguration, extensionPath, isInExport,getExportPath  )
+
+const server = new RevealServer(logger,getRootDir, getSlides,getConfiguration, extensionPath, isInExport,getExportPath  )
+
+
+afterEach(() => {
+  server.dispose()
+});
 
 test('Default state', () => {
-
-  const server = createServer()
   expect(server.isListening).toBeFalsy()
   expect(server.uri).toBe("")
 })
 
 test('Start should return uri and trigger onDidStart', () => {
 
-  const server = createServer()
   let receivedUri = ""
   server.onDidStart(uri => receivedUri = uri)
   const uri = server.start()
@@ -41,7 +45,6 @@ test('Start should return uri and trigger onDidStart', () => {
 test('Stop should trigger onDidStop only when server is listening', () => {
 
   const onDidStopLock = jest.fn()
-  const server = createServer()
   server.onDidStop( onDidStopLock )
   server.stop()
 
@@ -51,7 +54,6 @@ test('Stop should trigger onDidStop only when server is listening', () => {
 test('Stop should trigger onDidStop', () => {
 
   const onDidStopLock = jest.fn()
-  const server = createServer()
   server.onDidStop( onDidStopLock )
   server.start()
   server.stop()
@@ -64,7 +66,6 @@ test('Dispose should trigger onDidDispose and Stop', () => {
 
   const onDidStopMock = jest.fn()
   const onDidDisposeMock = jest.fn()
-  const server = createServer()
   server.onDidStop( onDidStopMock )
   server.onDidDispose( onDidDisposeMock)
   server.start()
@@ -76,8 +77,6 @@ test('Dispose should trigger onDidDispose and Stop', () => {
 
 test('Request root', async () => {
 
-  const server = createServer()
-  //server.start()
 
   const response = await request(server.app.callback()).get('/')
   expect(response.status).toEqual(200);
@@ -88,8 +87,6 @@ test('Request root', async () => {
 
 test('Request with export', async () => {
  
-  const server = createServer()
-  //server.start()
   inExport = true
   const response = await request(server.app.callback()).get('/')
   expect(response.status).toEqual(200);
