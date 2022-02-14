@@ -29,6 +29,13 @@ jobs:
 
       - name: test
         run: npm run coverage
+        
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+          files: ./coverage/clover.xml
+          flags: unittests # optional
+          verbose: true # optional (default = false)
 
       # - name: ui-test linux
       #   if: runner.os == 'Linux'
