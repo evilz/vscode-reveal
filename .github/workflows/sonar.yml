@@ -1,4 +1,4 @@
-name: continuous integration workflow
+name: sonarcloud
 
 on: [push]
 
