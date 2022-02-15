@@ -3,7 +3,8 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: [ "**/*.jest.ts" ],
-  verbose: true
+  verbose: true,
+  collectCoverageFrom : ["src/**/*.ts", "!src/test/**/*.ts"],
 };
 
 

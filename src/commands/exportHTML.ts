@@ -1,5 +1,5 @@
 import open from 'open'
-import { Logger } from '../Logger'
+import  Logger from '../Logger'
 
 import { window, ProgressLocation } from 'vscode'
 

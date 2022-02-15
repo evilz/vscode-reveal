@@ -291,7 +291,7 @@ export default class MainController {
       this.#currentContext?.server.start()
       this.#webViewPane.title = this.configuration.title
       this.#webViewPane.update(this.uri)
-      this.#webViewPane.on("disposed", ()=> this.#webViewPane = undefined)
+      this.#webViewPane.onDidDispose(()=> this.#webViewPane = undefined)
   }}
 
   private createContext(editor){
