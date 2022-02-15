@@ -5,6 +5,8 @@ module.exports = {
   testMatch: [ "**/*.jest.ts" ],
   verbose: true,
   collectCoverageFrom : ["src/**/*.ts", "!src/test/**/*.ts"],
+  testResultsProcessor: "jest-sonar-reporter",
+ 
 };
 
 

@@ -1,0 +1,28 @@
+name: continuous integration workflow
+
+on: [push]
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Detect Node version from .nvmrc
+        id: node_version
+        run: echo "::set-output name=nvmrc::$(cat .nvmrc)"
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.node_version.outputs.nvmrc }}
+
+      - name: npm-ci
+        run: npm ci
+
+      - name: test
+        run: npm run coverage
+
+      - name: test
+        run: npm run sonar
+       
