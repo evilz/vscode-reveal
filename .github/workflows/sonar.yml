@@ -1,28 +1,42 @@
 name: sonarcloud
 
-on: [push]
+on:
+  # Trigger analysis when pushing in master or pull requests, and when creating
+  # a pull request.
+  push:
+    branches:
+      - master
+  pull_request:
+      types: [opened, synchronize, reopened]
 
 jobs:
-  sonar:
+  sonarcloud:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - name: Detect Node version from .nvmrc
+      id: node_version
+      run: echo "::set-output name=nvmrc::$(cat .nvmrc)"
 
-      - name: Detect Node version from .nvmrc
-        id: node_version
-        run: echo "::set-output name=nvmrc::$(cat .nvmrc)"
+    - uses: actions/setup-node@v2
+      with:
+        node-version: ${{ steps.node_version.outputs.nvmrc }}
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ steps.node_version.outputs.nvmrc }}
+    - name: npm-ci
+      run: npm ci
 
-      - name: npm-ci
-        run: npm ci
+    - name: build
+      run: npm run vscode:prepublish
 
-      - name: test
-        run: npm run coverage
-
-      - name: test
-        run: npm run sonar
+    - name: test
+      run: npm run coverage
+      
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
        
