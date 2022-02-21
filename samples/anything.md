@@ -166,7 +166,8 @@ You can use external javascript libraries e.g. to insert function plots and char
 
 ### Decision trees with D3.js
 <svg class="decisiontree">
- <!--
+
+<!--
 { 
   "margin": { "left": 100, "right": 250},
   "data": { "name": "0",
@@ -200,7 +201,7 @@ You can use external javascript libraries e.g. to insert function plots and char
 -->
 </svg>
 
---
+---
 
 ### Anything with D3.js
 
@@ -221,8 +222,7 @@ You can use external javascript libraries e.g. to insert function plots and char
 	var path = d3.geo.path()
 	    .projection(projection)
 	    .context(context);
-
-	d3.json('anything/d3/world-110m.json', function(error, world) {
+	d3.json('https://rajgoel.github.io/reveal.js-demos/anything/d3/world-110m.json', function(error, world) {
 	  if (error) throw error;
 	  var land = topojson.feature(world, world.objects.land);
 	  d3.timer(function(elapsed) {
@@ -232,7 +232,6 @@ You can use external javascript libraries e.g. to insert function plots and char
 	    context.lineWidth = 2.5;
 	    context.fillStyle = '#fff';
 	    context.fill();
-
 	    projection.rotate([velocity * elapsed, 0]);
 	    context.beginPath();
 	    path(land);
@@ -246,17 +245,18 @@ You can use external javascript libraries e.g. to insert function plots and char
 	  });
 	});
 	d3.select(self.frameElement).style('height', height + 'px');
-
     }"
 }
 -->
 </canvas>
+
 				
 <p style="font-size:16px">Based on <a href="http://bl.ocks.org/mbostock/ba63c55dd2dbc3ab0127">This is a globe</a> by <a href="http://bost.ocks.org/mike/">Mike Bostock</a>.</p>
 
 ---
 
 ### World tour
+
 <canvas width=500 height=500 class="anything">
 <!--
 {
@@ -268,29 +268,23 @@ You can use external javascript libraries e.g. to insert function plots and char
 	    .scale(width / 2 - 20)
 	    .clipAngle(90)
 	    .precision(0.6);
-
 	var c = container.getContext('2d');
-
 	var path = d3.geo.path()
 	    .projection(projection)
 	    .context(c);
-
 	var title = container.parentElement.querySelector('h3');
 	queue()
-	    .defer(d3.json, 'anything/d3/world-110m.json')
-	    .defer(d3.tsv, 'anything/d3/world-country-names.tsv')
+	    .defer(d3.json, 'https://rajgoel.github.io/reveal.js-demos/anything/d3/world-110m.json')
+	    .defer(d3.tsv, 'https://rajgoel.github.io/reveal.js-demos/anything/d3/world-country-names.tsv')
 	    .await(ready);
-
 	function ready(error, world, names) {
 	  if (error) throw error;
-
 	  var globe = {type: 'Sphere'},
 	      land = topojson.feature(world, world.objects.land),
 	      countries = topojson.feature(world, world.objects.countries).features,
 	      borders = topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }),
 	      i = -1,
 	      n = countries.length;
-
 	  countries = countries.filter(function(d) {
 	    return names.some(function(n) {
 	      if (d.id == n.id) return d.name = n.name;
@@ -298,7 +292,6 @@ You can use external javascript libraries e.g. to insert function plots and char
 	  }).sort(function(a, b) {
 	    return a.name.localeCompare(b.name);
 	  });
-
 	  (function transition() {
 	    d3.transition()
 	        .duration(1250)
@@ -323,9 +316,7 @@ You can use external javascript libraries e.g. to insert function plots and char
 	        .each('end', transition);
 	  })();
 	}
-
 	d3.select(self.frameElement).style('height', height + 'px');
-
     }"
 }
 -->

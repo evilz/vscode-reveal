@@ -104,3 +104,4 @@ xunit.xml
 **/export/
 
 *.vsix
+test-report.xml
