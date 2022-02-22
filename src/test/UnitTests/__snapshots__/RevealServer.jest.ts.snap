@@ -84,7 +84,13 @@ exports[`Request root 1`] = `
   	<script src=\\"libs/reveal.js/4.1.3/plugin/animate/plugin.js\\"></script>
   	<script src=\\"libs/reveal.js/4.1.3/plugin/animate/svg.min.js\\"></script>
   
-  	 <!--	<script src=\\"libs/reveal.js/4.1.3/plugin/anything/plugin.js\\"></script> -->
+  	<script src=\\"libs/reveal.js/4.1.3/plugin/anything/plugin.js\\"></script>
+	  <script src=\\"libs/reveal.js/4.1.3/plugin/anything/Chart.min.js\\"></script>
+	<script src=\\"libs/reveal.js/4.1.3/plugin/anything/d3/d3.v3.min.js\\"></script>				
+	<script src=\\"libs/reveal.js/4.1.3/plugin/anything/d3.patch.js\\"></script>			
+	<script src=\\"libs/reveal.js/4.1.3/plugin/anything/d3/queue.v1.min.js\\"></script>		
+	<script src=\\"libs/reveal.js/4.1.3/plugin/anything/d3/topojson.v1.min.js\\"></script>		
+	<script src=\\"libs/reveal.js/4.1.3/plugin/anything/function-plot.js\\"></script>
 
  <!--	<script src=\\"libs/reveal.js/4.1.3/plugin/audio-slideshow/plugin.js\\"></script>  -->
 <!--	<script src=\\"libs/reveal.js/4.1.3/plugin/audio-slideshow/recorder.js\\"></script>-->
@@ -115,7 +121,7 @@ exports[`Request root 1`] = `
 				RevealMarkdown, 
 				RevealMenu, 
 				RevealFullscreen,
-				//RevealAnything,
+				RevealAnything,
 				//RevealAudioSlideshow,
 				//RevealAudioRecorder,
 				RevealCustomControls, 
@@ -255,6 +261,21 @@ exports[`Request root 1`] = `
 				// pass other options into \`MathJax.Hub.Config()\`
 				TeX: { Macros: { RR: \\"{\\\\\\\\bf R}\\" } }
 				},
+				anything: [ 
+				{
+		className: \\"plot\\",
+		defaults: {width:500, height: 500, grid:true},
+		initialize: (function(container, options){ options.target = \\"#\\"+container.id; functionPlot(options) })
+	 },
+	 {
+		className: \\"chart\\",  
+		initialize: (function(container, options){ container.chart = new Chart(container.getContext(\\"2d\\"), options);  })
+	 },
+	 {
+		className: \\"anything\\",
+		initialize: (function(container, options){ if (options && options.initialize) { options.initialize(container)} })
+	 },
+					],
 			// Learn about plugins: https://revealjs.com/plugins/
 			plugins: (window.location.search.match(/print-pdf/gi) ? printPlugins : plugins ) 
 		});
