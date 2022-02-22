@@ -1,13 +1,13 @@
 {
     "Slide attribut": {
-        "prefix": ".sld",
+        "prefix": "sld-attributs",
         "body": [
             "<!-- .slide: $2 -->"
         ],
         "description": "Add slide attributs"
     },
     "Fullscreen slide": {
-        "prefix": ".fullcreen",
+        "prefix": "sld-fullcreen",
         "body": [
             "<!-- .slide: data-fullscreen -->"
         ],
