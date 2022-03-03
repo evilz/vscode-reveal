@@ -611,7 +611,7 @@
     "@vscode/test-web": "^0.0.22",
     "esbuild": "^0.14.21",
     "eslint": "^8.8.0",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^26.1.0",
     "jest": "^27.5.1",
     "jest-junit": "^13.0.0",
