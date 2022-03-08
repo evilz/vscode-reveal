@@ -54,7 +54,7 @@ export class SlideTreeProvider extends Disposable
 
   private mapSlides(slides: ISlide[], parentIndex?: number) {
     return slides.map(
-      (s, i) =>
+      (s) =>
         new SlideNode(
           s,
           parentIndex !== undefined,

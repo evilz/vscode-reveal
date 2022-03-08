@@ -99,7 +99,7 @@ export class RevealServer extends Disposable{
     app.use(cors())
     // LOG REQUEST
     app.use(
-      koalogger((str, args) => {
+      koalogger((str) => {
         this.logger.log(str)
       })
     )

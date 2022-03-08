@@ -6,11 +6,6 @@ export enum LogLevel {
   Verbose,
 }
 
-
-interface LoggerEvents {
-  levelChanged: (LogLevel) => void,
-}
-
 export default class Logger  extends Disposable{
   
   constructor( private readonly appendLine: (string) => void, private logLevel= LogLevel.Verbose) {
