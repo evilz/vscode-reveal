@@ -100,7 +100,7 @@ export class RevealServer extends Disposable{
     // LOG REQUEST
     app.use(
       koalogger((str) => {
-        this.logger.log(str)
+        this.logger.debug(str)
       })
     )
 

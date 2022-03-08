@@ -53,7 +53,7 @@ export class SlideTreeProvider extends Disposable
   }
 
   private mapSlides(slides: ISlide[], parentIndex?: number) {
-    return slides.map(
+    const items = slides.map(
       (s) =>
         new SlideNode(
           s,
@@ -67,6 +67,7 @@ export class SlideTreeProvider extends Disposable
           }
         )
     )
+    return items
   }
 }
 

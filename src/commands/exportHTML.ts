@@ -13,17 +13,17 @@ export const exportHTML = (logger: Logger, startExport: () => Promise<string>, d
       title: 'Export',
     },
     async (progress) => {
-      logger.log('Start export')
+      logger.debug('Start export')
       progress.report({ message: 'in progress' })
       const path = await startExport()
       progress.report({ message: 'Done' })
       await timeout(1500)
-      logger.log('End export ' + path)
+      logger.debug('End export ' + path)
       if (doOpenAfterExport()) {
         progress.report({ message: 'Opening out folder !' })
         await timeout(1500)
         open(path)
-        logger.log('Open folder: ' + path)
+        logger.debug('Open folder: ' + path)
       }
     }
   )

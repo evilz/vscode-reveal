@@ -61,7 +61,7 @@ export default class MainController {
   //readonly #server: RevealServer
   readonly #statusBarController: StatusBarController
   readonly #slidesExplorer: SlideTreeProvider
-  readonly #configurationProvider: ConfigurationProvider
+  private readonly configurationProvider: ConfigurationProvider
   readonly #slideParser: SlideParser
   readonly #TextDecorator: TextDecorator
 
@@ -75,7 +75,7 @@ export default class MainController {
   #slides: ISlide[] = []
   #position: ISlidePosition = { horizontal: 0, vertical: 0 }
 
-  get configuration() { return this.#configurationProvider.configuration }
+  get configuration() { return this.configurationProvider.configuration }
   get filename() { return this.#currentContext?.editor?.document.fileName }
 
   get dirname() { return this.filename ? path.dirname(this.filename) : '' }
@@ -156,7 +156,7 @@ export default class MainController {
 
   public onDidChangeConfiguration(e: ConfigurationChangeEvent) {
     if (!e.affectsConfiguration(extensionId)) { return }
-    this.#configurationProvider.reloadWorkspaceConfig()
+    this.configurationProvider.reloadWorkspaceConfig()
   }
 
 
@@ -171,15 +171,16 @@ export default class MainController {
     
     //this.#currentEditor = currentEditor
 
-    this.#configurationProvider = new ConfigurationProvider()
-    this.#configurationProvider.onDidUpdate(() => {
-    this.#log("configurationProvider", `configuration updated`)
+    this.configurationProvider = new ConfigurationProvider()
+    this.configurationProvider.onDidUpdate(() => {
+    this.logger.LogLevel = this.configurationProvider.configuration.logLevel
+    this.#logInfo("configurationProvider", `configuration updated`)
       this.refresh()
     } )
 
     this.#statusBarController = new StatusBarController()
-    this.#statusBarController.onDidUpdateServerInfo(() => this.#log("StatusBarController", `updatedServerInfo`))
-    this.#statusBarController.onDidUpdatedSlideCount(() => this.#log("StatusBarController", `updatedSlideCount`))
+    this.#statusBarController.onDidUpdateServerInfo(() => this.#logInfo("StatusBarController", `updatedServerInfo`))
+    this.#statusBarController.onDidUpdatedSlideCount(() => this.#logInfo("StatusBarController", `updatedSlideCount`))
 
     // this.#server = new RevealServer(
     //   this.logger,
@@ -193,20 +194,20 @@ export default class MainController {
 
     this.#slideParser = new SlideParser()
     this.#slideParser.onDidParse(e => {
-      this.#log(`SlideParser`, `frontmatter:${e.frontmatter.bodyBegin > 1} - slides:${e.slides.length}`)
+      this.#logInfo(`SlideParser`, `frontmatter:${e.frontmatter.bodyBegin > 1} - slides:${e.slides.length}`)
       this.#slides = e.slides
-      this.#configurationProvider.documentConfig = e.frontmatter.attributes}
+      this.configurationProvider.documentConfig = e.frontmatter.attributes}
     )
 
     this.#TextDecorator = new TextDecorator(configDesc)
 
     this.#currentContext?.server.onDidStart( uri => {
-      this.#log(`Server`,`started on ${uri}`)
+      this.#logInfo(`Server`,`started on ${uri}`)
       this.#statusBarController.updateServerInfo(uri)
     })
 
     this.#currentContext?.server.onDidStop(() => {
-      this.#log(`Server`, `stopped`)
+      this.#logInfo(`Server`, `stopped`)
       this.#statusBarController.updateServerInfo(null)
     })
 
@@ -214,12 +215,12 @@ export default class MainController {
 
     this.#slidesExplorer = new SlideTreeProvider(() => this.#slides)
     this.#slidesExplorer.register()
-    this.#slidesExplorer.onDidChangeTreeData( ()=>  this.#log(`SlideTreeProvider`, `updated`))
+    this.#slidesExplorer.onDidChangeTreeData( ()=>  this.#logInfo(`SlideTreeProvider`, `updated`))
 
   }
 
-  #log(component: string, message: string) {
-    this.logger.log(`"${component.toUpperCase()}": ${message}`)
+  #logInfo(component: string, message: string) {
+    this.logger.info(`"${component.toUpperCase()}": ${message}`)
   }
   #logError(component: string, message: string) { this.logger.error(`"${component.toUpperCase()}": ${message}`) }
 
@@ -253,17 +254,17 @@ export default class MainController {
     this.#refreshTimeout = setTimeout(() => {
         if(!this.#currentContext) return
 
-        this.logger.log(`REFRESH START!`)
+        this.logger.info(`REFRESH START!`)
         const {frontmatter,slides} = this.#slideParser.parse(this.#currentContext.editor.document.getText(), this.configuration)
         this.#slides = slides
         this.#frontMatterResult = frontmatter
-        this.#configurationProvider.documentConfig = frontmatter.attributes
+        this.configurationProvider.documentConfig = frontmatter.attributes
 
         this.refreshWebViewPane()
         this.#slidesExplorer.update()
         this.#statusBarController.updateCount(this.#slides.length)
         this.#TextDecorator.update(this.#currentContext.editor)
-        this.logger.log(`REFRESH DONE!`)
+        this.logger.info(`REFRESH DONE!`)
     }, wait)
   }
 
@@ -304,6 +305,10 @@ export default class MainController {
   public showWebViewPane(webviewPanel:WebviewPanel ){
     if(!this.#webViewPane){
       this.#webViewPane = new WebViewPane(webviewPanel)
+      this.#webViewPane.onDidDispose(()=> {
+        this.#logInfo("WebView", "disposed")
+        this.#webViewPane = undefined
+      })
       this.refreshWebViewPane()
     }
   }
@@ -313,10 +318,7 @@ export default class MainController {
       this.startServer()
       this.#webViewPane.title = this.configuration.title
       this.#webViewPane.update(this.uri)
-      this.#webViewPane.onDidDispose(()=> {
-        this.#log("WebView", "disposed")
-        this.#webViewPane = undefined
-      })
+      
   }}
 
   /** Start server on an available port */

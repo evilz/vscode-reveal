@@ -27,8 +27,8 @@ export function activate(context: ExtensionContext) {
   
   const outputChannel = window.createOutputChannel(extensionId)
   const logger = new Logger( (s) => outputChannel.appendLine(s) )
-  logger.onDidLevelChanged(level => logger.log(`log levelChanged to ${level} `))
-  logger.log('"vscode-reveal" is now active')
+  logger.onDidLevelChanged(level => logger.info(`log level changed to ${level} `))
+  logger.info('"vscode-reveal" is now active')
 
   const configDesc = getConfigurationDescription(context.extension.packageJSON.contributes.configuration.properties)
 
@@ -38,9 +38,9 @@ export function activate(context: ExtensionContext) {
   commands.executeCommand('setContext', 'slideExplorerEnabled', main.configuration.slideExplorerEnabled)
 
   const registerCmd = (cmdName, fn) => {
-    const inner = () => {
-      logger.log(`Execute command ${cmdName}`)
-      fn()
+    const inner = (arg) => {
+      logger.info(`Execute command ${cmdName}`)
+      fn(arg)
     }
     return commands.registerCommand(cmdName, inner)
   }
