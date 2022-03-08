@@ -1,20 +1,10 @@
-import { StatusBarAlignment, StatusBarItem, window } from 'vscode'
+import { StatusBarAlignment, StatusBarItem, window, EventEmitter } from 'vscode'
 import { SHOW_REVEALJS } from './commands/showRevealJS'
 import { SHOW_REVEALJS_IN_BROWSER } from './commands/showRevealJSInBrowser'
 import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
+import { Disposable } from './dispose'
 
-import EventEmitter from "events"
-import TypedEmitter from "typed-emitter"
-
-interface StatusBarControllerEvents {
-  updatedServerInfo: () => void,
-  updatedSlideCount: () => void,
-  disposed: () => void
-  error: (error: Error) => void
-  
-}
-
-export class StatusBarController extends (EventEmitter as new () => TypedEmitter<StatusBarControllerEvents>){
+export class StatusBarController extends Disposable{
   readonly #countItem: StatusBarItem
   readonly #addressItem: StatusBarItem
   readonly #stopItem: StatusBarItem
@@ -41,11 +31,35 @@ export class StatusBarController extends (EventEmitter as new () => TypedEmitter
 
   }
 
+  readonly #onDidError = this._register(new EventEmitter<Error>());
+	/**
+	 * Fired when the server got an error.
+	 */
+	public readonly onDidError = this.#onDidError.event;
+
+  readonly #onDidUpdateServerInfo = this._register(new EventEmitter<void>());
+	/**
+	 * Fired when the server info is updated.
+	 */
+	public readonly onDidUpdateServerInfo = this.#onDidUpdateServerInfo.event;
+
+  readonly #onDidUpdatedSlideCount = this._register(new EventEmitter<void>());
+	/**
+	 * Fired when slide count change
+	 */
+	public readonly onDidUpdatedSlideCount = this.#onDidUpdatedSlideCount.event;
+
+  readonly #onDidDispose = this._register(new EventEmitter<void>());
+	/**
+	 * Fired when disposed.
+	 */
+	public readonly onDidDispose = this.#onDidDispose.event;
+
   public dispose() {
     this.#addressItem.dispose()
     this.#countItem.dispose()
     this.#stopItem.dispose()
-    this.emit("disposed")
+    this.#onDidDispose.fire()
   }
 
   public updateServerInfo(serverUri: string | null) {
@@ -59,7 +73,7 @@ export class StatusBarController extends (EventEmitter as new () => TypedEmitter
       this.#addressItem.hide()
       this.#stopItem.hide()
     }
-    this.emit("updatedServerInfo")
+    this.#onDidUpdateServerInfo.fire()
   }
 
 
@@ -80,6 +94,6 @@ export class StatusBarController extends (EventEmitter as new () => TypedEmitter
       this.#countItem.text = ""
       this.#countItem.hide()
     }
-    this.emit("updatedSlideCount")
+    this.#onDidUpdatedSlideCount.fire()
   }
 }

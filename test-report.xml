@@ -1,45 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
-  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\NotTestedYet.jest.ts">
-    <testCase name="NOTHING HERE" duration="2"/>
-  </file>
-  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\WebviewPane.jest.ts">
-    <testCase name="Set title of webviewpane" duration="3"/>
-    <testCase name="Dispose should trigger onDidDispose" duration="2"/>
-    <testCase name="Update should trigger onDidUpdate" duration="0"/>
+  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\RevealServer.jest.ts">
+    <testCase name="Default state" duration="5"/>
+    <testCase name="Start should return uri and trigger onDidStart" duration="6"/>
+    <testCase name="Stop should trigger onDidStop only when server is listening" duration="1"/>
+    <testCase name="Stop should trigger onDidStop" duration="3"/>
+    <testCase name="Dispose should trigger onDidDispose and Stop" duration="3"/>
+    <testCase name="Request root" duration="531"/>
+    <testCase name="Request with export" duration="75"/>
   </file>
   <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\logger.jest.ts">
-    <testCase name="Logger should log error when level is error" duration="25"/>
-    <testCase name="Logger should NOT log when level is error" duration="1"/>
-    <testCase name="Logger should log error when level is verbose" duration="0"/>
-    <testCase name="Logger should log when level is verbose" duration="0"/>
+    <testCase name="Logger should log error when level is error" duration="131"/>
+    <testCase name="Logger should NOT log when level is error" duration="0"/>
+    <testCase name="Logger should log error when level is verbose" duration="1"/>
+    <testCase name="Logger should log when level is verbose" duration="1"/>
     <testCase name="Logger should Not log when level is verbose" duration="0"/>
   </file>
+  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\NotTestedYet.jest.ts">
+    <testCase name="NOTHING HERE" duration="4"/>
+  </file>
+  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\WebviewPane.jest.ts">
+    <testCase name="Set title of webviewpane" duration="4"/>
+    <testCase name="Dispose should trigger onDidDispose" duration="1"/>
+    <testCase name="Update should trigger onDidUpdate" duration="0"/>
+  </file>
   <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\findTitle.jest.ts">
-    <testCase name="Should retrieve title from content" duration="2"/>
   </file>
   <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\slideparser.jest.ts">
-    <testCase name="Parse Slide content" duration="2"/>
-    <testCase name="Check slide 1" duration="1"/>
-    <testCase name="Check slide 2" duration="0"/>
-    <testCase name="Check slide 3.0" duration="1"/>
-    <testCase name="Should count horizontal slides" duration="0"/>
-    <testCase name="Should count vertical slides" duration="1"/>
-    <testCase name="Slides should have correct number of lines" duration="6"/>
-    <testCase name="Count line to slide 1" duration="0"/>
-    <testCase name="Count line to slide 2" duration="0"/>
-    <testCase name="Count line to slide 3" duration="1"/>
-    <testCase name="Count line to slide 3.1" duration="0"/>
-    <testCase name="Count line to slide 3.2" duration="0"/>
-    <testCase name="Extract slide attributes" duration="1"/>
-  </file>
-  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\RevealServer.jest.ts">
-    <testCase name="Default state" duration="2"/>
-    <testCase name="Start should return uri and trigger onDidStart" duration="3"/>
-    <testCase name="Stop should trigger onDidStop only when server is listening" duration="1"/>
-    <testCase name="Stop should trigger onDidStop" duration="1"/>
-    <testCase name="Dispose should trigger onDidDispose and Stop" duration="1"/>
-    <testCase name="Request root" duration="100"/>
-    <testCase name="Request with export" duration="15"/>
   </file>
 </testExecutions>

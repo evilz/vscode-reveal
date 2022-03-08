@@ -1,10 +1,8 @@
 import { LogLevel } from './Logger'
-import { workspace } from 'vscode'
+import { EventEmitter, workspace } from 'vscode'
 import { extensionId } from './utils'
 import { isDeepStrictEqual } from 'util'
-
-import EventEmitter from 'events'
-import TypedEmitter from 'typed-emitter'
+import { Disposable } from './dispose'
 
 /**
  * @file Manages the configuration settings for the extension.
@@ -24,7 +22,9 @@ export interface IDocumentOptions {
   autoPlayMedia: boolean
   defaultTiming: number
   display: 'block'
-
+  separator: string
+  verticalSeparator: string
+  notesSeparator: string
   theme: themes
   highlightTheme: string | null
   customTheme: string | null
@@ -100,6 +100,9 @@ export const defaultConfiguration: Configuration = {
   logoImg: null,
   description: '',
   author: '',
+  notesSeparator: 'note:',
+  separator: '^\\r?\\n---\\r?\\n$',
+  verticalSeparator: '^\\r?\\n--\\r?\\n$',
 
   customHighlightTheme: null,
   customTheme: null,
@@ -193,7 +196,7 @@ interface ConfigurationProviderEvents {
 
 
 
-export default class ConfigurationProvider extends (EventEmitter as new () => TypedEmitter<ConfigurationProviderEvents>) {
+export default class ConfigurationProvider extends Disposable{
   #workspaceConfig: Configuration
   #documentConfig: Configuration
   #configuration: Configuration
@@ -205,13 +208,25 @@ export default class ConfigurationProvider extends (EventEmitter as new () => Ty
     this.#configuration = defaultConfiguration
   }
 
+  readonly #onDidError = this._register(new EventEmitter<Error>());
+	/**
+	 * Fired when the server got an error.
+	 */
+	public readonly onDidError = this.#onDidError.event;
+
+  readonly #onDidUpdate = this._register(new EventEmitter<Configuration>());
+	/**
+	 * Fired when the server got an error.
+	 */
+	public readonly onDidUpdate = this.#onDidUpdate.event;
+
   public get configuration() { return this.#configuration }
-  set configuration(v : Configuration) { this.#configuration = v; this.emit('updated', this.configuration) }
+  set configuration(v : Configuration) { this.#configuration = v; this.#onDidUpdate.fire(this.configuration) }
   
 
   public get documentConfig() { return this.#documentConfig }
   public set documentConfig(v: Configuration) {
-    if (!isDeepStrictEqual(this.#documentConfig, v)) {
+    if (!isDeepStrictEqual(this.#documentConfig, v)) { // import to not do loop !!
       this.#documentConfig = v
       this.#refresh()
     }

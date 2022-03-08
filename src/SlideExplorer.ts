@@ -1,19 +1,11 @@
 import * as path from 'path'
 import * as vscode from 'vscode'
+import { EventEmitter } from 'vscode'
 import { GO_TO_SLIDE } from './commands/goToSlide'
+import { Disposable } from './dispose'
 import { ISlide } from './ISlide'
 
-import EventEmitter from "events"
-import TypedEmitter from "typed-emitter"
-
-interface SlideTreeProviderEvents {
-  updated: () => void,
-  error: (error: Error) => void
-  
-}
-
-
-export class SlideTreeProvider
+export class SlideTreeProvider extends Disposable
   implements vscode.TreeDataProvider<SlideNode>
 {
   private readonly _onDidChangeTreeData: vscode.EventEmitter<SlideNode | null> = new vscode.EventEmitter<SlideNode | null>()
@@ -21,11 +13,24 @@ export class SlideTreeProvider
   public readonly onDidChangeTreeData: vscode.Event<SlideNode | null> = this._onDidChangeTreeData.event
 
   constructor(private readonly getSlide: () => ISlide[]) {
-   
+   super()
   }
+
+  readonly #onDidError = this._register(new EventEmitter<Error>());
+	/**
+	 * Fired when the Slide Tree Provider got an error.
+	 */
+	public readonly onDidError = this.#onDidError.event;
+
+  readonly #onDidUpdate = this._register(new EventEmitter<void>());
+	/**
+	 * Fired when the Slide Tree Provider did update.
+	 */
+	public readonly onDidUpdate = this.#onDidUpdate.event;
 
   public update() {
     this._onDidChangeTreeData.fire(null)
+    this.#onDidUpdate.fire()
   }
 
   public register() {

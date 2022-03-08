@@ -3,11 +3,10 @@ import { Disposable } from "./dispose";
 
 export default class WebviewPane
     extends Disposable {
-    //extends (EventEmitter as new () => TypedEmitter<WebviewPaneEvents>){
 
-    constructor(private webview:WebviewPanel) {
+    constructor(private webviewPanel:WebviewPanel) {
         super()
-        this.webview.onDidDispose(() => { this.#onDidDispose.fire() })
+        this.webviewPanel.onDidDispose(() => { this.dispose() })
     }
 
     readonly #onDidDispose = this._register(new EventEmitter<void>());
@@ -25,11 +24,11 @@ export default class WebviewPane
 
     /** Set title of web pane */
     public set title(title:string) {
-        this.webview.title = title;
+        this.webviewPanel.title = title;
     }
     
     public update(url:string) {
-        this.webview.webview.html = `
+        this.webviewPanel.webview.html = `
         <!doctype html>
         <html lang="en">
         <head>
@@ -72,8 +71,8 @@ export default class WebviewPane
       // }, null)
   
     public dispose() {
-        const d = this.webview.dispose()
+        //const d = this.webviewPanel.dispose()
         this.#onDidDispose.fire()
-        return d
+        //return d
     }
 }

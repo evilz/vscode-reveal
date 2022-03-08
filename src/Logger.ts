@@ -1,5 +1,5 @@
-import EventEmitter from "events"
-import TypedEmitter from "typed-emitter"
+import { EventEmitter } from "vscode";
+import { Disposable } from "./dispose";
 
 export enum LogLevel {
   Error,
@@ -11,7 +11,7 @@ interface LoggerEvents {
   levelChanged: (LogLevel) => void,
 }
 
-export default class Logger  extends (EventEmitter as new () => TypedEmitter<LoggerEvents>) {
+export default class Logger  extends Disposable{
   
   constructor( private readonly appendLine: (string) => void, private logLevel= LogLevel.Verbose) {
     super();
@@ -32,6 +32,12 @@ export default class Logger  extends (EventEmitter as new () => TypedEmitter<Log
   public get LogLevel() { return this.logLevel }
   public set LogLevel(level: LogLevel) {
     this.logLevel = level
-    this.emit("levelChanged", this.logLevel)
+    this.#onDidLevelChanged.fire(this.logLevel)
   }
+
+  readonly #onDidLevelChanged = this._register(new EventEmitter<LogLevel>());
+	/**
+	 * Fired when the server got an error.
+	 */
+	public readonly onDidLevelChanged = this.#onDidLevelChanged.event;
 }

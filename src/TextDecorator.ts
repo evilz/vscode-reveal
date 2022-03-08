@@ -1,4 +1,4 @@
-import {DecorationOptions, ExtensionContext, MarkdownString, Range, TextEditor, ThemeColor, window} from 'vscode';
+import {DecorationOptions, MarkdownString, Range, TextEditor, ThemeColor, window} from 'vscode';
 import { ConfigurationDescription } from './Configuration';
 
 
@@ -11,7 +11,6 @@ const revealjsConfigKeyForeground = window.createTextEditorDecorationType({
   
 export default class TextDecorator {
 
-
     propertiesRegex: RegExp
    
     constructor(private configDesc:ConfigurationDescription[] ) {
@@ -19,7 +18,6 @@ export default class TextDecorator {
         const allProps = configDesc.map(x => x.label).join('|')
         this.propertiesRegex = new RegExp(`^(${allProps}):.*$`, 'gm');
     }
-
 
     update(editor: TextEditor) {
 

@@ -1,10 +1,9 @@
 import { Configuration} from './Configuration';
 import { ISlide } from './ISlide';
 import frontmatter, { FrontMatterResult } from 'front-matter'
-import {separator, verticalSeparator} from './utils'
-
-import EventEmitter from "events"
-import TypedEmitter from "typed-emitter"
+//import {separator, verticalSeparator} from './utils'
+import { Disposable } from './dispose';
+import { EventEmitter } from 'vscode';
 
 const trimFirstLastEmptyLine = (s) => {
   let content = s
@@ -38,26 +37,29 @@ const findTitle = (text: string) => {
   return lines[0].trim()
 }
 
-interface SlideParserEvents {
-  parsed: (frontmatter:FrontMatterResult<Configuration>, slides:ISlide[]) => void
-}
-
-export default class SlideParser extends (EventEmitter as new () => TypedEmitter<SlideParserEvents>){
+export default class SlideParser extends Disposable{
 
   constructor() {
     super()
   }
 
-  public parse(text: string, doEmit = true) {
+  
+  readonly #onDidParse = this._register(new EventEmitter<{frontmatter:FrontMatterResult<Configuration>, slides:ISlide[]}>());
+	/**
+	 * Fired when the server got an error.
+	 */
+	public readonly onDidParse = this.#onDidParse.event;
+
+  public parse(text: string, configuration:Configuration, partial = true) {
     const result = frontmatter<Configuration>(text)
-    const slides = this.#parseSlides(result.body)
-    if(doEmit) { this.emit('parsed', result, slides) } // dont emit if called for partial document
+    const slides = this.#parseSlides(result.body,configuration.separator, configuration.verticalSeparator)
+    if(partial) { this.#onDidParse.fire({frontmatter:result, slides}) } // dont emit if called for partial document
     return {frontmatter:result, slides}
   }
 
   
-  #parseSlide = (slideContent: string, index: number): ISlide => {
-  const verticalSlides = this.#getVerticalSlides(slideContent)
+  #parseSlide = (slideContent: string, index: number, verticalSeparator:string): ISlide => {
+  const verticalSlides = this.#getVerticalSlides(slideContent, verticalSeparator)
   const currentSlide = verticalSlides[0]
   return {
     ...currentSlide,
@@ -67,19 +69,19 @@ export default class SlideParser extends (EventEmitter as new () => TypedEmitter
 }
 
 
-  #parseSlides = (slideContent: string): ISlide[] => {
+  #parseSlides = (slideContent: string, separator: string, verticalSeparator:string): ISlide[] => {
   const regex = new RegExp(separator, 'gm')
   const slides = slideContent.split(regex)
   // TODO : do dirty remove first or last line !
   return slides.map((s, i) => {
 
-    return this.#parseSlide(trimFirstLastEmptyLine(s), i)
+    return this.#parseSlide(trimFirstLastEmptyLine(s), i, verticalSeparator)
 
   })
 }
 
 
-  #getVerticalSlides = (slideContent: string): ISlide[] => {
+  #getVerticalSlides = (slideContent: string, verticalSeparator:string): ISlide[] => {
   const regex = new RegExp(verticalSeparator, 'gm')
   const slides = slideContent.split(regex)
 

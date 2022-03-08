@@ -1,3 +1,12 @@
+/*
+ * Filename: c:\DATA\GITHUB\vscode-reveal\src\extension.ts
+ * Path: c:\DATA\GITHUB\vscode-reveal
+ * Created Date: Wednesday, October 23rd 2019, 2:31:17 pm
+ * Author: Vincent Bourdon
+ * 
+ * Copyright (c) 2022 Your Company
+ */
+
 'use strict'
 
 import { commands, ExtensionContext, window, workspace } from 'vscode'
@@ -18,7 +27,7 @@ export function activate(context: ExtensionContext) {
   
   const outputChannel = window.createOutputChannel(extensionId)
   const logger = new Logger( (s) => outputChannel.appendLine(s) )
-  logger.on('levelChanged', level => logger.log(`log levelChanged to ${level} `))
+  logger.onDidLevelChanged(level => logger.log(`log levelChanged to ${level} `))
   logger.log('"vscode-reveal" is now active')
 
   const configDesc = getConfigurationDescription(context.extension.packageJSON.contributes.configuration.properties)
@@ -28,15 +37,22 @@ export function activate(context: ExtensionContext) {
   
   commands.executeCommand('setContext', 'slideExplorerEnabled', main.configuration.slideExplorerEnabled)
 
+  const registerCmd = (cmdName, fn) => {
+    const inner = () => {
+      logger.log(`Execute command ${cmdName}`)
+      fn()
+    }
+    return commands.registerCommand(cmdName, inner)
+  }
 
   context.subscriptions.push(
-    commands.registerCommand(SHOW_REVEALJS, showRevealJS((panel) => main.showWebViewPane(panel))  ),
-    commands.registerCommand(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() => main.ServerUri) ),
-    commands.registerCommand(STOP_REVEALJS_SERVER, () => main.stopServer()),
-    commands.registerCommand(SHOW_SAMPLE, () => showSample(context.extensionPath)),
-    commands.registerCommand(GO_TO_SLIDE, (arg) => main.goToSlide(arg.horizontal, arg.vertical)),
-    commands.registerCommand(EXPORT_PDF,exportPDF(() => main.ServerUri)),
-    commands.registerCommand(EXPORT_HTML,exportHTML(logger, main.export, () => main.configuration.openFilemanagerAfterHTMLExport)),
+    registerCmd(SHOW_REVEALJS, showRevealJS((panel) => main.showWebViewPane(panel))  ),
+    registerCmd(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() =>main.startServer() )),
+    registerCmd(STOP_REVEALJS_SERVER, () => main.stopServer()),
+    registerCmd(SHOW_SAMPLE, () => showSample(context.extensionPath)),
+    registerCmd(GO_TO_SLIDE, (arg) => main.goToSlide(arg.horizontal, arg.vertical)),
+    registerCmd(EXPORT_PDF,exportPDF(() => main.ServerUri)),
+    registerCmd(EXPORT_HTML,exportHTML(logger, main.export, () => main.configuration.openFilemanagerAfterHTMLExport)),
 
     window.onDidChangeTextEditorSelection((e) => main.onDidChangeTextEditorSelection(e)),
     window.onDidChangeActiveTextEditor((e) => main.onDidChangeActiveTextEditor(e)),

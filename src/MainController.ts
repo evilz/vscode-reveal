@@ -1,3 +1,16 @@
+/*
+ * File: \src\MainController.ts
+ * Project: vscode-reveal
+ * Created Date: Wednesday October 23rd 2019
+ * Author: Vincent Bourdon
+ * -----
+ * Last Modified: Tuesday, 8th March 2022 9:22:25 am
+ * Modified By: Vincent Bourdon
+ * -----
+ * MIT License http://www.opensource.org/licenses/MIT
+ */
+
+
 /**
  * @summary Main controller that connect server, document, statusbar, iframe etc...
  * @author Vincent B. <evilznet@gmail.com>
@@ -5,7 +18,6 @@
 import {
   commands,
   ConfigurationChangeEvent,
-  Disposable,
   ExtensionContext,
   Position,
   Range,
@@ -15,9 +27,7 @@ import {
   TextEditor,
   TextEditorSelectionChangeEvent,
   WebviewPanel,
-  window,
 } from 'vscode'
-
 
 import * as jetpack from 'fs-jetpack'
 import * as path from 'path'
@@ -34,7 +44,6 @@ import SlideParser from './SlideParser'
 import WebViewPane from './WebViewPane'
 import { FrontMatterResult } from 'front-matter'
 import TextDecorator from './TextDecorator'
-import { config } from 'process'
 
 interface ISlidePosition {
   horizontal: number
@@ -44,7 +53,6 @@ interface ISlidePosition {
 interface RevealContext {
   editor : TextEditor
   server: RevealServer
-
 }
 
 const isMarkdownFile = (d:TextDocument) => d.languageId === 'markdown'
@@ -76,32 +84,49 @@ export default class MainController {
 
   //#### connect vs code event
   public onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent) {
-    if (event.textEditor.document.fileName !== this.#currentContext?.editor.document.fileName 
-      || event.selections.length === 0) { return }
+    const selection = event.selections.length > 0 ? event.selections[0] : event.textEditor.selection; 
+    this.OnEditorEvent(event.textEditor,selection.active)
 
-    const end = event.selections[0].active
-    this.updatePosition(end)
-    this.refresh()
+    // if (event.textEditor.document.fileName !== this.#currentContext?.editor.document.fileName 
+    //   || event.selections.length === 0) { return }
+
+    // const end = event.selections[0].active
+    // this.updatePosition(end)
+    // this.refresh()
   }
 
+
+  private OnEditorEvent(editor: TextEditor | undefined, newPosition: Position ){
+    if (editor && isMarkdownFile( editor.document)) {
+      if(!this.#revealContexts.has(editor.document.fileName)){
+        this.createContext(editor)
+        this.#currentContext = this.#revealContexts.get(editor.document.fileName)
+      }
+      this.updatePosition(newPosition)
+      this.refresh()
+    }
+  }
   
 
   public onDidChangeActiveTextEditor(editor: TextEditor | undefined) {
-    if (editor && isMarkdownFile( editor.document)) {
+    if(editor === undefined) return
+    this.OnEditorEvent(editor,editor.selection.active)
 
-      if(!this.#revealContexts.has(editor.document.fileName)){
+    // if (editor && isMarkdownFile( editor.document)) {
+
+    //   if(!this.#revealContexts.has(editor.document.fileName)){
        
-        this.createContext(editor)
+    //     this.createContext(editor)
 
-         }
+    //      }
          
 
-      this.#currentContext = this.#revealContexts.get(editor.document.fileName)
-      this.updatePosition(editor.selection.active)
-      this.refresh()
+    //   this.#currentContext = this.#revealContexts.get(editor.document.fileName)
+    //   this.updatePosition(editor.selection.active)
+    //   this.refresh()
       // ADD debug level
       //this.logger.log(`onDidChangeActiveTextEditor: ${editor.document.fileName}`)
-    }
+    
   }
 
   public async onDidChangeTextDocument(e: TextDocumentChangeEvent) {
@@ -147,14 +172,14 @@ export default class MainController {
     //this.#currentEditor = currentEditor
 
     this.#configurationProvider = new ConfigurationProvider()
-    this.#configurationProvider.on("updated", () => {
-      this.#log("configurationProvider", `configuration updated`)
+    this.#configurationProvider.onDidUpdate(() => {
+    this.#log("configurationProvider", `configuration updated`)
       this.refresh()
     } )
 
     this.#statusBarController = new StatusBarController()
-    this.#statusBarController.on("updatedServerInfo", () => this.#log("StatusBarController", `updatedServerInfo`))
-    this.#statusBarController.on("updatedSlideCount", () => this.#log("StatusBarController", `updatedSlideCount`))
+    this.#statusBarController.onDidUpdateServerInfo(() => this.#log("StatusBarController", `updatedServerInfo`))
+    this.#statusBarController.onDidUpdatedSlideCount(() => this.#log("StatusBarController", `updatedSlideCount`))
 
     // this.#server = new RevealServer(
     //   this.logger,
@@ -167,10 +192,10 @@ export default class MainController {
     // )
 
     this.#slideParser = new SlideParser()
-    this.#slideParser.on("parsed", (front, slides) => {
-      this.#log(`SlideParser`, `frontmatter:${front.bodyBegin > 1} - slides:${slides.length}`)
-      this.#slides = slides
-      this.#configurationProvider.documentConfig = front.attributes}
+    this.#slideParser.onDidParse(e => {
+      this.#log(`SlideParser`, `frontmatter:${e.frontmatter.bodyBegin > 1} - slides:${e.slides.length}`)
+      this.#slides = e.slides
+      this.#configurationProvider.documentConfig = e.frontmatter.attributes}
     )
 
     this.#TextDecorator = new TextDecorator(configDesc)
@@ -229,7 +254,7 @@ export default class MainController {
         if(!this.#currentContext) return
 
         this.logger.log(`REFRESH START!`)
-        const {frontmatter,slides} = this.#slideParser.parse(this.#currentContext.editor.document.getText())
+        const {frontmatter,slides} = this.#slideParser.parse(this.#currentContext.editor.document.getText(), this.configuration)
         this.#slides = slides
         this.#frontMatterResult = frontmatter
         this.#configurationProvider.documentConfig = frontmatter.attributes
@@ -246,7 +271,7 @@ export default class MainController {
     if(!this.#currentContext) return
     const start = new Position(0, 0)
     const range = new Range(start, cursorPosition)
-    const {slides} =this.#slideParser.parse(this.#currentContext.editor.document.getText(range), false)
+    const {slides} =this.#slideParser.parse(this.#currentContext.editor.document.getText(range), this.configuration, false)
     const currentSlide = slides[slides.length - 1]
 
     this.#position = currentSlide.verticalChildren
@@ -276,9 +301,6 @@ export default class MainController {
     this.#currentContext.editor.revealRange(new Range(position, position.translate(20)))
   }
 
-
-  stopServer = () => this.#currentContext?.server.stop()
-
   public showWebViewPane(webviewPanel:WebviewPanel ){
     if(!this.#webViewPane){
       this.#webViewPane = new WebViewPane(webviewPanel)
@@ -288,15 +310,30 @@ export default class MainController {
 
   private refreshWebViewPane(){
     if(this.#webViewPane){
-      this.#currentContext?.server.start()
+      this.startServer()
       this.#webViewPane.title = this.configuration.title
       this.#webViewPane.update(this.uri)
-      this.#webViewPane.onDidDispose(()=> this.#webViewPane = undefined)
+      this.#webViewPane.onDidDispose(()=> {
+        this.#log("WebView", "disposed")
+        this.#webViewPane = undefined
+      })
   }}
+
+  /** Start server on an available port */
+  public startServer(){
+    this.#currentContext?.server.start()
+    return this.#currentContext?.server.uri;
+  }
+
+  /** Stop server from listening */
+  public stopServer() { 
+    this.#currentContext?.server.stop()
+  }
+
 
   private createContext(editor){
     if(editor){
-      this.#revealContexts.set(editor.document.fileName, { editor:editor, server:new RevealServer(
+      const context = { editor:editor, server:new RevealServer(
         this.logger,
         () => this.dirname,
         () => this.#slides,
@@ -304,7 +341,10 @@ export default class MainController {
         this.extensionContext.extensionPath,
         () => this.isInExport,
         () => this.exportPath,
-      ) })
+      ) }
+
+      this.#revealContexts.set(editor.document.fileName, context)
+
     }
   }
 

@@ -15,7 +15,7 @@ test('Set title of webviewpane', () => {
   test('Dispose should trigger onDidDispose', () => {
 
     const onDidDispose = jest.fn( ) as Event<void>
-    const dispose = jest.fn() as (()=>any)
+    const dispose = jest.fn() as (()=>unknown)
     const webviewPanel = {title: "test" , onDidDispose: onDidDispose, dispose : dispose }  as WebviewPanel 
     const pane = new WebviewPane( webviewPanel )
   
@@ -32,7 +32,7 @@ test('Set title of webviewpane', () => {
   test('Update should trigger onDidUpdate', () => {
 
     const onDidDispose = jest.fn( ) as Event<void>
-    const dispose = jest.fn() as (()=>any)
+    const dispose = jest.fn() as (()=> unknown)
     const webviewPanel = {title: "test" , onDidDispose: onDidDispose, dispose : dispose, webview: {html:""} }  as WebviewPanel 
     const pane = new WebviewPane( webviewPanel )
   

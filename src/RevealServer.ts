@@ -12,7 +12,6 @@ import { Configuration } from './Configuration'
 import { exportHTML, IExportOptions } from './ExportHTML'
 import { ISlide } from './ISlide'
 import Logger from './Logger'
-//import EventEmitter from "events"
 import {EventEmitter} from "vscode"
 import {Disposable} from './dispose'
 
