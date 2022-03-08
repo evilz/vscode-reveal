@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 4.1.2
+
+- Add Anything plugin [830](https://github.com/evilz/vscode-reveal/issues/830)
+- Change snippets too `sld-*` [815](https://github.com/evilz/vscode-reveal/issues/815)
+- Fix: can't open presentation in browser [801](https://github.com/evilz/vscode-reveal/issues/801)
+- Fix: exported presentation links [799](https://github.com/evilz/vscode-reveal/issues/799)
+- Add back coinfig of separator [740](https://github.com/evilz/vscode-reveal/issues/740)
+
 ## 4.1.1
 
 - Add config for presentation size [741](https://github.com/evilz/vscode-reveal/issues/741)
