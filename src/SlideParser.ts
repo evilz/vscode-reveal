@@ -37,7 +37,7 @@ const findTitle = (text: string) => {
   return lines[0].trim()
 }
 
-export default class SlideParser extends Disposable{
+export class SlideParser extends Disposable{
 
   constructor() {
     super()
@@ -72,7 +72,6 @@ export default class SlideParser extends Disposable{
   #parseSlides = (slideContent: string, separator: string, verticalSeparator:string): ISlide[] => {
   const regex = new RegExp(separator, 'gm')
   const slides = slideContent.split(regex)
-  // TODO : do dirty remove first or last line !
   return slides.map((s, i) => {
 
     return this.#parseSlide(trimFirstLastEmptyLine(s), i, verticalSeparator)
@@ -104,4 +103,7 @@ export default class SlideParser extends Disposable{
 
 
 }
+
+//Singleton
+export default new SlideParser()
 

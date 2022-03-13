@@ -8,12 +8,9 @@ import * as path from 'path'
 
 import markdownit from './Markdown-it'
 
-import { Configuration } from './Configuration'
 import { exportHTML, IExportOptions } from './ExportHTML'
-import { ISlide } from './ISlide'
-import Logger from './Logger'
-import {EventEmitter} from "vscode"
 import {Disposable} from './dispose'
+import { RevealContext } from './RevealContext'
 
 /** Http server to serve reveal presentation */
 export class RevealServer extends Disposable{
@@ -21,43 +18,26 @@ export class RevealServer extends Disposable{
   private server: http.Server | null = null
   private readonly host = 'localhost'
 
-  constructor(
-    private readonly logger: Logger,
-    private readonly getRootDir: () => string,
-    private readonly getSlides: () => ISlide[],
-    private readonly getConfiguration: () => Configuration,
-    private readonly extensionPath: string,
-    private readonly isInExport: () => boolean,
-    private readonly getExportPath: () => string
-  ) {
+  public isInExport = false
+  
+
+  constructor(private readonly context:RevealContext) {
     super()
     this.configure()
   }
 
-  readonly #onDidError = this._register(new EventEmitter<Error>());
-	/**
-	 * Fired when the server got an error.
-	 */
-	public readonly onDidError = this.#onDidError.event;
-
-  readonly #onDidStart = this._register(new EventEmitter<string>());
-	/**
-	 * Fired when the server did start and send uri.
-	 */
-	public readonly onDidStart = this.#onDidStart.event;
-
   public start() {
     try {
-      if (!this.isListening && this.getRootDir()) {
+      if (!this.isListening) {
         this.server = this.app.listen(0)
-        this.#onDidStart.fire(this.uri)
-        return this.uri
+        this.context.logger.info(`SERVER started`)
       }
     } catch (err) {
       const error = new Error(`Cannot start server: ${err}`)
-      this.#onDidError.fire(error)
+      this.context.logger.error(`SERVER: Cannot start server: ${err}`)
       throw error
     }
+    return this.uri
   }
  
   /** True if server is currently listening*/
@@ -65,15 +45,11 @@ export class RevealServer extends Disposable{
     return this.server ? this.server.listening : false
   }
 
-  readonly #onDidStop = this._register(new EventEmitter<void>());
-	/** Fired when the server did stop. */
-	public readonly onDidStop = this.#onDidStop.event;
-
   /** Stop listening */
   stop(): void {
     if (this.isListening && this.server) {
       this.server.close()
-      this.#onDidStop.fire()
+      this.context.logger.debug(`SERVER: stopped`)
     }
   }
 
@@ -95,21 +71,22 @@ export class RevealServer extends Disposable{
 
   private configure() {
     const app = this.app
-
+    const context = this.context
+   
     app.use(cors())
     // LOG REQUEST
     app.use(
       koalogger((str) => {
-        this.logger.debug(str)
+        context.logger.debug(str)
       })
     )
-
+    
     // EXPORT
-    app.use(this.exportMiddleware(exportHTML, () => this.isInExport()))
+    app.use(this.exportMiddleware(exportHTML, () => context.isInExport))
 
     // EJS VIEW engine
     render(app, {
-      root: path.resolve(this.extensionPath, 'views'),
+      root: path.resolve(context.extensionPath, 'views'),
       layout: 'template.4.1.3',
       viewExt: 'ejs',
       cache: false,
@@ -122,37 +99,38 @@ export class RevealServer extends Disposable{
         return next()
       }
 
-      const htmlSlides = this.getSlides().map((s) => ({
+      const htmlSlides = context.slides.map((s) => ({
         ...s,
         html: markdownit.render(s.text),
         children: s.verticalChildren.map((c) => ({ ...c, html: markdownit.render(c.text) })),
       }))
-      ctx.state = { slides: htmlSlides, ...this.getConfiguration(), rootUrl: this.uri }
+      ctx.state = { slides: htmlSlides, ...context.configuration, rootUrl: this.uri }
       await ctx.render('reveal')
     })
 
     // STATIC LIBS
-    const libsPAth = path.join(this.extensionPath, 'libs')
+    const libsPAth = path.join(context.extensionPath, 'libs')
     app.use(serve({ rootDir: libsPAth, rootPath: '/libs' }))
 
     // STATIC RELATIVE TO MD FILE
-    const rootDir = this.getRootDir()
-    if (rootDir) {
-      app.use(serve({ rootDir, rootPath: '/' }))
+    if (context.dirname) {
+      app.use(serve({ rootDir:context.dirname, rootPath: '/' }))
     }
 
     // ERROR HANDLER
     app.on('error', (err) => {
-      this.logger.error(err)
+      context.logger.error(err)
     })
   }
 
 
   private readonly exportMiddleware = (exportfn: (ExportOptions) => Promise<void>, isInExport) => {
+
+    const {exportPath} = this.context
+
     return async (ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, { path: string }>, next) => {
       await next()
       if (isInExport()) {
-        const exportPath = this.getExportPath()
         const opts: IExportOptions =
           typeof ctx.body === 'string'
             ? { folderPath: exportPath, url: ctx.originalUrl.split('?')[0], srcFilePath: null, data: ctx.body }
@@ -163,21 +141,9 @@ export class RevealServer extends Disposable{
     }
   }
 
-  private readonly _onDidDispose = this._register(new EventEmitter<void>());
-	/**
-	 * Fired when the document is disposed of.
-	 */
-	public readonly onDidDispose = this._onDidDispose.event;
-
-  /**
-	 * Called by VS Code when there are no more references to the document.
-	 *
-	 * This happens when all editors for it have been closed.
-	 */
 	dispose(): void {
     this.stop()
     this.server = null
-		this._onDidDispose.fire();
 		super.dispose();
 	}
 }

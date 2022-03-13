@@ -10,7 +10,6 @@
  * MIT License http://www.opensource.org/licenses/MIT
  */
 
-
 /**
  * @summary Main controller that connect server, document, statusbar, iframe etc...
  * @author Vincent B. <evilznet@gmail.com>
@@ -20,74 +19,49 @@ import {
   ConfigurationChangeEvent,
   ExtensionContext,
   Position,
-  Range,
-  Selection,
   TextDocument,
   TextDocumentChangeEvent,
   TextEditor,
   TextEditorSelectionChangeEvent,
-  WebviewPanel,
+  ViewColumn,
+  window,
 } from 'vscode'
 
 import * as jetpack from 'fs-jetpack'
-import * as path from 'path'
 
 import { SHOW_REVEALJS } from './commands/showRevealJS'
-import ConfigurationProvider, { ConfigurationDescription, IDocumentOptions } from './Configuration'
-import { countLinesToSlide, extensionId } from './utils'
-import { ISlide } from './ISlide'
-import  Logger  from './Logger'
-import { RevealServer } from './RevealServer'
+import Logger from './Logger'
 import { SlideTreeProvider } from './SlideExplorer'
 import { StatusBarController } from './StatusBarController'
-import SlideParser from './SlideParser'
 import WebViewPane from './WebViewPane'
-import { FrontMatterResult } from 'front-matter'
 import TextDecorator from './TextDecorator'
+import { RevealContext, RevealContexts } from './RevealContext'
+import { configPefix, Configuration, ConfigurationDescription, getConfig } from './Configuration'
 
-interface ISlidePosition {
-  horizontal: number
-  vertical: number
-}
-
-interface RevealContext {
-  editor : TextEditor
-  server: RevealServer
-}
-
-const isMarkdownFile = (d:TextDocument) => d.languageId === 'markdown'
+const isMarkdownFile = (d: TextDocument) => d.languageId === 'markdown'
 
 export default class MainController {
-  //readonly #server: RevealServer
   readonly #statusBarController: StatusBarController
   readonly #slidesExplorer: SlideTreeProvider
-  private readonly configurationProvider: ConfigurationProvider
-  readonly #slideParser: SlideParser
   readonly #TextDecorator: TextDecorator
 
-  #webViewPane?:WebViewPane
-  #frontMatterResult?:FrontMatterResult<IDocumentOptions>
-  
-  //#currentEditor?:TextEditor;
-  #currentContext?:RevealContext
-  #revealContexts: Map<string,RevealContext>
+  #webViewPane?: WebViewPane
 
-  #slides: ISlide[] = []
-  #position: ISlidePosition = { horizontal: 0, vertical: 0 }
+  public currentContext?: RevealContext
+  private revealContexts: RevealContexts
 
-  get configuration() { return this.configurationProvider.configuration }
-  get filename() { return this.#currentContext?.editor?.document.fileName }
-
-  get dirname() { return this.filename ? path.dirname(this.filename) : '' }
-  
-  get ServerUri() { return this.#currentContext?.server.uri }
+  get ServerUri() {
+    return this.currentContext?.server.uri
+  }
 
   //#### connect vs code event
   public onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent) {
-    const selection = event.selections.length > 0 ? event.selections[0] : event.textEditor.selection; 
-    this.OnEditorEvent(event.textEditor,selection.active)
+    if(this.currentContext == undefined || !this.currentContext.is(event.textEditor.document)) return
 
-    // if (event.textEditor.document.fileName !== this.#currentContext?.editor.document.fileName 
+    const selection = event.selections.length > 0 ? event.selections[0] : event.textEditor.selection
+    this.OnEditorEvent(event.textEditor, selection.active)
+
+    // if (event.textEditor.document.fileName !== this.#currentContext?.editor.document.fileName
     //   || event.selections.length === 0) { return }
 
     // const end = event.selections[0].active
@@ -95,152 +69,126 @@ export default class MainController {
     // this.refresh()
   }
 
-
-  private OnEditorEvent(editor: TextEditor | undefined, newPosition: Position ){
-    if (editor && isMarkdownFile( editor.document)) {
-      if(!this.#revealContexts.has(editor.document.fileName)){
-        this.createContext(editor)
-        this.#currentContext = this.#revealContexts.get(editor.document.fileName)
-      }
+  private OnEditorEvent(editor: TextEditor | undefined, newPosition: Position) {
+    if (editor && isMarkdownFile(editor.document)) {
+      this.currentContext = this.revealContexts.getOrAdd(editor)
       this.updatePosition(newPosition)
       this.refresh()
     }
   }
-  
 
   public onDidChangeActiveTextEditor(editor: TextEditor | undefined) {
-    if(editor === undefined) return
-    this.OnEditorEvent(editor,editor.selection.active)
+    if (editor === undefined) return
+    this.OnEditorEvent(editor, editor.selection.active)
 
     // if (editor && isMarkdownFile( editor.document)) {
 
     //   if(!this.#revealContexts.has(editor.document.fileName)){
-       
+
     //     this.createContext(editor)
 
     //      }
-         
 
     //   this.#currentContext = this.#revealContexts.get(editor.document.fileName)
     //   this.updatePosition(editor.selection.active)
     //   this.refresh()
-      // ADD debug level
-      //this.logger.log(`onDidChangeActiveTextEditor: ${editor.document.fileName}`)
-    
+    // ADD debug level
+    //this.logger.log(`onDidChangeActiveTextEditor: ${editor.document.fileName}`)
   }
 
   public async onDidChangeTextDocument(e: TextDocumentChangeEvent) {
-    if (e.document.fileName=== this.#currentContext?.editor?.document.fileName) {
-       // ADD debug level
-      //this.logger.log(`onDidChangeTextDocument: ${e.document.fileName}`)
-      this.refresh()
+    if (this.currentContext?.is(e.document)) {
+    this.logger.debug(`onDidChangeTextDocument: ${e.document.fileName}`)
+    this.refresh()
     }
   }
 
-  public onDidSaveTextDocument(e: TextDocument) {
-     // ADD debug level
+  public onDidSaveTextDocument(document: TextDocument) {
+    if (this.currentContext?.is(document)) {
+      // ADD debug level
+      this.logger.debug(`onDidSaveTextDocument: ${document.fileName}`)
+      this.refresh()
+      }
+    // ADD debug level
     //this.logger.log(`onDidSaveTextDocument: ${e.fileName}`)
   }
 
-  public onDidCloseTextDocument(e: TextDocument) {
-    if (e.fileName === this.#currentContext?.editor.document.fileName) {
-      
-      this.#currentContext.server.dispose()
-      this.#currentContext = undefined
-      this.#revealContexts.delete(e.fileName)
-      this.#webViewPane?.dispose() // TODO: check if this is not a bug
+  public onDidCloseTextDocument(document: TextDocument) {
+    if (this.currentContext?.is(document)) {
+      this.currentContext = undefined
+      this.revealContexts.remove(document.uri)
+      this.logger.debug(`onDidCloseTextDocument ${document.uri}`)
     }
-     // ADD debug level
-    //this.logger.log(`onDidCloseTextDocument ${e.fileName}`)
+    
   }
 
   public onDidChangeConfiguration(e: ConfigurationChangeEvent) {
-    if (!e.affectsConfiguration(extensionId)) { return }
-    this.configurationProvider.reloadWorkspaceConfig()
+    if (!e.affectsConfiguration(configPefix)) {
+      return
+    }
+    this.config = getConfig()
   }
-
 
   public constructor(
     private readonly logger: Logger,
     private readonly extensionContext: ExtensionContext,
     private readonly configDesc: ConfigurationDescription[],
+    private config:Configuration,
     currentEditor: TextEditor | undefined
   ) {
-
-    this.#revealContexts = new Map<string,RevealContext>()
+   
     
-    //this.#currentEditor = currentEditor
-
-    this.configurationProvider = new ConfigurationProvider()
-    this.configurationProvider.onDidUpdate(() => {
-    this.logger.LogLevel = this.configurationProvider.configuration.logLevel
-    this.#logInfo("configurationProvider", `configuration updated`)
-      this.refresh()
-    } )
 
     this.#statusBarController = new StatusBarController()
-    this.#statusBarController.onDidUpdateServerInfo(() => this.#logInfo("StatusBarController", `updatedServerInfo`))
-    this.#statusBarController.onDidUpdatedSlideCount(() => this.#logInfo("StatusBarController", `updatedSlideCount`))
-
-    // this.#server = new RevealServer(
-    //   this.logger,
-    //   () => this.dirname,
-    //   () => this.#slides,
-    //   () => this.configuration,
-    //   this.extensionContext.extensionPath,
-    //   () => this.isInExport,
-    //   () => this.exportPath,
-    // )
-
-    this.#slideParser = new SlideParser()
-    this.#slideParser.onDidParse(e => {
-      this.#logInfo(`SlideParser`, `frontmatter:${e.frontmatter.bodyBegin > 1} - slides:${e.slides.length}`)
-      this.#slides = e.slides
-      this.configurationProvider.documentConfig = e.frontmatter.attributes}
-    )
 
     this.#TextDecorator = new TextDecorator(configDesc)
 
-    this.#currentContext?.server.onDidStart( uri => {
-      this.#logInfo(`Server`,`started on ${uri}`)
-      this.#statusBarController.updateServerInfo(uri)
-    })
+    this.revealContexts = new RevealContexts(
+      logger,
+      () => this.config,
+      extensionContext.extensionPath,
+      () => this.isInExport
+    )
 
-    this.#currentContext?.server.onDidStop(() => {
-      this.#logInfo(`Server`, `stopped`)
-      this.#statusBarController.updateServerInfo(null)
-    })
+    if (currentEditor && isMarkdownFile(currentEditor.document)) {
+      this.currentContext = this.revealContexts.getOrAdd(currentEditor)
+    }
 
-    this.#currentContext?.server.onDidError( (err) => this.#logError(`Server`, `${err.message}`))
-
-    this.#slidesExplorer = new SlideTreeProvider(() => this.#slides)
+    this.#slidesExplorer = new SlideTreeProvider(() => (this.currentContext ? this.currentContext.slides : []))
     this.#slidesExplorer.register()
-    this.#slidesExplorer.onDidChangeTreeData( ()=>  this.#logInfo(`SlideTreeProvider`, `updated`))
-
+    this.#slidesExplorer.onDidChangeTreeData(() => this.#logInfo(`SlideTreeProvider`, `updated`))
   }
 
   #logInfo(component: string, message: string) {
     this.logger.info(`"${component.toUpperCase()}": ${message}`)
   }
-  #logError(component: string, message: string) { this.logger.error(`"${component.toUpperCase()}": ${message}`) }
+  #logError(component: string, message: string) {
+    this.logger.error(`"${component.toUpperCase()}": ${message}`)
+  }
 
   // active export during 5 seconds
   #exportTimeout: NodeJS.Timeout | null = null
-  public get isInExport() { return this.#exportTimeout !== null }
+  public get isInExport() {
+    return this.#exportTimeout !== null
+  }
+
+  public shouldOpenFilemanagerAfterHTMLExport(){
+    if(this.currentContext) {
+      return this.currentContext.configuration.openFilemanagerAfterHTMLExport
+    }
+    return false
+  }
 
   public export = async () => {
     if (this.#exportTimeout !== null) {
       clearTimeout(this.#exportTimeout)
     }
-    await jetpack.removeAsync(this.exportPath)
+    if (this.currentContext != undefined) await jetpack.removeAsync(this.currentContext.exportPath)
 
     const promise = new Promise<string>((resolve) => {
-      this.#exportTimeout = setTimeout(() => resolve(this.exportPath), 5000)
+      this.#exportTimeout = setTimeout(() => resolve(this.currentContext == undefined ? '' : this.currentContext.exportPath), 5000)
     })
-    this.#webViewPane
-     ? this.refreshWebViewPane()
-     : await commands.executeCommand(SHOW_REVEALJS)
-   
+    this.#webViewPane ? this.refreshWebViewPane() : await commands.executeCommand(SHOW_REVEALJS)
 
     return promise
   }
@@ -248,108 +196,84 @@ export default class MainController {
   // debounce parse and refresh
   #refreshTimeout: NodeJS.Timeout | null = null
   refresh(wait = 500) {
-    if(!this.#currentContext) return
+    if (!this.currentContext) return
 
-    if(this.#refreshTimeout) { clearTimeout(this.#refreshTimeout) }
+    if (this.#refreshTimeout) {
+      clearTimeout(this.#refreshTimeout)
+    }
     this.#refreshTimeout = setTimeout(() => {
-        if(!this.#currentContext) return
+      if (!this.currentContext) return
 
-        this.logger.info(`REFRESH START!`)
-        const {frontmatter,slides} = this.#slideParser.parse(this.#currentContext.editor.document.getText(), this.configuration)
-        this.#slides = slides
-        this.#frontMatterResult = frontmatter
-        this.configurationProvider.documentConfig = frontmatter.attributes
-
-        this.refreshWebViewPane()
-        this.#slidesExplorer.update()
-        this.#statusBarController.updateCount(this.#slides.length)
-        this.#TextDecorator.update(this.#currentContext.editor)
-        this.logger.info(`REFRESH DONE!`)
+      this.logger.info(`REFRESH START!`)
+      const { frontmatter, slides } = this.currentContext.refresh()
+      
+      this.refreshWebViewPane()
+      this.#slidesExplorer.update()
+      this.#statusBarController.updateCount(slides.length)
+      this.#TextDecorator.update(this.currentContext.editor)
+      this.logger.info(`REFRESH DONE!`)
     }, wait)
   }
 
   updatePosition(cursorPosition: Position) {
-    if(!this.#currentContext) return
-    const start = new Position(0, 0)
-    const range = new Range(start, cursorPosition)
-    const {slides} =this.#slideParser.parse(this.#currentContext.editor.document.getText(range), this.configuration, false)
-    const currentSlide = slides[slides.length - 1]
-
-    this.#position = currentSlide.verticalChildren
-      ? { horizontal: slides.length - 1, vertical: currentSlide.verticalChildren.length }
-      : { horizontal: slides.length - 1, vertical: 0 }
+    if (!this.currentContext) return
+    this.currentContext.updatePosition(cursorPosition)
   }
 
-  get uri() {
-    const {horizontal,vertical} = this.#position
-    return `${this.#currentContext?.server.uri}#/${horizontal}/${vertical}/${Date.now()}`
-  }
+  // public get exportPath(): string {
+  //   return path.isAbsolute(this.configuration.exportHTMLPath)
+  //     ? this.configuration.exportHTMLPath
+  //     : path.join(this.dirname, this.configuration.exportHTMLPath)
+  // }
 
-  public get exportPath(): string {
-    return path.isAbsolute(this.configuration.exportHTMLPath)
-      ? this.configuration.exportHTMLPath
-      : path.join(this.dirname, this.configuration.exportHTMLPath)
-  }
-
-  
   public goToSlide(topindex: number, verticalIndex: number) {
-    if(!this.#currentContext) return
+    if (this.currentContext) this.currentContext.goToSlide(topindex, verticalIndex)
+    // if(!this.currentContext) return
 
-    const linesCount = countLinesToSlide(this.#slides, topindex, verticalIndex) + (this.#frontMatterResult?.frontmatter ? this.#frontMatterResult.bodyBegin : 0)
+    // const linesCount = countLinesToSlide(this.#slides, topindex, verticalIndex) + (this.#frontMatterResult?.frontmatter ? this.#frontMatterResult.bodyBegin : 0)
 
-    const position = new Position(linesCount, 0)
-    this.#currentContext.editor.selections = [new Selection(position, position)]
-    this.#currentContext.editor.revealRange(new Range(position, position.translate(20)))
+    // const position = new Position(linesCount, 0)
+    // this.currentContext.editor.selections = [new Selection(position, position)]
+    // this.currentContext.editor.revealRange(new Range(position, position.translate(20)))
   }
 
-  public showWebViewPane(webviewPanel:WebviewPanel ){
-    if(!this.#webViewPane){
+  /**
+   * Create Web view pane if not exists
+   * @returns return false if pane already exists
+   */
+  public showWebViewPane() {
+    if (this.#webViewPane) {
+      this.refreshWebViewPane()
+      return false
+    } else {
+      const webviewPanel = window.createWebviewPanel('RevealJS', 'Reveal JS presentation', ViewColumn.Beside, { enableScripts: true })
       this.#webViewPane = new WebViewPane(webviewPanel)
-      this.#webViewPane.onDidDispose(()=> {
-        this.#logInfo("WebView", "disposed")
+      this.#webViewPane.onDidDispose(() => {
+        this.#logInfo('WebView', 'disposed')
         this.#webViewPane = undefined
       })
       this.refreshWebViewPane()
+      return true
     }
   }
 
-  private refreshWebViewPane(){
-    if(this.#webViewPane){
+  private refreshWebViewPane() {
+    if (this.#webViewPane && this.currentContext != undefined) {
       this.startServer()
-      this.#webViewPane.title = this.configuration.title
-      this.#webViewPane.update(this.uri)
-      
-  }}
+      this.#webViewPane.title = this.currentContext.configuration.title
+      this.#webViewPane.update(this.currentContext.uri)
+    }
+  }
 
   /** Start server on an available port */
-  public startServer(){
-    this.#currentContext?.server.start()
-    return this.#currentContext?.server.uri;
+  public startServer() {
+    // if(this.currentContext == undefined) return
+    this.currentContext?.startServer()
+    // return this.currentContext?.server.uri;
   }
 
   /** Stop server from listening */
-  public stopServer() { 
-    this.#currentContext?.server.stop()
+  public stopServer() {
+    this.currentContext?.server.stop()
   }
-
-
-  private createContext(editor){
-    if(editor){
-      const context = { editor:editor, server:new RevealServer(
-        this.logger,
-        () => this.dirname,
-        () => this.#slides,
-        () => this.configuration,
-        this.extensionContext.extensionPath,
-        () => this.isInExport,
-        () => this.exportPath,
-      ) }
-
-      this.#revealContexts.set(editor.document.fileName, context)
-
-    }
-  }
-
-  
 }
-

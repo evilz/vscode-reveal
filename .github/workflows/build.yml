@@ -1,0 +1,28 @@
+name: continuous integration Build Matrix
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Detect Node version from .nvmrc
+        id: node_version
+        run: echo "::set-output name=nvmrc::$(cat .nvmrc)"
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ steps.node_version.outputs.nvmrc }}
+
+      - name: npm-ci
+        run: npm ci
+
+      - name: build
+        run: npm run vscode:prepublish

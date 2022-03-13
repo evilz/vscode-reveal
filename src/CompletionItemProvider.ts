@@ -10,7 +10,7 @@ import {
   Disposable,
 } from 'vscode'
 import { ConfigurationDescription } from './Configuration'
-//provideCompletionItems
+
 const enumValueProvider = (prefix: string, values: string[]) => {
   return {
     provideCompletionItems(document: TextDocument, position: Position) {

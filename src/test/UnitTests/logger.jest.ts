@@ -1,5 +1,18 @@
 import Logger, { LogLevel } from '../../Logger'
 
+const logMock = jest.fn();
+test('Logger should Not log when level is debug', () => {
+ // let output = ''
+  const logger = new Logger(logMock, LogLevel.Debug)
+
+  logger.debug('text1')
+
+  expect(logMock.mock.calls[0][0]).toContain(`[DEBUG]`);
+  expect(logMock.mock.calls[0][0]).toContain(`text1`);
+  //expect(output).not.toEqual('')
+});
+
+
 test('Logger should log error when level is error', () => {
   let output = ''
   const logger = new Logger((s) => {
@@ -37,20 +50,20 @@ test('Logger should log when level is info', () => {
   let output = ''
   const logger = new Logger( (s) => {
     output = s
-  }, LogLevel.Information)
+  }, LogLevel.Info)
 
   logger.info('text1')
 
   expect(output).not.toEqual('')
 });
 
-test('Logger should Not log when level is debug', () => {
-  let output = ''
-  const logger = new Logger((s) => {
-    output = s
-  }, LogLevel.Debug)
+// test('Logger should Not log when level is debug', () => {
+//   let output = ''
+//   const logger = new Logger((s) => {
+//     output = s
+//   }, LogLevel.Debug)
 
-  logger.debug('text1')
+//   logger.debug('text1')
 
-  expect(output).not.toEqual('')
-});
+//   expect(output).not.toEqual('')
+// });

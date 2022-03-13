@@ -6,11 +6,7 @@ module.exports = {
   verbose: true,
   collectCoverageFrom : ["src/**/*.ts", "!src/test/**/*.ts"],
   testResultsProcessor: "jest-sonar-reporter",
-  jestSonar: {
-    reportPath: "reports",
-    reportFile: "test-reporter.xml",
-    indent: 4
-  }
+  coverageDirectory: "./coverage",
 };
 
 

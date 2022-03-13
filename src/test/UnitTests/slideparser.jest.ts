@@ -1,11 +1,9 @@
 import { countLines, countLinesToSlide } from '../../utils'
-import SlideParser from '../../SlideParser'
+import parser from '../../SlideParser'
 import {defaultConfiguration} from "../../Configuration"
 
 // const sampleFile = fs.readFileSync('../sample.md').toString()
 
-
-const parser = new SlideParser()
 
 const slideContent = `# Title One
 

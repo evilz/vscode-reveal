@@ -1,20 +1,12 @@
 import { LogLevel } from './Logger'
-import { EventEmitter, workspace } from 'vscode'
-import { extensionId } from './utils'
-import { isDeepStrictEqual } from 'util'
-import { Disposable } from './dispose'
+import { workspace } from 'vscode'
 
-/**
- * @file Manages the configuration settings for the extension.
- * @author Vincent Bourdon @Evilznet
- */
-
-export type Configuration = IDocumentOptions & IExtensionOptions
+export type Configuration = IRevealOptions & IExtensionOptions
 
 type themes = 'black' | 'white' | 'league' | 'beige' | 'sky' | 'night' | 'serif' | 'simple' | 'solarized'
 type transitions = 'default' | 'none' | 'fade' | 'slide' | 'convex' | 'concave' | 'zoom'
 
-export interface IDocumentOptions {
+export interface IRevealOptions {
   controlsTutorial: boolean
   controlsLayout: 'edges' | 'bottom-right'
   controlsBackArrows: 'faded' | 'hidden' | 'visible'
@@ -86,13 +78,6 @@ export interface IExtensionOptions {
   logLevel: LogLevel
 }
 
-export const getDocumentOptions = (configuration: Configuration) => {
-  return configuration as IDocumentOptions
-}
-
-export const getExtensionOptions = (configuration: Configuration) => {
-  return configuration as IExtensionOptions
-}
 
 export const defaultConfiguration: Configuration = {
   title: 'Reveal JS presentation',
@@ -187,64 +172,11 @@ export const getConfigurationDescription = (properties:object) => {
   return allProps
 }
 
+export const configPefix = "revealjs"
 
-
-interface ConfigurationProviderEvents {
-  updated: (Configuration) => void
-  error: (error: Error) => void
+export const getConfig = () => {
+  const workspaceConfig = workspace.getConfiguration(configPefix) as unknown as Configuration
+  return { ...defaultConfiguration, ...workspaceConfig} as Configuration
 }
 
-
-
-export default class ConfigurationProvider extends Disposable{
-  #workspaceConfig: Configuration
-  #documentConfig: Configuration
-  #configuration: Configuration
-
-  constructor() {
-    super()
-    this.#workspaceConfig = workspace.getConfiguration(extensionId) as unknown as Configuration
-    this.#documentConfig = {} as Configuration
-    this.#configuration = defaultConfiguration
-  }
-
-  readonly #onDidError = this._register(new EventEmitter<Error>());
-	/**
-	 * Fired when the server got an error.
-	 */
-	public readonly onDidError = this.#onDidError.event;
-
-  readonly #onDidUpdate = this._register(new EventEmitter<Configuration>());
-	/**
-	 * Fired when the server got an error.
-	 */
-	public readonly onDidUpdate = this.#onDidUpdate.event;
-
-  public get configuration() { return this.#configuration }
-  set configuration(v : Configuration) { this.#configuration = v; this.#onDidUpdate.fire(this.configuration) }
-  
-
-  public get documentConfig() { return this.#documentConfig }
-  public set documentConfig(v: Configuration) {
-    if (!isDeepStrictEqual(this.#documentConfig, v)) { // import to not do loop !!
-      this.#documentConfig = v
-      this.#refresh()
-    }
-  }
-
-  public get workspaceConfig() {
-    return this.#workspaceConfig
-  }
-
-  public reloadWorkspaceConfig() {
-    const loaded = workspace.getConfiguration(extensionId) as unknown as Configuration
-    if (!isDeepStrictEqual(this.#workspaceConfig, loaded)) {
-      this.#workspaceConfig = loaded
-      this.#refresh()
-    }
-  }
-
-  #refresh = () => {
-    this.configuration = { ...defaultConfiguration, ...this.#workspaceConfig, ...this.#documentConfig }
-  }
-}
+export const mergeConfig = (workspaceConfig, documentConfig) =>  ({ ...defaultConfiguration, ...workspaceConfig, ...documentConfig} as Configuration)

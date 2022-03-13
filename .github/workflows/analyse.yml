@@ -28,12 +28,17 @@ jobs:
     - name: npm-ci
       run: npm ci
 
-    - name: build
-      run: npm run vscode:prepublish
-
     - name: test
       run: npm run coverage
-      
+    
+    - name: Codecov Scan
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        files: ./coverage/clover.xml
+        flags: unittests # optional
+        verbose: true # optional (default = false)
+
     - name: SonarCloud Scan
       uses: sonarsource/sonarcloud-github-action@master
       env:

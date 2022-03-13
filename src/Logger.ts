@@ -1,22 +1,18 @@
-import { EventEmitter } from 'vscode'
-import { Disposable } from './dispose'
-
 export enum LogLevel {
   /** 0 - Logs that are used for interactive investigation during development. These logs should primarily contain information useful for debugging and have no long-term value. */
-  Debug,
+  Debug = "debug",
   /** 1 - Logs that track the general flow of the application. These logs should have long-term value. */
-  Information,
+  Info = "info",
   /** 2 - Logs that highlight an abnormal or unexpected event in the application flow, but do not otherwise cause the application execution to stop. */
-  Warning,
+  Warning = "warning",
   /** 3 - Logs that highlight when the current flow of execution is stopped due to a failure. These should indicate a failure in the current activity, not an application-wide failure. */
-  Error,
+  Error = "error",
   /** 4 - Not used for writing log messages. Specifies that a logging category should not write any messages. */
-  None,
+  None = "none",
 }
 
-export default class Logger extends Disposable {
+export default class Logger {
   constructor(private readonly appendLine: (string) => void, private logLevel = LogLevel.Error) {
-    super()
   }
 
   #printLog(level,message){
@@ -38,7 +34,7 @@ export default class Logger extends Disposable {
   }
 
   public info(message: string) {
-    if(this.LogLevel <= LogLevel.Information){
+    if(this.LogLevel <= LogLevel.Info){
       this.#printLog("INFO",message)
     }
   }
@@ -56,12 +52,6 @@ export default class Logger extends Disposable {
   public set LogLevel(level: LogLevel) {
     if(level === null || this.logLevel == level) return
     this.logLevel = level
-    this.#onDidLevelChanged.fire(this.logLevel)
+    this.info(`log level changed to ${level} `)
   }
-
-  readonly #onDidLevelChanged = this._register(new EventEmitter<LogLevel>())
-  /**
-   * Fired when the server got an error.
-   */
-  public readonly onDidLevelChanged = this.#onDidLevelChanged.event
 }
