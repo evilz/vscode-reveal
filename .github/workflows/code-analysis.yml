@@ -10,8 +10,7 @@ on:
       types: [opened, synchronize, reopened]
 
 jobs:
-  setup:
-    name: Node Setup
+  analysis:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -29,30 +28,9 @@ jobs:
     - name: npm-ci
       run: npm ci
 
-  test:
-    name: Test Coverage
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: test
-        run: npm run coverage
-      
-  sonarcloud:
-    name: SonarCloud analysis
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: test 
+      run: npm run coverage
 
-  codecov:
-    name: Codecov Scan
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
     - name: Codecov Scan
       uses: codecov/codecov-action@v2
       with:
@@ -60,6 +38,22 @@ jobs:
         files: ./coverage/clover.xml
         flags: unittests # optional
         verbose: true # optional (default = false)
+      
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+          languages: typeScript
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
+
+
 
     
        
