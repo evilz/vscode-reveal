@@ -1,5 +1,6 @@
 ---
 customTheme : "animate"
+
 ---
 
 # Animations with Reveal.js and SVG.js

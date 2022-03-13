@@ -1,0 +1,4 @@
+printWidth: 250
+parser: "typescript"
+singleQuote: true
+semi: false

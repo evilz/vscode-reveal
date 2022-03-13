@@ -152,22 +152,26 @@ export const defaultConfiguration: Configuration = {
   enableSearch: true,
 }
 
+
+type ConfigurationDescriptionTypes = "string" | "boolean"
 export interface ConfigurationDescription {
-  label:string,
+  label: string,
   detail: string,
   documentation: string,
-  type: string,
+  type: ConfigurationDescriptionTypes,
   values?: string[]
 }
-export const getConfigurationDescription = (properties:object) => {
+export const getConfigurationDescription = (properties: object) => {
 
-  const allProps:ConfigurationDescription[] =
+  const allProps: ConfigurationDescription[] =
     Object.keys(properties)
-    .map(key => ({ label: key.substring(9), // remove "revealjs."
-                  detail: properties[key].description,
-                  documentation: `Default value:  ${properties[key].default}`,
-                  type: properties[key].type,
-                  values: properties[key].enum}))
+      .map(key => ({
+        label: key.substring(9), // remove "revealjs."
+        detail: properties[key].description,
+        documentation: `Default value:  ${properties[key].default}`,
+        type: properties[key].type,
+        values: properties[key].enum
+      }))
 
   return allProps
 }
@@ -176,7 +180,7 @@ export const configPefix = "revealjs"
 
 export const getConfig = () => {
   const workspaceConfig = workspace.getConfiguration(configPefix) as unknown as Configuration
-  return { ...defaultConfiguration, ...workspaceConfig} as Configuration
+  return { ...defaultConfiguration, ...workspaceConfig } as Configuration
 }
 
-export const mergeConfig = (workspaceConfig, documentConfig) =>  ({ ...defaultConfiguration, ...workspaceConfig, ...documentConfig} as Configuration)
+export const mergeConfig = (workspaceConfig, documentConfig) => ({ ...defaultConfiguration, ...workspaceConfig, ...documentConfig } as Configuration)

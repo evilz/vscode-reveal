@@ -60,13 +60,6 @@ export default class MainController {
 
     const selection = event.selections.length > 0 ? event.selections[0] : event.textEditor.selection
     this.OnEditorEvent(event.textEditor, selection.active)
-
-    // if (event.textEditor.document.fileName !== this.#currentContext?.editor.document.fileName
-    //   || event.selections.length === 0) { return }
-
-    // const end = event.selections[0].active
-    // this.updatePosition(end)
-    // this.refresh()
   }
 
   private OnEditorEvent(editor: TextEditor | undefined, newPosition: Position) {
@@ -77,26 +70,14 @@ export default class MainController {
     }
   }
 
-  public onDidChangeActiveTextEditor(editor: TextEditor | undefined) {
+  public onDidChangeActiveTextEditor(editor?: TextEditor) {
     if (editor === undefined) return
+    this.logger.debug(`onDidChangeActiveTextEditor: ${editor.document.fileName}`)
     this.OnEditorEvent(editor, editor.selection.active)
-
-    // if (editor && isMarkdownFile( editor.document)) {
-
-    //   if(!this.#revealContexts.has(editor.document.fileName)){
-
-    //     this.createContext(editor)
-
-    //      }
-
-    //   this.#currentContext = this.#revealContexts.get(editor.document.fileName)
-    //   this.updatePosition(editor.selection.active)
-    //   this.refresh()
-    // ADD debug level
-    //this.logger.log(`onDidChangeActiveTextEditor: ${editor.document.fileName}`)
+    
   }
 
-  public async onDidChangeTextDocument(e: TextDocumentChangeEvent) {
+  public onDidChangeTextDocument(e: TextDocumentChangeEvent) {
     if (this.currentContext?.is(e.document)) {
     this.logger.debug(`onDidChangeTextDocument: ${e.document.fileName}`)
     this.refresh()
@@ -179,7 +160,7 @@ export default class MainController {
     return false
   }
 
-  public export = async () => {
+  public exportAsync = async () => {
     if (this.#exportTimeout !== null) {
       clearTimeout(this.#exportTimeout)
     }
@@ -205,7 +186,7 @@ export default class MainController {
       if (!this.currentContext) return
 
       this.logger.info(`REFRESH START!`)
-      const { frontmatter, slides } = this.currentContext.refresh()
+      const { slides } = this.currentContext.refresh()
       
       this.refreshWebViewPane()
       this.#slidesExplorer.update()
@@ -220,21 +201,8 @@ export default class MainController {
     this.currentContext.updatePosition(cursorPosition)
   }
 
-  // public get exportPath(): string {
-  //   return path.isAbsolute(this.configuration.exportHTMLPath)
-  //     ? this.configuration.exportHTMLPath
-  //     : path.join(this.dirname, this.configuration.exportHTMLPath)
-  // }
-
   public goToSlide(topindex: number, verticalIndex: number) {
     if (this.currentContext) this.currentContext.goToSlide(topindex, verticalIndex)
-    // if(!this.currentContext) return
-
-    // const linesCount = countLinesToSlide(this.#slides, topindex, verticalIndex) + (this.#frontMatterResult?.frontmatter ? this.#frontMatterResult.bodyBegin : 0)
-
-    // const position = new Position(linesCount, 0)
-    // this.currentContext.editor.selections = [new Selection(position, position)]
-    // this.currentContext.editor.revealRange(new Range(position, position.translate(20)))
   }
 
   /**
@@ -267,9 +235,7 @@ export default class MainController {
 
   /** Start server on an available port */
   public startServer() {
-    // if(this.currentContext == undefined) return
     this.currentContext?.startServer()
-    // return this.currentContext?.server.uri;
   }
 
   /** Stop server from listening */

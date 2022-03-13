@@ -1,43 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
-  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\NotTestedYet.jest.ts">
-    <testCase name="NOTHING HERE" duration="7"/>
+  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\WebviewPane.jest.ts">
+    <testCase name="Set title of webviewpane" duration="3">
+      <failure message="TypeError: vscode_1.EventEmitter is not a constructor"><![CDATA[TypeError: vscode_1.EventEmitter is not a constructor
+    at new WebviewPane (E:\PROJECTS\GITHUB\vscode-reveal\src\WebViewPane.ts:12:45)
+    at Object.<anonymous> (E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\WebviewPane.jest.ts:8:18)
+    at Promise.then.completed (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\utils.js:391:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\utils.js:316:10)
+    at _callCircusTest (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:218:40)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at _runTest (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:155:3)
+    at _runTestsForDescribeBlock (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:66:9)
+    at run (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:25:3)]]></failure>
+    </testCase>
+    <testCase name="Dispose should trigger onDidDispose" duration="1">
+      <failure message="TypeError: vscode_1.EventEmitter is not a constructor"><![CDATA[TypeError: vscode_1.EventEmitter is not a constructor
+    at new WebviewPane (E:\PROJECTS\GITHUB\vscode-reveal\src\WebViewPane.ts:12:45)
+    at Object.<anonymous> (E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\WebviewPane.jest.ts:20:18)
+    at Promise.then.completed (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\utils.js:391:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\utils.js:316:10)
+    at _callCircusTest (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:218:40)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at _runTest (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:155:3)
+    at _runTestsForDescribeBlock (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:66:9)
+    at run (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:25:3)]]></failure>
+    </testCase>
+    <testCase name="Update should trigger onDidUpdate" duration="1">
+      <failure message="TypeError: vscode_1.EventEmitter is not a constructor"><![CDATA[TypeError: vscode_1.EventEmitter is not a constructor
+    at new WebviewPane (E:\PROJECTS\GITHUB\vscode-reveal\src\WebViewPane.ts:12:45)
+    at Object.<anonymous> (E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\WebviewPane.jest.ts:37:18)
+    at Promise.then.completed (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\utils.js:391:28)
+    at new Promise (<anonymous>)
+    at callAsyncCircusFn (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\utils.js:316:10)
+    at _callCircusTest (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:218:40)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at _runTest (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:155:3)
+    at _runTestsForDescribeBlock (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:66:9)
+    at run (E:\PROJECTS\GITHUB\vscode-reveal\node_modules\jest-circus\build\run.js:25:3)]]></failure>
+    </testCase>
   </file>
-  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\logger.jest.ts">
-    <testCase name="Logger should Not log when level is debug" duration="106"/>
-    <testCase name="Logger should log error when level is error" duration="3"/>
-    <testCase name="Logger should NOT log when level is none" duration="1"/>
-    <testCase name="Logger should log error when level is warning" duration="2"/>
-    <testCase name="Logger should log when level is info" duration="2"/>
+  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\NotTestedYet.jest.ts">
+    <testCase name="NOTHING HERE" duration="2"/>
   </file>
-  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\WebviewPane.jest.ts">
-    <testCase name="Set title of webviewpane" duration="6"/>
-    <testCase name="Dispose should trigger onDidDispose" duration="1"/>
-    <testCase name="Update should trigger onDidUpdate" duration="1"/>
+  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\findTitle.jest.ts">
   </file>
-  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\slideparser.jest.ts">
-    <testCase name="Parse Slide content" duration="4"/>
-    <testCase name="Check slide 1" duration="1"/>
-    <testCase name="Check slide 2" duration="0"/>
-    <testCase name="Check slide 3.0" duration="2"/>
-    <testCase name="Should count horizontal slides" duration="0"/>
-    <testCase name="Should count vertical slides" duration="0"/>
-    <testCase name="Slides should have correct number of lines" duration="2"/>
-    <testCase name="Count line to slide 1" duration="1"/>
-    <testCase name="Count line to slide 2" duration="0"/>
-    <testCase name="Count line to slide 3" duration="0"/>
-    <testCase name="Count line to slide 3.1" duration="0"/>
-    <testCase name="Count line to slide 3.2" duration="1"/>
-    <testCase name="Extract slide attributes" duration="1"/>
+  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\slideparser.jest.ts">
   </file>
-  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\findTitle.jest.ts">
-    <testCase name="Should retrieve title from content" duration="7"/>
+  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\CompletionItemProvider.jest.ts">
+    <testCase name="Should createCompletionItems from configDesc" duration="4"/>
   </file>
-  <file path="C:\DATA\GITHUB\vscode-reveal\src\test\UnitTests\RevealServer.jest.ts">
-    <testCase name="Default state" duration="3"/>
-    <testCase name="Start should return uri and trigger onDidStart" duration="26"/>
-    <testCase name="Stop should trigger onDidStop only when server is listening" duration="1"/>
-    <testCase name="Request root" duration="118"/>
-    <testCase name="Request with export" duration="22"/>
+  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\RevealServer.jest.ts">
   </file>
 </testExecutions>

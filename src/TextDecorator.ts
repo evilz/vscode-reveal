@@ -11,19 +11,19 @@ const revealjsConfigKeyForeground = window.createTextEditorDecorationType({
   
 export default class TextDecorator {
 
-    propertiesRegex: RegExp
+    #propertiesRegex: RegExp
    
     constructor(private configDesc:ConfigurationDescription[] ) {
         
         const allProps = configDesc.map(x => x.label).join('|')
-        this.propertiesRegex = new RegExp(`^(${allProps}):.*$`, 'gm');
+        this.#propertiesRegex = new RegExp(`^(${allProps}):.*$`, 'gm');
     }
 
     update(editor: TextEditor) {
 
         const decorations: DecorationOptions[] = [];
         let match;
-		while ((match = this.propertiesRegex.exec(editor.document.getText())) !== null) {
+		while ((match = this.#propertiesRegex.exec(editor.document.getText())) !== null) {
 			const startPos = editor.document.positionAt(match.index);
 			const endPos = editor.document.positionAt(match.index + match[1].length);
 

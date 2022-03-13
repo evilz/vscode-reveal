@@ -52,7 +52,7 @@ export function activate(context: ExtensionContext) {
     registerCmd(SHOW_SAMPLE, () => showSample(context.extensionPath)),
     registerCmd(GO_TO_SLIDE, (arg) => main.goToSlide(arg.horizontal, arg.vertical)),
     registerCmd(EXPORT_PDF,exportPDF(() => main.currentContext?.startServer())),
-    registerCmd(EXPORT_HTML,exportHTML(logger, main.export, main.shouldOpenFilemanagerAfterHTMLExport)),
+    registerCmd(EXPORT_HTML,exportHTML(logger, main.exportAsync, main.shouldOpenFilemanagerAfterHTMLExport)),
 
     window.onDidChangeTextEditorSelection((e) => main.onDidChangeTextEditorSelection(e)),
     window.onDidChangeActiveTextEditor((e) => main.onDidChangeActiveTextEditor(e)),
