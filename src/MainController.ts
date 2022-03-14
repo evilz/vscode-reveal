@@ -56,10 +56,10 @@ export default class MainController {
 
   //#### connect vs code event
   public onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent) {
-    if (this.currentContext === undefined || !this.currentContext.is(event.textEditor.document)) { return }
-
-    const selection = event.selections.length > 0 ? event.selections[0] : event.textEditor.selection
-    this.OnEditorEvent(event.textEditor, selection.active)
+    if (this.currentContext !== undefined && this.currentContext.is(event.textEditor.document)) {
+      const selection = event.selections.length > 0 ? event.selections[0] : event.textEditor.selection
+      this.OnEditorEvent(event.textEditor, selection.active)
+    }
   }
 
   private OnEditorEvent(editor: TextEditor | undefined, newPosition: Position) {
@@ -71,9 +71,10 @@ export default class MainController {
   }
 
   public onDidChangeActiveTextEditor(editor?: TextEditor) {
-    if (editor === undefined) { return }
-    this.logger.debug(`onDidChangeActiveTextEditor: ${editor.document.fileName}`)
-    this.OnEditorEvent(editor, editor.selection.active)
+    if (editor !== undefined) {
+      this.logger.debug(`onDidChangeActiveTextEditor: ${editor.document.fileName}`)
+      this.OnEditorEvent(editor, editor.selection.active)
+    }
   }
 
   public onDidChangeTextDocument(e: TextDocumentChangeEvent) {

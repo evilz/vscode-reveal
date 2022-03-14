@@ -27,4 +27,7 @@
         "serverId": "evilz-github"
     },
     "tslint.autoFixOnSave": true,
+    "sonarlint.connectedMode.project": {
+        "projectKey": "evilz_vscode-reveal"
+      }
 }

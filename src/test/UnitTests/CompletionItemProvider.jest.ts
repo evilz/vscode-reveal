@@ -1,8 +1,7 @@
 /* eslint-disable jest/no-export */
 /* eslint-disable @typescript-eslint/no-namespace */
-import { hasUncaughtExceptionCaptureCallback } from "process";
 import { CancellationToken, CompletionContext, CompletionItem, EndOfLine, MarkdownString, Position, Range, TextDocument, TextLine, Uri } from "vscode";
-import CompletionItemProvider, { createCompletionItems } from "../../CompletionItemProvider"
+import { createCompletionItems } from "../../CompletionItemProvider"
 import { ConfigurationDescription } from '../../Configuration'
 
 test('Should createCompletionItems from configDesc', () => {

@@ -590,7 +590,8 @@
     "markdown-it-sup": "^1.0.0",
     "markdown-it-task-lists": "^2.1.1",
     "open": "^8.4.0",
-    "pako": "^2.0.4"
+    "pako": "^2.0.4",
+    "prettier": "^2.5.1"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",

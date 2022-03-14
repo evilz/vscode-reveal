@@ -1,5 +1,7 @@
 root: true
 parser: '@typescript-eslint/parser'
+parserOptions:
+  project: './tsconfig.json'
 plugins: ['@typescript-eslint', 'jest','sonarjs' ]
 extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier','plugin:jest/recommended','plugin:sonarjs/recommended']
 
