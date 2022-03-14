@@ -13,22 +13,18 @@ export const exportHTML = async (options: IExportOptions) => {
   const { folderPath, url, data, srcFilePath } = options
 
   const file = url.endsWith('/') ? `${url}index.html` : url
-  const filePath = path.join(folderPath ? folderPath  : ".", file)
+  const filePath = path.join(folderPath ? folderPath : ".", file)
 
   if (data) {
     try {
       await jetpack.writeAsync(filePath, data)
-      return
-     
     } catch (error) {
       console.error(error)
     }
   }
-  if (srcFilePath) {
-
+  else if (srcFilePath) {
     try {
-      await jetpack.copyAsync(srcFilePath, filePath, {overwrite : true})
-      return
+      await jetpack.copyAsync(srcFilePath, filePath, { overwrite: true })
     } catch (error) {
       console.error(error)
     }

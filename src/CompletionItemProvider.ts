@@ -3,7 +3,6 @@ import {
   TextDocument,
   Position,
   CancellationToken,
-  CompletionContext,
   CompletionItem,
   CompletionItemKind,
   MarkdownString,
@@ -18,7 +17,7 @@ import { ConfigurationDescription } from './Configuration'
 export const enumValueProvider = (prefix: string, values: string[]) => {
   return {
     provideCompletionItems(document: TextDocument, position: Position) {
-      const linePrefix = document.lineAt(position).text.substr(0, position.character)
+      const linePrefix = document.lineAt(position).text.substring(0, position.character)
       if (!linePrefix.startsWith(`${prefix}: `)) {
         return undefined
       }
@@ -28,7 +27,7 @@ export const enumValueProvider = (prefix: string, values: string[]) => {
 }
 
 export const createCompletionItems = (configDesc: ConfigurationDescription[]) => {
-  const enumValueProviders: CompletionItemProvider<CompletionItem>[] = []
+  const enumValueProviders: CompletionItemProvider[] = []
   const completionItems: CompletionItem[] =
     configDesc.map(({ label, detail, documentation, type, values }) => {
       const completionItem = new CompletionItem(label)
@@ -58,11 +57,12 @@ export const createCompletionItems = (configDesc: ConfigurationDescription[]) =>
 
 export const createCompletionItemsProvider = (completionItems: CompletionItem[]) => {
   return {
-    provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext) {
+    provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken) {
       if (!token.isCancellationRequested) {
-        const linePrefix = document.lineAt(position).text.substr(0, position.character)
+        const linePrefix = document.lineAt(position).text.substring(0, position.character)
         return completionItems.filter((item) => item.label.toString().startsWith(linePrefix))
       }
+      return []
     },
   }
 }

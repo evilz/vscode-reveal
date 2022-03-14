@@ -15,33 +15,33 @@ export default class Logger {
   constructor(private readonly appendLine: (string) => void, private logLevel = LogLevel.Error) {
   }
 
-  #printLog(level,message){
+  #printLog(level, message) {
     const msg = `[${level}] [${new Date().toLocaleTimeString()}] ${message}`
     this.appendLine(msg)
   }
 
 
   public error(message: string) {
-    if(this.LogLevel <= LogLevel.Error){
-      this.#printLog("ERROR",message)
+    if (this.LogLevel <= LogLevel.Error) {
+      this.#printLog("ERROR", message)
     }
   }
 
   public warning(message: string) {
-    if(this.LogLevel <= LogLevel.Warning){
-      this.#printLog("WARNING",message)
+    if (this.LogLevel <= LogLevel.Warning) {
+      this.#printLog("WARNING", message)
     }
   }
 
   public info(message: string) {
-    if(this.LogLevel <= LogLevel.Info){
-      this.#printLog("INFO",message)
+    if (this.LogLevel <= LogLevel.Info) {
+      this.#printLog("INFO", message)
     }
   }
 
   public debug(message: string) {
-    if(this.LogLevel <= LogLevel.Debug){
-      this.#printLog("DEBUG",message)
+    if (this.LogLevel <= LogLevel.Debug) {
+      this.#printLog("DEBUG", message)
     }
   }
 
@@ -50,7 +50,7 @@ export default class Logger {
     return this.logLevel
   }
   public set LogLevel(level: LogLevel) {
-    if(level === null || this.logLevel == level) return
+    if (level === null || this.logLevel === level) { return }
     this.logLevel = level
     this.info(`log level changed to ${level} `)
   }

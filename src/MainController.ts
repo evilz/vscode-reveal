@@ -48,7 +48,7 @@ export default class MainController {
   #webViewPane?: WebViewPane
 
   public currentContext?: RevealContext
-  private revealContexts: RevealContexts
+  readonly #revealContexts: RevealContexts
 
   get ServerUri() {
     return this.currentContext?.server.uri
@@ -56,7 +56,7 @@ export default class MainController {
 
   //#### connect vs code event
   public onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent) {
-    if(this.currentContext == undefined || !this.currentContext.is(event.textEditor.document)) return
+    if (this.currentContext === undefined || !this.currentContext.is(event.textEditor.document)) { return }
 
     const selection = event.selections.length > 0 ? event.selections[0] : event.textEditor.selection
     this.OnEditorEvent(event.textEditor, selection.active)
@@ -64,23 +64,22 @@ export default class MainController {
 
   private OnEditorEvent(editor: TextEditor | undefined, newPosition: Position) {
     if (editor && isMarkdownFile(editor.document)) {
-      this.currentContext = this.revealContexts.getOrAdd(editor)
+      this.currentContext = this.#revealContexts.getOrAdd(editor)
       this.updatePosition(newPosition)
       this.refresh()
     }
   }
 
   public onDidChangeActiveTextEditor(editor?: TextEditor) {
-    if (editor === undefined) return
+    if (editor === undefined) { return }
     this.logger.debug(`onDidChangeActiveTextEditor: ${editor.document.fileName}`)
     this.OnEditorEvent(editor, editor.selection.active)
-    
   }
 
   public onDidChangeTextDocument(e: TextDocumentChangeEvent) {
     if (this.currentContext?.is(e.document)) {
-    this.logger.debug(`onDidChangeTextDocument: ${e.document.fileName}`)
-    this.refresh()
+      this.logger.debug(`onDidChangeTextDocument: ${e.document.fileName}`)
+      this.refresh()
     }
   }
 
@@ -89,7 +88,7 @@ export default class MainController {
       // ADD debug level
       this.logger.debug(`onDidSaveTextDocument: ${document.fileName}`)
       this.refresh()
-      }
+    }
     // ADD debug level
     //this.logger.log(`onDidSaveTextDocument: ${e.fileName}`)
   }
@@ -97,10 +96,9 @@ export default class MainController {
   public onDidCloseTextDocument(document: TextDocument) {
     if (this.currentContext?.is(document)) {
       this.currentContext = undefined
-      this.revealContexts.remove(document.uri)
+      this.#revealContexts.remove(document.uri)
       this.logger.debug(`onDidCloseTextDocument ${document.uri}`)
     }
-    
   }
 
   public onDidChangeConfiguration(e: ConfigurationChangeEvent) {
@@ -114,17 +112,12 @@ export default class MainController {
     private readonly logger: Logger,
     private readonly extensionContext: ExtensionContext,
     private readonly configDesc: ConfigurationDescription[],
-    private config:Configuration,
+    private config: Configuration,
     currentEditor: TextEditor | undefined
   ) {
-   
-    
-
     this.#statusBarController = new StatusBarController()
-
     this.#TextDecorator = new TextDecorator(configDesc)
-
-    this.revealContexts = new RevealContexts(
+    this.#revealContexts = new RevealContexts(
       logger,
       () => this.config,
       extensionContext.extensionPath,
@@ -132,7 +125,7 @@ export default class MainController {
     )
 
     if (currentEditor && isMarkdownFile(currentEditor.document)) {
-      this.currentContext = this.revealContexts.getOrAdd(currentEditor)
+      this.currentContext = this.#revealContexts.getOrAdd(currentEditor)
     }
 
     this.#slidesExplorer = new SlideTreeProvider(() => (this.currentContext ? this.currentContext.slides : []))
@@ -153,8 +146,8 @@ export default class MainController {
     return this.#exportTimeout !== null
   }
 
-  public shouldOpenFilemanagerAfterHTMLExport(){
-    if(this.currentContext) {
+  public shouldOpenFilemanagerAfterHTMLExport() {
+    if (this.currentContext) {
       return this.currentContext.configuration.openFilemanagerAfterHTMLExport
     }
     return false
@@ -164,7 +157,7 @@ export default class MainController {
     if (this.#exportTimeout !== null) {
       clearTimeout(this.#exportTimeout)
     }
-    if (this.currentContext != undefined) await jetpack.removeAsync(this.currentContext.exportPath)
+    if (this.currentContext !== undefined) { await jetpack.removeAsync(this.currentContext.exportPath) }
 
     const promise = new Promise<string>((resolve) => {
       this.#exportTimeout = setTimeout(() => resolve(this.currentContext == undefined ? '' : this.currentContext.exportPath), 5000)
@@ -187,7 +180,7 @@ export default class MainController {
 
       this.logger.info(`REFRESH START!`)
       const { slides } = this.currentContext.refresh()
-      
+
       this.refreshWebViewPane()
       this.#slidesExplorer.update()
       this.#statusBarController.updateCount(slides.length)
