@@ -562,7 +562,7 @@
     "all": true
   },
   "dependencies": {
-    "@koa/cors": "^3.1.0",
+    "@koa/cors": "^3.2.0",
     "front-matter": "4.0.2",
     "fs-jetpack": "^4.3.1",
     "gray-matter": "^4.0.3",
