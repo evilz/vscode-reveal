@@ -37,14 +37,9 @@ export class RevealContext extends Disposable {
     this.server = new RevealServer(this)
     this._register(this.server)
 
-    slideParser.onDidParse((e) => {
-      this.logger.info(`SLIDERPARSER - frontmatter:${e.frontmatter.bodyBegin > 1} - slides:${e.slides.length}`)
-      //this.slides = e.slides
-      //this.configurationProvider.documentConfig = e.frontmatter.attributes
-    })
   }
 
-  private get docUri(){
+  private get docUri() {
     return this.editor.document.uri
   }
 

@@ -1,4 +1,3 @@
-// AVANT
 jest.mock("fs-jetpack");
 
 import { RevealServer } from '../../RevealServer'
@@ -9,15 +8,13 @@ import { RevealContext } from '../../RevealContext';
 import { TextEditor } from 'vscode';
 
 
-//jest.mock('./Logger');
-
 let inExport = false
-//const getRootDir = () => "getRoot"
-//const getSlides = () => []
+//--- const getRootDir = () => "getRoot"
+//--- const getSlides = () => []
 const getConfiguration= () => defaultConfiguration
 const extensionPath = "";
 const isInExport= () => inExport
-//const getExportPath=jest.fn();
+//  ---const getExportPath=jest.fn();
 
 const logger =  new Logger(s => s,LogLevel.Error )
 

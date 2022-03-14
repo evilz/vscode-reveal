@@ -1,9 +1,7 @@
-import { Configuration} from './Configuration';
+import { Configuration } from './Configuration';
 import { ISlide } from './ISlide';
-import frontmatter, { FrontMatterResult } from 'front-matter'
-//import {separator, verticalSeparator} from './utils'
 import { Disposable } from './dispose';
-import { EventEmitter } from 'vscode';
+import frontmatter, { FrontMatterResult } from 'front-matter'
 
 const trimFirstLastEmptyLine = (s) => {
   let content = s
@@ -37,71 +35,57 @@ const findTitle = (text: string) => {
   return lines[0].trim()
 }
 
-export class SlideParser extends Disposable{
+export class SlideParser extends Disposable {
 
   constructor() {
     super()
   }
 
-  
-  readonly #onDidParse = this._register(new EventEmitter<{frontmatter:FrontMatterResult<Configuration>, slides:ISlide[]}>());
-	/**
-	 * Fired when the server got an error.
-	 */
-	public readonly onDidParse = this.#onDidParse.event;
-
-  public parse(text: string, configuration:Configuration, partial = true) {
+  public parse(text: string, configuration: Configuration, partial = true) {
     const result = frontmatter<Configuration>(text)
-    const slides = this.#parseSlides(result.body,configuration.separator, configuration.verticalSeparator)
-    if(partial) { this.#onDidParse.fire({frontmatter:result, slides}) } // dont emit if called for partial document
-    return {frontmatter:result, slides}
+    const slides = this.#parseSlides(result.body, configuration.separator, configuration.verticalSeparator)
+    return { frontmatter: result, slides }
   }
 
-  
-  #parseSlide = (slideContent: string, index: number, verticalSeparator:string): ISlide => {
-  const verticalSlides = this.#getVerticalSlides(slideContent, verticalSeparator)
-  const currentSlide = verticalSlides[0]
-  return {
-    ...currentSlide,
-    index,
-    verticalChildren: verticalSlides.length > 1 ? verticalSlides.slice(1) : []
-  }
-}
 
-
-  #parseSlides = (slideContent: string, separator: string, verticalSeparator:string): ISlide[] => {
-  const regex = new RegExp(separator, 'gm')
-  const slides = slideContent.split(regex)
-  return slides.map((s, i) => {
-
-    return this.#parseSlide(trimFirstLastEmptyLine(s), i, verticalSeparator)
-
-  })
-}
-
-
-  #getVerticalSlides = (slideContent: string, verticalSeparator:string): ISlide[] => {
-  const regex = new RegExp(verticalSeparator, 'gm')
-  const slides = slideContent.split(regex)
-
-  return slides.map((s, i) => {
-    const content = trimFirstLastEmptyLine(s)
+  #parseSlide = (slideContent: string, index: number, verticalSeparator: string): ISlide => {
+    const verticalSlides = this.#getVerticalSlides(slideContent, verticalSeparator)
+    const currentSlide = verticalSlides[0]
     return {
-      title: findTitle(content),
-      index: i,
-      text: content,
-      verticalChildren: [],
-      attributes: findSlideAttributes(content)
-
+      ...currentSlide,
+      index,
+      verticalChildren: verticalSlides.length > 1 ? verticalSlides.slice(1) : []
     }
-  })
-}
-  
+  }
 
 
+  #parseSlides = (slideContent: string, separator: string, verticalSeparator: string): ISlide[] => {
+    const regex = new RegExp(separator, 'gm')
+    const slides = slideContent.split(regex)
+    return slides.map((s, i) => {
+
+      return this.#parseSlide(trimFirstLastEmptyLine(s), i, verticalSeparator)
+
+    })
+  }
 
 
+  #getVerticalSlides = (slideContent: string, verticalSeparator: string): ISlide[] => {
+    const regex = new RegExp(verticalSeparator, 'gm')
+    const slides = slideContent.split(regex)
 
+    return slides.map((s, i) => {
+      const content = trimFirstLastEmptyLine(s)
+      return {
+        title: findTitle(content),
+        index: i,
+        text: content,
+        verticalChildren: [],
+        attributes: findSlideAttributes(content)
+
+      }
+    })
+  }
 }
 
 //Singleton

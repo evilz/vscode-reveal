@@ -11,10 +11,7 @@
 //   //constructor(callOnDispose: () => any);
 //   dispose() { return {} };
 // }
-// export interface Event<T> {
 
-//   (listener: (e: T) => any, thisArgs?: any, disposables?: Disposable[]): Disposable;
-// }
 
 // export interface TextDocument { }
 // export interface Position { }
@@ -36,20 +33,7 @@
 // export interface DocumentFilter { readonly language?: string; readonly scheme?: string; readonly pattern?: GlobPattern; }
 // export type GlobPattern = string //| RelativePattern;
 
-// export class EventEmitter<T> {
 
-//   #listener: (e: T) => any = (x: T) => null
-
-//   public get event() {
-//     return (listener: (ee: T) => any, thisArgs?: any, disposables?: Disposable[]) => {
-//       this.#listener = listener
-//     };
-//   }
-//   // eslint-disable-next-line @typescript-eslint/no-empty-function
-//   fire(data: T) { this.#listener(data) };
-//   // eslint-disable-next-line @typescript-eslint/no-empty-function
-//   dispose() { };
-// }
 
 // export interface CompletionItemLabel {
 //   label: string;
@@ -218,4 +202,23 @@ export interface TextLine {
 
 export class Range {
   constructor(public start: Position, public end: Position) { }
+}
+
+export interface Event<T> {
+
+  (listener: (e: T) => any, thisArgs?: any, disposables?: Disposable[]): Disposable;
+}
+
+export class EventEmitter<T> {
+
+  #listener: (e: T) => any = (x: T) => null
+
+  public get event() {
+    return (listener: (ee: T) => any, thisArgs?: any, disposables?: Disposable[]) => {
+      this.#listener = listener
+    };
+  }
+  fire(data: T) { this.#listener(data) };
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  dispose() { };
 }
