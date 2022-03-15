@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 4.1.3
+
+- Cannot Switch Between Different Markdown File Freely [858](https://github.com/evilz/vscode-reveal/issues/858)
+- Custom themes applying inconsistently [852](https://github.com/evilz/vscode-reveal/issues/852)
+- Error loading images [851](https://github.com/evilz/vscode-reveal/issues/851)
+
 ## 4.1.2
 
 - Add Anything plugin [830](https://github.com/evilz/vscode-reveal/issues/830)
