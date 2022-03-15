@@ -9,19 +9,19 @@ import * as path from 'path'
 import markdownit from './Markdown-it'
 
 import { exportHTML, IExportOptions } from './ExportHTML'
-import {Disposable} from './dispose'
+import { Disposable } from './dispose'
 import { RevealContext } from './RevealContext'
 
 /** Http server to serve reveal presentation */
-export class RevealServer extends Disposable{
+export class RevealServer extends Disposable {
   public readonly app = new Koa()
   private server: http.Server | null = null
   private readonly host = 'localhost'
 
   public isInExport = false
-  
 
-  constructor(private readonly context:RevealContext) {
+
+  constructor(private readonly context: RevealContext) {
     super()
     this.configure()
   }
@@ -39,7 +39,7 @@ export class RevealServer extends Disposable{
     }
     return this.uri
   }
- 
+
   /** True if server is currently listening*/
   public get isListening() {
     return this.server ? this.server.listening : false
@@ -72,7 +72,7 @@ export class RevealServer extends Disposable{
   private configure() {
     const app = this.app
     const context = this.context
-   
+
     app.use(cors())
     // LOG REQUEST
     app.use(
@@ -80,7 +80,7 @@ export class RevealServer extends Disposable{
         context.logger.debug(str)
       })
     )
-    
+
     // EXPORT
     app.use(this.exportMiddleware(exportHTML, () => context.isInExport))
 
@@ -90,7 +90,7 @@ export class RevealServer extends Disposable{
       layout: 'template.4.1.3',
       viewExt: 'ejs',
       cache: false,
-      debug: true,
+      debug: false,
     })
 
     // MAIN FILE
@@ -114,7 +114,7 @@ export class RevealServer extends Disposable{
 
     // STATIC RELATIVE TO MD FILE
     if (context.dirname) {
-      app.use(serve({ rootDir:context.dirname, rootPath: '/' }))
+      app.use(serve({ rootDir: context.dirname, rootPath: '/' }))
     }
 
     // ERROR HANDLER
@@ -126,7 +126,7 @@ export class RevealServer extends Disposable{
 
   private readonly exportMiddleware = (exportfn: (ExportOptions) => Promise<void>, isInExport) => {
 
-    const {exportPath} = this.context
+    const { exportPath } = this.context
 
     return async (ctx: Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, { path: string }>, next) => {
       await next()
@@ -141,9 +141,9 @@ export class RevealServer extends Disposable{
     }
   }
 
-	dispose(): void {
+  dispose(): void {
     this.stop()
     this.server = null
-		super.dispose();
-	}
+    super.dispose();
+  }
 }

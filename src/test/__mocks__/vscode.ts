@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-interface */
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-namespace */
 
 export enum CompletionItemKind {
@@ -52,7 +55,7 @@ export class MarkdownString {
   isTrusted?: boolean; supportThemeIcons?: boolean; supportHtml?: boolean;
   constructor(value?: string, supportThemeIcons?: boolean) { }
   appendText(value: string) { return this; }
-  appendMarkdown(value: string) { return this; };
+  appendMarkdown(value: string) { return this; }
   appendCodeblock(value: string, language?: string) { return this; }
 }
 
@@ -62,13 +65,13 @@ export type CompletionItemProvider = any
 export class Disposable {
   //static from(...disposableLikes: { dispose: () => any }[]): Disposable;
   //constructor(callOnDispose: () => any);
-  dispose() { return {} };
+  dispose() { return {} }
 }
 
 
 export namespace languages {
   export function registerCompletionItemProvider(selector: DocumentSelector, provider: CompletionItemProvider, ...triggerCharacters: string[]): Disposable {
-    return new Disposable();
+    return new Disposable()
   }
 }
 
@@ -114,9 +117,9 @@ export class EventEmitter<T> {
       this.#listener = listener
     };
   }
-  fire(data: T) { this.#listener(data) };
+  fire(data: T) { this.#listener(data) }
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  dispose() { };
+  dispose() { }
 }
 
 export interface TreeItemLabel { label: string; highlights?: [number, number][]; }
@@ -224,3 +227,11 @@ export interface TreeDataProvider<T> {
 export type ProviderResult<T> = T | undefined | null | Thenable<T | undefined | null>;
 
 export interface CancellationToken { isCancellationRequested: boolean; onCancellationRequested: Event<any>; }
+
+export class Selection extends Range {
+  //anchor: Position;
+  //active: Position;
+  constructor(public anchor: Position, public active: Position) { super(anchor, active) }
+  //constructor(anchorLine: number, anchorCharacter: number, activeLine: number, activeCharacter: number) { super() }
+  //isReversed: boolean;
+}

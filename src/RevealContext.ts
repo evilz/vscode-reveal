@@ -16,7 +16,7 @@ interface ISlidePosition {
 }
 
 export class RevealContext extends Disposable {
-  public readonly server: RevealServer
+  readonly #server: RevealServer
 
   public slides: ISlide[] = []
   public frontmatter?: FrontMatterResult<Configuration>
@@ -34,8 +34,8 @@ export class RevealContext extends Disposable {
     this.editor = editor
     this.configuration = getConfiguration()
 
-    this.server = new RevealServer(this)
-    this._register(this.server)
+    this.#server = new RevealServer(this)
+    this._register(this.#server)
 
   }
 
@@ -51,9 +51,13 @@ export class RevealContext extends Disposable {
     return path.dirname(this.editor.document.fileName)
   }
 
-  get uri() {
+  get uriWithPosition() {
     const { horizontal, vertical } = this.position
-    return `${this.server.uri}#/${horizontal}/${vertical}/${Date.now()}`
+    return `${this.#server.uri}#/${horizontal}/${vertical}/${Date.now()}`
+  }
+
+  get baseUri() {
+    return this.#server.uri
   }
 
   public get exportPath(): string {
@@ -100,7 +104,11 @@ export class RevealContext extends Disposable {
   }
 
   startServer() {
-    return this.server.start()
+    return this.#server.start()
+  }
+
+  stopServer() {
+    this.#server.stop()
   }
 
   private readonly _onDidDispose = this._register(new EventEmitter<void>())

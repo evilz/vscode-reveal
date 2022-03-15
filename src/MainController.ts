@@ -50,8 +50,8 @@ export default class MainController {
   public currentContext?: RevealContext
   readonly #revealContexts: RevealContexts
 
-  get ServerUri() {
-    return this.currentContext?.server.uri
+  get baseUri() {
+    return this.currentContext?.baseUri
   }
 
   //#### connect vs code event
@@ -223,7 +223,7 @@ export default class MainController {
     if (this.#webViewPane && this.currentContext != undefined) {
       this.startServer()
       this.#webViewPane.title = this.currentContext.configuration.title
-      this.#webViewPane.update(this.currentContext.uri)
+      this.#webViewPane.update(this.currentContext.uriWithPosition)
     }
   }
 
@@ -234,6 +234,6 @@ export default class MainController {
 
   /** Stop server from listening */
   public stopServer() {
-    this.currentContext?.server.stop()
+    this.currentContext?.stopServer()
   }
 }

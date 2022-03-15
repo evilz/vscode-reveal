@@ -2,13 +2,14 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: [ "**/*.jest.ts" ],
+  testMatch: ['**/*.jest.ts'],
   verbose: true,
-  collectCoverageFrom : ["src/**/*.ts", "!src/test/**/*.ts"],
-  testResultsProcessor: "jest-sonar-reporter",
-  coverageDirectory: "./coverage",
-};
-
+  collectCoverageFrom: ['src/**/*.ts', '!src/test/**/*.ts'],
+  testResultsProcessor: 'jest-sonar-reporter',
+  coverageDirectory: './coverage',
+  //setupTestFrameworkScriptFile: '@alex_neo/jest-expect-message',
+  setupFilesAfterEnv: ['@alex_neo/jest-expect-message'],
+}
 
 // "jest": {
 //   "verbose": true,
