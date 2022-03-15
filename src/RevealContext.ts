@@ -1,7 +1,7 @@
 import { FrontMatterResult } from 'front-matter'
 import path from 'path'
 import { isDeepStrictEqual } from 'util'
-import { EventEmitter, Position, Range, Selection, TextDocument, TextEditor, Uri } from 'vscode'
+import { EventEmitter, Position, Range, Selection, TextDocument, TextEditor, TextEditorRevealType, Uri } from 'vscode'
 import { Configuration, mergeConfig } from './Configuration'
 import { Disposable } from './dispose'
 import { ISlide } from './ISlide'
@@ -99,7 +99,7 @@ export class RevealContext extends Disposable {
       countLinesToSlide(this.slides, topindex, verticalIndex) + (this.frontmatter?.frontmatter ? this.frontmatter.bodyBegin : 0)
 
     const position = new Position(linesCount, 0)
-    this.editor.selections = [new Selection(position, position)]
+    this.editor.selection = new Selection(position, position) //selections = [new Selection(position, position)]
     this.editor.revealRange(new Range(position, position.translate(20)))
   }
 
