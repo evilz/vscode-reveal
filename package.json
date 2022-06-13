@@ -604,7 +604,7 @@
     "@types/koa-static": "^4.0.2",
     "@types/koa-static-server": "^1.5.0",
     "@types/markdown-it": "12.2.3",
-    "@types/node": "^17.0.21",
+    "@types/node": "^17.0.42",
     "@types/plantuml-encoder": "^1.4.0",
     "@types/request": "^2.48.8",
     "@types/vscode": "^1.65.0",
