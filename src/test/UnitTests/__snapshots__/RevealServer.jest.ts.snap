@@ -103,6 +103,7 @@ exports[`Request root 1`] = `
 	<script src=\\"libs/reveal.js/4.1.3/plugin/chart/chart.min.js\\"></script>
 	<script src=\\"libs/reveal.js/4.1.3/plugin/chart/plugin.js\\"></script>
 
+<script src=\\"libs/reveal.js/4.1.3/plugin/verticator/verticator.js\\"></script>
   <script>
 
 		const printPlugins = [
@@ -128,6 +129,7 @@ exports[`Request root 1`] = `
 				// poll
 				// question
 				// seminar
+				Verticator 
 				 ]
 
 
