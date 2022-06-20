@@ -29,5 +29,30 @@
     "tslint.autoFixOnSave": true,
     "sonarlint.connectedMode.project": {
         "projectKey": "evilz_vscode-reveal"
-      }
+      },
+      "psi-header.license-reference": {"uri": "https://github.com/evilz/vscode-reveal/blob/master/license.txt"},
+   
+      "psi-header.config": {
+          "forceToTop": true,
+          "blankLinesAfter": 1,
+          "spacesBetweenYears": false,
+          "license": "MIT",
+          "creationDateZero": "asIs",
+      },
+      "psi-header.templates":  [
+          {
+              "language": "*",
+              "template": [
+                  "File: <<filerelativepath>>",
+                  "Project: <<projectname>>",
+                  "Created Date: <<filecreated('dddd MMMM Do YYYY')>>",
+                  "Author: <<author>>",
+                  "-----",
+                  "Last Modified: <<dateformat('dddd, Do MMMM YYYY h:mm:ss a')>>",
+                  "Modified By: <<author>>",
+                  "-----",
+                  "<<licensename>> <<licenseurl>>"
+              ]
+          },
+      ],
 }

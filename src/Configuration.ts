@@ -1,3 +1,15 @@
+/*
+ * File: \src\Configuration.ts
+ * Project: vscode-reveal
+ * Created Date: Sunday March 13th 2022
+ * Author: evilz
+ * -----
+ * Last Modified: Wednesday, 16th March 2022 2:57:57 pm
+ * Modified By: evilz
+ * -----
+ * MIT License http://www.opensource.org/licenses/MIT
+ */
+
 import { LogLevel } from './Logger'
 import { workspace } from 'vscode'
 
@@ -5,6 +17,7 @@ export type Configuration = IRevealOptions & IExtensionOptions
 
 type themes = 'black' | 'white' | 'league' | 'beige' | 'sky' | 'night' | 'serif' | 'simple' | 'solarized'
 type transitions = 'default' | 'none' | 'fade' | 'slide' | 'convex' | 'concave' | 'zoom'
+
 
 export interface IRevealOptions {
   controlsTutorial: boolean
@@ -79,6 +92,7 @@ export interface IExtensionOptions {
 }
 
 
+/** The default configuration for the Reveal.js presentation. */
 export const defaultConfiguration: Configuration = {
   title: 'Reveal JS presentation',
   // tslint:disable-next-line:object-literal-sort-keys
