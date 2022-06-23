@@ -17,8 +17,8 @@ exports[`Request root 1`] = `
 
 	<meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1.0\\">
 
-	<link rel=\\"stylesheet\\" href=\\"libs/reveal.js/4.1.3/reset.css\\">
-	<link rel=\\"stylesheet\\" href=\\"libs/reveal.js/4.1.3/reveal.css\\">
+	<link rel=\\"stylesheet\\" href=\\"libs/reveal.js/4.3.1/reset.css\\">
+	<link rel=\\"stylesheet\\" href=\\"libs/reveal.js/4.3.1/reveal.css\\">
 
 	
 	
@@ -30,27 +30,33 @@ exports[`Request root 1`] = `
 	
 	
 		
-	<link rel=\\"stylesheet\\" href=\\"libs/reveal.js/4.1.3/plugin/chalkboard/style.css\\">
+	<link rel=\\"stylesheet\\" href=\\"libs/reveal.js/4.3.1/plugin/chalkboard/style.css\\">
 	
 	
 	
-		<link rel=\\"stylesheet\\" href=\\"libs/reveal.js/4.1.3/plugin/customcontrols/style.css\\">
+		<link rel=\\"stylesheet\\" href=\\"libs/reveal.js/4.3.1/plugin/customcontrols/style.css\\">
 	
-	<link rel=\\"stylesheet\\" href=\\"libs/styles/tasklist.css\\">
+	
 
 
 
   <!-- Revealjs Theme -->
   
-  	<link rel=\\"stylesheet\\" href=\\"libs/reveal.js/4.1.3/theme/black.css\\" id=\\"theme\\">
+  	<link rel=\\"stylesheet\\" href=\\"libs/reveal.js/4.3.1/theme/black.css\\" id=\\"theme\\">
   
   
+
+  <link rel=\\"stylesheet\\" href=\\"libs/styles/tasklist.css\\">
+	<link rel=\\"stylesheet\\" href=\\"libs/styles/iota.css\\">
+	<link rel=\\"stylesheet\\" href=\\"libs/styles/layout.css\\">
 
 
   <!-- Revealjs Theme -->
   
 
- 
+   <!-- css list -->
+	
+
 </head>
 
 <body>

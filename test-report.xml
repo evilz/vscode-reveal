@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testExecutions version="1">
-  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\NotTestedYet.jest.ts">
-    <testCase name="NOTHING HERE" duration="7"/>
+  <file path="C:\Users\evilz\Documents\GITHUB\vscode-reveal\src\test\UnitTests\CompletionItemProvider.jest.ts">
+    <testCase name="Should createCompletionItems from configDesc" duration="156"/>
   </file>
-  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\logger.jest.ts">
-    <testCase name="Logger should Not log when level is debug" duration="24"/>
-    <testCase name="Logger should log error when level is error" duration="4"/>
-    <testCase name="Logger should NOT log when level is none" duration="4"/>
-    <testCase name="Logger should log error when level is warning" duration="3"/>
-    <testCase name="Logger should log when level is info" duration="4"/>
+  <file path="C:\Users\evilz\Documents\GITHUB\vscode-reveal\src\test\UnitTests\slideparser.jest.ts">
+    <testCase name="Parse Slide content" duration="11"/>
+    <testCase name="Check slide 1" duration="8"/>
+    <testCase name="Check slide 2" duration="6"/>
+    <testCase name="Check slide 3.0" duration="8"/>
+    <testCase name="Should count horizontal slides" duration="6"/>
+    <testCase name="Should count vertical slides" duration="13"/>
+    <testCase name="Slides should have correct number of lines" duration="43"/>
+    <testCase name="Count line to slide 1" duration="6"/>
+    <testCase name="Count line to slide 2" duration="7"/>
+    <testCase name="Count line to slide 3" duration="8"/>
+    <testCase name="Count line to slide 3.1" duration="18"/>
+    <testCase name="Count line to slide 3.2" duration="16"/>
+    <testCase name="Extract slide attributes" duration="39"/>
   </file>
-  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\WebviewPane.jest.ts">
+  <file path="C:\Users\evilz\Documents\GITHUB\vscode-reveal\src\test\UnitTests\logger.jest.ts">
+    <testCase name="Logger should Not log when level is debug" duration="68"/>
+    <testCase name="Logger should log error when level is error" duration="8"/>
+    <testCase name="Logger should NOT log when level is none" duration="14"/>
+    <testCase name="Logger should log error when level is warning" duration="14"/>
+    <testCase name="Logger should log when level is info" duration="8"/>
+  </file>
+  <file path="C:\Users\evilz\Documents\GITHUB\vscode-reveal\src\test\UnitTests\WebviewPane.jest.ts">
     <testCase name="Set title of webviewpane" duration="8"/>
-    <testCase name="Dispose should trigger onDidDispose" duration="5"/>
-    <testCase name="Update should trigger onDidUpdate" duration="3"/>
+    <testCase name="Dispose should trigger onDidDispose" duration="14"/>
+    <testCase name="Update should trigger onDidUpdate" duration="7"/>
   </file>
-  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\CompletionItemProvider.jest.ts">
-    <testCase name="Should createCompletionItems from configDesc" duration="23"/>
+  <file path="C:\Users\evilz\Documents\GITHUB\vscode-reveal\src\test\UnitTests\NotTestedYet.jest.ts">
+    <testCase name="NOTHING HERE" duration="11"/>
   </file>
-  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\findTitle.jest.ts">
-    <testCase name="Should retrieve title from content" duration="5"/>
+  <file path="C:\Users\evilz\Documents\GITHUB\vscode-reveal\src\test\UnitTests\RevealServer.jest.ts">
+    <testCase name="Default state" duration="27"/>
+    <testCase name="Start should return uri and trigger onDidStart" duration="68"/>
+    <testCase name="Stop should trigger onDidStop only when server is listening" duration="7"/>
+    <testCase name="Request root" duration="118"/>
+    <testCase name="Request with export" duration="23"/>
   </file>
-  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\slideparser.jest.ts">
-    <testCase name="Parse Slide content" duration="5"/>
-    <testCase name="Check slide 1" duration="3"/>
-    <testCase name="Check slide 2" duration="2"/>
-    <testCase name="Check slide 3.0" duration="6"/>
-    <testCase name="Should count horizontal slides" duration="3"/>
-    <testCase name="Should count vertical slides" duration="6"/>
-    <testCase name="Slides should have correct number of lines" duration="13"/>
-    <testCase name="Count line to slide 1" duration="2"/>
-    <testCase name="Count line to slide 2" duration="2"/>
-    <testCase name="Count line to slide 3" duration="2"/>
-    <testCase name="Count line to slide 3.1" duration="3"/>
-    <testCase name="Count line to slide 3.2" duration="2"/>
-    <testCase name="Extract slide attributes" duration="2"/>
+  <file path="C:\Users\evilz\Documents\GITHUB\vscode-reveal\src\test\UnitTests\findTitle.jest.ts">
+    <testCase name="Should retrieve title from content" duration="12"/>
   </file>
-  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\RevealServer.jest.ts">
-    <testCase name="Default state" duration="6"/>
-    <testCase name="Start should return uri and trigger onDidStart" duration="19"/>
-    <testCase name="Stop should trigger onDidStop only when server is listening" duration="2"/>
-    <testCase name="Request root" duration="28"/>
-    <testCase name="Request with export" duration="10"/>
-  </file>
-  <file path="E:\PROJECTS\GITHUB\vscode-reveal\src\test\UnitTests\MainController.jest.ts">
-    <testCase name="CurrentContext should be undefined when no editor is pass" duration="15"/>
-    <testCase name="CurrentContext should be undefined when editor is not markdown" duration="12"/>
-    <testCase name="CurrentContext should be create when editor is pass and that is markdown" duration="76"/>
+  <file path="C:\Users\evilz\Documents\GITHUB\vscode-reveal\src\test\UnitTests\MainController.jest.ts">
+    <testCase name="CurrentContext should be undefined when no editor is pass" duration="21"/>
+    <testCase name="CurrentContext should be undefined when editor is not markdown" duration="24"/>
+    <testCase name="CurrentContext should be create when editor is pass and that is markdown" duration="147"/>
   </file>
 </testExecutions>
