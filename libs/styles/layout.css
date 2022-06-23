@@ -1,0 +1,58 @@
+
+  
+  .reveal .slides {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  
+  
+  /*********************************************
+   * Mostly Image
+   *********************************************/
+  
+  .reveal-viewport.layout-bg50 .slides,
+  .reveal-viewport.layout-bg30 .slides
+ {
+    width: 100% !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+  }
+  
+
+  
+  .reveal-viewport.layout-bg50 .slide-background-content,
+  .reveal-viewport.layout-bg1_3 .slide-background-content
+   {
+    animation: fadeInLeft; /* referring directly to the animation's @keyframe declaration */
+    animation-duration: 0.5s; /* don't forget to set a duration! */
+  }
+
+  .reveal-viewport.layout-bg50 .slide-background-content { width: 50% !important; }
+  .reveal-viewport.layout-bg33 .slide-background-content { width: 33% !important; }
+  
+  .reveal-viewport.layout-bg33 section,
+  .reveal-viewport.layout-bg50 section {
+    animation: fadeInRight; /* referring directly to the animation's @keyframe declaration */
+    animation-duration: 0.5s; /* don't forget to set a duration! */
+    align-self: flex-end !important;
+  }
+
+  .reveal-viewport.layout-bg50 section {  width: 50% !important;  }
+  .reveal-viewport.layout-bg33 section {  width: 67% !important;  }
+
+  .reveal-viewport.layout-bg50 section[data-state="layout-bg50"]{    width: 100% !important;  }
+  .reveal-viewport.layout-bg33 section[data-state="layout-bg33"]{    width: 100% !important;  }
+  
+
+  .reveal-viewport.layout-bg33r .slide-background-content {     width: 33% !important; right: 0; }
+  
+  .reveal-viewport.layout-bg33r section {  width: 67% !important; left:0;  }
+
+  .reveal-viewport.layout-bg50r .slide-background-content {     width: 50% !important; right: 0; }
+  .reveal-viewport.layout-bg50r section {  width: 50% !important; left:0;  }

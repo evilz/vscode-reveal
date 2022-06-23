@@ -87,7 +87,7 @@ export class RevealServer extends Disposable {
     // EJS VIEW engine
     render(app, {
       root: path.resolve(context.extensionPath, 'views'),
-      layout: 'template.4.1.3',
+      layout: 'template.4.3.1',
       viewExt: 'ejs',
       cache: false,
       debug: false,

@@ -14,8 +14,8 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link rel="stylesheet" href="libs/reveal.js/4.1.3/reset.css">
-	<link rel="stylesheet" href="libs/reveal.js/4.1.3/reveal.css">
+	<link rel="stylesheet" href="libs/reveal.js/4.3.1/reset.css">
+	<link rel="stylesheet" href="libs/reveal.js/4.3.1/reveal.css">
 
 	
 	
@@ -29,11 +29,11 @@
 	<link rel="stylesheet" href="libs/highlight.js/11.3.1/styles/monokai.min.css">
 	<%}%>
 		
-	<link rel="stylesheet" href="libs/reveal.js/4.1.3/plugin/chalkboard/style.css">
+	<link rel="stylesheet" href="libs/reveal.js/4.3.1/plugin/chalkboard/style.css">
 	
 	
 	<% if (enableMenu ) { %>
-		<link rel="stylesheet" href="libs/reveal.js/4.1.3/plugin/customcontrols/style.css">
+		<link rel="stylesheet" href="libs/reveal.js/4.3.1/plugin/customcontrols/style.css">
 	<%}%>
 	
 
@@ -41,10 +41,10 @@
 
   <!-- Revealjs Theme -->
   <% if (theme) { %>
-  	<link rel="stylesheet" href="libs/reveal.js/4.1.3/theme/<%=theme%>.css" id="theme">
+  	<link rel="stylesheet" href="libs/reveal.js/4.3.1/theme/<%=theme%>.css" id="theme">
   <%}%>
   <% if (!theme) { %>
-  	<link rel="stylesheet" href="libs/reveal.js/4.1.3/theme/black.css" id="theme">
+  	<link rel="stylesheet" href="libs/reveal.js/4.3.1/theme/black.css" id="theme">
   <%}%>
 
   <link rel="stylesheet" href="libs/styles/tasklist.css">
@@ -57,7 +57,11 @@
   	<link rel="stylesheet" href="<%=customTheme%>.css">
   <%}%>
 
- 
+   <!-- css list -->
+	<% for(var i=0; i < css.length; i++) { %>
+	<link rel="stylesheet" href="<%=css[i]%>">
+   <%}%>
+
 </head>
 
 <body>

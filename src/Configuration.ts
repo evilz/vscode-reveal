@@ -82,6 +82,8 @@ export interface IRevealOptions {
   enableTitleFooter: boolean
   enableZoom: boolean
   enableSearch: boolean
+
+  css: string[]
 }
 export interface IExtensionOptions {
   slideExplorerEnabled: boolean
@@ -164,6 +166,8 @@ export const defaultConfiguration: Configuration = {
   enableTitleFooter: true,
   enableZoom: true,
   enableSearch: true,
+
+  css: []
 }
 
 

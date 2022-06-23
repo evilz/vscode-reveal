@@ -1,0 +1,113 @@
+.grid {
+  display: grid !important;
+  grid-gap: var(--gap-xs, 2rem);
+  grid-auto-flow: var(--flow-xs, row);
+  grid-auto-columns: var(--auto-cols-xs, auto);
+  grid-auto-rows: var(--auto-rows-xs, auto);
+  grid-template-columns: var(--template-cols-xs, repeat(var(--cols-xs, 1), var(--cols-size-xs, 1fr)));
+  grid-template-rows: var(--template-rows-xs, none);
+  justify-content: var(--jc-xs, space-evenly);
+  justify-items: var(--ji-xs, stretch);
+  align-content: var(--ac-xs, center);
+  align-items: var(--ai-xs, stretch);
+}
+@media (min-width: 640px) {
+  .grid {
+    grid-gap: var(--gap-sm, 2rem);
+    grid-auto-flow: var(--flow-sm, row);
+    grid-auto-columns: var(--auto-cols-sm, auto);
+    grid-auto-rows: var(--auto-rows-sm, auto);
+    grid-template-columns: var(--template-cols-sm, repeat(var(--cols-sm, 2), var(--cols-size-sm, 1fr)));
+    grid-template-rows: var(--template-rows-sm, none);
+    justify-content: var(--jc-sm, space-evenly);
+    justify-items: var(--ji-sm, stretch);
+    align-content: var(--ac-sm, center);
+    align-items: var(--ai-sm, stretch);
+  }
+}
+@media (min-width: 860px) {
+  .grid {
+    grid-gap: var(--gap-md, 2rem);
+    grid-auto-flow: var(--flow-md, row);
+    grid-auto-columns: var(--auto-cols-md, auto);
+    grid-auto-rows: var(--auto-rows-md, auto);
+    grid-template-columns: var(--template-cols-md, repeat(var(--cols-md, 2), var(--cols-size-md, 1fr)));
+    grid-template-rows: var(--template-rows-md, none);
+    justify-content: var(--jc-md, space-evenly);
+    justify-items: var(--ji-md, stretch);
+    align-content: var(--ac-md, center);
+    align-items: var(--ai-md, stretch);
+  }
+}
+@media (min-width: 1080px) {
+  .grid {
+    grid-gap: var(--gap-lg, 2rem);
+    grid-auto-flow: var(--flow-lg, row);
+    grid-auto-columns: var(--auto-cols-lg, auto);
+    grid-auto-rows: var(--auto-rows-lg, auto);
+    grid-template-columns: var(--template-cols-lg, repeat(var(--cols-lg, 4), var(--cols-size-lg, 1fr)));
+    grid-template-rows: var(--template-rows-lg, none);
+    justify-content: var(--jc-lg, space-evenly);
+    justify-items: var(--ji-lg, stretch);
+    align-content: var(--ac-lg, center);
+    align-items: var(--ai-lg, stretch);
+  }
+}
+@media (min-width: 1300px) {
+  .grid {
+    grid-gap: var(--gap-xl, 2rem);
+    grid-auto-flow: var(--flow-xl, row);
+    grid-auto-columns: var(--auto-cols-xl, auto);
+    grid-auto-rows: var(--auto-rows-xl, auto);
+    grid-template-columns: var(--template-cols-xl, repeat(var(--cols-xl, 4), var(--cols-size-xl, 1fr)));
+    grid-template-rows: var(--template-rows-xl, none);
+    justify-content: var(--jc-xl, space-evenly);
+    justify-items: var(--ji-xl, stretch);
+    align-content: var(--ac-xl, center);
+    align-items: var(--ai-xl, stretch);
+  }
+}
+.grid.is-inline {
+  display: inline-grid;
+}
+.grid > * {
+  min-width: 0px;
+  max-width: 100%;
+  min-height: 0px;
+  grid-column: var(--col-xs, auto);
+  grid-row: var(--row-xs, auto);
+  justify-self: var(--js-xs, auto);
+  align-self: var(--as-xs, auto);
+}
+@media (min-width: 640px) {
+  .grid > * {
+    grid-column: var(--col-sm, auto);
+    grid-row: var(--row-sm, auto);
+    justify-self: var(--js-sm, auto);
+    align-self: var(--as-sm, auto);
+  }
+}
+@media (min-width: 860px) {
+  .grid > * {
+    grid-column: var(--col-md, auto);
+    grid-row: var(--row-md, auto);
+    justify-self: var(--js-md, auto);
+    align-self: var(--as-md, auto);
+  }
+}
+@media (min-width: 1080px) {
+  .grid > * {
+    grid-column: var(--col-lg, auto);
+    grid-row: var(--row-lg, auto);
+    justify-self: var(--js-lg, auto);
+    align-self: var(--as-lg, auto);
+  }
+}
+@media (min-width: 1300px) {
+  .grid > * {
+    grid-column: var(--col-xl, auto);
+    grid-row: var(--row-xl, auto);
+    justify-self: var(--js-xl, auto);
+    align-self: var(--as-xl, auto);
+  }
+}

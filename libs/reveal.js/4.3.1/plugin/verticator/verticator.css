@@ -1,0 +1,89 @@
+:root {
+    --verticator-scale: 1; }
+  
+  ul.verticator {
+    --bullet-maincolor: black;
+    --bullet-oppositecolor: white;
+    --verticator-scale: 1;
+    list-style: none;
+    right: 3vmin;
+    left: auto;
+    margin: 0;
+    top: 50%;
+    -webkit-transform: translateY(-50%) translateZ(0);
+            transform: translateY(-50%) translateZ(0);
+    display: block;
+    opacity: 0;
+    z-index: 10;
+    position: absolute;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    padding: 12px;
+    padding: calc(12px * var(--verticator-scale));
+    -webkit-transition: background-color 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), -webkit-transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+    transition: background-color 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), -webkit-transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+    -o-transition: background-color 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+    transition: background-color 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+    transition: background-color 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985), transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), -webkit-transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
+    ul.verticator.visible {
+      opacity: 0.6; }
+      ul.verticator.visible:hover {
+        opacity: 1; }
+    ul.verticator.no-click {
+      pointer-events: none; }
+    ul.verticator li {
+      position: relative;
+      color: inherit; }
+      ul.verticator li a {
+        color: inherit;
+        width: calc(18px * var(--verticator-scale));
+        height: calc(18px * var(--verticator-scale));
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+            -ms-flex-align: center;
+                align-items: center;
+        -webkit-box-pack: center;
+            -ms-flex-pack: center;
+                justify-content: center;
+        text-decoration: none; }
+        ul.verticator li a:after {
+          will-change: auto;
+          color: inherit;
+          background-color: currentColor;
+          background-color: var(--bullet-maincolor);
+          display: block;
+          content: '';
+          width: calc(12px * var(--verticator-scale));
+          height: calc(12px * var(--verticator-scale));
+          opacity: 0.6;
+          -webkit-transform: translateZ(0) scale(0.4);
+                  transform: translateZ(0) scale(0.4);
+          border-radius: 100%;
+          -webkit-transition: opacity 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), -webkit-transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+          transition: opacity 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), -webkit-transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+          -o-transition: transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+          transition: transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+          transition: transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), opacity 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985), -webkit-transform 200ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
+        ul.verticator li a:hover {
+          color: inherit; }
+          ul.verticator li a:hover:after {
+            opacity: 1;
+            -webkit-transform: translateZ(0) scale(0.75);
+                    transform: translateZ(0) scale(0.75); }
+      ul.verticator li.active a {
+        cursor: default; }
+        ul.verticator li.active a:after {
+          -webkit-transform: translateZ(0) scale(1);
+                  transform: translateZ(0) scale(1);
+          opacity: 1; }
+  
+  .print-pdf .verticator,
+  .overview .verticator {
+    display: none; }
