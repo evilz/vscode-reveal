@@ -6,11 +6,32 @@
         ],
         "description": "Add slide attributs"
     },
+    "Slide background color": {
+        "prefix": "sld-bg-color",
+        "body": [
+            "<!-- .slide: data-background-color=\"${1:aquamarine}\" -->"
+        ],
+        "description": "Add slide background color"
+    },
+    "Slide background imgage": {
+        "prefix": "sld-bg-image",
+        "body": [
+            "<!-- .slide: data-background-image=\"${1:https://via.placeholder.com/1980x1080?text=background}\" -->"
+        ],
+        "description": "Add slide background image"
+    },
     "Fullscreen slide": {
         "prefix": "sld-fullcreen",
         "body": [
             "<!-- .slide: data-fullscreen -->"
         ],
         "description": "Add data-fullscreen"
+    },
+    "Fragment list item": {
+        "prefix": "-fr",
+        "body": [
+            "- ${1:text} {.fragment}"
+        ],
+        "description": "Add fragment list item"
     }
 }
