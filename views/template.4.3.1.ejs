@@ -212,8 +212,8 @@
 			parallaxBackgroundVertical: <%= parallaxBackgroundVertical %>,
 			
 			//Presentation Size
-			width: <%= width %>,
-			height: <%= height %>,
+			width: <% if (isNaN(width)) { %> '<%= width %>' <% } else{ %>  <%= width %> <% } %>,
+			height: <% if (isNaN(height)) { %> '<%= height %>' <% } else{ %>  <%= height %> <% } %>,
 			margin: <%= margin %>,
 			minScale: <%= minScale %>,
 			maxScale: <%= maxScale %>,

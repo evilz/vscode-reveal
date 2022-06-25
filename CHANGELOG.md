@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 4.3.1
+
+- Update Revealjs to 4.3.1
+- Add plugin Verticor
+- Dependencies update
+- Add new Config for list of custom CSS
+- fix config for Width and height for string like 100%
+- Integrated Grid css (https://korywakefield.com/iota/)
+- Add new snippets for Slide and Fragments
+
 ## 4.1.3
 
 - Cannot Switch Between Different Markdown File Freely [858](https://github.com/evilz/vscode-reveal/issues/858)

@@ -2,12 +2,12 @@
   "name": "vscode-reveal",
   "displayName": "vscode-reveal",
   "description": "Show markdown as revealJs presentation",
-  "version": "4.1.3",
+  "version": "4.3.1",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
   "icon": "logo.png",
-  "preview": false,
+  "preview": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/evilz/vscode-reveal"

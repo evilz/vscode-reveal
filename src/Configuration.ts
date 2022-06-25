@@ -60,8 +60,8 @@ export interface IRevealOptions {
   backgroundTransition: transitions
   viewDistance: number
 
-  width: number,
-  height: number,
+  width: number | string,
+  height: number | string,
   margin: number,
   minScale: number,
   maxScale: number,
