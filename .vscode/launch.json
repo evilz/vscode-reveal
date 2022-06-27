@@ -12,6 +12,7 @@
             "args": [
                 "--extensionDevelopmentPath=${workspaceFolder}"
             ],
+            "env": { "DEBUG": "express:*" },
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
             ],
