@@ -37,7 +37,6 @@ import WebViewPane from './WebViewPane'
 import TextDecorator from './TextDecorator'
 import { RevealContext, RevealContexts } from './RevealContext'
 import { configPefix, Configuration, ConfigurationDescription, getConfig } from './Configuration'
-import { SHOW_REVEALJS_IN_BROWSER } from './commands/showRevealJSInBrowser'
 
 const isMarkdownFile = (d: TextDocument) => d.languageId === 'markdown'
 

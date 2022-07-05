@@ -1,6 +1,5 @@
 import * as http from 'http'
 import express from 'express'
-import { config, engine } from 'express-edge'
 import cors from 'cors'
 import morgan from 'morgan'
 import * as path from 'path'
@@ -8,7 +7,6 @@ import markdownit from './Markdown-it'
 import { exportHTML, IExportOptions } from './ExportHTML'
 import { Disposable } from './dispose'
 import { RevealContext } from './RevealContext'
-import { stringify } from 'querystring'
 
 /** Http server to serve reveal presentation */
 export class RevealServer extends Disposable {
@@ -139,6 +137,7 @@ export class RevealServer extends Disposable {
         const oldWrite = res.write
         const oldEnd = res.end;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const chunks: any[] = [];
 
         res.write = (chunk, ...args) => {
