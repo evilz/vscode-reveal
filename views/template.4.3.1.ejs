@@ -17,8 +17,8 @@
 	<link rel="stylesheet" href="libs/reveal.js/4.3.1/reset.css">
 	<link rel="stylesheet" href="libs/reveal.js/4.3.1/reveal.css">
 
-	
-	
+
+
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 	  <!-- highlight Theme -->
@@ -28,14 +28,14 @@
 	<% if (highlightTheme == null) { %>
 	<link rel="stylesheet" href="libs/highlight.js/11.3.1/styles/monokai.min.css">
 	<%}%>
-		
+
 	<link rel="stylesheet" href="libs/reveal.js/4.3.1/plugin/chalkboard/style.css">
-	
-	
+
+
 	<% if (enableMenu ) { %>
 		<link rel="stylesheet" href="libs/reveal.js/4.3.1/plugin/customcontrols/style.css">
 	<%}%>
-	
+
 
 
 
@@ -84,7 +84,7 @@
 
   </div>
 
-  	
+
 	<script src="libs/reveal.js/4.1.3/reveal.js"></script>
 	<% if(enableZoom) {%><script src="libs/reveal.js/4.1.3/plugin/zoom/zoom.js"></script><%}%>
 	<script src="libs/reveal.js/4.1.3/plugin/notes/notes.js"></script>
@@ -95,16 +95,16 @@
 	<script src="libs/reveal.js/4.1.3/plugin/math/math.js"></script>
 
 	<script src="libs/reveal.js/4.1.3/plugin/fullscreen/plugin.js"></script>
-  
+
   	<script src="libs/reveal.js/4.1.3/plugin/animate/plugin.js"></script>
   	<script src="libs/reveal.js/4.1.3/plugin/animate/svg.min.js"></script>
-  
+
   	<script src="libs/reveal.js/4.1.3/plugin/anything/plugin.js"></script>
 	  <script src="libs/reveal.js/4.1.3/plugin/anything/Chart.min.js"></script>
-	<script src="libs/reveal.js/4.1.3/plugin/anything/d3/d3.v3.min.js"></script>				
-	<script src="libs/reveal.js/4.1.3/plugin/anything/d3.patch.js"></script>			
-	<script src="libs/reveal.js/4.1.3/plugin/anything/d3/queue.v1.min.js"></script>		
-	<script src="libs/reveal.js/4.1.3/plugin/anything/d3/topojson.v1.min.js"></script>		
+	<script src="libs/reveal.js/4.1.3/plugin/anything/d3/d3.v3.min.js"></script>
+	<script src="libs/reveal.js/4.1.3/plugin/anything/d3.patch.js"></script>
+	<script src="libs/reveal.js/4.1.3/plugin/anything/d3/queue.v1.min.js"></script>
+	<script src="libs/reveal.js/4.1.3/plugin/anything/d3/topojson.v1.min.js"></script>
 	<script src="libs/reveal.js/4.1.3/plugin/anything/function-plot.js"></script>
 
  <!--	<script src="libs/reveal.js/4.1.3/plugin/audio-slideshow/plugin.js"></script>  -->
@@ -123,7 +123,7 @@
   <script>
 
 		const printPlugins = [
-			RevealNotes, 
+			RevealNotes,
 			RevealHighlight,
 			RevealMath,
 			RevealAnimate,
@@ -135,7 +135,7 @@
 		const plugins =  [...printPlugins,
 		<% if(enableZoom) {%>RevealZoom, <%}%>
 		<% if(enableSearch) {%>RevealSearch, <%}%>
-				RevealMarkdown, 
+				RevealMarkdown,
 				<% if(enableMenu) {%>RevealMenu, <%}%>
 				RevealFullscreen,
 				RevealAnything,
@@ -145,7 +145,7 @@
 				// poll
 				// question
 				// seminar
-				Verticator 
+				Verticator
 				 ]
 
 
@@ -211,7 +211,7 @@
 			parallaxBackgroundSize: '<%= parallaxBackgroundSize %>',
 			parallaxBackgroundHorizontal: <%= parallaxBackgroundHorizontal %>,
 			parallaxBackgroundVertical: <%= parallaxBackgroundVertical %>,
-			
+
 			//Presentation Size
 			width: <% if (isNaN(width)) { %>'<%= width %>'<% } else{ %><%= width %><%}%>,
 			height: <% if (isNaN(height)) { %>'<%= height %>'<% } else{ %><%= height %><%}%>,
@@ -260,18 +260,18 @@
 				]
 			},
 			chart: {
-					defaults: { 
+					defaults: {
 						color: 'lightgray', // color of labels
-						scale: { 
-							beginAtZero: true, 
+						scale: {
+							beginAtZero: true,
 							ticks: { stepSize: 1 },
 							grid: { color: "lightgray" } , // color of grid lines
 						},
 					},
-					line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] }, 
-					bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+					line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] },
+					bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]},
 					pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
-					radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+					radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]},
 			},
 			math: {
 				mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
@@ -279,14 +279,14 @@
 				// pass other options into `MathJax.Hub.Config()`
 				TeX: { Macros: { RR: "{\\bf R}" } }
 				},
-				anything: [ 
+				anything: [
 				{
 		className: "plot",
 		defaults: {width:500, height: 500, grid:true},
 		initialize: (function(container, options){ options.target = "#"+container.id; functionPlot(options) })
 	 },
 	 {
-		className: "chart",  
+		className: "chart",
 		initialize: (function(container, options){ container.chart = new Chart(container.getContext("2d"), options);  })
 	 },
 	 {
@@ -295,12 +295,12 @@
 	 },
 					],
 			// Learn about plugins: https://revealjs.com/plugins/
-			plugins: (window.location.search.match(/print-pdf/gi) ? printPlugins : plugins ) 
+			plugins: (window.location.search.match(/print-pdf/gi) ? printPlugins : plugins )
 		});
-			
 
 
-	    // Change chalkboard theme : 
+
+	    // Change chalkboard theme :
 		function changeTheme(input) {
 			var config = {};
 			config.theme = input.value;
@@ -323,9 +323,9 @@
       		setTimeout(() => {
 				window.print();
 			  }, 2500);
-			
+
     }
-		
+
 
 	</script>
 
