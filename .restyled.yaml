@@ -1,0 +1,14 @@
+enabled: true
+exclude:
+  - "**/*.patch"
+  - "**/node_modules/**/*"
+  - "**/vendor/**/*"
+  - ".github/workflows/**/*"
+  - "libs/**/*"
+  - "docs/**/*"
+  - ".ionide/**/*"
+  - ".vscode/**/*"
+  - "coverage/**/*"
+  - "resources/**/*"
+  - "samples/**/*"
+  - "package*.json"

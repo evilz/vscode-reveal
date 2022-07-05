@@ -33,10 +33,8 @@ export class RevealContext extends Disposable {
     super()
     this.editor = editor
     this.configuration = getConfiguration()
-
     this.#server = new RevealServer(this)
     this._register(this.#server)
-
   }
 
   private get docUri() {

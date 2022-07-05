@@ -54,5 +54,6 @@
                   "<<licensename>> <<licenseurl>>"
               ]
           },
-      ],
+    ],
+    "docwriter.style": "JSDoc",
 }

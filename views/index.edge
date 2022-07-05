@@ -1,0 +1,30 @@
+@layout('layouts.main')
+
+@section('body')
+
+{{-- @end --}}
+
+@each(slide in slides)
+
+@if(slide.children.length === 0)
+<section {{{slide.attributes}}}>
+    {{{slide.html}}}
+</section>
+
+@else
+<section>
+    <section {{{slide.attributes}}}>
+        {{{slide.html}}}
+    </section>
+
+    @each(slide in slides)
+    <section {{{child.attributes}}}>
+        {{{child.html}}}
+    </section>
+    @endeach
+</section>
+
+@endif
+
+@endeach
+@endsection
