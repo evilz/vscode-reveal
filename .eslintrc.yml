@@ -6,3 +6,4 @@ plugins: ['@typescript-eslint', 'jest','sonarjs' ]
 extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier','plugin:jest/recommended','plugin:sonarjs/recommended']
 rules:
   jest/valid-expect: "off"
+  "@typescript-eslint/ban-ts-comment": "off"
