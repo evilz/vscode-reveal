@@ -11,3 +11,4 @@ exclude:
   - "coverage/**/*"
   - "resources/**/*"
   - "samples/**/*"
+  - "package*.json"
