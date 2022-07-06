@@ -1,0 +1,361 @@
+/**
+ * A simple theme for reveal.js presentations, similar
+ * to the default theme. The accent color is darkblue.
+ *
+ * This theme is Copyright (C) 2012 Owen Versteeg, https://github.com/StereotypicalApps. It is MIT licensed.
+ * reveal.js is Copyright (C) 2011-2012 Hakim El Hattab, http://hakim.se
+ */
+@import "http://fonts.googleapis.com/css?family=Roboto:400,300,500";
+@import "http://fonts.googleapis.com/css?family=Roboto+Slab:400,700";
+/*********************************************
+ * GLOBAL STYLES
+ *********************************************/
+body {
+  background-color: #fff;
+  counter-reset: section; }
+  body > a {
+    color: #444; }
+
+.reveal {
+  font-family: "Roboto", sans-serif;
+  font-size: 3rem;
+  font-weight: 300;
+  color: #444; }
+
+.reveal.has-dark-background {
+  color: #fff; }
+
+::selection {
+  color: #fff;
+  background: #69B978;
+  text-shadow: none; }
+
+.reveal .slides > section,
+.reveal .slides > section > section {
+  line-height: 1.3;
+  font-weight: inherit; }
+
+/*********************************************
+ * HEADERS
+ *********************************************/
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+  margin: 0 0 2.5rem 0;
+  color: #444;
+  font-family: "Roboto Slab", serif;
+  font-weight: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-transform: none;
+  text-shadow: none;
+  word-wrap: break-word; }
+
+.reveal.has-dark-background h1, .reveal.has-dark-background h2, .reveal.has-dark-background h3, .reveal.has-dark-background h4, .reveal.has-dark-background h5, .reveal.has-dark-background h6 {
+  color: #fff; }
+
+.reveal h1 {
+  font-size: 5rem; }
+
+.reveal h2 {
+  font-size: 3.5rem; }
+
+.reveal h3 {
+  font-size: 3rem; }
+
+.reveal h4 {
+  font-size: 2rem; }
+
+.reveal h1 {
+  text-shadow: none; }
+
+/*********************************************
+ * OTHER
+ *********************************************/
+.reveal p {
+  margin: 2.5rem 0;
+  line-height: 1.3; }
+
+/* Ensure certain elements are never larger than the slide itself */
+.reveal img,
+.reveal video,
+.reveal iframe {
+  max-width: 95%;
+  max-height: 95%; }
+
+.reveal strong,
+.reveal b {
+  font-weight: bold; }
+
+.reveal em {
+  font-style: italic; }
+
+.reveal ol,
+.reveal dl,
+.reveal ul {
+  display: inline-block;
+  text-align: left;
+  margin: 0 0 0 1em; }
+
+.reveal ol {
+  list-style-type: decimal; }
+
+.reveal ul {
+  list-style-type: disc; }
+
+.reveal ul ul {
+  list-style-type: square; }
+
+.reveal ul ul ul {
+  list-style-type: circle; }
+
+.reveal ul ul,
+.reveal ul ol,
+.reveal ol ol,
+.reveal ol ul {
+  display: block;
+  margin-left: 40px; }
+
+.reveal dt {
+  font-weight: bold; }
+
+.reveal dd {
+  margin-left: 40px; }
+
+.reveal q,
+.reveal blockquote {
+  quotes: none; }
+
+.reveal blockquote {
+  display: block;
+  position: relative;
+  width: 70%;
+  margin: 2.5rem auto;
+  padding: 5px;
+  font-style: italic;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2); }
+
+.reveal blockquote p:first-child,
+.reveal blockquote p:last-child {
+  display: inline-block; }
+
+.reveal q {
+  font-style: italic; }
+
+.reveal pre {
+  display: block;
+  position: relative;
+  width: 90%;
+  margin: 2.5rem auto;
+  text-align: left;
+  font-size: 0.55em;
+  font-family: monospace;
+  line-height: 1.2em;
+  word-wrap: break-word;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3); }
+
+.reveal code {
+  font-family: monospace; }
+
+.reveal pre code {
+  display: block;
+  padding: 5px;
+  overflow: auto;
+  max-height: 400px;
+  word-wrap: normal;
+  background: #3F3F3F;
+  color: #DCDCDC; }
+
+.reveal table {
+  margin: auto;
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+.reveal table th {
+  font-weight: bold; }
+
+.reveal table th,
+.reveal table td {
+  text-align: left;
+  padding: 0.2em 0.5em 0.2em 0.5em;
+  border-bottom: 1px solid; }
+
+.reveal table tr:last-child td {
+  border-bottom: none; }
+
+.reveal sup {
+  vertical-align: super; }
+
+.reveal sub {
+  vertical-align: sub; }
+
+.reveal small {
+  display: inline-block;
+  font-size: 0.6em;
+  line-height: 1.2em;
+  vertical-align: top; }
+
+.reveal small * {
+  vertical-align: top; }
+
+.reveal .text-left {
+  text-align: left; }
+
+/*********************************************
+ * LINKS
+ *********************************************/
+.reveal a {
+  color: #333;
+  text-decoration: none;
+  background-image: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3) 50%);
+  background-repeat: repeat-x;
+  background-size: 2px 2px;
+  background-position: 0 1em;
+  -webkit-transition: color .15s ease;
+  -moz-transition: color .15s ease;
+  transition: color .15s ease; }
+
+.reveal a:hover {
+  color: #111;
+  text-shadow: none;
+  border: none; }
+
+.reveal.has-dark-background a {
+  color: #eee;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.3) 50%); }
+
+.reveal.has-dark-background a:hover {
+  color: #fff; }
+
+.reveal .roll span:after {
+  color: #fff;
+  background: #0d0d0d; }
+
+/*********************************************
+ * IMAGES
+ *********************************************/
+.reveal section img.thumbnail {
+  margin: 15px 0px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 4px solid #444;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
+
+.reveal a img {
+  -webkit-transition: all .15s linear;
+  -moz-transition: all .15s linear;
+  transition: all .15s linear; }
+
+.reveal a:hover img {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #333;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.55); }
+
+/*********************************************
+ * NAVIGATION CONTROLS
+ *********************************************/
+.reveal .controls div.navigate-left,
+.reveal .controls div.navigate-left.enabled {
+  border-right-color: #333; }
+
+.reveal .controls div.navigate-right,
+.reveal .controls div.navigate-right.enabled {
+  border-left-color: #333; }
+
+.reveal .controls div.navigate-up,
+.reveal .controls div.navigate-up.enabled {
+  border-bottom-color: #333; }
+
+.reveal .controls div.navigate-down,
+.reveal .controls div.navigate-down.enabled {
+  border-top-color: #333; }
+
+.reveal .controls div.navigate-left.enabled:hover {
+  border-right-color: #111; }
+
+.reveal .controls div.navigate-right.enabled:hover {
+  border-left-color: #111; }
+
+.reveal .controls div.navigate-up.enabled:hover {
+  border-bottom-color: #111; }
+
+.reveal .controls div.navigate-down.enabled:hover {
+  border-top-color: #111; }
+
+/*********************************************
+ * PROGRESS BAR
+ *********************************************/
+.reveal .progress {
+  background: rgba(0, 0, 0, 0.2); }
+
+.reveal .progress span {
+  background: #333;
+  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
+
+/*********************************************
+ * SLIDE NUMBER
+ *********************************************/
+.reveal .slide-number {
+  color: #333; }
+
+section.intro.past {
+  display: block !important; }
+
+.reveal .intro h1:before, .reveal .intro h2:before, .reveal .intro h3:before {
+  counter-increment: section;
+  content: counter(section);
+  background-color: white;
+  display: table;
+  margin: 0 auto 40px;
+  border-radius: 50%;
+  font-weight: bold;
+  height: 1.5em;
+  width: 1.5em;
+  line-height: 1.5em; }
+
+/*********************************************
+ * SLIDE MASTER
+ *********************************************/
+.reveal .slide-background.master-white {
+  background-color: #fff;
+  background-repeat: no-repeat; }
+
+.reveal .slide-background.master01 {
+  background: url('data:image/svg+xml;utf8,<svg width="312" height="147" viewBox="0 0 312 147" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M311.8 147H104.36L208.08 43.28 311.78 147" fill="#47B8B2"/><path d="M238.46 73.66L311.8.32V147l-73.34-73.34" fill="#3D9ECC"/><path d="M104.36 147l51.86-51.86H52.5L.64 147h103.72" fill="#369096"/></g></svg>') bottom right, url('data:image/svg+xml;utf8,<svg width="156" height="208" viewBox="0 0 156 208" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M.1 207.15V-.28l103.7 103.72L.1 207.14" fill="#2D81B6"/><path d="M.1-.28h103.7L51.96 51.58.1-.28" fill="#47B8B2"/><path d="M155.67 51.58l-51.86 51.86-51.85-51.86L103.8-.28l51.87 51.86" fill="#3D9ECC"/></g></svg>') top left;
+  background-color: #1E5A96;
+  background-repeat: no-repeat; }
+
+.master01.intro h1:before, .master01.intro h2:before, .master01.intro h3:before {
+  color: #1E5A96; }
+
+.reveal .slide-background.master02 {
+  background: url('data:image/svg+xml;utf8,<svg width="178" height="208" viewBox="0 0 178 208" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M177.84-.22V207.4L73.9 103.6 177.83-.23" fill="#1E5A96"/><path d="M104.33 73.19L30.83-.23h147l-73.5 73.4" fill="#238BCA"/><path d="M52.36 125.1L.38 73.2l51.98-51.92 51.97 51.9-51.97 51.9" fill="#3FA8E0"/></g></svg>') top right, url('data:image/svg+xml;utf8,<svg width="208" height="208" viewBox="0 0 208 208" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M.07-.22H207.5l-103.7 103.8L.06-.2" fill="#238BCA"/><path d="M.08 103.6V-.23l51.85 51.9-51.85 51.9" fill="#1E5A96"/><path d="M51.93 155.5L.08 207.4V103.6l51.85-51.92V155.5" fill="#3FA8E0"/></g></svg>') top left;
+  background-color: #3B7BBE;
+  background-repeat: no-repeat; }
+
+.master02.intro h1:before, .master02.intro h2:before, .master02.intro h3:before {
+  color: #3B7BBE; }
+
+.reveal .slide-background.master03 {
+  background: url('data:image/svg+xml;utf8,<svg width="178" height="208" viewBox="0 0 178 208" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M177.84-.22V207.4L73.9 103.6 177.83-.23" fill="#3FA8E0"/><path d="M104.33 73.19L30.83-.23h147l-73.5 73.4" fill="#3B7BBE"/><path d="M52.36 125.1L.38 73.2l51.98-51.92 51.97 51.9-51.97 51.9" fill="#46BCC0"/></g></svg>') top right, url('data:image/svg+xml;utf8,<svg width="208" height="208" viewBox="0 0 208 208" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M.07-.22H207.5l-103.7 103.8L.06-.2" fill="#3FA8E0"/><path d="M.08 103.6V-.23l51.85 51.9-51.85 51.9" fill="#46BCC0"/><path d="M51.93 155.5L.08 207.4V103.6l51.85-51.92V155.5" fill="#3B7BBE"/></g></svg>') top left;
+  background-color: #238BCA;
+  background-repeat: no-repeat; }
+
+.master03.intro h1:before, .master03.intro h2:before, .master03.intro h3:before {
+  color: #238BCA; }
+
+.reveal .slide-background.master04 {
+  background: url('data:image/svg+xml;utf8,<svg width="178" height="208" viewBox="0 0 178 208" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M177.84-.22V207.4L73.9 103.6 177.83-.23" fill="#238BCA"/><path d="M104.33 73.19L30.83-.23h147l-73.5 73.4" fill="#3FA8E0"/><path d="M52.36 125.1L.38 73.2l51.98-51.92 51.97 51.9-51.97 51.9" fill="#46BCC0"/></g></svg>') top right, url('data:image/svg+xml;utf8,<svg width="208" height="208" viewBox="0 0 208 208" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M.07-.22H207.5l-103.7 103.8L.06-.2" fill="#46BCC0"/><path d="M.08 103.6V-.23l51.85 51.9-51.85 51.9" fill="#238BCA"/><path d="M51.93 155.5L.08 207.4V103.6l51.85-51.92V155.5" fill="#3FA8E0"/></g></svg>') top left;
+  background-color: #2C97A6;
+  background-repeat: no-repeat; }
+
+.master04.intro h1:before, .master04.intro h2:before, .master04.intro h3:before {
+  color: #2C97A6; }
+
+.reveal .slide-background.master05 {
+  background: url('data:image/svg+xml;utf8,<svg width="178" height="208" viewBox="0 0 178 208" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M177.84-.22V207.4L73.9 103.6 177.83-.23" fill="#2C97A6"/><path d="M104.33 73.19L30.83-.23h147l-73.5 73.4" fill="#61B44B"/><path d="M52.36 125.1L.38 73.2l51.98-51.92 51.97 51.9-51.97 51.9" fill="#46BCC0"/></g></svg>') top right, url('data:image/svg+xml;utf8,<svg width="208" height="208" viewBox="0 0 208 208" xmlns="http://www.w3.org/2000/svg"><g fill="none"><path d="M.07-.22H207.5l-103.7 103.8L.06-.2" fill="#46BCC0"/><path d="M.08 103.6V-.23l51.85 51.9-51.85 51.9" fill="#2C97A6"/><path d="M51.93 155.5L.08 207.4V103.6l51.85-51.92V155.5" fill="#61B44B"/></g></svg>') top left;
+  background-color: #69B978;
+  background-repeat: no-repeat; }
+
+.master05.intro h1:before, .master05.intro h2:before, .master05.intro h3:before {
+  color: #69B978; }
