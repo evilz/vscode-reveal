@@ -7,7 +7,7 @@
   "author": "Vincent Bourdon",
   "license": "MIT",
   "icon": "logo.png",
-  "preview": true,
+  "preview": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/evilz/vscode-reveal"
