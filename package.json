@@ -2,12 +2,12 @@
   "name": "vscode-reveal",
   "displayName": "vscode-reveal",
   "description": "Show markdown as revealJs presentation",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "publisher": "evilz",
   "author": "Vincent Bourdon",
   "license": "MIT",
   "icon": "logo.png",
-  "preview": true,
+  "preview": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/evilz/vscode-reveal"
@@ -481,6 +481,22 @@
           "type": "string",
           "default": "Reveal JS presentation",
           "description": "Title of your presentation"
+        },
+        "revealjs.css": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "External css file to use"
+        },
+        "revealjs.cssvariables": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "default": null,
+          "description": "Css variable to add see https://github.com/hakimel/reveal.js/blob/master/css/theme/template/exposer.scss"
         }
       }
     },

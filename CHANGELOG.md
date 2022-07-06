@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 4.3.2
+
+- Use ExpressJS 5 and EJS
+- Split EJS views
+- Add new themes :  cern, hull-blue, material, myplanet, object-partners, pikestreet, puzzle, robot-lung-ebi, robot-lung, savasian, sfeir-school, sunblind, tidy
+- Add slide borders
+- Add cssvariables
+- Add init override using init.js file
+
 ## 4.3.1
 
 - Update Revealjs to 4.3.1

@@ -2,7 +2,6 @@
 theme: myplanet
 ---
 
-
 # Heading	
 
 # H1

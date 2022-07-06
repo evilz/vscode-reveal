@@ -1,0 +1,11 @@
+<% if (cssvariables) { %>
+<style>
+  :root {
+    <% Object.keys(cssvariables).forEach(function(prop) {
+        %> <%- prop %>: <%- cssvariables[prop] %>;
+        <%
+      });
+    %>
+  }
+</style>
+<% } %>

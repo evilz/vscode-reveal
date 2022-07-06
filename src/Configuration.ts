@@ -84,6 +84,7 @@ export interface IRevealOptions {
   enableSearch: boolean
 
   css: string[]
+  cssvariables: object | null
 }
 export interface IExtensionOptions {
   slideExplorerEnabled: boolean
@@ -167,7 +168,8 @@ export const defaultConfiguration: Configuration = {
   enableZoom: true,
   enableSearch: true,
 
-  css: []
+  css: [],
+  cssvariables: null
 }
 
 
