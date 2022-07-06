@@ -1,0 +1,2269 @@
+@charset "UTF-8";
+/**
+ * Sfeir Override theme for reveal.js.
+
+ * By Jean-François Garreau : jefBinomed
+ */
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-Light.ttf");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-LightItalic.ttf");
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-ExtraLight.ttf");
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-ExtraLightItalic.ttf");
+  font-weight: 100;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-Medium.ttf");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-MediumItalic.ttf");
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-SemiBold.ttf");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-SemiBoldItalic.ttf");
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-Bold.ttf");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-BoldItalic.ttf");
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-ExtraBold.ttf");
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-ExtraBoldItalic.ttf");
+  font-weight: 800;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-Black.ttf");
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("../fonts/Poppins-BlackItalic.ttf");
+  font-weight: 900;
+  font-style: italic;
+}
+@font-face {
+  font-family: "Consolas";
+  src: url("../fonts/Consolas.ttf");
+}
+@font-face {
+  font-family: "Consolas";
+  src: url("../fonts/Consolaz.ttf");
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Inconsolata";
+  src: url("../fonts/Inconsolata-Regular.ttf");
+}
+@font-face {
+  font-family: "Inconsolata";
+  src: url("../fonts/Inconsolata-Bold.ttf");
+  font-weight: 800;
+  font-style: normal;
+}
+.reveal {
+  font-family: "Poppins", "Helvetica Neue", Helvetica, "Microsoft YaHei", "WenQuanYi Micro Hei", Arial, sans-serif;
+}
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4,
+.reveal .slides section.with-code h1, .reveal .slides section.with-code h2 {
+  font-family: "Poppins", "Helvetica Neue", Helvetica, "Microsoft YaHei", "WenQuanYi Micro Hei", Arial, sans-serif;
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "sfeir";
+  src: url("../fontello-sfeir/font/sfeir.eot?23854124");
+  src: url("../fontello-sfeir/font/sfeir.eot?23854124#iefix") format("embedded-opentype"), url("../fontello-sfeir/font/sfeir.woff2?23854124") format("woff2"), url("../fontello-sfeir/font/sfeir.woff?23854124") format("woff"), url("../fontello-sfeir/font/sfeir.ttf?23854124") format("truetype"), url("../fontello-sfeir/font/sfeir.svg?23854124#sfeir") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+/**
+* Custom Properties
+*/
+:root {
+  --code-bg: #3f3f3f;
+  --light-grey: #ddd;
+  --white: white;
+  --medium-grey: #817c7c;
+  --black: #434343;
+  --dark-grey: #2a3244;
+  --dark-grey-alpha: rgba(61, 67, 73, 0.7);
+  --red: #e74c3c;
+  --sfeir-pink: #dd3355;
+  --sfeir-blue: #575eaa;
+  --sfeir-green: #0ab580;
+}
+
+/**
+* Custom Properties
+*/
+:root {
+  --backgroundColor: #FFF;
+  --mainFont: Poppins, sans-serif;
+  --mainFontSize: 40px;
+  --mainColor: white;
+  --blockMargin: 20px;
+  --headingMargin: 0 0 20px 0;
+  --headingFont: Poppins, Impact, sans-serif;
+  --headingColor: white;
+  --headingLineHeight: 1.2;
+  --headingLetterSpacing: normal;
+  --headingTextTransform: uppercase;
+  --headingTextShadow: none;
+  --headingFontWeight: normal;
+  --heading1TextShadow: none;
+  --heading1Size: 3.77em;
+  --heading2Size: 2.11em;
+  --heading3Size: 1.55em;
+  --heading4Size: 1em;
+  --linkColor: #434343;
+  --linkColorHover: #767676;
+  --selectionBackgroundColor: rgba(140, 191, 240, 0.8);
+  --selectionColor: #fff;
+}
+
+/*********************************************
+ * GLOBAL STYLES
+ *********************************************/
+:root {
+  --background-color: #FFF;
+  --main-font: Poppins, sans-serif;
+  --main-font-size: 40px;
+  --main-color: white;
+  --block-margin: 20px;
+  --heading-margin: 0 0 20px 0;
+  --heading-font: Poppins, Impact, sans-serif;
+  --heading-color: white;
+  --heading-line-height: 1.2;
+  --heading-letter-spacing: normal;
+  --heading-text-transform: uppercase;
+  --heading-text-shadow: none;
+  --heading-font-weight: normal;
+  --heading1-text-shadow: none;
+  --heading1-size: 3.77em;
+  --heading2-size: 2.11em;
+  --heading3-size: 1.55em;
+  --heading4-size: 1em;
+  --code-font: monospace;
+  --link-color: #434343;
+  --link-color-hover: #767676;
+  --selection-background-color: rgba(140, 191, 240, 0.8);
+  --selection-color: #fff;
+}
+
+.reveal-viewport {
+  background: #FFF;
+  background-color: #FFF;
+}
+
+.reveal {
+  font-family: "Poppins", sans-serif;
+  font-size: 40px;
+  font-weight: normal;
+  color: white;
+}
+
+.reveal ::selection {
+  color: #fff;
+  background: rgba(140, 191, 240, 0.8);
+  text-shadow: none;
+}
+
+.reveal ::-moz-selection {
+  color: #fff;
+  background: rgba(140, 191, 240, 0.8);
+  text-shadow: none;
+}
+
+.reveal .slides section,
+.reveal .slides section > section {
+  line-height: 1.3;
+  font-weight: inherit;
+}
+
+/*********************************************
+ * HEADERS
+ *********************************************/
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4,
+.reveal h5,
+.reveal h6 {
+  margin: 0 0 20px 0;
+  color: white;
+  font-family: "Poppins", Impact, sans-serif;
+  font-weight: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-transform: uppercase;
+  text-shadow: none;
+  word-wrap: break-word;
+}
+
+.reveal h1 {
+  font-size: 3.77em;
+}
+
+.reveal h2 {
+  font-size: 2.11em;
+}
+
+.reveal h3 {
+  font-size: 1.55em;
+}
+
+.reveal h4 {
+  font-size: 1em;
+}
+
+.reveal h1 {
+  text-shadow: none;
+}
+
+/*********************************************
+ * OTHER
+ *********************************************/
+.reveal p {
+  margin: 20px 0;
+  line-height: 1.3;
+}
+
+/* Remove trailing margins after titles */
+.reveal h1:last-child,
+.reveal h2:last-child,
+.reveal h3:last-child,
+.reveal h4:last-child,
+.reveal h5:last-child,
+.reveal h6:last-child {
+  margin-bottom: 0;
+}
+
+/* Ensure certain elements are never larger than the slide itself */
+.reveal img,
+.reveal video,
+.reveal iframe {
+  max-width: 95%;
+  max-height: 95%;
+}
+
+.reveal strong,
+.reveal b {
+  font-weight: bold;
+}
+
+.reveal em {
+  font-style: italic;
+}
+
+.reveal ol,
+.reveal dl,
+.reveal ul {
+  display: inline-block;
+  text-align: left;
+  margin: 0 0 0 1em;
+}
+
+.reveal ol {
+  list-style-type: decimal;
+}
+
+.reveal ul {
+  list-style-type: disc;
+}
+
+.reveal ul ul {
+  list-style-type: square;
+}
+
+.reveal ul ul ul {
+  list-style-type: circle;
+}
+
+.reveal ul ul,
+.reveal ul ol,
+.reveal ol ol,
+.reveal ol ul {
+  display: block;
+  margin-left: 40px;
+}
+
+.reveal dt {
+  font-weight: bold;
+}
+
+.reveal dd {
+  margin-left: 40px;
+}
+
+.reveal blockquote {
+  display: block;
+  position: relative;
+  width: 70%;
+  margin: 20px auto;
+  padding: 5px;
+  font-style: italic;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+}
+
+.reveal blockquote p:first-child,
+.reveal blockquote p:last-child {
+  display: inline-block;
+}
+
+.reveal q {
+  font-style: italic;
+}
+
+.reveal pre {
+  display: block;
+  position: relative;
+  width: 90%;
+  margin: 20px auto;
+  text-align: left;
+  font-size: 0.55em;
+  font-family: monospace;
+  line-height: 1.2em;
+  word-wrap: break-word;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.reveal code {
+  font-family: monospace;
+  text-transform: none;
+}
+
+.reveal pre code {
+  display: block;
+  padding: 5px;
+  overflow: auto;
+  max-height: 400px;
+  word-wrap: normal;
+}
+
+.reveal table {
+  margin: auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.reveal table th {
+  font-weight: bold;
+}
+
+.reveal table th,
+.reveal table td {
+  text-align: left;
+  padding: 0.2em 0.5em 0.2em 0.5em;
+  border-bottom: 1px solid;
+}
+
+.reveal table th[align=center],
+.reveal table td[align=center] {
+  text-align: center;
+}
+
+.reveal table th[align=right],
+.reveal table td[align=right] {
+  text-align: right;
+}
+
+.reveal table tbody tr:last-child th,
+.reveal table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.reveal sup {
+  vertical-align: super;
+  font-size: smaller;
+}
+
+.reveal sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+.reveal small {
+  display: inline-block;
+  font-size: 0.6em;
+  line-height: 1.2em;
+  vertical-align: top;
+}
+
+.reveal small * {
+  vertical-align: top;
+}
+
+.reveal img {
+  margin: 20px 0;
+}
+
+/*********************************************
+ * LINKS
+ *********************************************/
+.reveal a {
+  color: #434343;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.reveal a:hover {
+  color: #767676;
+  text-shadow: none;
+  border: none;
+}
+
+.reveal .roll span:after {
+  color: #fff;
+  background: #1d1d1d;
+}
+
+/*********************************************
+ * Frame helper
+ *********************************************/
+.reveal .r-frame {
+  border: 4px solid white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.reveal a .r-frame {
+  transition: all 0.15s linear;
+}
+
+.reveal a:hover .r-frame {
+  border-color: #434343;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.55);
+}
+
+/*********************************************
+ * NAVIGATION CONTROLS
+ *********************************************/
+.reveal .controls {
+  color: #434343;
+}
+
+/*********************************************
+ * PROGRESS BAR
+ *********************************************/
+.reveal .progress {
+  background: rgba(0, 0, 0, 0.2);
+  color: #434343;
+}
+
+/*********************************************
+ * PRINT BACKGROUND
+ *********************************************/
+@media print {
+  .backgrounds {
+    background-color: #FFF;
+  }
+}
+/*
+* 
+* MIXINS
+**/
+.reveal .slides section img[alt*=h-50], .reveal .slides section .h-50, .reveal .slides section .h-50 + * {
+  height: 50px;
+}
+.reveal .slides section img[alt*=w-50], .reveal .slides section .w-50, .reveal .slides section .w-50 + * {
+  width: 50px;
+}
+.reveal .slides section img[alt*=h-100], .reveal .slides section .h-100, .reveal .slides section .h-100 + * {
+  height: 100px;
+}
+.reveal .slides section img[alt*=w-100], .reveal .slides section .w-100, .reveal .slides section .w-100 + * {
+  width: 100px;
+}
+.reveal .slides section img[alt*=h-150], .reveal .slides section .h-150, .reveal .slides section .h-150 + * {
+  height: 150px;
+}
+.reveal .slides section img[alt*=w-150], .reveal .slides section .w-150, .reveal .slides section .w-150 + * {
+  width: 150px;
+}
+.reveal .slides section img[alt*=h-200], .reveal .slides section .h-200, .reveal .slides section .h-200 + * {
+  height: 200px;
+}
+.reveal .slides section img[alt*=w-200], .reveal .slides section .w-200, .reveal .slides section .w-200 + * {
+  width: 200px;
+}
+.reveal .slides section img[alt*=h-250], .reveal .slides section .h-250, .reveal .slides section .h-250 + * {
+  height: 250px;
+}
+.reveal .slides section img[alt*=w-250], .reveal .slides section .w-250, .reveal .slides section .w-250 + * {
+  width: 250px;
+}
+.reveal .slides section img[alt*=h-300], .reveal .slides section .h-300, .reveal .slides section .h-300 + * {
+  height: 300px;
+}
+.reveal .slides section img[alt*=w-300], .reveal .slides section .w-300, .reveal .slides section .w-300 + * {
+  width: 300px;
+}
+.reveal .slides section img[alt*=h-350], .reveal .slides section .h-350, .reveal .slides section .h-350 + * {
+  height: 350px;
+}
+.reveal .slides section img[alt*=w-350], .reveal .slides section .w-350, .reveal .slides section .w-350 + * {
+  width: 350px;
+}
+.reveal .slides section img[alt*=h-400], .reveal .slides section .h-400, .reveal .slides section .h-400 + * {
+  height: 400px;
+}
+.reveal .slides section img[alt*=w-400], .reveal .slides section .w-400, .reveal .slides section .w-400 + * {
+  width: 400px;
+}
+.reveal .slides section img[alt*=h-450], .reveal .slides section .h-450, .reveal .slides section .h-450 + * {
+  height: 450px;
+}
+.reveal .slides section img[alt*=w-450], .reveal .slides section .w-450, .reveal .slides section .w-450 + * {
+  width: 450px;
+}
+.reveal .slides section img[alt*=h-500], .reveal .slides section .h-500, .reveal .slides section .h-500 + * {
+  height: 500px;
+}
+.reveal .slides section img[alt*=w-500], .reveal .slides section .w-500, .reveal .slides section .w-500 + * {
+  width: 500px;
+}
+.reveal .slides section img[alt*=h-550], .reveal .slides section .h-550, .reveal .slides section .h-550 + * {
+  height: 550px;
+}
+.reveal .slides section img[alt*=w-550], .reveal .slides section .w-550, .reveal .slides section .w-550 + * {
+  width: 550px;
+}
+.reveal .slides section img[alt*=h-600], .reveal .slides section .h-600, .reveal .slides section .h-600 + * {
+  height: 600px;
+}
+.reveal .slides section img[alt*=w-600], .reveal .slides section .w-600, .reveal .slides section .w-600 + * {
+  width: 600px;
+}
+.reveal .slides section img[alt*=h-650], .reveal .slides section .h-650, .reveal .slides section .h-650 + * {
+  height: 650px;
+}
+.reveal .slides section img[alt*=w-650], .reveal .slides section .w-650, .reveal .slides section .w-650 + * {
+  width: 650px;
+}
+.reveal .slides section img[alt*=h-700], .reveal .slides section .h-700, .reveal .slides section .h-700 + * {
+  height: 700px;
+}
+.reveal .slides section img[alt*=w-700], .reveal .slides section .w-700, .reveal .slides section .w-700 + * {
+  width: 700px;
+}
+.reveal .slides section img[alt*=h-750], .reveal .slides section .h-750, .reveal .slides section .h-750 + * {
+  height: 750px;
+}
+.reveal .slides section img[alt*=w-750], .reveal .slides section .w-750, .reveal .slides section .w-750 + * {
+  width: 750px;
+}
+.reveal .slides section img[alt*=h-800], .reveal .slides section .h-800, .reveal .slides section .h-800 + * {
+  height: 800px;
+}
+.reveal .slides section img[alt*=w-800], .reveal .slides section .w-800, .reveal .slides section .w-800 + * {
+  width: 800px;
+}
+.reveal .slides section img[alt*=h-850], .reveal .slides section .h-850, .reveal .slides section .h-850 + * {
+  height: 850px;
+}
+.reveal .slides section img[alt*=w-850], .reveal .slides section .w-850, .reveal .slides section .w-850 + * {
+  width: 850px;
+}
+.reveal .slides section img[alt*=h-900], .reveal .slides section .h-900, .reveal .slides section .h-900 + * {
+  height: 900px;
+}
+.reveal .slides section img[alt*=w-900], .reveal .slides section .w-900, .reveal .slides section .w-900 + * {
+  width: 900px;
+}
+.reveal .slides section img[alt*=h-950], .reveal .slides section .h-950, .reveal .slides section .h-950 + * {
+  height: 950px;
+}
+.reveal .slides section img[alt*=w-950], .reveal .slides section .w-950, .reveal .slides section .w-950 + * {
+  width: 950px;
+}
+.reveal .slides section img[alt*=h-1000], .reveal .slides section .h-1000, .reveal .slides section .h-1000 + * {
+  height: 1000px;
+}
+.reveal .slides section img[alt*=w-1000], .reveal .slides section .w-1000, .reveal .slides section .w-1000 + * {
+  width: 1000px;
+}
+.reveal .slides section img[alt*=hm-50], .reveal .slides section .hm-50, .reveal .slides section .hm-50 + * {
+  max-height: 50px;
+}
+.reveal .slides section img[alt*=wm-50], .reveal .slides section .wm-50, .reveal .slides section .wm-50 + * {
+  max-width: 50px;
+}
+.reveal .slides section img[alt*=hm-100], .reveal .slides section .hm-100, .reveal .slides section .hm-100 + * {
+  max-height: 100px;
+}
+.reveal .slides section img[alt*=wm-100], .reveal .slides section .wm-100, .reveal .slides section .wm-100 + * {
+  max-width: 100px;
+}
+.reveal .slides section img[alt*=hm-150], .reveal .slides section .hm-150, .reveal .slides section .hm-150 + * {
+  max-height: 150px;
+}
+.reveal .slides section img[alt*=wm-150], .reveal .slides section .wm-150, .reveal .slides section .wm-150 + * {
+  max-width: 150px;
+}
+.reveal .slides section img[alt*=hm-200], .reveal .slides section .hm-200, .reveal .slides section .hm-200 + * {
+  max-height: 200px;
+}
+.reveal .slides section img[alt*=wm-200], .reveal .slides section .wm-200, .reveal .slides section .wm-200 + * {
+  max-width: 200px;
+}
+.reveal .slides section img[alt*=hm-250], .reveal .slides section .hm-250, .reveal .slides section .hm-250 + * {
+  max-height: 250px;
+}
+.reveal .slides section img[alt*=wm-250], .reveal .slides section .wm-250, .reveal .slides section .wm-250 + * {
+  max-width: 250px;
+}
+.reveal .slides section img[alt*=hm-300], .reveal .slides section .hm-300, .reveal .slides section .hm-300 + * {
+  max-height: 300px;
+}
+.reveal .slides section img[alt*=wm-300], .reveal .slides section .wm-300, .reveal .slides section .wm-300 + * {
+  max-width: 300px;
+}
+.reveal .slides section img[alt*=hm-350], .reveal .slides section .hm-350, .reveal .slides section .hm-350 + * {
+  max-height: 350px;
+}
+.reveal .slides section img[alt*=wm-350], .reveal .slides section .wm-350, .reveal .slides section .wm-350 + * {
+  max-width: 350px;
+}
+.reveal .slides section img[alt*=hm-400], .reveal .slides section .hm-400, .reveal .slides section .hm-400 + * {
+  max-height: 400px;
+}
+.reveal .slides section img[alt*=wm-400], .reveal .slides section .wm-400, .reveal .slides section .wm-400 + * {
+  max-width: 400px;
+}
+.reveal .slides section img[alt*=hm-450], .reveal .slides section .hm-450, .reveal .slides section .hm-450 + * {
+  max-height: 450px;
+}
+.reveal .slides section img[alt*=wm-450], .reveal .slides section .wm-450, .reveal .slides section .wm-450 + * {
+  max-width: 450px;
+}
+.reveal .slides section img[alt*=hm-500], .reveal .slides section .hm-500, .reveal .slides section .hm-500 + * {
+  max-height: 500px;
+}
+.reveal .slides section img[alt*=wm-500], .reveal .slides section .wm-500, .reveal .slides section .wm-500 + * {
+  max-width: 500px;
+}
+.reveal .slides section img[alt*=hm-550], .reveal .slides section .hm-550, .reveal .slides section .hm-550 + * {
+  max-height: 550px;
+}
+.reveal .slides section img[alt*=wm-550], .reveal .slides section .wm-550, .reveal .slides section .wm-550 + * {
+  max-width: 550px;
+}
+.reveal .slides section img[alt*=hm-600], .reveal .slides section .hm-600, .reveal .slides section .hm-600 + * {
+  max-height: 600px;
+}
+.reveal .slides section img[alt*=wm-600], .reveal .slides section .wm-600, .reveal .slides section .wm-600 + * {
+  max-width: 600px;
+}
+.reveal .slides section img[alt*=hm-650], .reveal .slides section .hm-650, .reveal .slides section .hm-650 + * {
+  max-height: 650px;
+}
+.reveal .slides section img[alt*=wm-650], .reveal .slides section .wm-650, .reveal .slides section .wm-650 + * {
+  max-width: 650px;
+}
+.reveal .slides section img[alt*=hm-700], .reveal .slides section .hm-700, .reveal .slides section .hm-700 + * {
+  max-height: 700px;
+}
+.reveal .slides section img[alt*=wm-700], .reveal .slides section .wm-700, .reveal .slides section .wm-700 + * {
+  max-width: 700px;
+}
+.reveal .slides section img[alt*=hm-750], .reveal .slides section .hm-750, .reveal .slides section .hm-750 + * {
+  max-height: 750px;
+}
+.reveal .slides section img[alt*=wm-750], .reveal .slides section .wm-750, .reveal .slides section .wm-750 + * {
+  max-width: 750px;
+}
+.reveal .slides section img[alt*=hm-800], .reveal .slides section .hm-800, .reveal .slides section .hm-800 + * {
+  max-height: 800px;
+}
+.reveal .slides section img[alt*=wm-800], .reveal .slides section .wm-800, .reveal .slides section .wm-800 + * {
+  max-width: 800px;
+}
+.reveal .slides section img[alt*=hm-850], .reveal .slides section .hm-850, .reveal .slides section .hm-850 + * {
+  max-height: 850px;
+}
+.reveal .slides section img[alt*=wm-850], .reveal .slides section .wm-850, .reveal .slides section .wm-850 + * {
+  max-width: 850px;
+}
+.reveal .slides section img[alt*=hm-900], .reveal .slides section .hm-900, .reveal .slides section .hm-900 + * {
+  max-height: 900px;
+}
+.reveal .slides section img[alt*=wm-900], .reveal .slides section .wm-900, .reveal .slides section .wm-900 + * {
+  max-width: 900px;
+}
+.reveal .slides section img[alt*=hm-950], .reveal .slides section .hm-950, .reveal .slides section .hm-950 + * {
+  max-height: 950px;
+}
+.reveal .slides section img[alt*=wm-950], .reveal .slides section .wm-950, .reveal .slides section .wm-950 + * {
+  max-width: 950px;
+}
+.reveal .slides section img[alt*=hm-1000], .reveal .slides section .hm-1000, .reveal .slides section .hm-1000 + * {
+  max-height: 1000px;
+}
+.reveal .slides section img[alt*=wm-1000], .reveal .slides section .wm-1000, .reveal .slides section .wm-1000 + * {
+  max-width: 1000px;
+}
+.reveal .slides section img[alt*=mt-10], .reveal .slides section .mt-10, .reveal .slides section .mt-10 + * {
+  margin-top: 10px;
+}
+.reveal .slides section img[alt*=mb-10], .reveal .slides section .mb-10, .reveal .slides section .mb-10 + * {
+  margin-bottom: 10px;
+}
+.reveal .slides section img[alt*=mt-20], .reveal .slides section .mt-20, .reveal .slides section .mt-20 + * {
+  margin-top: 20px;
+}
+.reveal .slides section img[alt*=mb-20], .reveal .slides section .mb-20, .reveal .slides section .mb-20 + * {
+  margin-bottom: 20px;
+}
+.reveal .slides section img[alt*=mt-30], .reveal .slides section .mt-30, .reveal .slides section .mt-30 + * {
+  margin-top: 30px;
+}
+.reveal .slides section img[alt*=mb-30], .reveal .slides section .mb-30, .reveal .slides section .mb-30 + * {
+  margin-bottom: 30px;
+}
+.reveal .slides section img[alt*=mt-40], .reveal .slides section .mt-40, .reveal .slides section .mt-40 + * {
+  margin-top: 40px;
+}
+.reveal .slides section img[alt*=mb-40], .reveal .slides section .mb-40, .reveal .slides section .mb-40 + * {
+  margin-bottom: 40px;
+}
+.reveal .slides section img[alt*=mt-50], .reveal .slides section .mt-50, .reveal .slides section .mt-50 + * {
+  margin-top: 50px;
+}
+.reveal .slides section img[alt*=mb-50], .reveal .slides section .mb-50, .reveal .slides section .mb-50 + * {
+  margin-bottom: 50px;
+}
+.reveal .slides section img[alt*=mt-60], .reveal .slides section .mt-60, .reveal .slides section .mt-60 + * {
+  margin-top: 60px;
+}
+.reveal .slides section img[alt*=mb-60], .reveal .slides section .mb-60, .reveal .slides section .mb-60 + * {
+  margin-bottom: 60px;
+}
+.reveal .slides section img[alt*=mt-70], .reveal .slides section .mt-70, .reveal .slides section .mt-70 + * {
+  margin-top: 70px;
+}
+.reveal .slides section img[alt*=mb-70], .reveal .slides section .mb-70, .reveal .slides section .mb-70 + * {
+  margin-bottom: 70px;
+}
+.reveal .slides section img[alt*=mt-80], .reveal .slides section .mt-80, .reveal .slides section .mt-80 + * {
+  margin-top: 80px;
+}
+.reveal .slides section img[alt*=mb-80], .reveal .slides section .mb-80, .reveal .slides section .mb-80 + * {
+  margin-bottom: 80px;
+}
+.reveal .slides section img[alt*=mt-90], .reveal .slides section .mt-90, .reveal .slides section .mt-90 + * {
+  margin-top: 90px;
+}
+.reveal .slides section img[alt*=mb-90], .reveal .slides section .mb-90, .reveal .slides section .mb-90 + * {
+  margin-bottom: 90px;
+}
+.reveal .slides section img[alt*=mt-100], .reveal .slides section .mt-100, .reveal .slides section .mt-100 + * {
+  margin-top: 100px;
+}
+.reveal .slides section img[alt*=mb-100], .reveal .slides section .mb-100, .reveal .slides section .mb-100 + * {
+  margin-bottom: 100px;
+}
+.reveal .slides section img[alt*=mt-110], .reveal .slides section .mt-110, .reveal .slides section .mt-110 + * {
+  margin-top: 110px;
+}
+.reveal .slides section img[alt*=mb-110], .reveal .slides section .mb-110, .reveal .slides section .mb-110 + * {
+  margin-bottom: 110px;
+}
+.reveal .slides section img[alt*=mt-120], .reveal .slides section .mt-120, .reveal .slides section .mt-120 + * {
+  margin-top: 120px;
+}
+.reveal .slides section img[alt*=mb-120], .reveal .slides section .mb-120, .reveal .slides section .mb-120 + * {
+  margin-bottom: 120px;
+}
+.reveal .slides section img[alt*=mt-130], .reveal .slides section .mt-130, .reveal .slides section .mt-130 + * {
+  margin-top: 130px;
+}
+.reveal .slides section img[alt*=mb-130], .reveal .slides section .mb-130, .reveal .slides section .mb-130 + * {
+  margin-bottom: 130px;
+}
+.reveal .slides section img[alt*=mt-140], .reveal .slides section .mt-140, .reveal .slides section .mt-140 + * {
+  margin-top: 140px;
+}
+.reveal .slides section img[alt*=mb-140], .reveal .slides section .mb-140, .reveal .slides section .mb-140 + * {
+  margin-bottom: 140px;
+}
+.reveal .slides section img[alt*=mt-150], .reveal .slides section .mt-150, .reveal .slides section .mt-150 + * {
+  margin-top: 150px;
+}
+.reveal .slides section img[alt*=mb-150], .reveal .slides section .mb-150, .reveal .slides section .mb-150 + * {
+  margin-bottom: 150px;
+}
+.reveal .slides section img[alt*=mt-160], .reveal .slides section .mt-160, .reveal .slides section .mt-160 + * {
+  margin-top: 160px;
+}
+.reveal .slides section img[alt*=mb-160], .reveal .slides section .mb-160, .reveal .slides section .mb-160 + * {
+  margin-bottom: 160px;
+}
+.reveal .slides section img[alt*=mt-170], .reveal .slides section .mt-170, .reveal .slides section .mt-170 + * {
+  margin-top: 170px;
+}
+.reveal .slides section img[alt*=mb-170], .reveal .slides section .mb-170, .reveal .slides section .mb-170 + * {
+  margin-bottom: 170px;
+}
+.reveal .slides section img[alt*=mt-180], .reveal .slides section .mt-180, .reveal .slides section .mt-180 + * {
+  margin-top: 180px;
+}
+.reveal .slides section img[alt*=mb-180], .reveal .slides section .mb-180, .reveal .slides section .mb-180 + * {
+  margin-bottom: 180px;
+}
+.reveal .slides section img[alt*=mt-190], .reveal .slides section .mt-190, .reveal .slides section .mt-190 + * {
+  margin-top: 190px;
+}
+.reveal .slides section img[alt*=mb-190], .reveal .slides section .mb-190, .reveal .slides section .mb-190 + * {
+  margin-bottom: 190px;
+}
+.reveal .slides section img[alt*=mt-200], .reveal .slides section .mt-200, .reveal .slides section .mt-200 + * {
+  margin-top: 200px;
+}
+.reveal .slides section img[alt*=mb-200], .reveal .slides section .mb-200, .reveal .slides section .mb-200 + * {
+  margin-bottom: 200px;
+}
+.reveal .slides section img[alt*=mt-210], .reveal .slides section .mt-210, .reveal .slides section .mt-210 + * {
+  margin-top: 210px;
+}
+.reveal .slides section img[alt*=mb-210], .reveal .slides section .mb-210, .reveal .slides section .mb-210 + * {
+  margin-bottom: 210px;
+}
+.reveal .slides section img[alt*=mt-220], .reveal .slides section .mt-220, .reveal .slides section .mt-220 + * {
+  margin-top: 220px;
+}
+.reveal .slides section img[alt*=mb-220], .reveal .slides section .mb-220, .reveal .slides section .mb-220 + * {
+  margin-bottom: 220px;
+}
+.reveal .slides section img[alt*=mt-230], .reveal .slides section .mt-230, .reveal .slides section .mt-230 + * {
+  margin-top: 230px;
+}
+.reveal .slides section img[alt*=mb-230], .reveal .slides section .mb-230, .reveal .slides section .mb-230 + * {
+  margin-bottom: 230px;
+}
+.reveal .slides section img[alt*=mt-240], .reveal .slides section .mt-240, .reveal .slides section .mt-240 + * {
+  margin-top: 240px;
+}
+.reveal .slides section img[alt*=mb-240], .reveal .slides section .mb-240, .reveal .slides section .mb-240 + * {
+  margin-bottom: 240px;
+}
+.reveal .slides section img[alt*=mt-250], .reveal .slides section .mt-250, .reveal .slides section .mt-250 + * {
+  margin-top: 250px;
+}
+.reveal .slides section img[alt*=mb-250], .reveal .slides section .mb-250, .reveal .slides section .mb-250 + * {
+  margin-bottom: 250px;
+}
+.reveal .slides section img[alt*=mt-260], .reveal .slides section .mt-260, .reveal .slides section .mt-260 + * {
+  margin-top: 260px;
+}
+.reveal .slides section img[alt*=mb-260], .reveal .slides section .mb-260, .reveal .slides section .mb-260 + * {
+  margin-bottom: 260px;
+}
+.reveal .slides section img[alt*=mt-270], .reveal .slides section .mt-270, .reveal .slides section .mt-270 + * {
+  margin-top: 270px;
+}
+.reveal .slides section img[alt*=mb-270], .reveal .slides section .mb-270, .reveal .slides section .mb-270 + * {
+  margin-bottom: 270px;
+}
+.reveal .slides section img[alt*=mt-280], .reveal .slides section .mt-280, .reveal .slides section .mt-280 + * {
+  margin-top: 280px;
+}
+.reveal .slides section img[alt*=mb-280], .reveal .slides section .mb-280, .reveal .slides section .mb-280 + * {
+  margin-bottom: 280px;
+}
+.reveal .slides section img[alt*=mt-290], .reveal .slides section .mt-290, .reveal .slides section .mt-290 + * {
+  margin-top: 290px;
+}
+.reveal .slides section img[alt*=mb-290], .reveal .slides section .mb-290, .reveal .slides section .mb-290 + * {
+  margin-bottom: 290px;
+}
+.reveal .slides section img[alt*=mt-300], .reveal .slides section .mt-300, .reveal .slides section .mt-300 + * {
+  margin-top: 300px;
+}
+.reveal .slides section img[alt*=mb-300], .reveal .slides section .mb-300, .reveal .slides section .mb-300 + * {
+  margin-bottom: 300px;
+}
+.reveal .slides section img[alt*=mt-310], .reveal .slides section .mt-310, .reveal .slides section .mt-310 + * {
+  margin-top: 310px;
+}
+.reveal .slides section img[alt*=mb-310], .reveal .slides section .mb-310, .reveal .slides section .mb-310 + * {
+  margin-bottom: 310px;
+}
+.reveal .slides section img[alt*=mt-320], .reveal .slides section .mt-320, .reveal .slides section .mt-320 + * {
+  margin-top: 320px;
+}
+.reveal .slides section img[alt*=mb-320], .reveal .slides section .mb-320, .reveal .slides section .mb-320 + * {
+  margin-bottom: 320px;
+}
+.reveal .slides section img[alt*=mt-330], .reveal .slides section .mt-330, .reveal .slides section .mt-330 + * {
+  margin-top: 330px;
+}
+.reveal .slides section img[alt*=mb-330], .reveal .slides section .mb-330, .reveal .slides section .mb-330 + * {
+  margin-bottom: 330px;
+}
+.reveal .slides section img[alt*=mt-340], .reveal .slides section .mt-340, .reveal .slides section .mt-340 + * {
+  margin-top: 340px;
+}
+.reveal .slides section img[alt*=mb-340], .reveal .slides section .mb-340, .reveal .slides section .mb-340 + * {
+  margin-bottom: 340px;
+}
+.reveal .slides section img[alt*=mt-350], .reveal .slides section .mt-350, .reveal .slides section .mt-350 + * {
+  margin-top: 350px;
+}
+.reveal .slides section img[alt*=mb-350], .reveal .slides section .mb-350, .reveal .slides section .mb-350 + * {
+  margin-bottom: 350px;
+}
+.reveal .slides section img[alt*=mt-360], .reveal .slides section .mt-360, .reveal .slides section .mt-360 + * {
+  margin-top: 360px;
+}
+.reveal .slides section img[alt*=mb-360], .reveal .slides section .mb-360, .reveal .slides section .mb-360 + * {
+  margin-bottom: 360px;
+}
+.reveal .slides section img[alt*=mt-370], .reveal .slides section .mt-370, .reveal .slides section .mt-370 + * {
+  margin-top: 370px;
+}
+.reveal .slides section img[alt*=mb-370], .reveal .slides section .mb-370, .reveal .slides section .mb-370 + * {
+  margin-bottom: 370px;
+}
+.reveal .slides section img[alt*=mt-380], .reveal .slides section .mt-380, .reveal .slides section .mt-380 + * {
+  margin-top: 380px;
+}
+.reveal .slides section img[alt*=mb-380], .reveal .slides section .mb-380, .reveal .slides section .mb-380 + * {
+  margin-bottom: 380px;
+}
+.reveal .slides section img[alt*=mt-390], .reveal .slides section .mt-390, .reveal .slides section .mt-390 + * {
+  margin-top: 390px;
+}
+.reveal .slides section img[alt*=mb-390], .reveal .slides section .mb-390, .reveal .slides section .mb-390 + * {
+  margin-bottom: 390px;
+}
+.reveal .slides section img[alt*=mt-400], .reveal .slides section .mt-400, .reveal .slides section .mt-400 + * {
+  margin-top: 400px;
+}
+.reveal .slides section img[alt*=mb-400], .reveal .slides section .mb-400, .reveal .slides section .mb-400 + * {
+  margin-bottom: 400px;
+}
+.reveal .slides section img[alt*=mt-410], .reveal .slides section .mt-410, .reveal .slides section .mt-410 + * {
+  margin-top: 410px;
+}
+.reveal .slides section img[alt*=mb-410], .reveal .slides section .mb-410, .reveal .slides section .mb-410 + * {
+  margin-bottom: 410px;
+}
+.reveal .slides section img[alt*=mt-420], .reveal .slides section .mt-420, .reveal .slides section .mt-420 + * {
+  margin-top: 420px;
+}
+.reveal .slides section img[alt*=mb-420], .reveal .slides section .mb-420, .reveal .slides section .mb-420 + * {
+  margin-bottom: 420px;
+}
+.reveal .slides section img[alt*=mt-430], .reveal .slides section .mt-430, .reveal .slides section .mt-430 + * {
+  margin-top: 430px;
+}
+.reveal .slides section img[alt*=mb-430], .reveal .slides section .mb-430, .reveal .slides section .mb-430 + * {
+  margin-bottom: 430px;
+}
+.reveal .slides section img[alt*=mt-440], .reveal .slides section .mt-440, .reveal .slides section .mt-440 + * {
+  margin-top: 440px;
+}
+.reveal .slides section img[alt*=mb-440], .reveal .slides section .mb-440, .reveal .slides section .mb-440 + * {
+  margin-bottom: 440px;
+}
+.reveal .slides section img[alt*=mt-450], .reveal .slides section .mt-450, .reveal .slides section .mt-450 + * {
+  margin-top: 450px;
+}
+.reveal .slides section img[alt*=mb-450], .reveal .slides section .mb-450, .reveal .slides section .mb-450 + * {
+  margin-bottom: 450px;
+}
+.reveal .slides section img[alt*=mt-460], .reveal .slides section .mt-460, .reveal .slides section .mt-460 + * {
+  margin-top: 460px;
+}
+.reveal .slides section img[alt*=mb-460], .reveal .slides section .mb-460, .reveal .slides section .mb-460 + * {
+  margin-bottom: 460px;
+}
+.reveal .slides section img[alt*=mt-470], .reveal .slides section .mt-470, .reveal .slides section .mt-470 + * {
+  margin-top: 470px;
+}
+.reveal .slides section img[alt*=mb-470], .reveal .slides section .mb-470, .reveal .slides section .mb-470 + * {
+  margin-bottom: 470px;
+}
+.reveal .slides section img[alt*=mt-480], .reveal .slides section .mt-480, .reveal .slides section .mt-480 + * {
+  margin-top: 480px;
+}
+.reveal .slides section img[alt*=mb-480], .reveal .slides section .mb-480, .reveal .slides section .mb-480 + * {
+  margin-bottom: 480px;
+}
+.reveal .slides section img[alt*=mt-490], .reveal .slides section .mt-490, .reveal .slides section .mt-490 + * {
+  margin-top: 490px;
+}
+.reveal .slides section img[alt*=mb-490], .reveal .slides section .mb-490, .reveal .slides section .mb-490 + * {
+  margin-bottom: 490px;
+}
+.reveal .slides section img[alt*=mt-500], .reveal .slides section .mt-500, .reveal .slides section .mt-500 + * {
+  margin-top: 500px;
+}
+.reveal .slides section img[alt*=mb-500], .reveal .slides section .mb-500, .reveal .slides section .mb-500 + * {
+  margin-bottom: 500px;
+}
+.reveal .slides section img[alt*=mt-510], .reveal .slides section .mt-510, .reveal .slides section .mt-510 + * {
+  margin-top: 510px;
+}
+.reveal .slides section img[alt*=mb-510], .reveal .slides section .mb-510, .reveal .slides section .mb-510 + * {
+  margin-bottom: 510px;
+}
+.reveal .slides section img[alt*=mt-520], .reveal .slides section .mt-520, .reveal .slides section .mt-520 + * {
+  margin-top: 520px;
+}
+.reveal .slides section img[alt*=mb-520], .reveal .slides section .mb-520, .reveal .slides section .mb-520 + * {
+  margin-bottom: 520px;
+}
+.reveal .slides section img[alt*=mt-530], .reveal .slides section .mt-530, .reveal .slides section .mt-530 + * {
+  margin-top: 530px;
+}
+.reveal .slides section img[alt*=mb-530], .reveal .slides section .mb-530, .reveal .slides section .mb-530 + * {
+  margin-bottom: 530px;
+}
+.reveal .slides section img[alt*=mt-540], .reveal .slides section .mt-540, .reveal .slides section .mt-540 + * {
+  margin-top: 540px;
+}
+.reveal .slides section img[alt*=mb-540], .reveal .slides section .mb-540, .reveal .slides section .mb-540 + * {
+  margin-bottom: 540px;
+}
+.reveal .slides section img[alt*=mt-550], .reveal .slides section .mt-550, .reveal .slides section .mt-550 + * {
+  margin-top: 550px;
+}
+.reveal .slides section img[alt*=mb-550], .reveal .slides section .mb-550, .reveal .slides section .mb-550 + * {
+  margin-bottom: 550px;
+}
+.reveal .slides section img[alt*=mt-560], .reveal .slides section .mt-560, .reveal .slides section .mt-560 + * {
+  margin-top: 560px;
+}
+.reveal .slides section img[alt*=mb-560], .reveal .slides section .mb-560, .reveal .slides section .mb-560 + * {
+  margin-bottom: 560px;
+}
+.reveal .slides section img[alt*=mt-570], .reveal .slides section .mt-570, .reveal .slides section .mt-570 + * {
+  margin-top: 570px;
+}
+.reveal .slides section img[alt*=mb-570], .reveal .slides section .mb-570, .reveal .slides section .mb-570 + * {
+  margin-bottom: 570px;
+}
+.reveal .slides section img[alt*=mt-580], .reveal .slides section .mt-580, .reveal .slides section .mt-580 + * {
+  margin-top: 580px;
+}
+.reveal .slides section img[alt*=mb-580], .reveal .slides section .mb-580, .reveal .slides section .mb-580 + * {
+  margin-bottom: 580px;
+}
+.reveal .slides section img[alt*=mt-590], .reveal .slides section .mt-590, .reveal .slides section .mt-590 + * {
+  margin-top: 590px;
+}
+.reveal .slides section img[alt*=mb-590], .reveal .slides section .mb-590, .reveal .slides section .mb-590 + * {
+  margin-bottom: 590px;
+}
+.reveal .slides section img[alt*=mt-600], .reveal .slides section .mt-600, .reveal .slides section .mt-600 + * {
+  margin-top: 600px;
+}
+.reveal .slides section img[alt*=mb-600], .reveal .slides section .mb-600, .reveal .slides section .mb-600 + * {
+  margin-bottom: 600px;
+}
+.reveal .slides section img[alt*=mt-610], .reveal .slides section .mt-610, .reveal .slides section .mt-610 + * {
+  margin-top: 610px;
+}
+.reveal .slides section img[alt*=mb-610], .reveal .slides section .mb-610, .reveal .slides section .mb-610 + * {
+  margin-bottom: 610px;
+}
+.reveal .slides section img[alt*=mt-620], .reveal .slides section .mt-620, .reveal .slides section .mt-620 + * {
+  margin-top: 620px;
+}
+.reveal .slides section img[alt*=mb-620], .reveal .slides section .mb-620, .reveal .slides section .mb-620 + * {
+  margin-bottom: 620px;
+}
+.reveal .slides section img[alt*=mt-630], .reveal .slides section .mt-630, .reveal .slides section .mt-630 + * {
+  margin-top: 630px;
+}
+.reveal .slides section img[alt*=mb-630], .reveal .slides section .mb-630, .reveal .slides section .mb-630 + * {
+  margin-bottom: 630px;
+}
+.reveal .slides section img[alt*=mt-640], .reveal .slides section .mt-640, .reveal .slides section .mt-640 + * {
+  margin-top: 640px;
+}
+.reveal .slides section img[alt*=mb-640], .reveal .slides section .mb-640, .reveal .slides section .mb-640 + * {
+  margin-bottom: 640px;
+}
+.reveal .slides section img[alt*=mt-650], .reveal .slides section .mt-650, .reveal .slides section .mt-650 + * {
+  margin-top: 650px;
+}
+.reveal .slides section img[alt*=mb-650], .reveal .slides section .mb-650, .reveal .slides section .mb-650 + * {
+  margin-bottom: 650px;
+}
+.reveal .slides section img[alt*=mt-660], .reveal .slides section .mt-660, .reveal .slides section .mt-660 + * {
+  margin-top: 660px;
+}
+.reveal .slides section img[alt*=mb-660], .reveal .slides section .mb-660, .reveal .slides section .mb-660 + * {
+  margin-bottom: 660px;
+}
+.reveal .slides section img[alt*=mt-670], .reveal .slides section .mt-670, .reveal .slides section .mt-670 + * {
+  margin-top: 670px;
+}
+.reveal .slides section img[alt*=mb-670], .reveal .slides section .mb-670, .reveal .slides section .mb-670 + * {
+  margin-bottom: 670px;
+}
+.reveal .slides section img[alt*=mt-680], .reveal .slides section .mt-680, .reveal .slides section .mt-680 + * {
+  margin-top: 680px;
+}
+.reveal .slides section img[alt*=mb-680], .reveal .slides section .mb-680, .reveal .slides section .mb-680 + * {
+  margin-bottom: 680px;
+}
+.reveal .slides section img[alt*=mt-690], .reveal .slides section .mt-690, .reveal .slides section .mt-690 + * {
+  margin-top: 690px;
+}
+.reveal .slides section img[alt*=mb-690], .reveal .slides section .mb-690, .reveal .slides section .mb-690 + * {
+  margin-bottom: 690px;
+}
+.reveal .slides section img[alt*=mt-700], .reveal .slides section .mt-700, .reveal .slides section .mt-700 + * {
+  margin-top: 700px;
+}
+.reveal .slides section img[alt*=mb-700], .reveal .slides section .mb-700, .reveal .slides section .mb-700 + * {
+  margin-bottom: 700px;
+}
+.reveal .slides section img[alt*=mt-710], .reveal .slides section .mt-710, .reveal .slides section .mt-710 + * {
+  margin-top: 710px;
+}
+.reveal .slides section img[alt*=mb-710], .reveal .slides section .mb-710, .reveal .slides section .mb-710 + * {
+  margin-bottom: 710px;
+}
+.reveal .slides section img[alt*=mt-720], .reveal .slides section .mt-720, .reveal .slides section .mt-720 + * {
+  margin-top: 720px;
+}
+.reveal .slides section img[alt*=mb-720], .reveal .slides section .mb-720, .reveal .slides section .mb-720 + * {
+  margin-bottom: 720px;
+}
+.reveal .slides section img[alt*=mt-730], .reveal .slides section .mt-730, .reveal .slides section .mt-730 + * {
+  margin-top: 730px;
+}
+.reveal .slides section img[alt*=mb-730], .reveal .slides section .mb-730, .reveal .slides section .mb-730 + * {
+  margin-bottom: 730px;
+}
+.reveal .slides section img[alt*=mt-740], .reveal .slides section .mt-740, .reveal .slides section .mt-740 + * {
+  margin-top: 740px;
+}
+.reveal .slides section img[alt*=mb-740], .reveal .slides section .mb-740, .reveal .slides section .mb-740 + * {
+  margin-bottom: 740px;
+}
+.reveal .slides section img[alt*=mt-750], .reveal .slides section .mt-750, .reveal .slides section .mt-750 + * {
+  margin-top: 750px;
+}
+.reveal .slides section img[alt*=mb-750], .reveal .slides section .mb-750, .reveal .slides section .mb-750 + * {
+  margin-bottom: 750px;
+}
+.reveal .slides section img[alt*=mt-760], .reveal .slides section .mt-760, .reveal .slides section .mt-760 + * {
+  margin-top: 760px;
+}
+.reveal .slides section img[alt*=mb-760], .reveal .slides section .mb-760, .reveal .slides section .mb-760 + * {
+  margin-bottom: 760px;
+}
+.reveal .slides section img[alt*=mt-770], .reveal .slides section .mt-770, .reveal .slides section .mt-770 + * {
+  margin-top: 770px;
+}
+.reveal .slides section img[alt*=mb-770], .reveal .slides section .mb-770, .reveal .slides section .mb-770 + * {
+  margin-bottom: 770px;
+}
+.reveal .slides section img[alt*=mt-780], .reveal .slides section .mt-780, .reveal .slides section .mt-780 + * {
+  margin-top: 780px;
+}
+.reveal .slides section img[alt*=mb-780], .reveal .slides section .mb-780, .reveal .slides section .mb-780 + * {
+  margin-bottom: 780px;
+}
+.reveal .slides section img[alt*=mt-790], .reveal .slides section .mt-790, .reveal .slides section .mt-790 + * {
+  margin-top: 790px;
+}
+.reveal .slides section img[alt*=mb-790], .reveal .slides section .mb-790, .reveal .slides section .mb-790 + * {
+  margin-bottom: 790px;
+}
+.reveal .slides section img[alt*=mt-800], .reveal .slides section .mt-800, .reveal .slides section .mt-800 + * {
+  margin-top: 800px;
+}
+.reveal .slides section img[alt*=mb-800], .reveal .slides section .mb-800, .reveal .slides section .mb-800 + * {
+  margin-bottom: 800px;
+}
+.reveal .slides section img[alt*=mt-810], .reveal .slides section .mt-810, .reveal .slides section .mt-810 + * {
+  margin-top: 810px;
+}
+.reveal .slides section img[alt*=mb-810], .reveal .slides section .mb-810, .reveal .slides section .mb-810 + * {
+  margin-bottom: 810px;
+}
+.reveal .slides section img[alt*=mt-820], .reveal .slides section .mt-820, .reveal .slides section .mt-820 + * {
+  margin-top: 820px;
+}
+.reveal .slides section img[alt*=mb-820], .reveal .slides section .mb-820, .reveal .slides section .mb-820 + * {
+  margin-bottom: 820px;
+}
+.reveal .slides section img[alt*=mt-830], .reveal .slides section .mt-830, .reveal .slides section .mt-830 + * {
+  margin-top: 830px;
+}
+.reveal .slides section img[alt*=mb-830], .reveal .slides section .mb-830, .reveal .slides section .mb-830 + * {
+  margin-bottom: 830px;
+}
+.reveal .slides section img[alt*=mt-840], .reveal .slides section .mt-840, .reveal .slides section .mt-840 + * {
+  margin-top: 840px;
+}
+.reveal .slides section img[alt*=mb-840], .reveal .slides section .mb-840, .reveal .slides section .mb-840 + * {
+  margin-bottom: 840px;
+}
+.reveal .slides section img[alt*=mt-850], .reveal .slides section .mt-850, .reveal .slides section .mt-850 + * {
+  margin-top: 850px;
+}
+.reveal .slides section img[alt*=mb-850], .reveal .slides section .mb-850, .reveal .slides section .mb-850 + * {
+  margin-bottom: 850px;
+}
+.reveal .slides section img[alt*=mt-860], .reveal .slides section .mt-860, .reveal .slides section .mt-860 + * {
+  margin-top: 860px;
+}
+.reveal .slides section img[alt*=mb-860], .reveal .slides section .mb-860, .reveal .slides section .mb-860 + * {
+  margin-bottom: 860px;
+}
+.reveal .slides section img[alt*=mt-870], .reveal .slides section .mt-870, .reveal .slides section .mt-870 + * {
+  margin-top: 870px;
+}
+.reveal .slides section img[alt*=mb-870], .reveal .slides section .mb-870, .reveal .slides section .mb-870 + * {
+  margin-bottom: 870px;
+}
+.reveal .slides section img[alt*=mt-880], .reveal .slides section .mt-880, .reveal .slides section .mt-880 + * {
+  margin-top: 880px;
+}
+.reveal .slides section img[alt*=mb-880], .reveal .slides section .mb-880, .reveal .slides section .mb-880 + * {
+  margin-bottom: 880px;
+}
+.reveal .slides section img[alt*=mt-890], .reveal .slides section .mt-890, .reveal .slides section .mt-890 + * {
+  margin-top: 890px;
+}
+.reveal .slides section img[alt*=mb-890], .reveal .slides section .mb-890, .reveal .slides section .mb-890 + * {
+  margin-bottom: 890px;
+}
+.reveal .slides section img[alt*=mt-900], .reveal .slides section .mt-900, .reveal .slides section .mt-900 + * {
+  margin-top: 900px;
+}
+.reveal .slides section img[alt*=mb-900], .reveal .slides section .mb-900, .reveal .slides section .mb-900 + * {
+  margin-bottom: 900px;
+}
+.reveal .slides section img[alt*=mt-910], .reveal .slides section .mt-910, .reveal .slides section .mt-910 + * {
+  margin-top: 910px;
+}
+.reveal .slides section img[alt*=mb-910], .reveal .slides section .mb-910, .reveal .slides section .mb-910 + * {
+  margin-bottom: 910px;
+}
+.reveal .slides section img[alt*=mt-920], .reveal .slides section .mt-920, .reveal .slides section .mt-920 + * {
+  margin-top: 920px;
+}
+.reveal .slides section img[alt*=mb-920], .reveal .slides section .mb-920, .reveal .slides section .mb-920 + * {
+  margin-bottom: 920px;
+}
+.reveal .slides section img[alt*=mt-930], .reveal .slides section .mt-930, .reveal .slides section .mt-930 + * {
+  margin-top: 930px;
+}
+.reveal .slides section img[alt*=mb-930], .reveal .slides section .mb-930, .reveal .slides section .mb-930 + * {
+  margin-bottom: 930px;
+}
+.reveal .slides section img[alt*=mt-940], .reveal .slides section .mt-940, .reveal .slides section .mt-940 + * {
+  margin-top: 940px;
+}
+.reveal .slides section img[alt*=mb-940], .reveal .slides section .mb-940, .reveal .slides section .mb-940 + * {
+  margin-bottom: 940px;
+}
+.reveal .slides section img[alt*=mt-950], .reveal .slides section .mt-950, .reveal .slides section .mt-950 + * {
+  margin-top: 950px;
+}
+.reveal .slides section img[alt*=mb-950], .reveal .slides section .mb-950, .reveal .slides section .mb-950 + * {
+  margin-bottom: 950px;
+}
+.reveal .slides section img[alt*=mt-960], .reveal .slides section .mt-960, .reveal .slides section .mt-960 + * {
+  margin-top: 960px;
+}
+.reveal .slides section img[alt*=mb-960], .reveal .slides section .mb-960, .reveal .slides section .mb-960 + * {
+  margin-bottom: 960px;
+}
+.reveal .slides section img[alt*=mt-970], .reveal .slides section .mt-970, .reveal .slides section .mt-970 + * {
+  margin-top: 970px;
+}
+.reveal .slides section img[alt*=mb-970], .reveal .slides section .mb-970, .reveal .slides section .mb-970 + * {
+  margin-bottom: 970px;
+}
+.reveal .slides section img[alt*=mt-980], .reveal .slides section .mt-980, .reveal .slides section .mt-980 + * {
+  margin-top: 980px;
+}
+.reveal .slides section img[alt*=mb-980], .reveal .slides section .mb-980, .reveal .slides section .mb-980 + * {
+  margin-bottom: 980px;
+}
+.reveal .slides section img[alt*=mt-990], .reveal .slides section .mt-990, .reveal .slides section .mt-990 + * {
+  margin-top: 990px;
+}
+.reveal .slides section img[alt*=mb-990], .reveal .slides section .mb-990, .reveal .slides section .mb-990 + * {
+  margin-bottom: 990px;
+}
+.reveal .slides section img[alt*=mt-1000], .reveal .slides section .mt-1000, .reveal .slides section .mt-1000 + * {
+  margin-top: 1000px;
+}
+.reveal .slides section img[alt*=mb-1000], .reveal .slides section .mb-1000, .reveal .slides section .mb-1000 + * {
+  margin-bottom: 1000px;
+}
+
+/**
+* IMAGE
+*
+*/
+.reveal .slides section img[alt*=center], .reveal .slides section .center, .reveal .slides section .center + * {
+  display: block;
+  margin: auto;
+}
+.reveal .slides section .center + img {
+  max-width: initial;
+  max-height: initial;
+}
+.reveal .slides section img[alt*=full-width], .reveal .slides section .full-width, .reveal .slides section .full-width + * {
+  width: 100%;
+  max-width: 100%;
+}
+.reveal .slides section .full-height {
+  height: 100%;
+  max-height: 100%;
+}
+.reveal .slides section img[alt*=float-left], .reveal .slides section .float-left {
+  float: left;
+  margin-right: 40px;
+}
+.reveal .slides section img[alt*=float-right], .reveal .slides section .float-right {
+  float: right;
+  margin-left: 10px;
+}
+
+/**
+* Alignments & Layouts
+*/
+.reveal .slides section.full-center p, .reveal .slides section :not(section).full-center {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.reveal .slides section.flex-row p, .reveal .slides section :not(section).flex-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+
+/**
+* Globals overrides to change the layout of slides
+*/
+.reveal ol, .reveal dl, .reveal ul {
+  padding: 0 0 0 1em;
+  line-height: 1.5em;
+  text-align: left;
+  margin: 0;
+}
+.reveal ul {
+  list-style-type: disc;
+}
+.reveal .slides section.stack {
+  height: 100%;
+}
+.reveal .slides section li p {
+  font-size: 100%;
+}
+.reveal .slides section p {
+  font-size: 1em;
+}
+.reveal .slides section p.credits {
+  justify-content: flex-end;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 0.7em;
+}
+.reveal .slides section[data-type-show=full] p {
+  font-size: 100%;
+}
+.reveal .slides section p + p {
+  margin-top: 40px;
+}
+.reveal blockquote::before {
+  content: "“";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 50px;
+}
+.reveal blockquote::after {
+  content: "”";
+  position: absolute;
+  bottom: -0.5em;
+  right: -0.5em;
+  width: 50px;
+  height: 50px;
+}
+.reveal blockquote {
+  display: block;
+  position: relative;
+  width: 70%;
+  margin: 20px auto;
+  padding: 1em;
+  text-align: left;
+  font-style: italic;
+  background: white;
+  color: #2a3244;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+}
+
+.reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]),
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]),
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) {
+  width: 100%;
+  height: calc(100% - 40px);
+  height: -webkit-calc(100% - 40px);
+  text-align: left;
+  font-size: 1em;
+}
+.reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h1, .reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h2,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) h1,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) h2,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) h1,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) h2 {
+  text-transform: initial;
+  text-align: left;
+  color: #434343;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+.reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h1, .reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h2, .reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h3,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) h1,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) h2,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) h3,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) h1,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) h2,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) h3 {
+  text-transform: initial;
+  margin-bottom: 130px;
+}
+.reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h1 ~ h2, .reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h2 ~ h3, .reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h1 ~ h3,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) h1 ~ h2,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) h2 ~ h3,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) h1 ~ h3,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) h1 ~ h2,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) h2 ~ h3,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) h1 ~ h3 {
+  text-transform: initial;
+  margin-bottom: 40px;
+  color: #434343;
+  font-size: 1em;
+}
+.reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h1 + h2, .reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h2 + h3, .reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h1 + h3,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) h1 + h2,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) h2 + h3,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) h1 + h3,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) h1 + h2,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) h2 + h3,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) h1 + h3 {
+  margin-top: -90px;
+  font-size: 1.15em;
+}
+.reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) table,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) table,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) table {
+  width: 100%;
+}
+.reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) thead,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]) thead,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]) thead {
+  background-color: #dd3355;
+  color: white;
+}
+.reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]).blue thead,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]).blue thead,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]).blue thead {
+  background-color: #575eaa;
+}
+.reveal .slides section:not(.sfeir-specific-slide):not(.stack):not([class*=transition]).green thead,
+.reveal .slides section.sfeir-basic-slide:not(.stack):not([class*=transition]).green thead,
+.reveal .slides section.sfeir-specific-slide.sfeir-bg-axololt:not(.stack):not([class*=transition]).green thead {
+  background-color: #0ab580;
+}
+
+.reveal .slides section.sfeir-basic-slide:not(.stack),
+.reveal .slides section.exercice:not(.stack) {
+  color: #2a3244;
+}
+.reveal .slides section.sfeir-basic-slide:not(.stack) h1, .reveal .slides section.sfeir-basic-slide:not(.stack) h2, .reveal .slides section.sfeir-basic-slide:not(.stack) h3,
+.reveal .slides section.exercice:not(.stack) h1,
+.reveal .slides section.exercice:not(.stack) h2,
+.reveal .slides section.exercice:not(.stack) h3 {
+  margin-bottom: 100px;
+}
+.reveal .slides section.sfeir-basic-slide:not(.stack) h1, .reveal .slides section.sfeir-basic-slide:not(.stack) h2, .reveal .slides section.sfeir-basic-slide:not(.stack) h1 ~ h2, .reveal .slides section.sfeir-basic-slide:not(.stack) h2 ~ h3, .reveal .slides section.sfeir-basic-slide:not(.stack) h1 ~ h3,
+.reveal .slides section.exercice:not(.stack) h1,
+.reveal .slides section.exercice:not(.stack) h2,
+.reveal .slides section.exercice:not(.stack) h1 ~ h2,
+.reveal .slides section.exercice:not(.stack) h2 ~ h3,
+.reveal .slides section.exercice:not(.stack) h1 ~ h3 {
+  position: relative;
+  color: #434343;
+  text-align: left;
+}
+.reveal .slides section.sfeir-basic-slide:not(.stack) h1:first-of-type:after, .reveal .slides section.sfeir-basic-slide:not(.stack) h2:first-of-type:after,
+.reveal .slides section.exercice:not(.stack) h1:first-of-type:after,
+.reveal .slides section.exercice:not(.stack) h2:first-of-type:after {
+  position: absolute;
+  content: "";
+  width: 40%;
+  height: 10px;
+  background-color: #dd3355;
+  bottom: -30px;
+  left: 0;
+}
+.reveal .slides section.sfeir-basic-slide:not(.stack).blue h1:first-of-type:after, .reveal .slides section.sfeir-basic-slide:not(.stack).blue h2:first-of-type:after,
+.reveal .slides section.exercice:not(.stack).blue h1:first-of-type:after,
+.reveal .slides section.exercice:not(.stack).blue h2:first-of-type:after {
+  background-color: #575eaa;
+}
+.reveal .slides section.sfeir-basic-slide:not(.stack).green h1:first-of-type:after, .reveal .slides section.sfeir-basic-slide:not(.stack).green h2:first-of-type:after,
+.reveal .slides section.exercice:not(.stack).green h1:first-of-type:after,
+.reveal .slides section.exercice:not(.stack).green h2:first-of-type:after {
+  background-color: #0ab580;
+}
+.reveal .slides section.sfeir-basic-slide:not(.stack) h1 ~ h2:first-of-type:after, .reveal .slides section.sfeir-basic-slide:not(.stack) h2 ~ h3:first-of-type:after, .reveal .slides section.sfeir-basic-slide:not(.stack) h1 ~ h3:first-of-type:after,
+.reveal .slides section.exercice:not(.stack) h1 ~ h2:first-of-type:after,
+.reveal .slides section.exercice:not(.stack) h2 ~ h3:first-of-type:after,
+.reveal .slides section.exercice:not(.stack) h1 ~ h3:first-of-type:after {
+  content: initial;
+}
+
+/**
+* Two Columns slides
+*/
+.reveal .slides section.two-column-layout {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 100px auto;
+  grid-column-gap: 20px;
+  grid-template-columns: 1fr 1fr;
+}
+.reveal .slides section.two-column-layout section:first-child {
+  grid-row-start: 1;
+  opacity: 1;
+}
+.reveal .slides section.two-column-layout section:nth-child(2) {
+  margin-top: 50px;
+  grid-row-start: 2;
+  grid-column-end: 2;
+  opacity: 1;
+}
+.reveal .slides section.two-column-layout section:last-child {
+  margin-top: 50px;
+  grid-row-start: 2;
+  grid-column-start: 2;
+  opacity: 1;
+}
+
+/**
+* Reset Somes styles
+*/
+.reveal section img {
+  margin: initial;
+  background: initial;
+  border: initial;
+  box-shadow: initial;
+}
+
+/**
+* Custom Properties
+*/
+:root {
+  --code-bg: #3f3f3f;
+  --light-grey: #ddd;
+  --white: white;
+  --medium-grey: #817c7c;
+  --black: #434343;
+  --dark-grey: #2a3244;
+  --dark-grey-alpha: rgba(61, 67, 73, 0.7);
+  --red: #e74c3c;
+  --sfeir-pink: #dd3355;
+  --sfeir-blue: #575eaa;
+  --sfeir-green: #0ab580;
+}
+
+/**
+* First Slide of Sfeir School
+*/
+.reveal .slides section[data-background].first-slide {
+  position: absolute;
+  color: white;
+  background: transparent;
+}
+.reveal .slides section[data-background].first-slide h1, .reveal .slides section[data-background].first-slide h2, .reveal .slides section[data-background].first-slide h3 {
+  color: white;
+  text-transform: initial;
+}
+.reveal .slides section[data-background].first-slide h1 {
+  margin-bottom: 40px;
+  margin-top: 20px;
+  font-size: 2.5em;
+  font-weight: 800;
+}
+.reveal .slides section[data-background].first-slide h2 {
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.reveal .slides section[data-background].first-slide div.sfeir-logo {
+  position: relative;
+  width: 500px;
+  height: 600px;
+  max-width: 500px;
+  max-height: 600px;
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  margin: auto;
+}
+.reveal .slides section[data-background].first-slide div.sfeir-logo::before {
+  color: #434343;
+  position: absolute;
+  content: attr(data-sfeir-techno);
+  text-transform: uppercase;
+  font-weight: 800;
+  top: 280px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 50px;
+}
+.reveal .slides section[data-background].first-slide div.sfeir-logo::after {
+  content: "";
+  position: absolute;
+  bottom: 50px;
+  width: 100%;
+  height: 200px;
+  left: 0;
+}
+.reveal .slides section[data-background].first-slide div.sfeir-logo[data-sfeir-level="1"]:after {
+  background: url("../images/star.png");
+  background-repeat: no-repeat;
+  background-position: 50% 40px;
+  background-size: 55px;
+}
+.reveal .slides section[data-background].first-slide div.sfeir-logo[data-sfeir-level="2"]:after {
+  background: url("../images/star.png"), url("../images/star.png");
+  background-position: calc(50% - 35px) 40px, calc(50% + 35px) 40px;
+  background-repeat: no-repeat;
+  background-size: 55px;
+}
+.reveal .slides section[data-background].first-slide div.sfeir-logo[data-sfeir-level="3"]:after {
+  background: url("../images/star.png"), url("../images/star.png"), url("../images/star.png");
+  background-position: calc(50% - 35px) 25px, calc(50% + 35px) 25px, 50% 65px;
+  background-repeat: no-repeat;
+  background-size: 55px;
+}
+
+/**
+* Custom Properties
+*/
+:root {
+  --code-bg: #3f3f3f;
+  --light-grey: #ddd;
+  --white: white;
+  --medium-grey: #817c7c;
+  --black: #434343;
+  --dark-grey: #2a3244;
+  --dark-grey-alpha: rgba(61, 67, 73, 0.7);
+  --red: #e74c3c;
+  --sfeir-pink: #dd3355;
+  --sfeir-blue: #575eaa;
+  --sfeir-green: #0ab580;
+}
+
+.reveal .slides section[data-background].speaker-slide {
+  height: 800px;
+  text-transform: inherit;
+}
+.reveal .slides section[data-background].speaker-slide h1 {
+  text-transform: inherit;
+  text-align: left;
+  font-size: 2em;
+  margin-top: 200px;
+  margin-left: 200px;
+  font-weight: 600;
+}
+.reveal .slides section[data-background].speaker-slide h2 {
+  position: absolute;
+  right: 0;
+  top: calc(400px + 200px + 100px);
+  text-transform: inherit;
+  text-align: center;
+  color: white;
+  font-weight: 800;
+  line-height: 1.5em;
+  height: 1.5em;
+  width: calc(300px * 2 + 400px);
+  font-size: 1.3em;
+}
+.reveal .slides section[data-background].speaker-slide h2 span {
+  padding-right: 15px;
+  background: linear-gradient(to right, #ee0f50, #fa8b88);
+}
+.reveal .slides section[data-background].speaker-slide h3 {
+  position: absolute;
+  text-transform: inherit;
+  text-align: left;
+  left: 200px;
+  font-size: 1.2em;
+  color: white;
+  margin-bottom: 20px;
+}
+.reveal .slides section[data-background].speaker-slide h3:before {
+  font-family: "sfeir";
+  content: "\e8c8";
+  position: absolute;
+  top: 0;
+  left: -70px;
+  width: 50px;
+  height: 50px;
+}
+.reveal .slides section[data-background].speaker-slide h3.icon-first {
+  top: calc(200px + 300px);
+}
+.reveal .slides section[data-background].speaker-slide h3.icon-second {
+  top: calc(200px + 400px);
+}
+.reveal .slides section[data-background].speaker-slide h3.icon-third {
+  top: calc(200px + 500px);
+}
+.reveal .slides section[data-background].speaker-slide h3.icon-twitter:before {
+  content: "\ec98";
+}
+.reveal .slides section[data-background].speaker-slide h3.icon-mail:before {
+  content: "\e8c8";
+}
+.reveal .slides section[data-background].speaker-slide h3[class^=icon] > a {
+  color: white;
+}
+.reveal .slides section[data-background].speaker-slide h3.icon-rule:before {
+  content: "\e81d";
+}
+.reveal .slides section[data-background].speaker-slide img[alt*=speaker], .reveal .slides section[data-background].speaker-slide div.speaker {
+  position: absolute;
+  right: 300px;
+  top: 200px;
+  width: 400px;
+  height: 400px;
+  margin-top: 20px;
+  border-radius: 400px;
+  border-style: solid;
+  border-width: 10px;
+  border-color: #dd3355;
+  background-size: cover;
+}
+.reveal .slides section[data-background].speaker-slide img[alt*=company] {
+  position: absolute;
+  top: 850px;
+  left: 350px;
+  max-width: 400px;
+  max-height: 200px;
+}
+.reveal .slides section[data-background].speaker-slide img[alt*=badge] {
+  position: absolute;
+  top: 800px;
+  right: 400px;
+  max-width: 250px;
+  max-height: 250px;
+}
+.reveal .slides section[data-background].speaker-slide img[alt*=first-badge] {
+  right: 700px;
+}
+.reveal .slides section[data-background].speaker-slide img[alt*=second-badge] {
+  right: 400px;
+}
+.reveal .slides section[data-background].speaker-slide img[alt*=third-badge] {
+  right: 100px;
+}
+.reveal .slides section[data-background].speaker-slide.blue img[alt*=speaker] {
+  border-color: #575eaa;
+}
+.reveal .slides section[data-background].speaker-slide.blue h2 span {
+  background: linear-gradient(to right, #00b6e5, #575eaa);
+}
+.reveal .slides section[data-background].speaker-slide.green img[alt*=speaker] {
+  border-color: #0ab580;
+}
+.reveal .slides section[data-background].speaker-slide.green h2 span {
+  background: linear-gradient(to right, #00bbc5, #0ab580);
+}
+
+.reveal .slides section[class*=transition],
+.reveal .slides section.sfeir-basic-slide[class*=transition],
+.reveal .slides section.sfeir-specific-slide[class*=transition] {
+  background: rgba(0, 0, 0, 0);
+}
+.reveal .slides section[class*=transition] h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition] h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition] h1 {
+  color: white;
+  margin: auto;
+  margin-top: 450px;
+  font-size: 3em;
+  font-weight: 800;
+  margin-bottom: 40px;
+  text-transform: initial;
+  padding: 30px;
+  width: fit-content;
+  background: linear-gradient(to right, #ee0f50, #fa8b88);
+  transform: rotate(-3deg);
+}
+.reveal .slides section[class*=transition].blue h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition].blue h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition].blue h1 {
+  background: linear-gradient(to right, #00b6e5, #575eaa);
+}
+.reveal .slides section[class*=transition].green h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition].green h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition].green h1 {
+  background: linear-gradient(to right, #00bbc5, #0ab580);
+}
+.reveal .slides section[class*=transition].bg-blue h1, .reveal .slides section[class*=transition].bg-green h1, .reveal .slides section[class*=transition].bg-pink h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition].bg-blue h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition].bg-green h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition].bg-pink h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition].bg-blue h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition].bg-green h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition].bg-pink h1 {
+  background: none;
+}
+.reveal .slides section[class*=transition].underline h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition].underline h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition].underline h1 {
+  background: initial;
+  position: relative;
+  transform: initial;
+}
+.reveal .slides section[class*=transition].underline h1:before,
+.reveal .slides section.sfeir-basic-slide[class*=transition].underline h1:before,
+.reveal .slides section.sfeir-specific-slide[class*=transition].underline h1:before {
+  content: "";
+  z-index: -1;
+  position: absolute;
+  background: #dd3355;
+  width: 100%;
+  height: 50px;
+  left: 0;
+  bottom: 35px;
+  transform: rotate(1deg);
+}
+.reveal .slides section[class*=transition].underline.green h1:before,
+.reveal .slides section.sfeir-basic-slide[class*=transition].underline.green h1:before,
+.reveal .slides section.sfeir-specific-slide[class*=transition].underline.green h1:before {
+  background: #0ab580;
+}
+.reveal .slides section[class*=transition].underline.blue h1:before,
+.reveal .slides section.sfeir-basic-slide[class*=transition].underline.blue h1:before,
+.reveal .slides section.sfeir-specific-slide[class*=transition].underline.blue h1:before {
+  background: #575eaa;
+}
+.reveal .slides section[class*=transition].left h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition].left h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition].left h1 {
+  margin-left: initial;
+  text-align: left;
+}
+.reveal .slides section[class*=transition].right h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition].right h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition].right h1 {
+  margin-right: initial;
+  text-align: right;
+}
+.reveal .slides section[class*=transition].top h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition].top h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition].top h1 {
+  margin-top: 50px;
+}
+.reveal .slides section[class*=transition].bottom h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition].bottom h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition].bottom h1 {
+  margin-top: 800px;
+}
+.reveal .slides section[class*=transition].bg-white:not(h1),
+.reveal .slides section.sfeir-basic-slide[class*=transition].bg-white:not(h1),
+.reveal .slides section.sfeir-specific-slide[class*=transition].bg-white:not(h1) {
+  color: #434343;
+}
+
+.reveal .slides section[class*=transition-left] h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition-left] h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition-left] h1 {
+  text-align: left;
+  margin-left: initial;
+}
+
+.reveal .slides section[class*=transition-right] h1,
+.reveal .slides section.sfeir-basic-slide[class*=transition-right] h1,
+.reveal .slides section.sfeir-specific-slide[class*=transition-right] h1 {
+  text-align: right;
+  margin-right: initial;
+}
+
+.reveal .backgrounds div.slide-background.transition.bg-white:after, .reveal .backgrounds div.slide-background.transition.bg-blue:after, .reveal .backgrounds div.slide-background.transition.bg-green:after, .reveal .backgrounds div.slide-background.transition.bg-pink:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.reveal .backgrounds div.slide-background.transition.bg-white:after {
+  background: rgba(255, 255, 255, 0.6);
+}
+.reveal .backgrounds div.slide-background.transition.bg-blue::after {
+  background: rgba(87, 94, 170, 0.6);
+}
+.reveal .backgrounds div.slide-background.transition.bg-green::after {
+  background: rgba(10, 181, 128, 0.6);
+}
+.reveal .backgrounds div.slide-background.transition.bg-pink::after {
+  background: rgba(221, 51, 85, 0.6);
+}
+
+.with-code-dark, .with-code-bg-dark {
+  /*
+
+  Darcula color scheme from the JetBrains family of IDEs
+
+  */
+}
+.with-code-dark .hljs, .with-code-bg-dark .hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #2b2b2b;
+  color: #bababa;
+}
+.with-code-dark .hljs-strong,
+.with-code-dark .hljs-emphasis, .with-code-bg-dark .hljs-strong,
+.with-code-bg-dark .hljs-emphasis {
+  color: #a8a8a2;
+}
+.with-code-dark .hljs-bullet,
+.with-code-dark .hljs-quote,
+.with-code-dark .hljs-link,
+.with-code-dark .hljs-number,
+.with-code-dark .hljs-regexp,
+.with-code-dark .hljs-literal, .with-code-bg-dark .hljs-bullet,
+.with-code-bg-dark .hljs-quote,
+.with-code-bg-dark .hljs-link,
+.with-code-bg-dark .hljs-number,
+.with-code-bg-dark .hljs-regexp,
+.with-code-bg-dark .hljs-literal {
+  color: #6896ba;
+}
+.with-code-dark .hljs-code,
+.with-code-dark .hljs-selector-class, .with-code-bg-dark .hljs-code,
+.with-code-bg-dark .hljs-selector-class {
+  color: #a6e22e;
+}
+.with-code-dark .hljs-emphasis, .with-code-bg-dark .hljs-emphasis {
+  font-style: italic;
+}
+.with-code-dark .hljs-keyword,
+.with-code-dark .hljs-selector-tag,
+.with-code-dark .hljs-section,
+.with-code-dark .hljs-attribute,
+.with-code-dark .hljs-name,
+.with-code-dark .hljs-variable, .with-code-bg-dark .hljs-keyword,
+.with-code-bg-dark .hljs-selector-tag,
+.with-code-bg-dark .hljs-section,
+.with-code-bg-dark .hljs-attribute,
+.with-code-bg-dark .hljs-name,
+.with-code-bg-dark .hljs-variable {
+  color: #cb7832;
+}
+.with-code-dark .hljs-params, .with-code-bg-dark .hljs-params {
+  color: #b9b9b9;
+}
+.with-code-dark .hljs-string, .with-code-bg-dark .hljs-string {
+  color: #6a8759;
+}
+.with-code-dark .hljs-subst,
+.with-code-dark .hljs-type,
+.with-code-dark .hljs-built_in,
+.with-code-dark .hljs-builtin-name,
+.with-code-dark .hljs-symbol,
+.with-code-dark .hljs-selector-id,
+.with-code-dark .hljs-selector-attr,
+.with-code-dark .hljs-selector-pseudo,
+.with-code-dark .hljs-template-tag,
+.with-code-dark .hljs-template-variable,
+.with-code-dark .hljs-addition, .with-code-bg-dark .hljs-subst,
+.with-code-bg-dark .hljs-type,
+.with-code-bg-dark .hljs-built_in,
+.with-code-bg-dark .hljs-builtin-name,
+.with-code-bg-dark .hljs-symbol,
+.with-code-bg-dark .hljs-selector-id,
+.with-code-bg-dark .hljs-selector-attr,
+.with-code-bg-dark .hljs-selector-pseudo,
+.with-code-bg-dark .hljs-template-tag,
+.with-code-bg-dark .hljs-template-variable,
+.with-code-bg-dark .hljs-addition {
+  color: #e0c46c;
+}
+.with-code-dark .hljs-comment,
+.with-code-dark .hljs-deletion,
+.with-code-dark .hljs-meta, .with-code-bg-dark .hljs-comment,
+.with-code-bg-dark .hljs-deletion,
+.with-code-bg-dark .hljs-meta {
+  color: #7f7f7f;
+}
+
+.reveal .backgrounds div.slide-background.with-code-dark {
+  background-color: #3f3f3f;
+}
+
+.reveal .slides section.with-code-dark:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h1, .reveal .slides section.with-code-dark:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h2 {
+  color: white;
+}
+
+.reveal .slides section.with-code pre,
+.reveal .slides section.with-code-dark pre,
+.reveal .slides section.with-code-bg-dark pre {
+  display: block;
+  position: relative;
+  width: 100%;
+  margin: 20px auto;
+  text-align: left;
+  font-family: monospace;
+  line-height: 1.7em;
+  word-wrap: break-word;
+}
+.reveal .slides section.with-code pre code,
+.reveal .slides section.with-code-dark pre code,
+.reveal .slides section.with-code-bg-dark pre code {
+  display: block;
+  padding: 10px;
+  overflow: auto;
+  max-height: 600px;
+  word-wrap: normal;
+  font-size: 0.9em;
+  font-family: monospace;
+  margin-bottom: 20px;
+}
+.reveal .slides section.with-code pre code span,
+.reveal .slides section.with-code-dark pre code span,
+.reveal .slides section.with-code-bg-dark pre code span {
+  line-height: 1.8em;
+}
+.reveal .slides section.with-code pre.big-code:not(.literal),
+.reveal .slides section.with-code-dark pre.big-code:not(.literal),
+.reveal .slides section.with-code-bg-dark pre.big-code:not(.literal) {
+  position: relative;
+  top: 0;
+}
+.reveal .slides section.with-code pre.big-code:not(.literal) code,
+.reveal .slides section.with-code-dark pre.big-code:not(.literal) code,
+.reveal .slides section.with-code-bg-dark pre.big-code:not(.literal) code {
+  font-size: 1.5em;
+  line-height: 2.1em;
+}
+.reveal .slides section.with-code pre.big-code:not(.literal).alone,
+.reveal .slides section.with-code-dark pre.big-code:not(.literal).alone,
+.reveal .slides section.with-code-bg-dark pre.big-code:not(.literal).alone {
+  position: absolute;
+  top: 20vh;
+}
+.reveal .slides section.with-code.consolas pre, .reveal .slides section.with-code.consolas pre code,
+.reveal .slides section.with-code-dark.consolas pre,
+.reveal .slides section.with-code-dark.consolas pre code,
+.reveal .slides section.with-code-bg-dark.consolas pre,
+.reveal .slides section.with-code-bg-dark.consolas pre code {
+  font-family: "Consolas";
+}
+.reveal .slides section.with-code.inconsolata pre, .reveal .slides section.with-code.inconsolata pre code,
+.reveal .slides section.with-code-dark.inconsolata pre,
+.reveal .slides section.with-code-dark.inconsolata pre code,
+.reveal .slides section.with-code-bg-dark.inconsolata pre,
+.reveal .slides section.with-code-bg-dark.inconsolata pre code {
+  font-family: "Inconsolata";
+}
+
+.reveal .slides section.with-code-bg-dark pre {
+  background-color: #3f3f3f;
+}
+
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) {
+  width: calc(100% - 200px);
+  height: calc(100% - 200px);
+  color: #2a3244;
+  padding-left: 200px;
+}
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h1:first-of-type:after {
+  background-color: #ffaa54;
+}
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h1,
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h2,
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h3 {
+  position: relative;
+  color: #434343;
+  font-size: 2em;
+}
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h1 {
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h1:first-of-type:before {
+  content: "\ed57";
+  font-family: "sfeir";
+  position: absolute;
+  left: -200px;
+  top: 0;
+  font-size: 2em;
+  width: 175px;
+  height: 250px;
+}
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h2:first-of-type {
+  position: absolute;
+  transform: rotateZ(272deg);
+  padding: 10px;
+  font-weight: 800;
+  top: 500px;
+  left: -100px;
+  color: white;
+  font-size: 2em;
+  background: linear-gradient(to right, #f9cb9c, #fa8b88);
+}
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h2:first-of-type:after {
+  content: initial;
+}
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) h3 {
+  color: #ffaa54;
+  font-size: 1.5em;
+  text-align: center;
+  bottom: -50px;
+  width: 100%;
+  left: 0;
+}
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) ul,
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) ol,
+.reveal .slides section.sfeir-basic-slide.exercice:not(.sfeir-specific-slide):not(.stack):not([class*=transition]) p {
+  text-align: left;
+  font-size: 1.2em;
+}
+
+.reveal .slides section.school-presentation .wifi {
+  font-weight: 800;
+  text-align: left;
+  padding: 100px;
+}
+.reveal .slides section.school-presentation .wifi .key {
+  text-transform: uppercase;
+}
+.reveal .slides section.school-presentation .wifi span:not(.key) {
+  color: white;
+  font-weight: 400;
+}
+
+.reveal .backgrounds div.slide-background.transition[data-background-hash].no-filter::before {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=png]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=PNG]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=Png]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=jpg]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=JPG]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=Jpg]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=jpeg]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=JPEG]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=Jpeg]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=gif]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=GIF]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=Gif]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=svg]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=SVG]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=Svg]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=bmp]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=BMP]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=Bmp]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=webp]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=WEBP]::before,
+.reveal .backgrounds div.slide-background.transition[data-background-hash*=Webp]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vw;
+}
+
+/*
+.with-code {
+    @import "../../../node_modules/highlight.js/styles/tomorrow";
+}
+.with-code-dark {
+    @import "../../../node_modules/highlight.js/styles/darcula";
+}
+*/
+
+/*# sourceMappingURL=sfeir-school-theme.css.map */
