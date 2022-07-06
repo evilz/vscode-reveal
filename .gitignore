@@ -105,3 +105,5 @@ xunit.xml
 
 *.vsix
 test-report.xml
+
+.fake

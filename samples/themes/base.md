@@ -1,7 +1,13 @@
 ---
-theme: myplanet
+theme: dsf
+cssvariables: 
+    --r-main-font-size: 1rem
+    --r-heading-margin: 5rem
+    --r-heading-text-shadow: "#FC0 1px 0 10px"
+    --r-link-color: yellow
+    --r-link-color-dark: orange
+    --r-link-color-hover: red
 ---
-
 
 # Heading	
 

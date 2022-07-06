@@ -1,4 +1,8 @@
  <script>
+   <% if(init) { %>
+   <%- init %>
+   <%} else { %>
+
    const printPlugins = [
        RevealNotes,
        RevealHighlight,
@@ -207,5 +211,6 @@
 			  }, 2500);
 			
     }
-		
+
+  <%}%>
  </script>

@@ -1,4 +1,5 @@
 import * as http from 'http'
+import * as fs from 'fs'
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
@@ -108,12 +109,21 @@ export class RevealServer extends Disposable {
         next()
       }
       else {
+
+        const opts = {}
+        if (context.dirname) {
+          const initPath = path.join(context.dirname, 'init.js')
+          if (fs.existsSync(initPath)) {
+            opts["init"] = fs.readFileSync(initPath, "utf8");
+          }
+        }
+
         const htmlSlides = context.slides.map((s) => ({
           ...s,
           html: markdownit.render(s.text),
           children: s.verticalChildren.map((c) => ({ ...c, html: markdownit.render(c.text) })),
         }))
-        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri })
+        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, ...opts })
       }
     })
 
