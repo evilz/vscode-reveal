@@ -1,6 +1,7 @@
 import * as http from 'http'
 import * as fs from 'fs'
 import express from 'express'
+import * as ejs from 'ejs'
 import cors from 'cors'
 import morgan from 'morgan'
 import * as path from 'path'
@@ -86,6 +87,7 @@ export class RevealServer extends Disposable {
 
     // Set EJS as view
     app.set('view engine', 'ejs');
+    app.engine('ejs', ejs.__express)
     app.set('views', path.resolve(context.extensionPath, 'views'));
     app.use(cors())
     // LOG REQUEST
@@ -110,11 +112,11 @@ export class RevealServer extends Disposable {
       }
       else {
 
-        const opts = {}
+        let init: string | null = null;
         if (context.dirname) {
           const initPath = path.join(context.dirname, 'init.js')
           if (fs.existsSync(initPath)) {
-            opts["init"] = fs.readFileSync(initPath, "utf8");
+            init = fs.readFileSync(initPath, "utf8");
           }
         }
 
@@ -123,7 +125,8 @@ export class RevealServer extends Disposable {
           html: markdownit.render(s.text),
           children: s.verticalChildren.map((c) => ({ ...c, html: markdownit.render(c.text) })),
         }))
-        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, ...opts })
+        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init })
+
       }
     })
 
