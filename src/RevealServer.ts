@@ -109,14 +109,20 @@ export class RevealServer extends Disposable {
     app.use((req, res, next) => {
       if (req.path !== '/') {
         next()
-      }
-      else {
-
-        let init: string | null = null;
+      } else {
+        let init: string | null = null
+        let initType: string | null = null
         if (context.dirname) {
           const initPath = path.join(context.dirname, 'init.js')
           if (fs.existsSync(initPath)) {
-            init = fs.readFileSync(initPath, "utf8");
+            init = fs.readFileSync(initPath, 'utf8')
+            initType = 'application/javascript'
+          } else {
+            const initPath = path.join(context.dirname, 'init.esm.js')
+            if (fs.existsSync(initPath)) {
+              init = fs.readFileSync(initPath, 'utf8')
+              initType = 'module'
+            }
           }
         }
 
@@ -125,8 +131,7 @@ export class RevealServer extends Disposable {
           html: markdownit.render(s.text),
           children: s.verticalChildren.map((c) => ({ ...c, html: markdownit.render(c.text) })),
         }))
-        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init })
-
+        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init, initType })
       }
     })
 
