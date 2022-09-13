@@ -12,7 +12,6 @@ import { RevealContext } from './RevealContext'
 
 /** Http server to serve reveal presentation */
 export class RevealServer extends Disposable {
-
   public readonly app = express()
 
   private server: http.Server | null = null
@@ -22,7 +21,6 @@ export class RevealServer extends Disposable {
     super()
     this.configure()
   }
-
 
   /**
    * If the server is not listening, start the server and log the server's status.
@@ -58,7 +56,7 @@ export class RevealServer extends Disposable {
   /** Current uri for this server, empty is not listening */
   public get uri() {
     if (!this.isListening || this.server === null) {
-      return ""
+      return ''
     }
 
     const addr = this.server.address()
@@ -76,8 +74,6 @@ export class RevealServer extends Disposable {
     const app = this.app
     const context = this.context
 
-
-
     //disable cache
     app.set('etag', false)
     app.use((req, res, next) => {
@@ -86,9 +82,9 @@ export class RevealServer extends Disposable {
     })
 
     // Set EJS as view
-    app.set('view engine', 'ejs');
+    app.set('view engine', 'ejs')
     app.engine('ejs', ejs.__express)
-    app.set('views', path.resolve(context.extensionPath, 'views'));
+    app.set('views', path.resolve(context.extensionPath, 'views'))
     app.use(cors())
     // LOG REQUEST
     app.use(morgan(':method :url :status :res[content-length] - :response-time ms', { stream: { write: (str) => context.logger.info(str) } }))
@@ -98,11 +94,11 @@ export class RevealServer extends Disposable {
 
     // STATIC LIBS
     const libsPAth = path.join(context.extensionPath, 'libs')
-    app.use('/libs', express.static(libsPAth, { cacheControl: false, etag: false, immutable: false }));
+    app.use('/libs', express.static(libsPAth, { cacheControl: false, etag: false, immutable: false }))
 
     // STATIC RELATIVE TO MD FILE if file is saved
     if (context.dirname) {
-      app.use('/', express.static(context.dirname, { cacheControl: false, etag: false, immutable: false }));
+      app.use('/', express.static(context.dirname, { cacheControl: false, etag: false, immutable: false }))
     }
 
     // MAIN FILE
@@ -113,16 +109,16 @@ export class RevealServer extends Disposable {
         let init: string | null = null
         let initType: string | null = null
         if (context.dirname) {
-          const initPath = path.join(context.dirname, 'init.js')
+          let initPath = path.join(context.dirname, 'init.js')
           if (fs.existsSync(initPath)) {
             init = fs.readFileSync(initPath, 'utf8')
             initType = 'application/javascript'
-          } else {
-            const initPath = path.join(context.dirname, 'init.esm.js')
-            if (fs.existsSync(initPath)) {
-              init = fs.readFileSync(initPath, 'utf8')
-              initType = 'module'
-            }
+          }
+
+          initPath = path.join(context.dirname, 'init.esm.js')
+          if (!init && fs.existsSync(initPath)) {
+            init = fs.readFileSync(initPath, 'utf8')
+            initType = 'module'
           }
         }
 
@@ -138,67 +134,59 @@ export class RevealServer extends Disposable {
     // ERROR HANDLER
     app.use(function (err, req, res, next) {
       context.logger.error(err.stack)
-      res.status(500).send(err.stack);
-    });
+      res.status(500).send(err.stack)
+    })
   }
 
   /* A middleware function that is used to export the presentation to a folder. */
   private readonly exportMiddleware = (exportfn: (ExportOptions) => Promise<void>, isInExport) => {
-
     const { exportPath } = this.context
 
     return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-
       if (isInExport()) {
-
-        console.log("in export");
+        console.log('in export')
         const oldWrite = res.write
-        const oldEnd = res.end;
+        const oldEnd = res.end
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const chunks: any[] = [];
+        const chunks: any[] = []
 
         res.write = (chunk, ...args) => {
-          chunks.push(chunk);
+          chunks.push(chunk)
           // @ts-ignore
-          return oldWrite.apply(res, [chunk, ...args]);
-        };
+          return oldWrite.apply(res, [chunk, ...args])
+        }
         // @ts-ignore
         res.end = async (chunk, ...args) => {
           this.context.logger.info(`${req.originalUrl.split('?')[0]} - ${chunks.length}`)
           if (chunk) {
-            chunks.push(chunk);
+            chunks.push(chunk)
           }
           try {
-            let body = "";
+            let body = ''
             if (chunks.length > 0 && typeof chunks[0] === 'string') {
-              body = body.concat(...(chunks as string[]));
+              body = body.concat(...(chunks as string[]))
+            } else {
+              body = Buffer.concat(chunks).toString('utf8')
             }
-            else {
-              body = Buffer.concat(chunks).toString('utf8');
-            }
-
 
             const opts: IExportOptions = { folderPath: exportPath, url: req.originalUrl.split('?')[0], srcFilePath: null, data: body }
-            await exportfn(opts);
-          }
-          catch (error) {
+            await exportfn(opts)
+          } catch (error) {
             this.context.logger.info(`Error : ${error}`)
           }
 
           // @ts-ignore
-          return oldEnd.apply(res, [chunk, ...args]);
-        };
+          return oldEnd.apply(res, [chunk, ...args])
+        }
       }
       next()
-
-
     }
   }
 
   dispose(): void {
     this.stop()
     this.server = null
-    super.dispose();
+    super.dispose()
   }
 }
