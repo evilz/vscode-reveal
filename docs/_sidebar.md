@@ -8,7 +8,7 @@
   - [Extended Syntax](markdown/extended-syntax.md)
   - Backgrounds
   - Media
-  - Code
+  - [Code](markdown/code.md)
   - Math
   - Fragments
   - Links
@@ -44,7 +44,7 @@
   - Reference
 
 - Reference
- 
+
   - [API](api.md)
   - [Configuration](configuration.md)
 
