@@ -637,7 +637,7 @@
     "@vscode/test-electron": "^2.1.4",
     "@vscode/test-web": "^0.0.24",
     "esbuild": "^0.14.47",
-    "eslint": "^8.18.0",
+    "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^26.5.3",
     "eslint-plugin-sonarjs": "^0.13.0",
