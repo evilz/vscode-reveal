@@ -636,7 +636,7 @@
     "@typescript-eslint/parser": "^5.29.0",
     "@vscode/test-electron": "^2.1.4",
     "@vscode/test-web": "^0.0.24",
-    "esbuild": "^0.14.47",
+    "esbuild": "^0.16.17",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^26.5.3",
