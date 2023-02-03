@@ -631,7 +631,7 @@
     "@types/node": "^18.0.0",
     "@types/plantuml-encoder": "^1.4.0",
     "@types/request": "^2.48.8",
-    "@types/vscode": "^1.68.0",
+    "@types/vscode": "^1.74.1",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "@vscode/test-electron": "^2.1.4",
