@@ -570,8 +570,7 @@
           "command": "vscode-revealjs.showRevealJSInBrowser",
           "group": "navigation"
         }
-  ]
-    
+      ]
     },
     "snippets": [
       {
