@@ -541,12 +541,37 @@
           "group": "navigation"
         }
       ],
+      "editor/title": [
+        {
+          "when": "resourceLangId == markdown",
+          "command": "vscode-revealjs.showRevealJS",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == markdown",
+          "command": "vscode-revealjs.showRevealJSInBrowser",
+          "group": "navigation"
+        }
+      ],
       "view/item/context": [
         {
           "command": "vscode-revealjs.goToSlide",
           "when": "view == slidesExplorer && viewItem == slideNode"
         }
-      ]
+      ],
+      "explorer/context": [
+        {
+          "when": "resourceLangId == markdown",
+          "command": "vscode-revealjs.showRevealJS",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == markdown",
+          "command": "vscode-revealjs.showRevealJSInBrowser",
+          "group": "navigation"
+        }
+  ]
+    
     },
     "snippets": [
       {
