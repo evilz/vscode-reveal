@@ -173,7 +173,7 @@ export class RevealServer extends Disposable {
               body = Buffer.concat(chunks);
             }
 
-            
+
             const opts: IExportOptions = { folderPath: exportPath, url: req.originalUrl.split('?')[0], srcFilePath: null, data: body }
             await exportfn(opts);
           }
