@@ -165,15 +165,15 @@ export class RevealServer extends Disposable {
             chunks.push(chunk);
           }
           try {
-            let body = "";
+            let body: string | Buffer;
             if (chunks.length > 0 && typeof chunks[0] === 'string') {
-              body = body.concat(...(chunks as string[]));
+              body = "".concat(...(chunks as string[]));
             }
             else {
-              body = Buffer.concat(chunks).toString('utf8');
+              body = Buffer.concat(chunks);
             }
 
-
+            
             const opts: IExportOptions = { folderPath: exportPath, url: req.originalUrl.split('?')[0], srcFilePath: null, data: body }
             await exportfn(opts);
           }

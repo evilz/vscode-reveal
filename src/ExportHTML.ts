@@ -5,7 +5,7 @@ import * as path from 'path'
 export interface IExportOptions {
   folderPath: string,
   url: string,
-  data: string | null
+  data: string | Buffer | null
   srcFilePath: string | null
 }
 
