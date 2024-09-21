@@ -445,7 +445,7 @@ Zoom anywhere on your presentation
 
 Add note to speaker view.
 
-Default markdown syntaxe is
+Default markdown syntax is
 
 ```text
 note: a custom note here
