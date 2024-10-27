@@ -11,18 +11,16 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Detect Node version from .nvmrc
-        id: node_version
-        run: echo "::set-output name=nvmrc::$(cat .nvmrc)"
-
-      - uses: actions/setup-node@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ steps.node_version.outputs.nvmrc }}
+          node-version-file: '.nvmrc'
 
-      - name: npm-ci
+      - name: Install dependencies
         run: npm ci
 
-      - name: build
+      - name: Build project
         run: npm run vscode:prepublish

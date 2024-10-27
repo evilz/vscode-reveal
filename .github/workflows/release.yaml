@@ -6,17 +6,17 @@ on:
         description: 'Publish to MS marketplace'
         type: boolean
         required: true
-        default: "true"
+        default: true
       publishOVSX:
         description: 'Publish to OpenVSX'
         type: boolean
         required: true
-        default: "true"
+        default: true
       publishGH:
         description: 'Publish to GitHub releases'
         type: boolean
         required: true
-        default: "true"
+        default: true
 
 jobs:
   package:
@@ -27,13 +27,17 @@ jobs:
       tag: ${{ steps.setup-tag.outputs.tag }}
       version: ${{ steps.setup-tag.outputs.version }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ steps.node_version.outputs.nvmrc }}
+          node-version-file: '.nvmrc'
 
       - name: Install dependencies
-        run: npm i
+        run: npm ci
 
       - name: Install vsce
         run: npm install -g vsce
@@ -47,7 +51,7 @@ jobs:
           VSIX_PACKAGE_PATH: ${{ steps.setup.outputs.packageName }}
         run: vsce package
       
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.setup.outputs.packageName }}
           path: ${{ steps.setup.outputs.packageName }}
@@ -67,10 +71,10 @@ jobs:
     needs: package
     if: github.event.inputs.publishMS == 'true'
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: ${{ needs.package.outputs.packageName }}
-      - uses: HaaLeo/publish-vscode-extension@v0
+      - uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com
@@ -83,7 +87,7 @@ jobs:
     needs: package
     if: github.event.inputs.publishOVSX == 'true'
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: ${{ needs.package.outputs.packageName }}
       - uses: HaaLeo/publish-vscode-extension@v0
@@ -99,7 +103,7 @@ jobs:
     needs: package
     if: github.event.inputs.publishGH == 'true'
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: ${{ needs.package.outputs.packageName }}
 
@@ -121,7 +125,7 @@ jobs:
           prerelease: false
           
       - name: Upload assets to a Release
-        uses: AButler/upload-release-assets@v2.0
+        uses: AButler/upload-release-assets@v3.0
         with:
           files: ${{ needs.package.outputs.packageName }}
           release-tag:  ${{ needs.package.outputs.tag }}
