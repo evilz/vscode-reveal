@@ -1,14 +1,14 @@
 export enum LogLevel {
   /** 0 - Logs that are used for interactive investigation during development. These logs should primarily contain information useful for debugging and have no long-term value. */
-  Debug = "debug",
+  Debug = 0,
   /** 1 - Logs that track the general flow of the application. These logs should have long-term value. */
-  Info = "info",
+  Info = 1,
   /** 2 - Logs that highlight an abnormal or unexpected event in the application flow, but do not otherwise cause the application execution to stop. */
-  Warning = "warning",
+  Warning = 2,
   /** 3 - Logs that highlight when the current flow of execution is stopped due to a failure. These should indicate a failure in the current activity, not an application-wide failure. */
-  Error = "error",
+  Error = 3,
   /** 4 - Not used for writing log messages. Specifies that a logging category should not write any messages. */
-  None = "none",
+  None = 4,
 }
 
 export default class Logger {
