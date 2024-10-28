@@ -232,6 +232,10 @@ enableSearch: false
 ---
 ```
 
+## Custom initialization (advanced)
+
+You can override revealjs initialization by putting `init.js` (or `init.esm.js` if you prefer ES module format). This gives you total control over executed code, but you'll have to call [Reveal.initialize()](https://revealjs.com/initialization/]) yourself. You also won't have access to frontmatter configuration, defaults, etc. Use at your own risk.
+
 ## <a id="faq"></a> FAQ
 
 
