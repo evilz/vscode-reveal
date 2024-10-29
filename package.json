@@ -643,7 +643,7 @@
     "markdown-it-task-lists": "^2.1.1",
     "morgan": "^1.10.0",
     "open": "^8.4.0",
-    "pako": "^2.0.4",
+    "pako": "^2.1.0",
     "prettier": "^2.7.1"
   },
   "devDependencies": {
