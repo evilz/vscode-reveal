@@ -623,7 +623,7 @@
     "front-matter": "4.0.2",
     "fs-jetpack": "^5.0.0",
     "markdown-it": "^13.0.1",
-    "markdown-it-abbr": "^1.0.4",
+    "markdown-it-abbr": "^2.0.0",
     "markdown-it-attribution": "^0.1.4",
     "markdown-it-attrs": "^4.2.0",
     "markdown-it-block-embed": "0.0.3",
