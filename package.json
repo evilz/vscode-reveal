@@ -631,7 +631,7 @@
     "markdown-it-div": "^1.1.0",
     "markdown-it-fontawesome": "^0.3.0",
     "markdown-it-iframe": "^1.0.0",
-    "markdown-it-ins": "^3.0.1",
+    "markdown-it-ins": "^4.0.0",
     "markdown-it-kbd": "^2.2.2",
     "markdown-it-mark": "^4.0.0",
     "markdown-it-multimd-table": "^4.1.3",
