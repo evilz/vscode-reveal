@@ -668,7 +668,7 @@
     "eslint-plugin-sonarjs": "^2.0.4",
     "expect-more-jest": "^5.4.1",
     "jest": "^27.5.1",
-    "jest-junit": "^15.0.0",
+    "jest-junit": "^16.0.0",
     "jest-sonar-reporter": "^2.0.0",
     "nyc": "^17.1.0",
     "rimraf": "^6.0.1",
