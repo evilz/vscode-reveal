@@ -645,7 +645,7 @@
     "morgan": "^1.10.0",
     "open": "^8.4.0",
     "pako": "^2.1.0",
-    "prettier": "^3.3.3"
+    "prettier": "^3.4.1"
   },
   "devDependencies": {
     "@alex_neo/jest-expect-message": "^1.0.5",
