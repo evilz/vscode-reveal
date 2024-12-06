@@ -665,7 +665,7 @@
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jest": "^26.5.3",
-    "eslint-plugin-sonarjs": "^2.0.4",
+    "eslint-plugin-sonarjs": "^3.0.1",
     "expect-more-jest": "^5.5.0",
     "jest": "^27.5.1",
     "jest-junit": "^16.0.0",
