@@ -626,7 +626,7 @@
     "markdown-it": "^14.1.0",
     "markdown-it-abbr": "^2.0.0",
     "markdown-it-attribution": "^0.1.4",
-    "markdown-it-attrs": "^4.2.0",
+    "markdown-it-attrs": "^4.3.1",
     "markdown-it-block-embed": "0.0.3",
     "markdown-it-deflist": "^3.0.0",
     "markdown-it-div": "^1.1.0",
