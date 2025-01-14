@@ -653,7 +653,7 @@
     "@types/jest": "^27.4.1",
     "@types/jest-expect-message": "^1.1.0",
     "@types/markdown-it": "14.1.2",
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.10.6",
     "@types/plantuml-encoder": "^1.4.2",
     "@types/request": "^2.48.12",
     "@types/vscode": "^1.95.0",
