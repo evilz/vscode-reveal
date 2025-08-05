@@ -1,5 +1,5 @@
 <% if(init) { %>
-<script>
+<script type="<%- initType %>">
   <%- init %>
 </script>
 <%}else{ %>
@@ -18,7 +18,7 @@
 		const plugins =  [...printPlugins,
 		<% if(enableZoom) {%>RevealZoom, <%}%>
 		<% if(enableSearch) {%>RevealSearch, <%}%>
-				RevealMarkdown, 
+				RevealMarkdown,
 				<% if(enableMenu) {%>RevealMenu, <%}%>
 				RevealFullscreen,
 				RevealAnything,
@@ -28,7 +28,7 @@
 				// poll
 				// question
 				// seminar
-				Verticator 
+				Verticator
 				 ]
 
 
@@ -148,18 +148,18 @@
 				]
 			},
 			chart: {
-					defaults: { 
+					defaults: {
 						color: 'lightgray', // color of labels
-						scale: { 
-							beginAtZero: true, 
+						scale: {
+							beginAtZero: true,
 							ticks: { stepSize: 1 },
 							grid: { color: "lightgray" } , // color of grid lines
 						},
 					},
-					line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] }, 
-					bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+					line: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ], "borderDash": [ [5,10], [0,0] ] },
+					bar: { backgroundColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]},
 					pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
-					radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
+					radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]},
 			},
 			math: {
 				mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
@@ -167,14 +167,14 @@
 				// pass other options into `MathJax.Hub.Config()`
 				TeX: { Macros: { RR: "{\\bf R}" } }
 				},
-				anything: [ 
+				anything: [
 				{
 		className: "plot",
 		defaults: {width:500, height: 500, grid:true},
 		initialize: (function(container, options){ options.target = "#"+container.id; functionPlot(options) })
 	 },
 	 {
-		className: "chart",  
+		className: "chart",
 		initialize: (function(container, options){ container.chart = new Chart(container.getContext("2d"), options);  })
 	 },
 	 {
@@ -183,12 +183,12 @@
 	 },
 					],
 			// Learn about plugins: https://revealjs.com/plugins/
-			plugins: (window.location.search.match(/print-pdf/gi) ? printPlugins : plugins ) 
+			plugins: (window.location.search.match(/print-pdf/gi) ? printPlugins : plugins )
 		});
-			
 
 
-	    // Change chalkboard theme : 
+
+	    // Change chalkboard theme :
 		function changeTheme(input) {
 			var config = {};
 			config.theme = input.value;
@@ -211,7 +211,7 @@
       		setTimeout(() => {
 				window.print();
 			  }, 2500);
-			
+
     }
 </script>
 <%}%>

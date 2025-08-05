@@ -111,13 +111,20 @@ export class RevealServer extends Disposable {
         next()
       }
       else {
-
-        let init: string | null = null;
+        let init: string | null = null
+        let initType: string | null = null
         if (context.dirname) {
-          const initPath = path.join(context.dirname, 'init.js')
+          let initPath = path.join(context.dirname, 'init.js')
           if (fs.existsSync(initPath)) {
             init = fs.readFileSync(initPath, "utf8");
+            init = fs.readFileSync(initPath, 'utf8')
+            initType = 'application/javascript'
           }
+
+          initPath = path.join(context.dirname, 'init.esm.js')
+          if (!init && fs.existsSync(initPath)) {
+            init = fs.readFileSync(initPath, 'utf8')
+            initType = 'module'
         }
 
         const htmlSlides = context.slides.map((s) => ({
