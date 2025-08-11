@@ -35,9 +35,7 @@ export class StatusBarController extends Disposable{
   }
 
   public dispose() {
-    this.#addressItem.dispose()
-    this.#countItem.dispose()
-    this.#stopItem.dispose()
+    super.dispose()
   }
 
   public updateServerInfo(serverUri: string | null) {
