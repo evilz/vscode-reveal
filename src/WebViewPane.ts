@@ -71,6 +71,7 @@ export default class WebviewPane
       // }, null)
   
     public dispose() {
-        this.#onDidDispose.fire()
+        this.#onDidDispose.fire();
+        super.dispose();
     }
 }
