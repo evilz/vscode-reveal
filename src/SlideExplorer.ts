@@ -34,7 +34,9 @@ export class SlideTreeProvider extends Disposable
   }
 
   public register() {
-    return vscode.window.registerTreeDataProvider('slidesExplorer', this)
+    return this._register(
+      vscode.window.registerTreeDataProvider('slidesExplorer', this)
+    )
   }
 
   public getTreeItem(element: SlideNode): vscode.TreeItem | Thenable<vscode.TreeItem> {
