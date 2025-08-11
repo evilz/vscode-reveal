@@ -12,10 +12,10 @@ export enum LogLevel {
 }
 
 export default class Logger {
-  constructor(private readonly appendLine: (string) => void, private logLevel = LogLevel.Error) {
+  constructor(private readonly appendLine: (text: string) => void, private logLevel = LogLevel.Error) {
   }
 
-  #printLog(level, message) {
+  #printLog(level: string, message: string) {
     const msg = `[${level}] [${new Date().toLocaleTimeString()}] ${message}`
     this.appendLine(msg)
   }
@@ -50,7 +50,7 @@ export default class Logger {
     return this.logLevel
   }
   public set LogLevel(level: LogLevel) {
-    if (level !== null || this.logLevel !== level) {
+    if (level !== null && this.logLevel !== level) {
       this.logLevel = level
       this.info(`log level changed to ${level} `)
     }
