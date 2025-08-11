@@ -1,6 +1,7 @@
 import {DecorationOptions, MarkdownString, Range, TextEditor, ThemeColor, window} from 'vscode';
 import { ConfigurationDescription } from './Configuration';
 
+const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\$&');
 
 // styles for known options in the frontmatter
 const revealjsConfigKeyForeground = window.createTextEditorDecorationType({
@@ -8,14 +9,14 @@ const revealjsConfigKeyForeground = window.createTextEditorDecorationType({
     fontStyle: 'italic',
     color: new ThemeColor('revealjs.configKeyForeground'),
   })
-  
+
 export default class TextDecorator {
 
     #propertiesRegex: RegExp
-   
+
     constructor(private configDesc:ConfigurationDescription[] ) {
-        
-        const allProps = configDesc.map(x => x.label).join('|')
+
+        const allProps = configDesc.map(x => escapeRegExp(x.label)).join('|')
         this.#propertiesRegex = new RegExp(`^(${allProps}):.*$`, 'gm');
     }
 
@@ -23,9 +24,9 @@ export default class TextDecorator {
 
         const decorations: DecorationOptions[] = [];
         let match;
-		while ((match = this.#propertiesRegex.exec(editor.document.getText())) !== null) {
-			const startPos = editor.document.positionAt(match.index);
-			const endPos = editor.document.positionAt(match.index + match[1].length);
+                while ((match = this.#propertiesRegex.exec(editor.document.getText())) !== null) {
+                        const startPos = editor.document.positionAt(match.index);
+                        const endPos = editor.document.positionAt(match.index + match[1].length);
 
             const item = this.configDesc.find(x => x.label === match[1]);
             let hoverMessage: MarkdownString = new MarkdownString();
@@ -34,9 +35,9 @@ export default class TextDecorator {
                 hoverMessage.isTrusted = true
                 hoverMessage.supportThemeIcons =true
             }
-			const decoration = { range: new Range(startPos, endPos), hoverMessage: hoverMessage };
-			decorations.push(decoration);
-		}
+                        const decoration = { range: new Range(startPos, endPos), hoverMessage: hoverMessage };
+                        decorations.push(decoration);
+                }
 
         editor.setDecorations(revealjsConfigKeyForeground, decorations);
     }
