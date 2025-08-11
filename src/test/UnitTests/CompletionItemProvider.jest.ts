@@ -66,4 +66,18 @@ test('Should createCompletionItems from configDesc', () => {
     expect(completion).toStrictEqual([new CompletionItem("test_values")])
 });
 
+test('Should handle number type without enum provider', () => {
+    const configDesc: ConfigurationDescription = {
+        label: 'num_option',
+        detail: 'numeric detail',
+        documentation: 'doc',
+        type: 'number'
+    }
+
+    const { completionItems, enumValueProviders } = createCompletionItems([configDesc])
+
+    expect(completionItems).toHaveLength(1)
+    expect(enumValueProviders).toHaveLength(0)
+})
+
 

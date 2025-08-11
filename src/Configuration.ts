@@ -173,7 +173,7 @@ export const defaultConfiguration: Configuration = {
 }
 
 
-type ConfigurationDescriptionTypes = "string" | "boolean"
+type ConfigurationDescriptionTypes = "string" | "boolean" | "number"
 export interface ConfigurationDescription {
   label: string,
   detail: string,

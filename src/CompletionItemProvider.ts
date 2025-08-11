@@ -66,6 +66,8 @@ export const createCompletionItems = (configDesc: ConfigurationDescription[]) =>
         case 'boolean':
           enumValueProviders.push(enumValueProvider(label, ['true', 'false']))
           break
+        case 'number':
+          break
       }
 
       completionItem.commitCharacters = [' ']
