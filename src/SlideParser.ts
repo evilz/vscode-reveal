@@ -3,13 +3,13 @@ import { ISlide } from './ISlide';
 import { Disposable } from './dispose';
 import frontmatter, { FrontMatterResult } from 'front-matter'
 
-const trimFirstLastEmptyLine = (s) => {
+const trimFirstLastEmptyLine = (s: string): string => {
   let content = s
-  content = content.indexOf("\n") === 0 ? content.substr(1) : content
-  content = content.indexOf("\r\n") === 0 ? content.substr(2) : content
+  content = content.indexOf("\n") === 0 ? content.slice(1) : content
+  content = content.indexOf("\r\n") === 0 ? content.slice(2) : content
 
-  content = content.lastIndexOf("\n") === content.length - 1 ? content.substr(0, content.length - 1) : content
-  content = content.lastIndexOf("\r\n") === content.length - 2 ? content.substr(0, content.length - 2) : content
+  content = content.lastIndexOf("\n") === content.length - 1 ? content.slice(0, content.length - 1) : content
+  content = content.lastIndexOf("\r\n") === content.length - 2 ? content.slice(0, content.length - 2) : content
   return content
 }
 
