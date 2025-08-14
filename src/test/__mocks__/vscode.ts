@@ -156,9 +156,9 @@ export interface DecorationRenderOptions extends ThemableDecorationRenderOptions
 
 export namespace window {
 
-  export function createStatusBarItem(alignment?: StatusBarAlignment, priority?: number): StatusBarItem {
-    return { hide: () => { } } as StatusBarItem;
-  }
+  export const createStatusBarItem = jest.fn((alignment?: StatusBarAlignment, priority?: number): StatusBarItem => {
+    return { hide: jest.fn(), dispose: jest.fn() } as unknown as StatusBarItem;
+  });
 
   export function createTextEditorDecorationType(options: DecorationRenderOptions): TextEditorDecorationType {
     return {} as TextEditorDecorationType;
