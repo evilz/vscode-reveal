@@ -78,8 +78,8 @@ class SlideNode extends vscode.TreeItem {
   }
 
   public iconPath = {
-    dark: path.join(__filename, '..', '..', 'resources', this.iconName),
-    light: path.join(__filename, '..', '..', 'resources', this.iconName)
+    dark: vscode.Uri.file(path.join(__filename, '..', '..', 'resources', this.iconName)),
+    light: vscode.Uri.file(path.join(__filename, '..', '..', 'resources', this.iconName))
   }
   constructor(
     public readonly slide: ISlide,
