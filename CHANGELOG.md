@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+- Updated dependencies to latest compatible versions
+  - Express 5.0.1 → 5.1.0
+  - markdown-it-attrs 4.2.0 → 4.3.1
+  - morgan 1.10.0 → 1.10.1
+  - open 8.4.0 → 8.4.2
+  - prettier 3.3.3 → 3.6.2
+  - @types/vscode 1.95.0 → 1.105.0
+  - eslint 8.18.0 → 8.57.1
+  - esbuild 0.24.0 → 0.24.2
+  - supertest 7.0.0 → 7.1.4
+  - And several other development dependencies
+
+### Fixed
+- Updated SlideExplorer icon paths to use vscode.Uri.file() for compatibility with @types/vscode 1.105.0
+
+### Added
+- Comprehensive unit tests for updated dependencies (12 new tests)
+- Tests verify functionality of Express, EJS, Markdown-it, and other core dependencies
+
 ## 4.3.3
 
 - fix EJS issue with minification
