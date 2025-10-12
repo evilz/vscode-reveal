@@ -52,6 +52,7 @@ test('Should createCompletionItems from configDesc', () => {
         getWordRangeAtPosition: jest.fn(),
         validateRange: jest.fn(),
         validatePosition: jest.fn(),
+        encoding: "utf-8",
     }
     const token: CancellationToken = {
         isCancellationRequested: false,
