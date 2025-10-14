@@ -649,7 +649,7 @@
   },
   "devDependencies": {
     "@alex_neo/jest-expect-message": "^1.0.5",
-    "@types/glob": "^8.1.0",
+    "@types/glob": "^9.0.0",
     "@types/jest": "^27.5.2",
     "@types/jest-expect-message": "^1.1.0",
     "@types/markdown-it": "14.1.2",
