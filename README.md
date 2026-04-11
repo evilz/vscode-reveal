@@ -164,6 +164,15 @@ transition: "zoom"
 > Note do not add `revealjs.` prefix before setting name.
 
 
+## Create a new presentation
+
+You can scaffold a new presentation directly from built-in templates:
+- run the command `Revealjs: New presentation from template`
+- choose a starter template (`Minimal`, `Code-heavy`, `Speaker notes`, or `Custom theme`)
+- pick where to save the `.md` file
+
+When a template needs local assets (for example `Custom theme`), the extension creates only the required supporting files next to your presentation.
+
 ## <a id="preview"></a> Open preview on right side
 
 To display the preview on the right side you can :
