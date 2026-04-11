@@ -23,6 +23,9 @@ on:
         required: true
         default: true
 
+permissions:
+  contents: write
+
 jobs:
   package:
     name: Package
@@ -49,7 +52,10 @@ jobs:
 
       - name: Setup package path
         id: setup
-        run: echo "packageName=$(node -e \"console.log(require('./package.json').name + '-' + require('./package.json').version + '.vsix')\")" >> "$GITHUB_OUTPUT"
+        run: |
+          name="$(jq -r '.name' package.json)"
+          version="$(jq -r '.version' package.json)"
+          echo "packageName=${name}-${version}.vsix" >> "$GITHUB_OUTPUT"
 
       - name: Package
         env:
@@ -64,11 +70,10 @@ jobs:
       - name: Setup tag
         id: setup-tag
         run: |
-          $version = (Get-Content ./package.json -Raw | ConvertFrom-Json).version
-          Write-Host "tag: release/$version"
-          "tag=release/$version" >> $env:GITHUB_OUTPUT
-          "version=$version" >> $env:GITHUB_OUTPUT
-        shell: pwsh
+          version="$(jq -r '.version' package.json)"
+          echo "tag: release/$version"
+          echo "tag=release/$version" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
   publishMS:
     name: Publish to MS marketplace
@@ -113,12 +118,6 @@ jobs:
         with:
           name: ${{ needs.package.outputs.packageName }}
 
-      - name: Commit tagger
-        uses: tvdias/github-tagger@v0.0.2
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ needs.package.outputs.tag }}
-          
       - name: Create release and upload VSIX
         uses: softprops/action-gh-release@v2
         env:
