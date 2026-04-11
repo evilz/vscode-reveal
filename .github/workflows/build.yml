@@ -1,6 +1,8 @@
 name: continuous integration Build Matrix
 
-on: [push]
+on:
+  push:
+  pull_request:
 
 jobs:
   build:
@@ -34,3 +36,6 @@ jobs:
 
       - name: Build project
         run: npm run vscode:prepublish
+      - name: Package extension smoke test
+        run: npx --yes @vscode/vsce package --no-dependencies
+
