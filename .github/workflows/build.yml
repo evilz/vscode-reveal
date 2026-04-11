@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: '.nvmrc'
 
@@ -36,6 +36,9 @@ jobs:
 
       - name: Build project
         run: npm run vscode:prepublish
+      - name: Install vsce
+        run: npm install -g vsce
+
       - name: Package extension smoke test
-        run: npx --yes @vscode/vsce package --no-dependencies
+        run: vsce package
 
