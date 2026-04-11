@@ -19,6 +19,29 @@ import {notesSeparator} from './utils'
 
 import pako from 'pako'
 
+const DEFAULT_DIAGRAM_SERVER = 'https://kroki.io'
+
+interface IDiagramRenderingConfig {
+  enabled: boolean
+  serverBaseUrl: string
+}
+
+const diagramRenderingConfig: IDiagramRenderingConfig = {
+  enabled: true,
+  serverBaseUrl: DEFAULT_DIAGRAM_SERVER,
+}
+
+export const setDiagramRenderingConfig = (config: Partial<IDiagramRenderingConfig>) => {
+  if (typeof config.enabled === 'boolean') {
+    diagramRenderingConfig.enabled = config.enabled
+  }
+
+  if (typeof config.serverBaseUrl === 'string') {
+    const trimmedServerBaseUrl = config.serverBaseUrl.trim().replace(/\/$/, '')
+    diagramRenderingConfig.serverBaseUrl = trimmedServerBaseUrl || DEFAULT_DIAGRAM_SERVER
+  }
+}
+
 const note = (markdown, config) => {
   const notesSeparator = config.notesSeparator
   const notesClass = 'notes'
@@ -107,13 +130,15 @@ const markdown = md({
 // add kroki
   const highlight = markdown.options.highlight
   markdown.options.highlight = (code, lang, attr) => {
-    const server = 'https://kroki.io' //TODO config.serverPath || '//www.plantuml.com/plantuml/svg/';
-
     if (lang && diagramTypes.indexOf(lang.toLowerCase()) >= 0) {
+      if (!diagramRenderingConfig.enabled) {
+        return `<pre><code class="language-${lang}">${markdown.utils.escapeHtml(code)}</code></pre>`
+      }
+
       const data = Buffer.from(code, 'utf8')
       const compressed = pako.deflate(data, { level: 9 })
       const result = Buffer.from(compressed).toString('base64').replace(/\+/g, '-').replace(/\//g, '_')
-      return `<pre style="all:unset;"><div><img class="${lang}" src="${server}/${lang}/svg/${result}" /></div></pre>`
+      return `<pre style="all:unset;"><div><img class="${lang}" src="${diagramRenderingConfig.serverBaseUrl}/${lang}/svg/${result}" /></div></pre>`
     }
     if (highlight !== null && highlight !== undefined) {
       return highlight(code, lang, attr)

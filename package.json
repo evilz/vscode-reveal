@@ -242,6 +242,16 @@
           "default": "monokai",
           "description": "highlight.js Theme"
         },
+        "revealjs.diagramServerEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable remote diagram rendering for supported diagram languages via a Kroki-compatible server"
+        },
+        "revealjs.diagramServerUrl": {
+          "type": "string",
+          "default": "https://kroki.io",
+          "description": "Base URL for the Kroki-compatible diagram server used to render supported diagram languages"
+        },
         "revealjs.controls": {
           "type": "boolean",
           "default": true,

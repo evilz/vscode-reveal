@@ -5,7 +5,7 @@ import * as ejs from 'ejs'
 import cors from 'cors'
 import morgan from 'morgan'
 import * as path from 'path'
-import markdownit from './Markdown-it'
+import markdownit, { setDiagramRenderingConfig } from './Markdown-it'
 import { exportHTML, IExportOptions } from './ExportHTML'
 import { Disposable } from './dispose'
 import { RevealContext } from './RevealContext'
@@ -113,6 +113,11 @@ export class RevealServer extends Disposable {
             init = fs.readFileSync(initPath, 'utf8')
           }
         }
+
+        setDiagramRenderingConfig({
+          enabled: context.configuration.diagramServerEnabled,
+          serverBaseUrl: context.configuration.diagramServerUrl,
+        })
 
         const htmlSlides = context.slides.map((s) => ({
           ...s,
