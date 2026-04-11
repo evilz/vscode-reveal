@@ -124,7 +124,7 @@ Diagram languages supported by Kroki (for example `mermaid`, `plantuml`, `graphv
 For a fully local/offline mode, set:
 
 ```
-revealjs.diagramServerEnabled: false
+diagramServerEnabled: false
 ```
 
 In this mode, diagram code blocks are kept as plain code blocks and no remote diagram request is made.
