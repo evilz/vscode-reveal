@@ -132,7 +132,7 @@ const markdown = md({
   markdown.options.highlight = (code, lang, attr) => {
     if (lang && diagramTypes.indexOf(lang.toLowerCase()) >= 0) {
       if (!diagramRenderingConfig.enabled) {
-        return `<pre><code class="language-${lang}">${markdown.utils.escapeHtml(code)}</code></pre>`
+        return `<pre><code class="language-${lang.toLowerCase()}">${markdown.utils.escapeHtml(code)}</code></pre>`
       }
 
       const data = Buffer.from(code, 'utf8')
