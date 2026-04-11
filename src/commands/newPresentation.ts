@@ -73,7 +73,7 @@ export const createPresentationFromTemplate = async () => {
   }
 
   const workspaceFolder = workspace.workspaceFolders?.[0]
-  const defaultUri = workspaceFolder ? Uri.file(path.join(workspaceFolder.uri.fsPath, 'presentation.md')) : undefined
+  const defaultUri = workspaceFolder ? Uri.joinPath(workspaceFolder.uri, 'presentation.md') : undefined
 
   const targetUri = await window.showSaveDialog({
     defaultUri,
