@@ -93,8 +93,8 @@ export const createPresentationFromTemplate = async () => {
   }
 
   for (const supportFile of scaffold.supportFiles) {
-    const supportPath = path.join(path.dirname(targetUri.fsPath), supportFile.filename)
-    await workspace.fs.writeFile(Uri.file(supportPath), new TextEncoder().encode(supportFile.content))
+    const supportUri = Uri.joinPath(targetUri, '..', supportFile.filename)
+    await workspace.fs.writeFile(supportUri, new TextEncoder().encode(supportFile.content))
   }
 
   await workspace.fs.writeFile(targetUri, new TextEncoder().encode(scaffold.content))
