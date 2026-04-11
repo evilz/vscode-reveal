@@ -28,7 +28,8 @@
     "onLanguage:markdown",
     "onCommand:vscode-revealjs.showSample",
     "onCommand:vscode-revealjs.showRevealJS",
-    "onCommand:vscode-revealjs.showRevealJSInBrowser"
+    "onCommand:vscode-revealjs.showRevealJSInBrowser",
+    "onCommand:vscode-revealjs.newPresentation"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -91,6 +92,10 @@
           "light": "resources/light/html.svg",
           "dark": "resources/dark/html.svg"
         }
+      },
+      {
+        "command": "vscode-revealjs.newPresentation",
+        "title": "Revealjs: New presentation from template"
       }
     ],
     "configuration": {

@@ -16,6 +16,7 @@ import { GO_TO_SLIDE } from './commands/goToSlide'
 import { SHOW_REVEALJS } from './commands/showRevealJS'
 import { SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser } from './commands/showRevealJSInBrowser'
 import { showSample, SHOW_SAMPLE } from './commands/showSample'
+import { createPresentationFromTemplate, NEW_PRESENTATION } from './commands/newPresentation'
 import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
 import languageCompletion from './CompletionItemProvider'
 import MainController from './MainController'
@@ -50,6 +51,7 @@ export function activate(context: ExtensionContext) {
     registerCmd(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() =>main.currentContext?.startServer() )),
     registerCmd(STOP_REVEALJS_SERVER, () => main.stopServer()),
     registerCmd(SHOW_SAMPLE, () => showSample(context.extensionPath)),
+    registerCmd(NEW_PRESENTATION, createPresentationFromTemplate),
     registerCmd(GO_TO_SLIDE, (arg) => main.goToSlide(arg.horizontal, arg.vertical)),
     registerCmd(EXPORT_PDF,exportPDF(() => main.currentContext?.startServer())),
     registerCmd(EXPORT_HTML,exportHTML(logger, main.exportAsync, main.shouldOpenFilemanagerAfterHTMLExport)),
