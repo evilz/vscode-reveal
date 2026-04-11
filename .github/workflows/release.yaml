@@ -1,4 +1,9 @@
 name: Release
+# Release flow:
+# 1. package: builds a VSIX once and uploads it as an artifact.
+# 2. publishMS/publishOVSX/publishGH: optional publish jobs controlled by
+#    workflow_dispatch inputs and sharing the artifact from the package job.
+# Targets are kept unchanged: VS Marketplace, OpenVSX, and GitHub Releases.
 on:
   workflow_dispatch:
     inputs:
@@ -44,7 +49,7 @@ jobs:
 
       - name: Setup package path
         id: setup
-        run: echo "::set-output name=packageName::$(node -e "console.log(require('./package.json').name + '-' + require('./package.json').version + '.vsix')")"
+        run: echo "packageName=$(node -e \"console.log(require('./package.json').name + '-' + require('./package.json').version + '.vsix')\")" >> "$GITHUB_OUTPUT"
 
       - name: Package
         env:
@@ -61,8 +66,8 @@ jobs:
         run: |
           $version = (Get-Content ./package.json -Raw | ConvertFrom-Json).version
           Write-Host "tag: release/$version"
-          Write-Host "::set-output name=tag::release/$version"
-          Write-Host "::set-output name=version::$version"
+          "tag=release/$version" >> $env:GITHUB_OUTPUT
+          "version=$version" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
   publishMS:
@@ -90,9 +95,10 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: ${{ needs.package.outputs.packageName }}
-      - uses: HaaLeo/publish-vscode-extension@v0
+      - uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: ${{ secrets.OPEN_VSX_TOKEN }}
+          registryUrl: https://open-vsx.org
           extensionFile: ${{ needs.package.outputs.packageName }}
           packagePath: ''
    
@@ -113,20 +119,13 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ needs.package.outputs.tag }}
           
-      - name: Create Release
-        id: create-release
-        uses: actions/create-release@v1
+      - name: Create release and upload VSIX
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ needs.package.outputs.tag }}
-          release_name: Release ${{ needs.package.outputs.version }}
+          name: Release ${{ needs.package.outputs.version }}
           draft: false
           prerelease: false
-          
-      - name: Upload assets to a Release
-        uses: AButler/upload-release-assets@v3.0
-        with:
           files: ${{ needs.package.outputs.packageName }}
-          release-tag:  ${{ needs.package.outputs.tag }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
