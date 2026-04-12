@@ -69,7 +69,6 @@ export default class MainController {
   private OnEditorEvent(editor: TextEditor, newPosition: Position) {
     if (isMarkdownFile(editor.document)) {
       this.currentContext = this.revealContexts.getOrAdd(editor)
-      this.syncAssetWatchers()
       this.updatePosition(newPosition)
       this.refresh()
     }
