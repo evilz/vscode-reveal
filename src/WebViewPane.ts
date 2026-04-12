@@ -7,9 +7,9 @@ export default class WebviewPane
     constructor(private webviewPanel:WebviewPanel) {
         super()
         this.webviewPanel.onDidDispose(() => { this.dispose() })
-        this.webviewPanel.webview.onDidReceiveMessage((message: unknown) => {
+        this._register(this.webviewPanel.webview.onDidReceiveMessage((message: unknown) => {
           this.#onDidReceiveMessage.fire(message)
-        })
+        }))
     }
 
     readonly #onDidDispose = this._register(new EventEmitter<void>());
