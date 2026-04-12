@@ -196,7 +196,9 @@ To display presentation in the browser you can:
 - call command `Revealjs: Open presentation in a browser`
 
 
-This will try to use Chrome that is the best browser to use for reveal.js presentation, if it can't find it, your default browser will be used.
+This uses VS Code's native external URL API by default (same behavior as opening a URL from VS Code).
+
+If `revealjs.browserPath` is set, the extension uses that executable path to launch the presentation instead of the VS Code default external opener.
 
 
 ## <a id="pdf"></a> Print to PDF
@@ -206,7 +208,9 @@ To export your presentation to pdf you can:
 - call the command `Revealjs: Export in PDF`
 
 
-This will try to launch Chrome or your default browser and launch printing.
+This opens the print URL using the same browser resolution rules as above:
+- if `revealjs.browserPath` is set and valid, that executable is used
+- otherwise VS Code's native external URL API is used
 Be sure to set print setting correctly:
 - No margin
 - print background
@@ -219,7 +223,11 @@ To export your presentation to a static website you can:
 - call the command `Revealjs: Export in HTML`
 
 
-This will try to launch Chrome in headless or your default browser it takes about 10sec and then open the export folder.
+The export runs in the extension host and then opens the export folder using VS Code native APIs.
+
+Folder-open fallback behavior:
+- first try `revealFileInOS` (native reveal in file manager)
+- if unavailable, fallback to `vscode.env.openExternal` with a `file://` URI
 
 ## <a id="plugins"></a> Plugins
 
