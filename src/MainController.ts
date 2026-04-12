@@ -17,8 +17,10 @@
 import {
   commands,
   ConfigurationChangeEvent,
+  DiagnosticCollection,
   ExtensionContext,
   FileSystemWatcher,
+  languages,
   Position,
   RelativePattern,
   TextDocument,
@@ -41,6 +43,7 @@ import WebViewPane from './WebViewPane'
 import TextDecorator from './TextDecorator'
 import { RevealContext, RevealContexts } from './RevealContext'
 import { configPrefix, Configuration, ConfigurationDescription, getConfig } from './Configuration'
+import { collectDiagnostics } from './FrontmatterDiagnostics'
 
 const isMarkdownFile = (d: TextDocument) => d.languageId === 'markdown'
 
@@ -52,6 +55,8 @@ export default class MainController {
   public currentContext?: RevealContext
   private readonly revealContexts: RevealContexts
   private readonly assetWatchers = new Map<string, FileSystemWatcher>()
+  private readonly diagnostics: DiagnosticCollection
+  private readonly configByKey: Map<string, ConfigurationDescription>
 
   get baseUri() {
     return this.currentContext?.baseUri
@@ -100,6 +105,7 @@ export default class MainController {
 
   public onDidCloseTextDocument(document: TextDocument) {
     if (this.currentContext?.is(document)) {
+      this.diagnostics.delete(document.uri)
       this.currentContext = undefined
       this.revealContexts.remove(document.uri)
       this.syncAssetWatchers()
@@ -132,6 +138,8 @@ export default class MainController {
       extensionContext.extensionPath,
       this.isInExport
     )
+    this.diagnostics = languages.createDiagnosticCollection('vscode-revealjs')
+    this.configByKey = new Map(configDesc.map((d) => [d.label, d]))
 
     if (currentEditor && isMarkdownFile(currentEditor.document)) {
       this.currentContext = this.revealContexts.getOrAdd(currentEditor)
@@ -181,17 +189,20 @@ export default class MainController {
     if (this.#refreshTimeout) {
       clearTimeout(this.#refreshTimeout)
     }
-    this.#refreshTimeout = setTimeout(() => {
-      if (!this.currentContext) return
+    this.#refreshTimeout = setTimeout(async () => {
+      const context = this.currentContext
+      if (!context) return
 
       this.logger.info(`REFRESH START!`)
-      const { slides } = this.currentContext.refresh()
+      const { slides } = context.refresh()
       this.syncAssetWatchers()
+      const diagnostics = await collectDiagnostics(context, this.configByKey)
+      this.diagnostics.set(context.editor.document.uri, diagnostics)
 
       this.refreshWebViewPane()
       this.slidesExplorer.update()
       this.statusBarController.updateCount(slides.length)
-      this.textDecorator.update(this.currentContext.editor)
+      this.textDecorator.update(context.editor)
       this.logger.info(`REFRESH DONE!`)
     }, wait)
   }
