@@ -14,7 +14,7 @@ import { EXPORT_HTML, exportHTML } from './commands/exportHTML'
 import { EXPORT_PDF, exportPDF } from './commands/exportPDF'
 import { GO_TO_SLIDE } from './commands/goToSlide'
 import { SHOW_REVEALJS } from './commands/showRevealJS'
-import { SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser } from './commands/showRevealJSInBrowser'
+import { SHOW_REVEALJS_IN_BROWSER, SHOW_REVEALJS_PRESENTER_VIEW, showRevealJSInBrowser, showRevealJSPresenterView } from './commands/showRevealJSInBrowser'
 import { showSample, SHOW_SAMPLE } from './commands/showSample'
 import { createPresentationFromTemplate, NEW_PRESENTATION } from './commands/newPresentation'
 import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
@@ -49,6 +49,7 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(
     registerCmd(SHOW_REVEALJS, () => main.showWebViewPane()  ),
     registerCmd(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() => main.currentContext?.startServer(), () => main.currentContext?.configuration.browserPath )),
+    registerCmd(SHOW_REVEALJS_PRESENTER_VIEW, showRevealJSPresenterView(() => main.currentContext?.startServer(), () => main.currentContext?.configuration.browserPath)),
     registerCmd(STOP_REVEALJS_SERVER, () => main.stopServer()),
     registerCmd(SHOW_SAMPLE, () => showSample(context.extensionPath)),
     registerCmd(NEW_PRESENTATION, createPresentationFromTemplate),
