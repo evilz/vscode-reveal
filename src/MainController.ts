@@ -18,16 +18,20 @@ import {
   commands,
   ConfigurationChangeEvent,
   ExtensionContext,
+  FileSystemWatcher,
   Position,
+  RelativePattern,
   TextDocument,
   TextDocumentChangeEvent,
   TextEditor,
   TextEditorSelectionChangeEvent,
+  workspace,
   ViewColumn,
   window,
 } from 'vscode'
 
 import * as jetpack from 'fs-jetpack'
+import path from 'path'
 
 import { SHOW_REVEALJS } from './commands/showRevealJS'
 import Logger from './Logger'
@@ -47,6 +51,7 @@ export default class MainController {
   private webViewPane?: WebViewPane
   public currentContext?: RevealContext
   private readonly revealContexts: RevealContexts
+  private readonly assetWatchers = new Map<string, FileSystemWatcher>()
 
   get baseUri() {
     return this.currentContext?.baseUri
@@ -97,6 +102,7 @@ export default class MainController {
     if (this.currentContext?.is(document)) {
       this.currentContext = undefined
       this.revealContexts.remove(document.uri)
+      this.syncAssetWatchers()
       this.logger.debug(`onDidCloseTextDocument ${document.uri}`)
     }
   }
@@ -180,6 +186,7 @@ export default class MainController {
 
       this.logger.info(`REFRESH START!`)
       const { slides } = this.currentContext.refresh()
+      this.syncAssetWatchers()
 
       this.refreshWebViewPane()
       this.slidesExplorer.update()
@@ -187,6 +194,39 @@ export default class MainController {
       this.textDecorator.update(this.currentContext.editor)
       this.logger.info(`REFRESH DONE!`)
     }, wait)
+  }
+
+  private syncAssetWatchers() {
+    const watchedPaths = new Set(this.currentContext?.getReferencedAssetPaths() ?? [])
+
+    for (const [assetPath, watcher] of this.assetWatchers.entries()) {
+      if (!watchedPaths.has(assetPath)) {
+        watcher.dispose()
+        this.assetWatchers.delete(assetPath)
+      }
+    }
+
+    for (const assetPath of watchedPaths) {
+      if (this.assetWatchers.has(assetPath)) {
+        continue
+      }
+
+      const watcher = workspace.createFileSystemWatcher(
+        new RelativePattern(path.dirname(assetPath), path.basename(assetPath)),
+        false,
+        false,
+        false
+      )
+      const onAssetChanged = () => {
+        this.logger.debug(`onDidChangeAsset: ${assetPath}`)
+        this.refresh(50)
+      }
+
+      watcher.onDidChange(onAssetChanged)
+      watcher.onDidCreate(onAssetChanged)
+      watcher.onDidDelete(onAssetChanged)
+      this.assetWatchers.set(assetPath, watcher)
+    }
   }
 
   updatePosition(cursorPosition: Position) {
