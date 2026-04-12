@@ -50,8 +50,9 @@ export default class WebviewPane
 
     private injectBaseHref(html: string, baseUrl: string) {
       const baseTag = `<base href="${baseUrl}">`
-      if (html.includes('<head>')) {
-        return html.replace('<head>', `<head>\n${baseTag}`)
+      const headMatch = html.match(/<head>/i)
+      if (headMatch) {
+        return html.replace(headMatch[0], `${headMatch[0]}\n${baseTag}`)
       }
       return `${baseTag}${html}`
     }
