@@ -73,6 +73,15 @@ export namespace languages {
   export function registerCompletionItemProvider(selector: DocumentSelector, provider: CompletionItemProvider, ...triggerCharacters: string[]): Disposable {
     return new Disposable()
   }
+  export function createDiagnosticCollection(name?: string): DiagnosticCollection {
+    void name
+    return {
+      delete: () => { },
+      set: () => { },
+      clear: () => { },
+      dispose: () => { }
+    }
+  }
 }
 
 export class Position {
@@ -101,6 +110,25 @@ export interface TextLine {
 
 export class Range {
   constructor(public start: Position, public end: Position) { }
+}
+
+export enum DiagnosticSeverity {
+  Error = 0,
+  Warning = 1,
+  Information = 2,
+  Hint = 3,
+}
+
+export class Diagnostic {
+  source?: string;
+  constructor(public range: Range, public message: string, public severity: DiagnosticSeverity = DiagnosticSeverity.Error) { }
+}
+
+export interface DiagnosticCollection {
+  delete: (uri: unknown) => void
+  set: (uri: unknown, diagnostics: Diagnostic[]) => void
+  clear: () => void
+  dispose: () => void
 }
 
 export interface Event<T> {
@@ -169,6 +197,24 @@ export namespace window {
   export function registerTreeDataProvider<T>(viewId: string, treeDataProvider: TreeDataProvider<T>): Disposable {
     return new Disposable();
   };
+}
+
+export class RelativePattern {
+  constructor(base: string, pattern: string) {
+    void base
+    void pattern
+  }
+}
+
+export namespace workspace {
+  export function createFileSystemWatcher(): any {
+    return {
+      onDidChange: () => { },
+      onDidCreate: () => { },
+      onDidDelete: () => { },
+      dispose: () => { }
+    }
+  }
 }
 
 export interface ThemableDecorationRenderOptions {

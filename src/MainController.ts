@@ -17,8 +17,10 @@
 import {
   commands,
   ConfigurationChangeEvent,
+  DiagnosticCollection,
   ExtensionContext,
   FileSystemWatcher,
+  languages,
   Position,
   RelativePattern,
   TextDocument,
@@ -41,6 +43,7 @@ import WebViewPane from './WebViewPane'
 import TextDecorator from './TextDecorator'
 import { RevealContext, RevealContexts } from './RevealContext'
 import { configPrefix, Configuration, ConfigurationDescription, getConfig } from './Configuration'
+import { collectDiagnostics } from './FrontmatterDiagnostics'
 
 const isMarkdownFile = (d: TextDocument) => d.languageId === 'markdown'
 
@@ -52,6 +55,7 @@ export default class MainController {
   public currentContext?: RevealContext
   private readonly revealContexts: RevealContexts
   private readonly assetWatchers = new Map<string, FileSystemWatcher>()
+  private readonly diagnostics: DiagnosticCollection
 
   get baseUri() {
     return this.currentContext?.baseUri
@@ -100,6 +104,7 @@ export default class MainController {
 
   public onDidCloseTextDocument(document: TextDocument) {
     if (this.currentContext?.is(document)) {
+      this.diagnostics.delete(document.uri)
       this.currentContext = undefined
       this.revealContexts.remove(document.uri)
       this.syncAssetWatchers()
@@ -120,7 +125,7 @@ export default class MainController {
   public constructor(
     private readonly logger: Logger,
     extensionContext: ExtensionContext,
-    configDesc: ConfigurationDescription[],
+    private readonly configDesc: ConfigurationDescription[],
     private config: Configuration,
     currentEditor: TextEditor | undefined
   ) {
@@ -132,6 +137,7 @@ export default class MainController {
       extensionContext.extensionPath,
       this.isInExport
     )
+    this.diagnostics = languages.createDiagnosticCollection('vscode-revealjs')
 
     if (currentEditor && isMarkdownFile(currentEditor.document)) {
       this.currentContext = this.revealContexts.getOrAdd(currentEditor)
@@ -187,6 +193,7 @@ export default class MainController {
       this.logger.info(`REFRESH START!`)
       const { slides } = this.currentContext.refresh()
       this.syncAssetWatchers()
+      this.diagnostics.set(this.currentContext.editor.document.uri, collectDiagnostics(this.currentContext, this.configDesc))
 
       this.refreshWebViewPane()
       this.slidesExplorer.update()

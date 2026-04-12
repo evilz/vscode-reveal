@@ -7,7 +7,7 @@ import { Disposable } from './dispose'
 import { ISlide } from './ISlide'
 import Logger from './Logger'
 import { RevealServer } from './RevealServer'
-import slideParser from './SlideParser'
+import slideParser, { SlideParserError } from './SlideParser'
 import { countLinesToSlide } from './utils'
 
 interface ISlidePosition {
@@ -20,6 +20,7 @@ export class RevealContext extends Disposable {
 
   public slides: ISlide[] = []
   public frontmatter?: FrontMatterResult<Configuration>
+  public parseError?: SlideParserError
   public configuration: Configuration
   private position: ISlidePosition = { horizontal: 0, vertical: 0 }
 
@@ -99,16 +100,17 @@ export class RevealContext extends Disposable {
   }
 
   public refresh() {
-    const { frontmatter, slides } = slideParser.parse(this.getText(), this.configuration)
+    const { frontmatter, slides, parseError } = slideParser.parse(this.getText(), this.configuration)
     this.slides = slides
+    this.parseError = parseError
     if (!isDeepStrictEqual(frontmatter, this.frontmatter)) {
       this.frontmatter = frontmatter
-      this.configuration = mergeConfig(this.getConfiguration(), frontmatter.attributes)
+      this.configuration = mergeConfig(this.getConfiguration(), frontmatter?.attributes)
       this.logger.LogLevel = this.configuration.logLevel
     }
 
     this.logger.debug(`CONTEXT: ${this.docUri} - Refreshed`)
-    return { frontmatter, slides }
+    return { frontmatter, slides, parseError }
   }
 
   updatePosition(cursorPosition: Position) {

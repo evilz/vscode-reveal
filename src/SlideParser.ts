@@ -2,6 +2,7 @@ import { Configuration } from './Configuration';
 import { ISlide } from './ISlide';
 import { Disposable } from './dispose';
 import frontmatter from 'front-matter'
+import { FrontMatterResult } from 'front-matter'
 
 const trimFirstLastEmptyLine = (s: string): string => {
   let content = s
@@ -41,11 +42,20 @@ export class SlideParser extends Disposable {
     super()
   }
 
-  public parse(text: string, configuration: Configuration, partial = true) {
+  public parse(text: string, configuration: Configuration, partial = true): ParseResult {
     void partial
-    const result = frontmatter<Configuration>(text)
-    const slides = this.#parseSlides(result.body, configuration.separator, configuration.verticalSeparator)
-    return { frontmatter: result, slides }
+    try {
+      const result = frontmatter<Configuration>(text)
+      const slides = this.#parseSlides(result.body, configuration.separator, configuration.verticalSeparator)
+      return { frontmatter: result, slides }
+    } catch (error) {
+      const slides = this.#parseSlides(text, configuration.separator, configuration.verticalSeparator)
+      return {
+        frontmatter: undefined,
+        slides,
+        parseError: mapParseError(error)
+      }
+    }
   }
 
 
@@ -86,6 +96,37 @@ export class SlideParser extends Disposable {
 
       }
     })
+  }
+}
+
+type FrontMatterParserError = {
+  message: string
+  reason?: string
+  mark?: {
+    line?: number
+    column?: number
+  }
+}
+
+export type SlideParserError = {
+  message: string
+  line?: number
+  column?: number
+}
+
+export type ParseResult = {
+  frontmatter?: FrontMatterResult<Configuration>
+  slides: ISlide[]
+  parseError?: SlideParserError
+}
+
+const mapParseError = (error: unknown): SlideParserError => {
+  const parserError = error as FrontMatterParserError
+  const message = parserError.reason ?? parserError.message ?? 'Unable to parse front matter.'
+  return {
+    message,
+    line: parserError.mark?.line,
+    column: parserError.mark?.column
   }
 }
 
