@@ -13,6 +13,11 @@ This extension let you display a reveal.js presentation directly from an opened 
 
 > Full documentation [here](https://www.evilznet.com/vscode-reveal)
 
+## Development platform baseline
+
+The extension targets `engines.vscode: ^1.105.0` and keeps `@types/vscode` aligned to the same API generation.  
+This baseline matches the current stable extension platform while still allowing patch/minor compatibility updates for contributors and CI.
+
 ## Features
 
 - [Markdown](#markdown)

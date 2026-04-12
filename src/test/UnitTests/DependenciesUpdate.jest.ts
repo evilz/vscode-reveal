@@ -91,7 +91,7 @@ test('Esbuild 0.24.2 should be importable', () => {
   expect(typeof esbuild.transform).toBe('function');
 });
 
-test('TypeScript 4.9.5 should be functional', () => {
+test('TypeScript 5.x should be functional', () => {
   const ts = require('typescript');
   expect(ts).toBeDefined();
   expect(ts.version).toBeDefined();
@@ -151,11 +151,13 @@ test('Core dependencies versions should match package.json', () => {
   expect(packageJson.dependencies['prettier']).toBe('^3.6.2');
   
   // Check devDependencies
-  expect(packageJson.devDependencies['@types/jest']).toBe('^27.5.2');
+  expect(packageJson.devDependencies['@types/jest']).toBe('^29.5.14');
   expect(packageJson.devDependencies['@types/node']).toBe('^22.18.10');
   expect(packageJson.devDependencies['@types/vscode']).toBe('^1.105.0');
   expect(packageJson.devDependencies['esbuild']).toBe('^0.24.2');
   expect(packageJson.devDependencies['eslint']).toBe('^8.57.1');
+  expect(packageJson.devDependencies['jest']).toBe('^29.7.0');
   expect(packageJson.devDependencies['supertest']).toBe('^7.1.4');
-  expect(packageJson.devDependencies['ts-jest']).toBe('^27.1.5');
+  expect(packageJson.devDependencies['ts-jest']).toBe('^29.4.4');
+  expect(packageJson.devDependencies['typescript']).toBe('^5.8.3');
 });
