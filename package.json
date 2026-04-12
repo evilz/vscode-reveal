@@ -29,6 +29,7 @@
     "onCommand:vscode-revealjs.showSample",
     "onCommand:vscode-revealjs.showRevealJS",
     "onCommand:vscode-revealjs.showRevealJSInBrowser",
+    "onCommand:vscode-revealjs.showRevealJSPresenterView",
     "onCommand:vscode-revealjs.newPresentation"
   ],
   "main": "./dist/extension.js",
@@ -56,6 +57,14 @@
       {
         "command": "vscode-revealjs.showRevealJSInBrowser",
         "title": "Revealjs: Open presentation in browser",
+        "icon": {
+          "light": "resources/light/browser.svg",
+          "dark": "resources/dark/browser.svg"
+        }
+      },
+      {
+        "command": "vscode-revealjs.showRevealJSPresenterView",
+        "title": "Revealjs: Open presenter view in browser",
         "icon": {
           "light": "resources/light/browser.svg",
           "dark": "resources/dark/browser.svg"
@@ -542,6 +551,11 @@
           "group": "navigation"
         },
         {
+          "command": "vscode-revealjs.showRevealJSPresenterView",
+          "when": "view == slidesExplorer",
+          "group": "navigation"
+        },
+        {
           "command": "vscode-revealjs.showRevealJS",
           "when": "view == slidesExplorer",
           "group": "navigation"
@@ -567,6 +581,11 @@
           "when": "resourceLangId == markdown",
           "command": "vscode-revealjs.showRevealJSInBrowser",
           "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == markdown",
+          "command": "vscode-revealjs.showRevealJSPresenterView",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
@@ -584,6 +603,11 @@
         {
           "when": "resourceLangId == markdown",
           "command": "vscode-revealjs.showRevealJSInBrowser",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == markdown",
+          "command": "vscode-revealjs.showRevealJSPresenterView",
           "group": "navigation"
         }
       ]

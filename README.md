@@ -200,6 +200,21 @@ This uses VS Code's native external URL API by default (same behavior as opening
 
 If `revealjs.browserPath` is set, the extension uses that executable path to launch the presentation instead of the VS Code default external opener.
 
+## Presenter view / speaker notes
+
+To open a dedicated presenter workflow (speaker notes + current/upcoming slide):
+- call command `Revealjs: Open presenter view in browser`
+- or use `Revealjs: Open presentation in a browser`, then press `S`
+
+How it works with the main deck preview:
+- presenter view opens a browser tab for the current deck and automatically launches Reveal.js speaker view in a second popup window
+- navigation stays synchronized between the deck tab and the speaker window
+- speaker notes authored in markdown (`note:` / `<aside class="notes">`) are shown in the presenter window
+
+Supported execution modes:
+- ✅ external browser mode (default browser or `revealjs.browserPath`): fully supported
+- ⚠️ VS Code webview side preview: does not provide a first-class presenter popup workflow
+
 
 ## <a id="pdf"></a> Print to PDF
 
