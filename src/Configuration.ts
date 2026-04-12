@@ -179,24 +179,54 @@ export const defaultConfiguration: Configuration = {
 }
 
 
-type ConfigurationDescriptionTypes = "string" | "boolean" | "number"
+type ConfigurationDescriptionTypes = "string" | "boolean" | "number" | "array" | "object" | "null"
 export interface ConfigurationDescription {
   label: string,
   detail: string,
   documentation: string,
   type: ConfigurationDescriptionTypes,
-  values?: string[]
+  values?: string[],
+  defaultValue?: unknown
 }
-export const getConfigurationDescription = (properties: object) => {
+type RawConfigurationProperty = {
+  type: string | string[]
+  default?: unknown
+  description?: string
+  markdownDescription?: string
+  enum?: string[]
+}
+
+const normalizeType = (type: string | string[]): ConfigurationDescriptionTypes => {
+  const types = (Array.isArray(type) ? type : [type]) as string[]
+  if (types.includes('object')) {
+    return 'object'
+  }
+  if (types.includes('array')) {
+    return 'array'
+  }
+  if (types.includes('null')) {
+    return 'null'
+  }
+  if (types.includes('number')) {
+    return 'number'
+  }
+  if (types.includes('boolean')) {
+    return 'boolean'
+  }
+  return 'string'
+}
+
+export const getConfigurationDescription = (properties: Record<string, RawConfigurationProperty>) => {
 
   const allProps: ConfigurationDescription[] =
     Object.keys(properties)
       .map(key => ({
-        label: key.substring(9), // remove "revealjs."
-        detail: properties[key].description,
-        documentation: `Default value:  ${properties[key].default}`,
-        type: properties[key].type,
-        values: properties[key].enum
+        label: key.startsWith(`${configPefix}.`) ? key.substring(configPefix.length + 1) : key,
+        detail: properties[key].description || properties[key].markdownDescription || '',
+        documentation: properties[key].description || properties[key].markdownDescription || '',
+        type: normalizeType(properties[key].type),
+        values: properties[key].enum,
+        defaultValue: properties[key].default
       }))
 
   return allProps
