@@ -66,8 +66,8 @@
         "command": "vscode-revealjs.showRevealJSPresenterView",
         "title": "Revealjs: Open presenter view in browser",
         "icon": {
-          "light": "resources/light/browser.svg",
-          "dark": "resources/dark/browser.svg"
+          "light": "resources/light/chat.svg",
+          "dark": "resources/dark/chat.svg"
         }
       },
       {
