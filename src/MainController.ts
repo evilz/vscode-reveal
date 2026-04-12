@@ -249,6 +249,17 @@ export default class MainController {
     } else {
       const webviewPanel = window.createWebviewPanel('RevealJS', 'Reveal JS presentation', ViewColumn.Beside, { enableScripts: true })
       this.webViewPane = new WebViewPane(webviewPanel)
+      this.webViewPane.onDidReceiveMessage((message) => {
+        if (!message || typeof message !== 'object') return
+
+        const command = 'command' in message ? message.command : undefined
+        if (command !== 'slideChanged') return
+
+        const horizontal = 'horizontal' in message ? Number(message.horizontal) : Number.NaN
+        const vertical = 'vertical' in message ? Number(message.vertical) : Number.NaN
+        if (!Number.isFinite(horizontal) || !Number.isFinite(vertical)) return
+        this.goToSlide(horizontal, vertical)
+      })
       this.webViewPane.onDidDispose(() => {
         this.logInfo('WebView', 'disposed')
         this.webViewPane = undefined
@@ -262,7 +273,7 @@ export default class MainController {
     if (this.webViewPane && this.currentContext) {
       this.startServer()
       this.webViewPane.title = this.currentContext.configuration.title
-      this.webViewPane.update(this.currentContext.uriWithPosition)
+      void this.webViewPane.update(this.currentContext.uriWithPosition)
     }
   }
 
