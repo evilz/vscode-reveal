@@ -97,6 +97,9 @@ export interface IExtensionOptions {
   logLevel: LogLevel
 }
 
+export const configPrefix = "revealjs"
+// Backward-compatible alias kept for existing imports.
+export const configPefix = configPrefix
 
 /** The default configuration for the Reveal.js presentation. */
 export const defaultConfiguration: Configuration = {
@@ -204,14 +207,17 @@ const normalizeType = (type: string | string[]): ConfigurationDescriptionTypes =
   if (types.includes('array')) {
     return 'array'
   }
-  if (types.includes('null')) {
-    return 'null'
-  }
   if (types.includes('number')) {
     return 'number'
   }
   if (types.includes('boolean')) {
     return 'boolean'
+  }
+  if (types.includes('string')) {
+    return 'string'
+  }
+  if (types.includes('null')) {
+    return 'null'
   }
   return 'string'
 }
@@ -221,9 +227,9 @@ export const getConfigurationDescription = (properties: Record<string, RawConfig
   const allProps: ConfigurationDescription[] =
     Object.keys(properties)
       .map(key => ({
-        label: key.startsWith(`${configPefix}.`) ? key.substring(configPefix.length + 1) : key,
+        label: key.startsWith(`${configPrefix}.`) ? key.substring(configPrefix.length + 1) : key,
         detail: properties[key].description || properties[key].markdownDescription || '',
-        documentation: properties[key].description || properties[key].markdownDescription || '',
+        documentation: properties[key].markdownDescription || properties[key].description || '',
         type: normalizeType(properties[key].type),
         values: properties[key].enum,
         defaultValue: properties[key].default
@@ -232,10 +238,8 @@ export const getConfigurationDescription = (properties: Record<string, RawConfig
   return allProps
 }
 
-export const configPefix = "revealjs"
-
 export const getConfig = () => {
-  const workspaceConfig = workspace.getConfiguration(configPefix) as unknown as Configuration
+  const workspaceConfig = workspace.getConfiguration(configPrefix) as unknown as Configuration
   return { ...defaultConfiguration, ...workspaceConfig } as Configuration
 }
 

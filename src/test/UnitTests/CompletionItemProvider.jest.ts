@@ -82,3 +82,17 @@ test('Should handle number type without enum provider', () => {
     expect(enumValueProviders).toHaveLength(0)
 })
 
+test('Should stringify complex default values in completion metadata', () => {
+    const configDesc: ConfigurationDescription = {
+        label: 'obj_option',
+        detail: 'object detail',
+        documentation: 'doc',
+        type: 'object',
+        defaultValue: { enabled: true, tags: ['a', 'b'] }
+    }
+
+    const { completionItems } = createCompletionItems([configDesc])
+
+    expect(completionItems[0].detail).toBe('object detail • default: {"enabled":true,"tags":["a","b"]}')
+    expect(completionItems[0].documentation).toStrictEqual(new MarkdownString('doc\n\nDefault: `{"enabled":true,"tags":["a","b"]}`'))
+})

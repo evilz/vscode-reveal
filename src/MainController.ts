@@ -40,7 +40,7 @@ import { StatusBarController } from './StatusBarController'
 import WebViewPane from './WebViewPane'
 import TextDecorator from './TextDecorator'
 import { RevealContext, RevealContexts } from './RevealContext'
-import { configPefix, Configuration, ConfigurationDescription, getConfig } from './Configuration'
+import { configPrefix, Configuration, ConfigurationDescription, getConfig } from './Configuration'
 
 const isMarkdownFile = (d: TextDocument) => d.languageId === 'markdown'
 
@@ -108,7 +108,7 @@ export default class MainController {
   }
 
   public onDidChangeConfiguration(e: ConfigurationChangeEvent) {
-    if (!e.affectsConfiguration(configPefix)) {
+    if (!e.affectsConfiguration(configPrefix)) {
       return
     }
     this.config = getConfig()

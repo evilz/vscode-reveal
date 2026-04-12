@@ -49,10 +49,15 @@ export const enumValueProvider = (prefix: string, values: string[]) => {
  */
 export const createCompletionItems = (configDesc: ConfigurationDescription[]) => {
   const formatValue = (value: unknown) => {
-    if (typeof value === 'string') {
-      return `"${value}"`
+    try {
+      const jsonValue = JSON.stringify(value)
+      if (jsonValue !== undefined) {
+        return jsonValue
+      }
+    } catch {
+      // Fallback for non-serializable values
     }
-    return `${value}`
+    return String(value)
   }
 
   const enumValueProviders: CompletionItemProvider[] = []
