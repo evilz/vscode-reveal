@@ -13,7 +13,7 @@
     "url": "https://github.com/evilz/vscode-reveal"
   },
   "engines": {
-    "vscode": "^1.68.0"
+    "vscode": "^1.105.0"
   },
   "categories": [
     "Other"
