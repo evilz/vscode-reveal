@@ -1,37 +1,34 @@
-import fs from 'fs'
-import path from 'path'
-import { Diagnostic, DiagnosticSeverity, Position, Range, TextDocument } from 'vscode'
+import { Diagnostic, DiagnosticSeverity, Position, Range, TextDocument, Uri, workspace } from 'vscode'
 import { ConfigurationDescription } from './Configuration'
 import { RevealContext } from './RevealContext'
 
-const frontmatterRange = (document: TextDocument): { start: number; end: number } | null => {
-  const text = document.getText()
-  if (!text.startsWith('---')) return null
+type FrontmatterLineRange = { start: number; end: number }
 
-  const lines = text.split(/\r?\n/)
-  let end = -1
-  for (let i = 1; i < lines.length; i++) {
-    if (lines[i].trim() === '---') {
-      end = i
-      break
+const findFrontmatterLineRange = (document: TextDocument): FrontmatterLineRange | null => {
+  if (document.lineCount < 1 || document.lineAt(0).text.trim() !== '---') {
+    return null
+  }
+
+  for (let line = 1; line < document.lineCount; line++) {
+    if (document.lineAt(line).text.trim() === '---') {
+      return { start: 0, end: line }
     }
   }
 
-  if (end < 0) return null
-  return { start: 0, end }
+  return null
 }
 
-const keyRangesByName = (document: TextDocument): Map<string, Range> => {
+const keyRangesByName = (document: TextDocument, frontmatterLineRange: FrontmatterLineRange | null): Map<string, Range> => {
   const map = new Map<string, Range>()
-  const range = frontmatterRange(document)
-  if (!range) return map
+  if (!frontmatterLineRange) return map
 
-  for (let i = range.start + 1; i < range.end; i++) {
+  for (let i = frontmatterLineRange.start + 1; i < frontmatterLineRange.end; i++) {
     const line = document.lineAt(i).text
     const match = /^\s*([a-zA-Z_][\w-]*)\s*:/.exec(line)
     if (!match) continue
     const key = match[1]
-    const start = new Position(i, match.index + line.slice(match.index).indexOf(key))
+    const keyOffset = line.indexOf(key, match.index)
+    const start = new Position(i, keyOffset)
     const end = new Position(i, start.character + key.length)
     map.set(key, new Range(start, end))
   }
@@ -39,12 +36,12 @@ const keyRangesByName = (document: TextDocument): Map<string, Range> => {
   return map
 }
 
-const wholeFrontmatterRange = (document: TextDocument): Range => {
-  const range = frontmatterRange(document)
-  if (!range) {
+const wholeFrontmatterRange = (document: TextDocument, frontmatterLineRange: FrontmatterLineRange | null): Range => {
+  if (!frontmatterLineRange) {
     return new Range(new Position(0, 0), new Position(0, 0))
   }
-  return new Range(new Position(range.start, 0), new Position(range.end, document.lineAt(range.end).text.length))
+  const endLine = frontmatterLineRange.end
+  return new Range(new Position(frontmatterLineRange.start, 0), new Position(endLine, document.lineAt(endLine).text.length))
 }
 
 const toDiagnostic = (range: Range, message: string, severity: DiagnosticSeverity = DiagnosticSeverity.Warning): Diagnostic => {
@@ -66,11 +63,29 @@ const acceptsType = (value: unknown, expectedType: ConfigurationDescription['typ
   return typeof value === expectedType
 }
 
-export const collectDiagnostics = (context: RevealContext, configDesc: ConfigurationDescription[]): Diagnostic[] => {
+const pathExists = async (fsPath: string) => {
+  try {
+    await workspace.fs.stat(Uri.file(fsPath))
+    return true
+  } catch {
+    return false
+  }
+}
+
+const getCssEntries = (css: unknown): string[] => {
+  if (!Array.isArray(css)) return []
+  return css.filter((entry): entry is string => typeof entry === 'string')
+}
+
+export const collectDiagnostics = async (
+  context: RevealContext,
+  configByKey: Map<string, ConfigurationDescription>
+): Promise<Diagnostic[]> => {
   const diagnostics: Diagnostic[] = []
   const doc = context.editor.document
-  const keyRanges = keyRangesByName(doc)
-  const configByKey = new Map(configDesc.map((d) => [d.label, d]))
+  const frontmatterLineRange = findFrontmatterLineRange(doc)
+  const keyRanges = keyRangesByName(doc, frontmatterLineRange)
+  const fullFrontmatterRange = wholeFrontmatterRange(doc, frontmatterLineRange)
 
   if (context.parseError) {
     const parseRange = context.parseError.line !== undefined
@@ -78,14 +93,14 @@ export const collectDiagnostics = (context: RevealContext, configDesc: Configura
         new Position(context.parseError.line, context.parseError.column ?? 0),
         new Position(context.parseError.line, (context.parseError.column ?? 0) + 1)
       )
-      : wholeFrontmatterRange(doc)
+      : fullFrontmatterRange
     diagnostics.push(toDiagnostic(parseRange, `Front matter parse error: ${context.parseError.message}`, DiagnosticSeverity.Error))
     return diagnostics
   }
 
   const attrs = context.frontmatter?.attributes ?? {}
   for (const [key, value] of Object.entries(attrs)) {
-    const keyRange = keyRanges.get(key) ?? wholeFrontmatterRange(doc)
+    const keyRange = keyRanges.get(key) ?? fullFrontmatterRange
     const desc = configByKey.get(key)
     if (!desc) {
       diagnostics.push(toDiagnostic(keyRange, `Unsupported front matter key "${key}".`))
@@ -102,24 +117,15 @@ export const collectDiagnostics = (context: RevealContext, configDesc: Configura
     }
   }
 
-  const customThemePath = context.configuration.customTheme
-    ? path.resolve(context.dirname, `${context.configuration.customTheme}.css`)
-    : null
-  if (customThemePath && !fs.existsSync(customThemePath)) {
-    diagnostics.push(toDiagnostic(
-      keyRanges.get('customTheme') ?? wholeFrontmatterRange(doc),
-      `Missing custom theme file: ${customThemePath}.`
-    ))
+  const customThemePath = context.resolveLocalAssetPath(context.configuration.customTheme, true)
+  if (customThemePath && !(await pathExists(customThemePath))) {
+    diagnostics.push(toDiagnostic(keyRanges.get('customTheme') ?? fullFrontmatterRange, `Missing custom theme file: ${customThemePath}.`))
   }
 
-  for (const css of context.configuration.css) {
-    if (!css || /^(https?:)?\/\//i.test(css) || /^data:/i.test(css)) continue
-    const cssPath = path.resolve(context.dirname, css)
-    if (fs.existsSync(cssPath)) continue
-    diagnostics.push(toDiagnostic(
-      keyRanges.get('css') ?? wholeFrontmatterRange(doc),
-      `Missing CSS file: ${cssPath}.`
-    ))
+  for (const cssEntry of getCssEntries(context.configuration.css)) {
+    const cssPath = context.resolveLocalAssetPath(cssEntry)
+    if (!cssPath || await pathExists(cssPath)) continue
+    diagnostics.push(toDiagnostic(keyRanges.get('css') ?? fullFrontmatterRange, `Missing CSS file: ${cssPath}.`))
   }
 
   return diagnostics

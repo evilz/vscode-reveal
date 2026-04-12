@@ -90,10 +90,21 @@ export class Position {
 
 export class Uri {
   static parse(value: string, strict?: boolean): Uri {
-    return new Uri("file", "", "", "", "");
+    void strict
+    return new Uri("file", "", value, "", "");
   }
 
-  private constructor(scheme: string, authority: string, path: string, query: string, fragment: string) { }
+  static file(path: string): Uri {
+    return new Uri("file", "", path, "", "");
+  }
+
+  private constructor(
+    public scheme: string,
+    public authority: string,
+    public path: string,
+    public query: string,
+    public fragment: string
+  ) { }
 
 }
 
@@ -207,6 +218,9 @@ export class RelativePattern {
 }
 
 export namespace workspace {
+  export const fs = {
+    stat: async () => ({})
+  }
   export function createFileSystemWatcher(): any {
     return {
       onDidChange: () => { },

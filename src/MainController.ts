@@ -56,6 +56,7 @@ export default class MainController {
   private readonly revealContexts: RevealContexts
   private readonly assetWatchers = new Map<string, FileSystemWatcher>()
   private readonly diagnostics: DiagnosticCollection
+  private readonly configByKey: Map<string, ConfigurationDescription>
 
   get baseUri() {
     return this.currentContext?.baseUri
@@ -125,7 +126,7 @@ export default class MainController {
   public constructor(
     private readonly logger: Logger,
     extensionContext: ExtensionContext,
-    private readonly configDesc: ConfigurationDescription[],
+    configDesc: ConfigurationDescription[],
     private config: Configuration,
     currentEditor: TextEditor | undefined
   ) {
@@ -138,6 +139,7 @@ export default class MainController {
       this.isInExport
     )
     this.diagnostics = languages.createDiagnosticCollection('vscode-revealjs')
+    this.configByKey = new Map(configDesc.map((d) => [d.label, d]))
 
     if (currentEditor && isMarkdownFile(currentEditor.document)) {
       this.currentContext = this.revealContexts.getOrAdd(currentEditor)
@@ -187,18 +189,20 @@ export default class MainController {
     if (this.#refreshTimeout) {
       clearTimeout(this.#refreshTimeout)
     }
-    this.#refreshTimeout = setTimeout(() => {
-      if (!this.currentContext) return
+    this.#refreshTimeout = setTimeout(async () => {
+      const context = this.currentContext
+      if (!context) return
 
       this.logger.info(`REFRESH START!`)
-      const { slides } = this.currentContext.refresh()
+      const { slides } = context.refresh()
       this.syncAssetWatchers()
-      this.diagnostics.set(this.currentContext.editor.document.uri, collectDiagnostics(this.currentContext, this.configDesc))
+      const diagnostics = await collectDiagnostics(context, this.configByKey)
+      this.diagnostics.set(context.editor.document.uri, diagnostics)
 
       this.refreshWebViewPane()
       this.slidesExplorer.update()
       this.statusBarController.updateCount(slides.length)
-      this.textDecorator.update(this.currentContext.editor)
+      this.textDecorator.update(context.editor)
       this.logger.info(`REFRESH DONE!`)
     }, wait)
   }

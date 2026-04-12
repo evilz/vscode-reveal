@@ -65,7 +65,7 @@ export class RevealContext extends Disposable {
       : path.join(this.dirname, this.configuration.exportHTMLPath)
   }
 
-  private resolveLocalAssetPath(assetPath: string | null | undefined, appendCssIfMissing = false): string | null {
+  public resolveLocalAssetPath(assetPath: string | null | undefined, appendCssIfMissing = false): string | null {
     if (!assetPath) return null
 
     const trimmed = assetPath.trim()
@@ -89,7 +89,8 @@ export class RevealContext extends Disposable {
       paths.add(customThemePath)
     }
 
-    for (const cssAssetPath of this.configuration.css) {
+    const cssAssetPaths = Array.isArray(this.configuration.css) ? this.configuration.css : []
+    for (const cssAssetPath of cssAssetPaths) {
       const resolvedPath = this.resolveLocalAssetPath(cssAssetPath)
       if (resolvedPath) {
         paths.add(resolvedPath)
