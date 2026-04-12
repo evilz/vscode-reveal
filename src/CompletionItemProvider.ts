@@ -48,14 +48,35 @@ export const enumValueProvider = (prefix: string, values: string[]) => {
  * `CompletionItemProvider[]`.
  */
 export const createCompletionItems = (configDesc: ConfigurationDescription[]) => {
+  const formatValue = (value: unknown) => {
+    if (typeof value === 'string') {
+      return `"${value}"`
+    }
+    return `${value}`
+  }
+
   const enumValueProviders: CompletionItemProvider[] = []
   const completionItems: CompletionItem[] =
-    configDesc.map(({ label, detail, documentation, type, values }) => {
+    configDesc.map(({ label, detail, documentation, type, values, defaultValue }) => {
       const completionItem = new CompletionItem(label)
       completionItem.kind = CompletionItemKind.Enum
-      completionItem.detail = detail
+      const metadataDetails: string[] = []
+      if (defaultValue !== undefined) {
+        metadataDetails.push(`default: ${formatValue(defaultValue)}`)
+      }
+      if (values && values.length > 0) {
+        metadataDetails.push(`enum: ${values.join(', ')}`)
+      }
+      completionItem.detail = [detail, ...metadataDetails].filter(Boolean).join(' • ')
       completionItem.filterText = label
-      completionItem.documentation = new MarkdownString(documentation)
+      const documentationLines = [documentation]
+      if (defaultValue !== undefined) {
+        documentationLines.push(`Default: \`${formatValue(defaultValue)}\``)
+      }
+      if (values && values.length > 0) {
+        documentationLines.push(`Allowed values: \`${values.join('`, `')}\``)
+      }
+      completionItem.documentation = new MarkdownString(documentationLines.filter(Boolean).join('\n\n'))
 
       switch (type) {
         case 'string':
@@ -67,6 +88,9 @@ export const createCompletionItems = (configDesc: ConfigurationDescription[]) =>
           enumValueProviders.push(enumValueProvider(label, ['true', 'false']))
           break
         case 'number':
+        case 'array':
+        case 'object':
+        case 'null':
           break
       }
 

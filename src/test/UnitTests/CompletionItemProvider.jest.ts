@@ -11,7 +11,8 @@ test('Should createCompletionItems from configDesc', () => {
         detail: "test_detail",
         documentation: "test_documentation",
         type: "string",
-        values: ["test_values"]
+        values: ["test_values"],
+        defaultValue: "test_default"
     }
 
     const { completionItems, enumValueProviders } = createCompletionItems([configDesc])
@@ -19,8 +20,8 @@ test('Should createCompletionItems from configDesc', () => {
 
     expect(completionItems).toHaveLength(1)
     expect(completionItems[0].label).toBe("test_label")
-    expect(completionItems[0].detail).toBe("test_detail")
-    expect(completionItems[0].documentation).toStrictEqual(new MarkdownString("test_documentation"))
+    expect(completionItems[0].detail).toBe("test_detail • default: \"test_default\" • enum: test_values")
+    expect(completionItems[0].documentation).toStrictEqual(new MarkdownString("test_documentation\n\nDefault: `\"test_default\"`\n\nAllowed values: `test_values`"))
 
     expect(enumValueProviders).toHaveLength(1)
     expect(enumValueProviders[0].provideCompletionItems).toBeDefined()
@@ -80,5 +81,4 @@ test('Should handle number type without enum provider', () => {
     expect(completionItems).toHaveLength(1)
     expect(enumValueProviders).toHaveLength(0)
 })
-
 
