@@ -48,12 +48,12 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(
     registerCmd(SHOW_REVEALJS, () => main.showWebViewPane()  ),
-    registerCmd(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() =>main.currentContext?.startServer() )),
+    registerCmd(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() => main.currentContext?.startServer(), () => main.currentContext?.configuration.browserPath )),
     registerCmd(STOP_REVEALJS_SERVER, () => main.stopServer()),
     registerCmd(SHOW_SAMPLE, () => showSample(context.extensionPath)),
     registerCmd(NEW_PRESENTATION, createPresentationFromTemplate),
     registerCmd(GO_TO_SLIDE, (arg) => main.goToSlide(arg.horizontal, arg.vertical)),
-    registerCmd(EXPORT_PDF,exportPDF(() => main.currentContext?.startServer())),
+    registerCmd(EXPORT_PDF,exportPDF(() => main.currentContext?.startServer(), () => main.currentContext?.configuration.browserPath)),
     registerCmd(EXPORT_HTML,exportHTML(logger, main.exportAsync, main.shouldOpenFilemanagerAfterHTMLExport)),
 
     window.onDidChangeTextEditorSelection((e) => main.onDidChangeTextEditorSelection(e)),

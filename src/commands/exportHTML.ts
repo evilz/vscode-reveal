@@ -1,7 +1,7 @@
-import open from 'open'
-import  Logger from '../Logger'
+import Logger from '../Logger'
 
 import { window, ProgressLocation } from 'vscode'
+import { openFolder } from './openExternal'
 
 export const EXPORT_HTML = 'vscode-revealjs.exportHTML'
 export type EXPORT_HTML = typeof EXPORT_HTML
@@ -22,7 +22,7 @@ export const exportHTML = (logger: Logger, startExport: () => Promise<string>, d
       if (doOpenAfterExport()) {
         progress.report({ message: 'Opening out folder !' })
         await timeout(1500)
-        open(path)
+        await openFolder(path)
         logger.debug('Open folder: ' + path)
       }
     }
