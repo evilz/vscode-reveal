@@ -130,6 +130,7 @@ export class RevealServer extends Disposable {
 
     // ERROR HANDLER
     app.use(function (err, req, res, next) {
+      void next
       context.logger.error(err.stack)
       res.status(500).send(err.stack)
     })

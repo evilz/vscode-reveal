@@ -1,5 +1,6 @@
 import attrs from 'markdown-it-attrs'
 import md from 'markdown-it'
+import type { Token } from 'markdown-it'
 import blockEmbed from 'markdown-it-block-embed'
 import multimdTable from 'markdown-it-multimd-table'
 import taskLists from 'markdown-it-task-lists'
@@ -54,23 +55,26 @@ const note = (markdown, config) => {
     }
 
   // tslint:disable-next-line: only-arrow-functions
-  markdown.renderer.rules.paragraph_open = function (tokens: any[], idx, options, env, self) {
-    const inlineToken = tokens[idx + 1] // text
+  markdown.renderer.rules.paragraph_open = function (tokens: Token[], idx, options, env, self) {
+    const currentToken = tokens[idx]!
+    const inlineToken = tokens[idx + 1]! // text
     if (inlineToken.content.startsWith(notesSeparator)) {
-      tokens[idx].tag = 'aside'
-      const classIndex = tokens[idx].attrIndex('class')
+      currentToken.tag = 'aside'
+      const classIndex = currentToken.attrIndex('class')
 
       if (classIndex < 0) {
-        tokens[idx].attrPush(['class', notesClass]) // add new attribute
-      } else {
-        tokens[idx].attrs[classIndex][1] = notesClass // replace value of existing attr
+        currentToken.attrPush(['class', notesClass]) // add new attribute
+      } else if (currentToken.attrs) {
+        currentToken.attrs[classIndex][1] = notesClass // replace value of existing attr
       }
 
       // remote "note:" from content
-      tokens[idx + 1].content = inlineToken.content.replace(notesSeparator, '')
-      tokens[idx + 1].children[0].content = tokens[idx + 1].children[0].content.replace(notesSeparator, '')
+      inlineToken.content = inlineToken.content.replace(notesSeparator, '')
+      if (inlineToken.children && inlineToken.children[0]) {
+        inlineToken.children[0].content = inlineToken.children[0].content.replace(notesSeparator, '')
+      }
 
-      tokens[idx + 2].tag = 'aside'
+      tokens[idx + 2]!.tag = 'aside'
     }
     // pass token to default renderer.
     return defaultRender(tokens, idx, options, env, self)

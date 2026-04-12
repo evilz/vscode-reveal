@@ -56,14 +56,3 @@ test('Logger should log when level is info', () => {
 
   expect(output).not.toEqual('')
 });
-
-// test('Logger should Not log when level is debug', () => {
-//   let output = ''
-//   const logger = new Logger((s) => {
-//     output = s
-//   }, LogLevel.Debug)
-
-//   logger.debug('text1')
-
-//   expect(output).not.toEqual('')
-// });

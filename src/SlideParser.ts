@@ -1,7 +1,7 @@
 import { Configuration } from './Configuration';
 import { ISlide } from './ISlide';
 import { Disposable } from './dispose';
-import frontmatter, { FrontMatterResult } from 'front-matter'
+import frontmatter from 'front-matter'
 
 const trimFirstLastEmptyLine = (s: string): string => {
   let content = s
@@ -42,6 +42,7 @@ export class SlideParser extends Disposable {
   }
 
   public parse(text: string, configuration: Configuration, partial = true) {
+    void partial
     const result = frontmatter<Configuration>(text)
     const slides = this.#parseSlides(result.body, configuration.separator, configuration.verticalSeparator)
     return { frontmatter: result, slides }
@@ -90,4 +91,3 @@ export class SlideParser extends Disposable {
 
 //Singleton
 export default new SlideParser()
-
