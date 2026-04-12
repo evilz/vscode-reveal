@@ -64,6 +64,40 @@ export class RevealContext extends Disposable {
       : path.join(this.dirname, this.configuration.exportHTMLPath)
   }
 
+  private resolveLocalAssetPath(assetPath: string | null | undefined, appendCssIfMissing = false): string | null {
+    if (!assetPath) return null
+
+    const trimmed = assetPath.trim()
+    if (!trimmed) return null
+    if (/^(https?:)?\/\//i.test(trimmed) || /^data:/i.test(trimmed)) return null
+
+    const [cleanedPath] = trimmed.split(/[?#]/)
+    const resolvedPath = path.isAbsolute(cleanedPath) ? cleanedPath : path.resolve(this.dirname, cleanedPath)
+    if (appendCssIfMissing && !path.extname(resolvedPath)) {
+      return `${resolvedPath}.css`
+    }
+    return resolvedPath
+  }
+
+  public getReferencedAssetPaths(): string[] {
+    const paths = new Set<string>()
+    paths.add(path.join(this.dirname, 'init.js'))
+
+    const customThemePath = this.resolveLocalAssetPath(this.configuration.customTheme, true)
+    if (customThemePath) {
+      paths.add(customThemePath)
+    }
+
+    for (const cssAssetPath of this.configuration.css) {
+      const resolvedPath = this.resolveLocalAssetPath(cssAssetPath)
+      if (resolvedPath) {
+        paths.add(resolvedPath)
+      }
+    }
+
+    return [...paths]
+  }
+
   public refresh() {
     const { frontmatter, slides } = slideParser.parse(this.getText(), this.configuration)
     this.slides = slides
