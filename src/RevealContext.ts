@@ -1,7 +1,7 @@
 import { FrontMatterResult } from 'front-matter'
 import path from 'path'
 import { isDeepStrictEqual } from 'util'
-import { EventEmitter, Position, Range, Selection, TextDocument, TextEditor, TextEditorRevealType, Uri } from 'vscode'
+import { EventEmitter, Position, Range, Selection, TextDocument, TextEditor, Uri } from 'vscode'
 import { Configuration, mergeConfig } from './Configuration'
 import { Disposable } from './dispose'
 import { ISlide } from './ISlide'

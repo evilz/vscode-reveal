@@ -20,22 +20,6 @@ test('CurrentContext should be undefined when no editor is pass', () => {
 });
 
 test('CurrentContext should be undefined when editor is not markdown', () => {
-
-    const editor: TextEditor = {
-        document: { languageId: 'text', fileName: "test.txt" } as TextDocument,
-        selection: new Selection(0, 0, 0, 0),
-        selections: [],
-        visibleRanges: [],
-        options: {},
-        viewColumn: undefined,
-        edit: jest.fn(),
-        insertSnippet: jest.fn(),
-        setDecorations: jest.fn(),
-        revealRange: jest.fn(),
-        show: jest.fn(),
-        hide: jest.fn()
-    }
-
     const main = new MainController(logger, {} as ExtensionContext, [], {} as Configuration, undefined)
     expect(main.currentContext).toBeUndefined()
 });

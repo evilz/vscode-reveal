@@ -61,7 +61,7 @@ export class MarkdownString {
 
 
 export type DocumentSelector = string;
-export type CompletionItemProvider = any
+export type CompletionItemProvider = unknown
 export class Disposable {
   //static from(...disposableLikes: { dispose: () => any }[]): Disposable;
   //constructor(callOnDispose: () => any);
@@ -105,15 +105,17 @@ export class Range {
 
 export interface Event<T> {
 
-  (listener: (e: T) => any, thisArgs?: any, disposables?: Disposable[]): Disposable;
+  (listener: (e: T) => void, thisArgs?: unknown, disposables?: Disposable[]): Disposable;
 }
 
 export class EventEmitter<T> {
 
-  #listener: (e: T) => any = (x: T) => null
+  #listener: (e: T) => void = (_x: T) => {}
 
   public get event() {
-    return (listener: (ee: T) => any, thisArgs?: any, disposables?: Disposable[]) => {
+    return (listener: (ee: T) => void, thisArgs?: unknown, disposables?: Disposable[]) => {
+      void thisArgs
+      void disposables
       this.#listener = listener
     };
   }
@@ -130,7 +132,7 @@ export class ThemeIcon {
   constructor(public readonly id: string, public readonly color?: ThemeColor) { }
 }
 
-export interface Command { title: string; command: string; tooltip?: string; arguments?: any[]; }
+export interface Command { title: string; command: string; tooltip?: string; arguments?: unknown[]; }
 export enum TreeItemCollapsibleState { None = 0, Collapsed = 1, Expanded = 2 }
 
 export class TreeItem {
@@ -226,7 +228,7 @@ export interface TreeDataProvider<T> {
 
 export type ProviderResult<T> = T | undefined | null | Thenable<T | undefined | null>;
 
-export interface CancellationToken { isCancellationRequested: boolean; onCancellationRequested: Event<any>; }
+export interface CancellationToken { isCancellationRequested: boolean; onCancellationRequested: Event<unknown>; }
 
 export class Selection extends Range {
   //anchor: Position;
