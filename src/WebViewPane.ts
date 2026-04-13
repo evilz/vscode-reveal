@@ -95,9 +95,15 @@ export default class WebviewPane
           setTimeout(postCurrentSlide, 0);
 
           if (${sendExportSignal}) {
-            window.addEventListener('load', () => {
+            const postExportComplete = () => {
               vscode.postMessage({ command: 'exportComplete' });
-            }, { once: true });
+            };
+
+            if (document.readyState === 'complete') {
+              postExportComplete();
+            } else {
+              window.addEventListener('load', postExportComplete, { once: true });
+            }
           }
         }());
       </script>
