@@ -7,7 +7,8 @@ export const EXPORT_HTML = 'vscode-revealjs.exportHTML'
 export type EXPORT_HTML = typeof EXPORT_HTML
 
 export const exportHTML = (logger: Logger, startExport: () => Promise<string>, doOpenAfterExport: () => boolean) => async () => {
-  await window.withProgress(
+  try {
+    await window.withProgress(
     {
       location: ProgressLocation.Notification,
       title: 'Export',
@@ -27,6 +28,12 @@ export const exportHTML = (logger: Logger, startExport: () => Promise<string>, d
       }
     }
   )
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    logger.error(`Export failed: ${message}`)
+    void window.showErrorMessage(`RevealJS HTML export failed: ${message}`)
+    throw error
+  }
 }
 
 function timeout(ms) {

@@ -16,17 +16,9 @@ export const exportHTML = async (options: IExportOptions) => {
   const filePath = path.join(folderPath ? folderPath : ".", file)
 
   if (data) {
-    try {
-      await jetpack.writeAsync(filePath, data)
-    } catch (error) {
-      console.error(error)
-    }
+    await jetpack.writeAsync(filePath, data)
   }
   else if (srcFilePath) {
-    try {
-      await jetpack.copyAsync(srcFilePath, filePath, { overwrite: true })
-    } catch (error) {
-      console.error(error)
-    }
+    await jetpack.copyAsync(srcFilePath, filePath, { overwrite: true })
   }
 }

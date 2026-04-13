@@ -36,7 +36,7 @@ export default class WebviewPane
         this.webviewPanel.title = title;
     }
     
-    public async update(url:string) {
+    public async update(url:string, sendExportSignal = false) {
         const parsedUrl = new URL(url)
         const slideHash = parsedUrl.hash || '#/'
         parsedUrl.hash = ''
@@ -44,7 +44,7 @@ export default class WebviewPane
         const response = await fetch(parsedUrl.toString())
         const html = await response.text()
         const htmlWithBase = this.injectBaseHref(html, parsedUrl.toString())
-        this.webviewPanel.webview.html = this.injectBridgeScript(htmlWithBase, slideHash)
+        this.webviewPanel.webview.html = this.injectBridgeScript(htmlWithBase, slideHash, sendExportSignal)
         this.#onDidUpdate.fire()
     }
 
@@ -57,7 +57,7 @@ export default class WebviewPane
       return `${baseTag}${html}`
     }
 
-    private injectBridgeScript(html: string, slideHash: string) {
+    private injectBridgeScript(html: string, slideHash: string, sendExportSignal: boolean) {
       const script = `
       <script>
         (function () {
@@ -93,6 +93,12 @@ export default class WebviewPane
           }
 
           setTimeout(postCurrentSlide, 0);
+
+          if (${sendExportSignal}) {
+            window.addEventListener('load', () => {
+              vscode.postMessage({ command: 'exportComplete' });
+            }, { once: true });
+          }
         }());
       </script>
       `
