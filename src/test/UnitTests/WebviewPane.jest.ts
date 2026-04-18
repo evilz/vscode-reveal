@@ -1,50 +1,64 @@
-import WebviewPane from "../../WebViewPane"
-import {Event, WebviewPanel} from "vscode"
+import WebviewPane from '../../WebViewPane'
+import { Event, WebviewPanel } from 'vscode'
 
 test('Set title of webviewpane', () => {
+  const onDidDispose = jest.fn() as Event<void>
+  const onDidReceiveMessage = jest.fn() as Event<unknown>
+  const webviewPanel = { title: 'test', onDidDispose: onDidDispose, webview: { html: '', onDidReceiveMessage } } as unknown as WebviewPanel
+  const pane = new WebviewPane(webviewPanel)
+  pane.title = 'new title'
 
-    const onDidDispose = jest.fn( ) as Event<void>
-    const onDidReceiveMessage = jest.fn() as Event<unknown>
-    const webviewPanel = {title: "test" , onDidDispose: onDidDispose, webview: { html: "", onDidReceiveMessage } }  as unknown as WebviewPanel 
-    const pane = new WebviewPane( webviewPanel )
-    pane.title = "new title"
-  
-    expect(webviewPanel.title).toBe("new title")
+  expect(webviewPanel.title).toBe('new title')
+})
+
+test('Dispose should trigger onDidDispose', () => {
+  const onDidDispose = jest.fn() as Event<void>
+  const onDidReceiveMessage = jest.fn() as Event<unknown>
+  const dispose = jest.fn() as () => unknown
+  const webviewPanel = { title: 'test', onDidDispose: onDidDispose, dispose: dispose, webview: { html: '', onDidReceiveMessage } } as unknown as WebviewPanel
+  const pane = new WebviewPane(webviewPanel)
+
+  const onDidDisposeFn = jest.fn()
+  pane.onDidDispose(onDidDisposeFn)
+
+  pane.dispose()
+
+  expect(onDidDispose).toHaveBeenCalledTimes(1)
+  expect(onDidDisposeFn).toHaveBeenCalledTimes(1)
+})
+
+test('Update should trigger onDidUpdate', async () => {
+  const onDidDispose = jest.fn() as Event<void>
+  const onDidReceiveMessage = jest.fn() as Event<unknown>
+  const dispose = jest.fn() as () => unknown
+  const webviewPanel = { title: 'test', onDidDispose: onDidDispose, dispose: dispose, webview: { html: '', onDidReceiveMessage } } as unknown as WebviewPanel
+  const pane = new WebviewPane(webviewPanel)
+  ;(global as unknown as { fetch: jest.Mock }).fetch = jest.fn().mockResolvedValue({
+    text: jest.fn().mockResolvedValue('<html><head></head><body>hello</body></html>'),
   })
 
+  const onDidUpdate = jest.fn()
+  pane.onDidUpdate(onDidUpdate)
+  await pane.update('http://localhost:1234/#/1/2')
 
-  test('Dispose should trigger onDidDispose', () => {
+  expect(onDidUpdate).toHaveBeenCalledTimes(1)
+})
 
-    const onDidDispose = jest.fn( ) as Event<void>
-    const onDidReceiveMessage = jest.fn() as Event<unknown>
-    const dispose = jest.fn() as (()=>unknown)
-    const webviewPanel = {title: "test" , onDidDispose: onDidDispose, dispose : dispose, webview: { html: "", onDidReceiveMessage } }  as unknown as WebviewPanel 
-    const pane = new WebviewPane( webviewPanel )
-  
-    const onDidDisposeFn = jest.fn()
-    pane.onDidDispose(onDidDisposeFn)
+test('Update injects bridge script for slide sync and preserves hash with query params', async () => {
+  const onDidDispose = jest.fn() as Event<void>
+  const onDidReceiveMessage = jest.fn() as Event<unknown>
+  const webviewPanel = { title: 'test', onDidDispose: onDidDispose, webview: { html: '', onDidReceiveMessage } } as unknown as WebviewPanel
+  const pane = new WebviewPane(webviewPanel)
 
-    pane.dispose()
-    
-    expect(onDidDispose).toHaveBeenCalledTimes(1)
-    expect(onDidDisposeFn).toHaveBeenCalledTimes(1)
+  ;(global as unknown as { fetch: jest.Mock }).fetch = jest.fn().mockResolvedValue({
+    text: jest.fn().mockResolvedValue('<html><head></head><body><div>hello</div></body></html>'),
   })
 
+  await pane.update('http://localhost:1234/?print-pdf#/2/1', true)
 
-  test('Update should trigger onDidUpdate', async () => {
-
-    const onDidDispose = jest.fn( ) as Event<void>
-    const onDidReceiveMessage = jest.fn() as Event<unknown>
-    const dispose = jest.fn() as (()=> unknown)
-    const webviewPanel = {title: "test" , onDidDispose: onDidDispose, dispose : dispose, webview: {html:"", onDidReceiveMessage} }  as unknown as WebviewPanel 
-    const pane = new WebviewPane( webviewPanel )
-    ;(global as unknown as { fetch: jest.Mock }).fetch = jest.fn().mockResolvedValue({
-      text: jest.fn().mockResolvedValue('<html><head></head><body>hello</body></html>')
-    })
-  
-    const onDidUpdate = jest.fn()
-    pane.onDidUpdate(onDidUpdate)
-    await pane.update("http://localhost:1234/#/1/2")
-    
-    expect(onDidUpdate).toHaveBeenCalledTimes(1)
-  })
+  expect(webviewPanel.webview.html).toContain('<base href="http://localhost:1234/?print-pdf">')
+  expect(webviewPanel.webview.html).toContain("command: 'slideChanged'")
+  expect(webviewPanel.webview.html).toContain("message.command === 'setSlide'")
+  expect(webviewPanel.webview.html).toContain('window.location.hash = initialHash')
+  expect(webviewPanel.webview.html).toContain("command: 'exportComplete'")
+})
