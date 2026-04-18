@@ -139,6 +139,10 @@ In this mode, diagram code blocks are kept as plain code blocks and no remote di
 
 You can customize many setting on for your reveal.js presentation.
 
+Configuration contract notes (validated by unit tests):
+- Runtime-only/frontmatter options: `author`, `autoPlayMedia`, `customHighlightTheme`, `customTheme`, `defaultTiming`, `description`, `display`, `enableTitleFooter`, `fragmentInURL`, `logLevel`, `logoImg`, `notesSeparator`, `separator`, `verticalSeparator`.
+- VS Code-contributed only options: `hashOneBasedIndex`, `showSlideNumber`.
+
 <table><tr><th>Name</th><th>Description</th><th>Default</th></tr><tr><td><code>revealjs.notesSeparator</code></td><td>Revealjs markdown note delimiter</td><td><code>note:</code></td></tr><tr><td><code>revealjs.separator</code></td><td>Revealjs markdown slide separator</td><td><code>^(
 ?|
 )---(

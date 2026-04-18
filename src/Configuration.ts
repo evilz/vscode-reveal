@@ -145,9 +145,9 @@ export const defaultConfiguration: Configuration = {
   mouseWheel: false,
   hideAddressBar: true,
   previewLinks: false,
-  transition: 'default',
+  transition: 'slide',
   transitionSpeed: 'default',
-  backgroundTransition: 'default',
+  backgroundTransition: 'fade',
   viewDistance: 3,
 
   width: 960,
