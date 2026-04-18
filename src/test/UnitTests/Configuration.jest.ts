@@ -37,7 +37,7 @@ const intentionallyRuntimeOnlyKeys = [
 // VS Code-contributed keys that intentionally have no runtime defaults in this extension.
 const intentionallyContributedOnlyKeys = ['hashOneBasedIndex', 'showSlideNumber']
 
-const stableStringify = (value: unknown) => JSON.stringify(value)
+const stringify = (value: unknown) => JSON.stringify(value)
 
 test('getConfigurationDescription should prefer primary type over null in unions', () => {
   const props = {
@@ -114,7 +114,7 @@ describe('configuration contract tests', () => {
       .filter((key) => !contributedRevealKeys.includes(key))
       .sort()
 
-    expect(runtimeOnlyKeys).toEqual(intentionallyRuntimeOnlyKeys.sort())
+    expect(runtimeOnlyKeys).toEqual([...intentionallyRuntimeOnlyKeys].sort())
   })
 
   test('contributed-only keys remain intentional and documented', () => {
@@ -122,13 +122,13 @@ describe('configuration contract tests', () => {
       .filter((key) => !runtimeKeys.includes(key))
       .sort()
 
-    expect(contributedOnlyKeys).toEqual(intentionallyContributedOnlyKeys.sort())
+    expect(contributedOnlyKeys).toEqual([...intentionallyContributedOnlyKeys].sort())
   })
 
   test('shared keys keep aligned default values between package.json and runtime defaults', () => {
     const defaultMismatches = contributedRevealKeys
       .filter((key) => runtimeKeys.includes(key))
-      .filter((key) => stableStringify(contributedProperties[`${configPrefix}.${key}`].default) !== stableStringify(defaultConfiguration[key]))
+      .filter((key) => stringify(contributedProperties[`${configPrefix}.${key}`].default) !== stringify(defaultConfiguration[key]))
 
     expect(defaultMismatches).toEqual([])
   })
