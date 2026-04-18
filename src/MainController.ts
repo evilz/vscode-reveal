@@ -136,7 +136,8 @@ export default class MainController {
       logger,
       () => this.config,
       extensionContext.extensionPath,
-      this.isInExport
+      this.isInExport,
+      this.onExportError
     )
     this.diagnostics = languages.createDiagnosticCollection('vscode-revealjs')
     this.configByKey = new Map(configDesc.map((d) => [d.label, d]))
@@ -159,23 +160,41 @@ export default class MainController {
   }
   //#endregion
 
-  // active export during 5 seconds
-  private exportTimeout: NodeJS.Timeout | null = null
-  public isInExport = () => this.exportTimeout != null && this.exportTimeout != undefined
+  private exportState: {
+    resolve: (path: string) => void
+    reject: (error: Error) => void
+    path: string
+  } | null = null
+  public isInExport = () => this.exportState !== null
+
+  private readonly onExportError = (error: unknown) => {
+    if (!this.exportState) return
+
+    const normalizedError = error instanceof Error ? error : new Error(String(error))
+    this.exportState.reject(new Error(`HTML export failed: ${normalizedError.message}`))
+    this.exportState = null
+  }
 
   public shouldOpenFilemanagerAfterHTMLExport = () => this.currentContext?.configuration.openFilemanagerAfterHTMLExport ?? false
 
 
   public exportAsync = async () => {
-    if (this.exportTimeout) {
-      clearTimeout(this.exportTimeout)
+    if (!this.currentContext) {
+      throw new Error('No active markdown context to export')
     }
-    if (this.currentContext) { await jetpack.removeAsync(this.currentContext.exportPath) }
 
-    const promise = new Promise<string>((resolve) => {
-      this.exportTimeout = setTimeout(() => resolve(this.currentContext?.exportPath ?? ''), 5000)
+    if (this.exportState) {
+      this.exportState.reject(new Error('A previous HTML export was interrupted by a new export request'))
+      this.exportState = null
+    }
+
+    await jetpack.removeAsync(this.currentContext.exportPath)
+    const exportPath = this.currentContext.exportPath
+
+    const promise = new Promise<string>((resolve, reject) => {
+      this.exportState = { resolve, reject, path: exportPath }
     })
-    //await commands.executeCommand(SHOW_REVEALJS_IN_BROWSER)
+
     this.webViewPane ? this.refreshWebViewPane() : await commands.executeCommand(SHOW_REVEALJS)
 
     return promise
@@ -264,6 +283,14 @@ export default class MainController {
         if (!message || typeof message !== 'object') return
 
         const command = 'command' in message ? message.command : undefined
+        if (command === 'exportComplete') {
+          if (this.exportState) {
+            this.exportState.resolve(this.exportState.path)
+            this.exportState = null
+          }
+          return
+        }
+
         if (command !== 'slideChanged') return
 
         const horizontal = 'horizontal' in message ? Number(message.horizontal) : Number.NaN
@@ -284,7 +311,7 @@ export default class MainController {
     if (this.webViewPane && this.currentContext) {
       this.startServer()
       this.webViewPane.title = this.currentContext.configuration.title
-      void this.webViewPane.update(this.currentContext.uriWithPosition)
+      void this.webViewPane.update(this.currentContext.uriWithPosition, this.isInExport())
     }
   }
 

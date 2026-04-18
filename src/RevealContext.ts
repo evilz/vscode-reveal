@@ -29,7 +29,8 @@ export class RevealContext extends Disposable {
     public logger: Logger,
     public getConfiguration: () => Configuration,
     public extensionPath: string,
-    public isInExport: () => boolean
+    public isInExport: () => boolean,
+    public onExportError: (error: unknown) => void = () => {}
   ) {
     super()
     this.editor = editor
@@ -170,14 +171,15 @@ export class RevealContexts {
     private readonly logger: Logger,
     private readonly getConfiguration: () => Configuration,
     private readonly extensionPath: string,
-    private readonly isInExport: () => boolean
+    private readonly isInExport: () => boolean,
+    private readonly onExportError: (error: unknown) => void
   ) {
     this.logger = logger
   }
 
   getOrAdd(editor: TextEditor) {
     if (this.innerMap.has(editor.document.uri)) return this.innerMap.get(editor.document.uri)
-    const context = new RevealContext(editor, this.logger, this.getConfiguration, this.extensionPath, this.isInExport)
+    const context = new RevealContext(editor, this.logger, this.getConfiguration, this.extensionPath, this.isInExport, this.onExportError)
 
     context.onDidDispose(() => this.logger.info(`CONTEXT: ${editor.document.uri} disposed`))
 

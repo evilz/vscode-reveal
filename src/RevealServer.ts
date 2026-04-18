@@ -178,7 +178,8 @@ export class RevealServer extends Disposable {
             const opts: IExportOptions = { folderPath: exportPath, url: req.originalUrl.split('?')[0], srcFilePath: null, data: body }
             await exportfn(opts)
           } catch (error) {
-            this.context.logger.info(`Error : ${error}`)
+            this.context.logger.error(`Export error: ${error}`)
+            this.context.onExportError(error)
           }
 
           // @ts-ignore
