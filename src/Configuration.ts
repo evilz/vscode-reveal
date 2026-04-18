@@ -201,11 +201,8 @@ type RawConfigurationProperty = {
 
 const normalizeType = (type: string | string[]): ConfigurationDescriptionTypes => {
   const types = (Array.isArray(type) ? type : [type]) as string[]
-  if (types.includes('object')) {
-    return 'object'
-  }
-  if (types.includes('array')) {
-    return 'array'
+  if (types.includes('string')) {
+    return 'string'
   }
   if (types.includes('number')) {
     return 'number'
@@ -213,8 +210,11 @@ const normalizeType = (type: string | string[]): ConfigurationDescriptionTypes =
   if (types.includes('boolean')) {
     return 'boolean'
   }
-  if (types.includes('string')) {
-    return 'string'
+  if (types.includes('array')) {
+    return 'array'
+  }
+  if (types.includes('object')) {
+    return 'object'
   }
   if (types.includes('null')) {
     return 'null'
