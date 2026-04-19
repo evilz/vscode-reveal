@@ -143,6 +143,6 @@ describe('extension activate', () => {
 
     jest.advanceTimersByTime(500)
     expect(mainControllerInstance.refresh).toHaveBeenCalledWith(0)
-    expect((context as any).subscriptions.length).toBeGreaterThan(0)
+    expect((context as any).subscriptions.length).toBe(16)
   })
 })
