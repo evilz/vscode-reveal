@@ -12,7 +12,7 @@ jest.mock('../../SlideParser', () => ({
 
 jest.mock('../../RevealServer', () => ({
   RevealServer: jest.fn().mockImplementation(() => ({
-    uri: 'http://localhost:1948',
+    uri: 'http://localhost:1948/',
     start: (...args: unknown[]) => (serverStartMock as any)(...args),
     stop: (...args: unknown[]) => (serverStopMock as any)(...args),
     dispose: jest.fn(),
