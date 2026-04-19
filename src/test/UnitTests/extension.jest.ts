@@ -128,7 +128,13 @@ describe('extension activate', () => {
     activate(context as any)
 
     expect(createOutputChannelMock).toHaveBeenCalledWith('RevealJS')
-    expect(MainControllerMock).toHaveBeenCalled()
+    expect(MainControllerMock).toHaveBeenCalledWith(
+      expect.anything(),
+      context,
+      ['config-desc'],
+      { logLevel: 2, slideExplorerEnabled: true },
+      undefined
+    )
     expect(executeCommandMock).toHaveBeenCalledWith('setContext', 'slideExplorerEnabled', true)
 
     expect(registerCommandMock).toHaveBeenCalledWith('vscode-revealjs.showRevealJS', expect.any(Function))
