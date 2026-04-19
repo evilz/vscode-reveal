@@ -2,7 +2,7 @@ const parseMock = jest.fn()
 const mergeConfigMock = jest.fn((workspace, document) => ({ ...workspace, ...document }))
 const countLinesToSlideMock = jest.fn(() => 5)
 
-const serverStartMock = jest.fn(() => 'http://localhost:1948')
+const serverStartMock = jest.fn(() => 'http://localhost:1948/')
 const serverStopMock = jest.fn()
 
 jest.mock('../../SlideParser', () => ({
@@ -94,7 +94,7 @@ describe('RevealContext', () => {
 
     expect(context.dirname).toBe('/workspace/slides')
     expect(context.exportPath).toBe('/workspace/slides/dist')
-    expect(context.baseUri).toBe('http://localhost:1948')
+    expect(context.baseUri).toBe('http://localhost:1948/')
 
     const cssPath = context.resolveLocalAssetPath('styles/custom', true)
     const absolutePath = context.resolveLocalAssetPath('/tmp/file.css')
@@ -153,7 +153,7 @@ describe('RevealContext', () => {
     context.updatePosition({ line: 2, character: 1 } as any)
 
     const nowSpy = jest.spyOn(Date, 'now').mockReturnValue(12345)
-    expect(context.uriWithPosition).toBe('http://localhost:1948#/1/2/12345')
+    expect(context.uriWithPosition).toBe('http://localhost:1948/#/1/2/12345')
     nowSpy.mockRestore()
 
     context.slides = [{}, {}] as any
@@ -164,7 +164,7 @@ describe('RevealContext', () => {
     expect(editor.revealRange).toHaveBeenCalled()
 
     expect(context.is({ uri: 'doc-uri' } as any)).toBe(true)
-    expect(context.startServer()).toBe('http://localhost:1948')
+    expect(context.startServer()).toBe('http://localhost:1948/')
     context.stopServer()
     expect(serverStopMock).toHaveBeenCalled()
 
