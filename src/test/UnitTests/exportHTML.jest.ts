@@ -22,16 +22,27 @@ describe('exportHTML command', () => {
   const logger = new Logger(jest.fn(), LogLevel.Debug)
 
   beforeEach(() => {
+    jest.useFakeTimers()
     jest.clearAllMocks()
     withProgressMock.mockImplementation(async (_options, task) => task({ report: jest.fn() }))
     openFolderMock.mockResolvedValue(undefined)
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
+    jest.restoreAllMocks()
   })
 
   test('runs export and opens folder when configured', async () => {
     const startExport = jest.fn().mockResolvedValue('/tmp/exported')
     const command = exportHTML(logger, startExport, () => true)
 
-    await command()
+    const commandPromise = command()
+    for (let i = 0; i < 4; i += 1) {
+      await Promise.resolve()
+      jest.advanceTimersByTime(1500)
+    }
+    await commandPromise
 
     expect(startExport).toHaveBeenCalledTimes(1)
     expect(openFolderMock).toHaveBeenCalledWith('/tmp/exported')

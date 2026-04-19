@@ -1,6 +1,21 @@
 import WebviewPane from '../../WebViewPane'
 import { Event, WebviewPanel } from 'vscode'
 
+afterEach(() => {
+  jest.restoreAllMocks()
+})
+
+
+const mockFetch = (html: string) => {
+  if (!global.fetch) {
+    ;(global as unknown as { fetch: typeof fetch }).fetch = (() => Promise.resolve({ text: async () => '' } as unknown as Response)) as typeof fetch
+  }
+
+  return jest.spyOn(global, 'fetch').mockResolvedValue({
+    text: jest.fn().mockResolvedValue(html),
+  } as unknown as Response)
+}
+
 test('Set title of webviewpane', () => {
   const onDidDispose = jest.fn() as Event<void>
   const onDidReceiveMessage = jest.fn() as Event<unknown>
@@ -33,9 +48,7 @@ test('Update should trigger onDidUpdate', async () => {
   const dispose = jest.fn() as () => unknown
   const webviewPanel = { title: 'test', onDidDispose: onDidDispose, dispose: dispose, webview: { html: '', onDidReceiveMessage } } as unknown as WebviewPanel
   const pane = new WebviewPane(webviewPanel)
-  ;(global as unknown as { fetch: jest.Mock }).fetch = jest.fn().mockResolvedValue({
-    text: jest.fn().mockResolvedValue('<html><head></head><body>hello</body></html>'),
-  })
+  mockFetch('<html><head></head><body>hello</body></html>')
 
   const onDidUpdate = jest.fn()
   pane.onDidUpdate(onDidUpdate)
@@ -50,9 +63,7 @@ test('Update injects bridge script for slide sync and preserves hash with query 
   const webviewPanel = { title: 'test', onDidDispose: onDidDispose, webview: { html: '', onDidReceiveMessage } } as unknown as WebviewPanel
   const pane = new WebviewPane(webviewPanel)
 
-  ;(global as unknown as { fetch: jest.Mock }).fetch = jest.fn().mockResolvedValue({
-    text: jest.fn().mockResolvedValue('<html><head></head><body><div>hello</div></body></html>'),
-  })
+  mockFetch('<html><head></head><body><div>hello</div></body></html>')
 
   await pane.update('http://localhost:1234/?print-pdf#/2/1', true)
 
