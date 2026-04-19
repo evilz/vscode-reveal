@@ -1,9 +1,8 @@
 import { countLines, countLinesToSlide } from '../../utils'
 import parser from '../../SlideParser'
-import {defaultConfiguration} from "../../Configuration"
+import { defaultConfiguration } from '../../Configuration'
 
 // const sampleFile = fs.readFileSync('../sample.md').toString()
-
 
 const slideContent = `# Title One
 
@@ -29,7 +28,7 @@ content !
 
 ## Sub Two`
 
-const { slides} = parser.parse(slideContent, defaultConfiguration)
+const { slides } = parser.parse(slideContent, defaultConfiguration)
 
 test('Parse Slide content', () => {
   expect(slides.length).toBe(3)
@@ -141,7 +140,7 @@ test('Extract slide attributes', () => {
   const content = `<!-- .slide: class="toto" data-something -->
 # title`
 
-  const {slides} = parser.parse(content,defaultConfiguration)
+  const { slides } = parser.parse(content, defaultConfiguration)
 
   expect(slides[0]).toEqual({
     index: 0,
@@ -151,4 +150,25 @@ test('Extract slide attributes', () => {
     verticalChildren: [],
     attributes: 'class="toto" data-something',
   })
+})
+
+test('Malformed front matter still returns parsed slides and parser location', () => {
+  const malformedFrontMatter = `---
+foo: [
+---
+# Slide one`
+
+  const result = parser.parse(malformedFrontMatter, defaultConfiguration)
+
+  expect(result.frontmatter).toBeUndefined()
+  expect(result.slides).toHaveLength(1)
+  expect(result.slides[0].title).toBe('---')
+  expect(result.slides[0].text).toContain('# Slide one')
+  expect(result.parseError).toEqual(
+    expect.objectContaining({
+      line: expect.any(Number),
+      column: expect.any(Number),
+      message: expect.any(String),
+    })
+  )
 })
