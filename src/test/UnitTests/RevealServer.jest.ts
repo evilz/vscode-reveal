@@ -5,11 +5,13 @@ import request from 'supertest'
 import { RevealContext } from '../../RevealContext'
 import { TextEditor } from 'vscode'
 import * as path from 'path'
+import * as fs from 'fs/promises'
+import * as os from 'os'
 
 const createContext = (options?: { inExport?: boolean; dirname?: string; onExportError?: (error: unknown) => void }) => {
   const logger = new Logger(() => undefined, LogLevel.Error)
   const inExport = options?.inExport ?? false
-  const fileName = path.join(options?.dirname ?? '/tmp', 'deck.md')
+  const fileName = path.join(options?.dirname ?? os.tmpdir(), 'deck.md')
   return new RevealContext(
     { document: { fileName } } as TextEditor,
     logger,
@@ -64,20 +66,21 @@ describe('RevealServer', () => {
   })
 
   test('loads init.js content when present in markdown folder', async () => {
-    const dirname = path.join(process.cwd(), 'samples', 'export-sample')
+    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), 'vscode-reveal-'))
     const initPath = path.join(dirname, 'init.js')
-    await import('fs/promises').then((fs) => fs.writeFile(initPath, 'window.testInitLoaded = true;'))
+    await fs.writeFile(initPath, 'window.testInitLoaded = true;')
     const context = createContext({ dirname })
     const server = new RevealServer(context)
+    try {
+      const response = await request(server.app).get('/')
 
-    const response = await request(server.app).get('/')
-
-    expect(response.status).toEqual(200)
-    expect(response.text).toContain('window.testInitLoaded = true;')
-
-    await import('fs/promises').then((fs) => fs.unlink(initPath))
-    server.dispose()
-    context.dispose()
+      expect(response.status).toEqual(200)
+      expect(response.text).toContain('window.testInitLoaded = true;')
+    } finally {
+      server.dispose()
+      context.dispose()
+      await fs.rm(dirname, { recursive: true, force: true })
+    }
   })
 
   test('export middleware calls onExportError when exporter fails', async () => {
