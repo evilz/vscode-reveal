@@ -1,8 +1,9 @@
 /* eslint-disable jest/no-export */
 /* eslint-disable @typescript-eslint/no-namespace */
 import { CancellationToken, CompletionContext, CompletionItem, EndOfLine, MarkdownString, Position, Range, TextDocument, TextLine, Uri } from "vscode";
-import { createCompletionItems } from "../../CompletionItemProvider"
+import completionProviderFactory, { createCompletionItems, createCompletionItemsProvider, enumValueProvider } from "../../CompletionItemProvider"
 import { ConfigurationDescription } from '../../Configuration'
+import * as vscode from 'vscode'
 
 test('Should createCompletionItems from configDesc', () => {
 
@@ -95,4 +96,47 @@ test('Should stringify complex default values in completion metadata', () => {
 
     expect(completionItems[0].detail).toBe('object detail • default: {"enabled":true,"tags":["a","b"]}')
     expect(completionItems[0].documentation).toStrictEqual(new MarkdownString('doc\n\nDefault: `{"enabled":true,"tags":["a","b"]}`'))
+})
+
+test('enumValueProvider returns undefined when line prefix does not match', () => {
+    const provider = enumValueProvider('theme', ['black', 'white'])
+    const document = {
+        lineAt: jest.fn(() => ({ text: 'title: demo' })),
+    } as unknown as TextDocument
+
+    const result = provider.provideCompletionItems(document, new Position(0, 'title: demo'.length))
+    expect(result).toBeUndefined()
+})
+
+test('createCompletionItemsProvider filters completion items by typed prefix and honors cancellation token', () => {
+    const provider = createCompletionItemsProvider([new CompletionItem('theme'), new CompletionItem('title')])
+    const document = {
+        lineAt: jest.fn(() => ({ text: 'ti' })),
+    } as unknown as TextDocument
+
+    const activeToken = { isCancellationRequested: false } as CancellationToken
+    const cancelledToken = { isCancellationRequested: true } as CancellationToken
+
+    expect(provider.provideCompletionItems(document, new Position(0, 2), activeToken)).toEqual([new CompletionItem('title')])
+    expect(provider.provideCompletionItems(document, new Position(0, 2), cancelledToken)).toEqual([])
+})
+
+test('default completion provider registers enum providers and main provider', () => {
+    const registerSpy = jest.spyOn(vscode.languages, 'registerCompletionItemProvider')
+    const disposeSpy = jest.fn()
+    registerSpy.mockReturnValue({ dispose: disposeSpy } as vscode.Disposable)
+
+    const config: ConfigurationDescription[] = [
+        { label: 'theme', detail: '', documentation: '', type: 'string', values: ['black'] },
+        { label: 'showNotes', detail: '', documentation: '', type: 'boolean' },
+    ]
+
+    const disposables = completionProviderFactory(config)
+    expect(disposables).toHaveLength(3)
+    expect(registerSpy).toHaveBeenCalledTimes(3)
+    expect(registerSpy).toHaveBeenNthCalledWith(1, 'markdown', expect.objectContaining({ provideCompletionItems: expect.any(Function) }))
+    expect(registerSpy).toHaveBeenNthCalledWith(2, 'markdown', expect.objectContaining({ provideCompletionItems: expect.any(Function) }))
+    expect(registerSpy).toHaveBeenNthCalledWith(3, 'markdown', expect.objectContaining({ provideCompletionItems: expect.any(Function) }))
+
+    registerSpy.mockRestore()
 })

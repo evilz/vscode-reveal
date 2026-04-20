@@ -22,4 +22,16 @@ describe('Markdown-it diagram server configuration', () => {
     expect(html).toContain('Alice -&gt; Bob: hello')
     expect(html).not.toContain('<img class="plantuml"')
   })
+
+  test('trims server base URL and falls back to default when empty', () => {
+    setDiagramRenderingConfig({ serverBaseUrl: '   ' })
+    const html = markdownit.render('```mermaid\nflowchart LR\nA-->B\n```')
+    expect(html).toContain('src="https://kroki.io/mermaid/svg/')
+  })
+
+  test('renders regular markdown syntax and speaker notes conversion', () => {
+    const html = markdownit.render('Paragraph text\n\nnote: this is speaker only')
+    expect(html).toContain('<p>Paragraph text</p>')
+    expect(html).toContain('<aside class="notes"> this is speaker only</aside>')
+  })
 })
