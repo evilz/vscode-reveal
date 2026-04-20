@@ -1,3 +1,5 @@
+import * as path from 'path'
+
 const parseMock = jest.fn()
 const mergeConfigMock = jest.fn((workspace, document) => ({ ...workspace, ...document }))
 const countLinesToSlideMock = jest.fn(() => 5)
@@ -91,22 +93,24 @@ describe('RevealContext', () => {
   test('computes asset paths and uri helpers', () => {
     const editor = makeEditor()
     const context = new RevealContext(editor as any, logger as any, () => ({ ...defaultConfiguration, exportHTMLPath: 'dist' }), '/ext', () => false)
+    const slidesDir = path.dirname(editor.document.fileName)
 
-    expect(context.dirname).toBe('/workspace/slides')
-    expect(context.exportPath).toBe('/workspace/slides/dist')
+    expect(context.dirname).toBe(slidesDir)
+    expect(context.exportPath).toBe(path.join(slidesDir, 'dist'))
     expect(context.baseUri).toBe('http://localhost:1948/')
 
     const cssPath = context.resolveLocalAssetPath('styles/custom', true)
-    const absolutePath = context.resolveLocalAssetPath('/tmp/file.css')
+    const absoluteCssPath = path.join(path.sep, 'tmp', 'file.css')
+    const absolutePath = context.resolveLocalAssetPath(absoluteCssPath)
     const externalPath = context.resolveLocalAssetPath('https://example.com/a.css')
     const dataPath = context.resolveLocalAssetPath('data:text/plain,hello')
     const queryPath = context.resolveLocalAssetPath('theme.css?v=1#hash')
 
-    expect(cssPath).toBe('/workspace/slides/styles/custom.css')
-    expect(absolutePath).toBe('/tmp/file.css')
+    expect(cssPath).toBe(path.join(slidesDir, 'styles', 'custom.css'))
+    expect(absolutePath).toBe(absoluteCssPath)
     expect(externalPath).toBeNull()
     expect(dataPath).toBeNull()
-    expect(queryPath).toBe('/workspace/slides/theme.css')
+    expect(queryPath).toBe(path.join(slidesDir, 'theme.css'))
 
     context.configuration = {
       ...defaultConfiguration,
@@ -115,9 +119,9 @@ describe('RevealContext', () => {
     }
 
     expect(context.getReferencedAssetPaths()).toEqual([
-      '/workspace/slides/init.js',
-      '/workspace/slides/styles/site.css',
-      '/workspace/slides/a.css',
+      path.join(slidesDir, 'init.js'),
+      path.join(slidesDir, 'styles', 'site.css'),
+      path.join(slidesDir, 'a.css'),
     ])
   })
 
