@@ -106,11 +106,11 @@ describe('RevealContext', () => {
     const dataPath = context.resolveLocalAssetPath('data:text/plain,hello')
     const queryPath = context.resolveLocalAssetPath('theme.css?v=1#hash')
 
-    expect(cssPath).toBe(path.join(slidesDir, 'styles', 'custom.css'))
+    expect(cssPath).toBe(path.resolve(slidesDir, 'styles', 'custom.css'))
     expect(absolutePath).toBe(absoluteCssPath)
     expect(externalPath).toBeNull()
     expect(dataPath).toBeNull()
-    expect(queryPath).toBe(path.join(slidesDir, 'theme.css'))
+    expect(queryPath).toBe(path.resolve(slidesDir, 'theme.css'))
 
     context.configuration = {
       ...defaultConfiguration,
@@ -120,8 +120,8 @@ describe('RevealContext', () => {
 
     expect(context.getReferencedAssetPaths()).toEqual([
       path.join(slidesDir, 'init.js'),
-      path.join(slidesDir, 'styles', 'site.css'),
-      path.join(slidesDir, 'a.css'),
+      path.resolve(slidesDir, 'styles', 'site.css'),
+      path.resolve(slidesDir, 'a.css'),
     ])
   })
 
