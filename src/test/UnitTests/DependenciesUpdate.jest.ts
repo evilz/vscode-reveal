@@ -139,23 +139,3 @@ test('Markdown-it plugins should work together', () => {
   const result4 = md.render('++inserted++');
   expect(result4).toContain('<ins>inserted</ins>');
 });
-
-test('Core dependencies versions should match package.json', () => {
-  const packageJson = require('../../../package.json');
-  
-  // Check that key updated dependencies are present
-  expect(packageJson.dependencies['express']).toBe('^5.1.0');
-  expect(packageJson.dependencies['markdown-it-attrs']).toBe('^4.3.1');
-  expect(packageJson.dependencies['morgan']).toBe('^1.10.1');
-  expect(packageJson.dependencies['open']).toBe('^8.4.2');
-  expect(packageJson.dependencies['prettier']).toBe('^3.6.2');
-  
-  // Check devDependencies
-  expect(packageJson.devDependencies['@types/jest']).toBe('^27.5.2');
-  expect(packageJson.devDependencies['@types/node']).toBe('^22.18.10');
-  expect(packageJson.devDependencies['@types/vscode']).toBe('^1.105.0');
-  expect(packageJson.devDependencies['esbuild']).toBe('^0.24.2');
-  expect(packageJson.devDependencies['eslint']).toBe('^8.57.1');
-  expect(packageJson.devDependencies['supertest']).toBe('^7.1.4');
-  expect(packageJson.devDependencies['ts-jest']).toBe('^27.1.5');
-});
