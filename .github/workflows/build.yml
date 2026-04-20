@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
@@ -26,6 +28,12 @@ jobs:
 
       - name: test 
         run: npm run coverage
+
+      - name: Verify SonarCloud coverage inputs
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          test -f coverage/lcov.info
+          test -f test-report.xml
       
       - name: SonarCloud Scan
         if: matrix.os == 'ubuntu-latest'
@@ -41,4 +49,3 @@ jobs:
 
       - name: Package extension smoke test
         run: vsce package
-
