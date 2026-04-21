@@ -5,31 +5,37 @@
 <%}else{ %>
 
 <script>
-  const printPlugins = [
-      RevealNotes,
-      RevealHighlight,
-      RevealMath.MathJax3,
-      RevealAnimate,
-      <% if(enableChalkboard) {%>RevealChalkboard, <%}%>
-			RevealEmbedTweet,
-			RevealChart,
-		];
+  const loadedPlugins = (...plugins) => [...new Set(plugins.filter(Boolean))];
+  const hasSeminarConfig = <%= typeof seminar !== 'undefined' && seminar && seminar.server && seminar.hash ? 'true' : 'false' %>;
+  const seminarPlugins = hasSeminarConfig
+    ? loadedPlugins(window.RevealSeminar, window.RevealPoll, window.RevealQnA)
+    : [];
 
-		const plugins =  [...printPlugins,
-		<% if(enableZoom) {%>RevealZoom, <%}%>
-		<% if(enableSearch) {%>RevealSearch, <%}%>
-				RevealMarkdown, 
-				<% if(enableMenu) {%>RevealMenu, <%}%>
-				RevealFullscreen,
-				RevealAnything,
-				//RevealAudioSlideshow,
-				//RevealAudioRecorder,
-				<% if(enableMenu) {%>RevealCustomControls, <%}%>
-				// poll
-				// question
-				// seminar
-				Verticator 
-				 ]
+  const printPlugins = [
+      window.RevealLoadContent,
+      window.RevealNotes,
+      window.RevealHighlight,
+      window.RevealMath?.MathJax3,
+      window.RevealAnimate,
+      window.RevealChart,
+      <% if(enableChalkboard) {%>window.RevealChalkboard,<%}%>
+		].filter(Boolean);
+
+		const plugins = loadedPlugins(
+      window.RevealLoadContent,
+      ...printPlugins,
+      window.RevealFullscreen,
+      window.RevealAnything,
+      window.RevealChart,
+      window.RevealAudioSlideshow,
+      window.RevealAudioRecorder,
+      <% if(enableZoom) {%>window.RevealZoom,<%}%>
+      <% if(enableSearch) {%>window.RevealSearch,<%}%>
+      <% if(enableMenu) {%>window.RevealMenu,<%}%>
+      <% if(enableMenu) {%>window.RevealCustomControls,<%}%>
+      ...seminarPlugins,
+      window.RevealMarkdown
+    );
 
 
 		// Also available as an ES module, see:
@@ -125,6 +131,20 @@
         storage: "chalkboard-demo",
       },
       <%}%>
+      <% if(enableMenu) {%>
+      menu: {
+        path: 'libs/reveal.js/6.0.1/plugin/menu/',
+      },
+      <%}%>
+      <% if (typeof seminar !== 'undefined') { %>
+      seminar: <%- JSON.stringify(seminar) %>,
+      <%}%>
+      <% if (typeof poll !== 'undefined') { %>
+      poll: <%- JSON.stringify(poll) %>,
+      <%}%>
+      <% if (typeof questions !== 'undefined') { %>
+      questions: <%- JSON.stringify(questions) %>,
+      <%}%>
 			customcontrols: {
 					controls: [
       						{
@@ -192,7 +212,10 @@
 		function changeTheme(input) {
 			var config = {};
 			config.theme = input.value;
-			Reveal.getPlugin("RevealChalkboard").configure(config);
+			var chalkboard = Reveal.getPlugin && Reveal.getPlugin("RevealChalkboard");
+			if (chalkboard && chalkboard.configure) {
+				chalkboard.configure(config);
+			}
 			input.blur();
 		}
 

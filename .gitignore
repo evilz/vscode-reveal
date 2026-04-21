@@ -105,5 +105,6 @@ xunit.xml
 
 *.vsix
 test-report.xml
+debug.json
 
 .fake

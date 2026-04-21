@@ -2,44 +2,41 @@
 
 A plugin for [Reveal.js](https://github.com/hakimel/reveal.js) allowing to add animations using [SVG.js](https://svgjs.dev).
 
-[Check out the live demo](https://rajgoel.github.io/reveal.js-demos/animate-demo.html)
+[Check out the demo](https://rajgoel.github.io/reveal.js-demos/?topic=animate)
 
-## Installation
+## Setup
 
-Copy the files ```plugin.js``` and ```svg.min.js``` into the plugin folder of your reveal.js presentation, i.e. ```plugin/animate``` and load the plugin as shown below.
-
+To use the plugin include
 ```html
-<script src="plugin/animate/plugin.js"></script>
-<script src="plugin/animate/svg.min.js"></script>
-
-<script>
-    Reveal.initialize({
-        // ...
-        plugins: [ RevealAnimate ],
-        // ...
-    });
-</script>
+<!-- Load content plugin -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/loadcontent/plugin.js"></script>
+<!-- Animate plugin -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/animate/plugin.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.min.js"></script>
 ```
+to the header of your presentation and configure reveal.js and the plugin by
 
-By default animations only play when using the [Auto-Slide](https://revealjs.com/auto-slide/) feature or when playing (or recording) an [Audio-Slideshow](https://github.com/rajgoel/reveal.js-plugins/tree/master/audio-slideshow). In order to always play an animation when moving to a slide, the plugin can be configured by setting the `autoplay` parameter to `true`:
 ```js
 Reveal.initialize({
-	// ...
-	animate: {
-		autoplay: true
-	}
-	// ...
+  animate: {
+    autoplay: true // default is false
+  },
+  // ...
+  plugins: [ RevealLoadContent, RevealAnimate ],
+  // ...
 });
 ```
 
+By default animations only play when using the [Auto-Slide](https://revealjs.com/auto-slide/) feature or when playing (or recording) an [Audio-Slideshow](https://github.com/rajgoel/reveal.js-plugins/tree/master/audio-slideshow). In order to always play an animation when moving to a slide, the plugin can be configured by setting the `autoplay` parameter to `true`.
 
+The `loadcontent` plugin is only required when svg are loaded from an external file using the `data-load="..."` attributes (see examples below). It is important that `RevealLoadContent` is listed before `RevealAnimate`.
 
 ## Usage
 
-An animation can be included in a slide by adding an element with the ```data-animate``` attribute. Furthermore, the filename of an SVG to be loaded can be provided by an attribute `data-src="drawing.svg"`. Alternatively, an `svg` element can be manually placed within the element. The animation is provided by a comment with a JSON-string as follows:
+An animation can be included in a slide by adding an element with the ```data-animate``` attribute. If the `loadcontent` plugin is used, the filename of an SVG to be loaded can be provided by an attribute `data-load="drawing.svg"`. Alternatively, an `svg` element can be manually placed within the element. The animation is provided by a comment with a JSON-string as follows:
 
 ```html
-<div data-animate data-src="drawing.svg">
+<div data-animate data-load="drawing.svg">
 <!--
 {
 "setup": [
@@ -72,7 +69,7 @@ The [demo](https://rajgoel.github.io/reveal.js-demos/animate-demo.html) includes
 
 The following example loads a heart and creates a heartbeat animation.
 ```html
-<div data-animate data-src="animate/heart.svg">
+<div data-animate data-load="animate/heart.svg">
 <!--
 {
 "setup": [
@@ -100,7 +97,7 @@ The following example loads a SVG file and makes selected elements of the svg ap
 <span class="fragment"></span>
 <span class="fragment"></span>
 
-<div data-animate data-src="animate/decisiontree.svg">
+<div data-animate data-load="animate/decisiontree.svg">
 <!--
 { "setup": [
 { "element": "#Price", "modifier": "attr", "parameters": [ {"class": "fragment", "data-fragment-index": "0"} ] },
@@ -126,7 +123,7 @@ The following example loads a SVG file and adds additional SVG elements to it up
 <span class="fragment"></span>
 <span class="fragment"></span>
 
-<div data-animate data-src="animate/linear_program.svg">
+<div data-animate data-load="animate/linear_program.svg">
 <!--
 {
 "setup": [
@@ -229,7 +226,7 @@ The following example loads a SVG file and adds additional SVG elements to it up
 The following example loads an SVG file, clones elements of the SVG, and manipulates them. Then, the cloned elements are displayed sequentially.
 
 ```html
-<div data-animate data-src="animate/integer_program.svg">
+<div data-animate data-load="animate/integer_program.svg">
 <!--
 {
 "setup": [
@@ -269,4 +266,4 @@ The following example loads an SVG file, clones elements of the SVG, and manipul
 
 MIT licensed
 
-Copyright (C) 2021 Asvin Goel
+Copyright (C) 2023 Asvin Goel

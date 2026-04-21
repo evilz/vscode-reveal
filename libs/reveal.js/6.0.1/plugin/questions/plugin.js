@@ -3,7 +3,7 @@
 **
 ** A plugin for reveal.js adding a Q&A to an online seminar.
 **
-** Version: 0.1.2
+** Version: 0.1.4
 **
 ** License: MIT license (see LICENSE.md)
 **
@@ -22,6 +22,7 @@ const initQnA = function(Reveal){
 	var config = Reveal.getConfig().questions || {};
         const STATUS = {"JOINED": 3, "HOSTING": 4};
 	var connected = false;
+	enableOrDisable(connected);
 	var questions = 0;
 	var counter = 0;
 
@@ -72,44 +73,13 @@ const initQnA = function(Reveal){
 	container.appendChild(questionList);
 	document.querySelector( '.reveal' ).appendChild( container );
 
-	toggleQnAButton = config.toggleQnAButton || false;
-
-	if ( toggleQnAButton ) {
-console.warn( "toggleQnAButton is deprecated, use customcontrols plugin instead!" );
-		var button = document.createElement( 'div' );
-		button.className = "toggle-questions";
-		button.id = "toggle-questions";
-		button.style.visibility = "hidden";
-		button.style.position = "absolute";
-		button.style.zIndex = 30;
-		button.style.fontSize = "24px";
-
-		button.style.left = toggleQnAButton.left || "30px";
-		button.style.bottom = toggleQnAButton.bottom ||  "30px";
-		button.style.top = toggleQnAButton.top ||  "auto";
-		button.style.right = toggleQnAButton.right ||  "auto";
-
-		button.innerHTML = '<a href="#" title="Toggle Q&A dashboard (Q)" onclick="RevealQnA.toggleQnA(); return false;">' +
-				'<span class="fa-stack" style="margin: -10px;"><span class="fa fa-comment fa-stack-1x"></span><strong class="fa-stack-1x fa-inverse qna question-counter" style="font-size:0.5em;"></strong></span>' +
-//<i class="fa fa-comment"></i>
-				'</a>';
-		document.querySelector(".reveal").appendChild( button );
-	}
-
-
-/*
-	function initializeQnA() {
-
-	}
-*/
-
-
 	function toggleQnA( show ) {
+		let dashboard = document.querySelector('.qna.dashboard');
+		if ( !dashboard ) return;
 		if ( show == undefined ) {
-			show = document.querySelector('.qna.dashboard').style.visibility == "hidden";
+			show = ( dashboard.style.visibility == "hidden" );
 		}
-
-		document.querySelector('.qna.dashboard').style.visibility = show ? "visible" : "hidden";
+		dashboard.style.visibility = show ? "visible" : "hidden";
 	}
 
 
@@ -214,10 +184,7 @@ console.warn( "toggleQnAButton is deprecated, use customcontrols plugin instead!
 		return bubbleUp( document.querySelector('.qna > .questions').appendChild(div) );
 	}
 
-	document.addEventListener( 'seminar', function ( message ) {
-		// update status
-//console.log(message.status);
-		var connected = ( message.status >= STATUS.JOINED );
+	function enableOrDisable(connected) {
 		var buttons = document.querySelectorAll('#toggle-questions');
 		for (var i = 0; i < buttons.length; i++) {
 			buttons[i].style.display = connected ? "inherit" : "none";
@@ -231,6 +198,12 @@ console.warn( "toggleQnAButton is deprecated, use customcontrols plugin instead!
 				toggleQnA();
 			} )
 		}
+	}
+
+	document.addEventListener( 'seminar', function ( message ) {
+		// update status
+//console.log(message.status);
+		enableOrDisable(message.status >= STATUS.JOINED);
 	});
 
 	document.addEventListener( 'received', function ( message ) {

@@ -4,29 +4,31 @@ A plugin for [Reveal.js](https://github.com/hakimel/reveal.js) allowing to easil
 The slideshow adds an audio player to the slideshow and plays an audio file provided for each slide and fragment.
 When an audio file has finished playing, the plugin and automatically advances the slideshow to the next slide or fragment.
 
-[Check out the live demo](https://rajgoel.github.io/reveal.js-demos/audio-slideshow-demo.html)
+[Check out the demo](https://rajgoel.github.io/reveal.js-demos/?topic=audio-slideshow)
 
+## Setup
 
-## Installation
-
-Copy the files ```plugin.js```, ```recorder.js```, and ```RecordRTC.js``` into the plugin folder of your reveal.js presentation, i.e. ```plugin/audio-slideshow``` and load the plugin as shown below.
-
+To use the plugin include
 ```html
-<script src="plugin/audio-slideshow/plugin.js"></script>
-<script src="plugin/audio-slideshow/recorder.js"></script>
-<script src="plugin/audio-slideshow/RecordRTC.js"></script>
+<!-- Audio slideshow plugin -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/audio-slideshow/plugin.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/audio-slideshow/recorder.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/RecordRTC/5.6.2/RecordRTC.js"></script>
+```
+to the header of your presentation and configure reveal.js and the plugin by
 
-<script>
-    Reveal.initialize({
-        // ...
-        plugins: [ RevealAudioSlideshow, RevealAudioRecorder ],
-        // ...
-    });
-</script>
+```js
+Reveal.initialize({
+  audio: {
+    // add configuration here
+  },
+  // ...
+  plugins: [ RevealAudioSlideshow, RevealAudioRecorder ],
+  // ...
+});
 ```
 
 The plugin ```RevealAudioRecorder``` and the respective files ```recorder.js``` and ```RecordRTC.js```are optional and not necessary for audio playback.
-
 
 ## Configuration
 
@@ -39,14 +41,15 @@ Reveal.initialize({
 	// ...
 	audio: {
 		prefix: 'audio/', 	// audio files are stored in the "audio" folder
-		suffix: '.ogg',		// audio files have the ".ogg" ending
+		suffix: '.webm',  	// audio files have the ".webm" ending
 		textToSpeechURL: null,  // the URL to the text to speech converter
 		defaultNotes: false, 	// use slide notes as default for the text to speech converter
 		defaultText: false, 	// use slide text as default for the text to speech converter
 		advance: 0, 		// advance to next slide after given time in milliseconds after audio has played, use negative value to not advance
 		autoplay: false,	// automatically start slideshow
 		defaultDuration: 5,	// default duration in seconds if no audio is available
-		defaultAudios: true,	// try to play audios with names such as audio/1.2.ogg
+		defaultAudios: true,	// try to play audios with names such as audio/1.2.webm
+		defaultPlaybackRate: 1.0, // speed of audio
 		playerOpacity: 0.05,	// opacity value of audio player if unfocused
 		playerStyle: 'position: fixed; bottom: 4px; left: 25%; width: 50%; height:75px; z-index: 33;', // style used for container of audio controls
 		startAtFragment: false, // when moving to a slide, start at the current fragment or at the start of the slide
@@ -54,6 +57,13 @@ Reveal.initialize({
 	// ...
 });
 ```
+
+### Playback speed
+
+This plugin has a parameter ```defaultPlaybackRate```, which configures with what speed audio is played by default.  Note that this option changes the speed of *all* audios, which may interfere with other plugins such as ```RevealChalkboard``` or ```RevealAnimate```, which may have their own notion of "correct" playback rate.
+
+In addition, users may use adjust the speed of audio using the audio controls (usually, via right-click).  The plugin remembers the currently set speed and uses that on subsequent audios as well.
+
 
 ## Preparing an audio slideshow
 
@@ -70,7 +80,7 @@ For each slide or fragment you can explicitly specify a file to be played when t
 </section>
 ```
 
-If no audio file is explicitly specified, the plugin automatically determines the name of the audio file using the given ```prefix```, the slide (or fragment) indices, and the ```suffix```, e.g. in the above code the slideshow will play the file ```audio/1.2.ogg```  before the fragment is shown (assuming that ```prefix``` is ```"audio/"```, ```suffix``` is ```".ogg"``` , ```Reveal.getIndices().h``` is ```"1"``` and ```Reveal.getIndices().v``` is ```"2"```).
+If no audio file is explicitly specified, the plugin automatically determines the name of the audio file using the given ```prefix```, the slide (or fragment) indices, and the ```suffix```, e.g. in the above code the slideshow will play the file ```audio/1.2.webm```  before the fragment is shown (assuming that ```prefix``` is ```"audio/"```, ```suffix``` is ```".webm"``` , ```Reveal.getIndices().h``` is ```"1"``` and ```Reveal.getIndices().v``` is ```"2"```).
 
 If you just want to play audio when file names are explicitly set with ```data-audio-src```, configure ```defaultAudios``` to ```false```.
 
@@ -147,25 +157,15 @@ By setting the ```data-audio-controls``` attribute for a video, the audio player
 
 ## Compatibility and known issues
 
-Playback is supported on recent desktop versions of Firefox, Chrome, and Opera.
-However, audio support of different browsers and for different operating systems is differently implemented and may not always work flawlessly.
-For example, playback of audio when using Chrome for Android, must be triggered [manually](https://code.google.com/p/chromium/issues/detail?id=178297) for each slide and fragment due to design decisions of Chrome developers.
-For other browser and mobile devices the functionality may be limited or the plugin may not work at all.
+Playback is supported on recent desktop versions of Firefox and Chrome. Audio support of different browsers and for different operating systems is differently implemented and may not always work flawlessly.
 
+Recording should work on recent desktop versions of Firefox and Chrome.
+For other browser and mobile devices recording may not work.
 
-The ```recorder.js```  plugin is based on [RecordRTC.js](https://github.com/muaz-khan/WebRTC-Experiment/tree/master/RecordRTC) and supports recording on recent desktop versions of Firefox, Chrome, and Opera.
-For other browser and mobile devices recording may not work at all.
-
-### Recording and fetching audio files on Chrome
-
-Your slideshow should be loaded  on HTTP or HTTPS. For slide decks stored on the local disk, you may have to launch the Chrome browser from the command line window with additional arguments for full functionality.
-
-```
-google-chrome  --disable-web-security --allow-file-access-from-files slidedeck.html
-```
+Your slideshow should be loaded  on HTTPS.
 
 ## License
 
 MIT licensed
 
-Copyright (C) 2020 Asvin Goel
+Copyright (C) 2023 Asvin Goel
