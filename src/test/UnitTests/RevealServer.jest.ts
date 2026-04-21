@@ -1,21 +1,30 @@
 import { RevealServer } from '../../RevealServer'
 import Logger, { LogLevel } from '../../Logger'
-import { defaultConfiguration } from '../../Configuration'
+import { Configuration, defaultConfiguration } from '../../Configuration'
 import request from 'supertest'
 import { RevealContext } from '../../RevealContext'
 import { TextEditor } from 'vscode'
 import * as path from 'path'
 import * as fs from 'fs/promises'
+import * as fsSync from 'fs'
 import * as os from 'os'
 
-const createContext = (options?: { inExport?: boolean; dirname?: string; onExportError?: (error: unknown) => void }) => {
+const localAssetPattern = /(?:href|src)="(libs\/[^"]+)"/g
+const collectLocalAssets = (html: string) => [...html.matchAll(localAssetPattern)].map((match) => match[1])
+
+const createContext = (options?: {
+  inExport?: boolean
+  dirname?: string
+  onExportError?: (error: unknown) => void
+  configuration?: Partial<Configuration> & Record<string, unknown>
+}) => {
   const logger = new Logger(() => undefined, LogLevel.Error)
   const inExport = options?.inExport ?? false
   const fileName = path.join(options?.dirname ?? os.tmpdir(), 'deck.md')
   return new RevealContext(
     { document: { fileName } } as TextEditor,
     logger,
-    () => defaultConfiguration,
+    () => ({ ...defaultConfiguration, ...options?.configuration }),
     process.cwd(),
     () => inExport,
     options?.onExportError ?? (() => undefined),
@@ -60,6 +69,167 @@ describe('RevealServer', () => {
     expect(response.status).toEqual(200)
     expect(response.type).toEqual('text/html')
     expect(response.headers['cache-control']).toBe('no-store')
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('root request references only bundled local assets', async () => {
+    const context = createContext()
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+    const localAssets = collectLocalAssets(response.text)
+    const missingAssets = localAssets.filter((asset) => !fsSync.existsSync(path.join(process.cwd(), asset)))
+
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/markdown.js')
+    expect(response.text).not.toContain('libs/reveal.js/6.0.1/plugin/markdown/markdown.js')
+    expect(missingAssets).toEqual([])
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('root request includes default-enabled optional plugin assets and registrations', async () => {
+    const context = createContext()
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/menu/menu.js')
+    expect(response.text).toContain("path: 'libs/reveal.js/6.0.1/plugin/menu/'")
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/loadcontent/plugin.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/fullscreen/plugin.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/anything/plugin.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/chart/chart.min.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/chart/plugin.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/audio-slideshow/plugin.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/audio-slideshow/RecordRTC.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/audio-slideshow/recorder.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/seminar/plugin.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/poll/plugin.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/questions/plugin.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/animate/svg.min.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/animate/plugin.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/chalkboard/plugin.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/chalkboard/style.css')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/customcontrols/plugin.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/customcontrols/style.css')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/poll/style.css')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/questions/style.css')
+    expect(response.text).toContain('window.RevealLoadContent')
+    expect(response.text).toContain('window.RevealFullscreen')
+    expect(response.text).toContain('window.RevealAnything')
+    expect(response.text).toContain('window.RevealChart')
+    expect(response.text).toContain('window.RevealAudioSlideshow')
+    expect(response.text).toContain('window.RevealAudioRecorder')
+    expect(response.text).toContain('window.RevealMenu')
+    expect(response.text).toContain('window.RevealAnimate')
+    expect(response.text).toContain('window.RevealChalkboard')
+    expect(response.text).toContain('window.RevealCustomControls')
+    expect(response.text).toContain('const hasSeminarConfig = false;')
+    expect(response.text).not.toContain('cdnjs.cloudflare.com/ajax/libs/socket.io')
+    expect(response.text).toContain('RevealChalkboard.toggleChalkboard();')
+    expect(response.text).toContain('RevealChalkboard.toggleNotesCanvas();')
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('root request omits optional plugin assets when disabled', async () => {
+    const context = createContext({ configuration: { enableMenu: false, enableChalkboard: false, enableZoom: false, enableSearch: false } })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).not.toContain('libs/reveal.js/6.0.1/plugin/menu/menu.js')
+    expect(response.text).not.toContain("path: 'libs/reveal.js/6.0.1/plugin/menu/'")
+    expect(response.text).not.toContain('libs/reveal.js/6.0.1/plugin/chalkboard/plugin.js')
+    expect(response.text).not.toContain('libs/reveal.js/6.0.1/plugin/chalkboard/style.css')
+    expect(response.text).not.toContain('libs/reveal.js/6.0.1/plugin/customcontrols/plugin.js')
+    expect(response.text).not.toContain('libs/reveal.js/6.0.1/plugin/customcontrols/style.css')
+    expect(response.text).not.toContain('window.RevealMenu')
+    expect(response.text).not.toContain('window.RevealChalkboard')
+    expect(response.text).not.toContain('window.RevealCustomControls')
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('registers seminar plugins only when seminar configuration is provided', async () => {
+    const context = createContext({
+      configuration: {
+        seminar: {
+          server: 'http://localhost:4433',
+          hash: 'integration-test',
+        },
+      },
+    })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js')
+    expect(response.text).toContain('const hasSeminarConfig = true;')
+    expect(response.text).toContain('window.RevealSeminar, window.RevealPoll, window.RevealQnA')
+    expect(response.text).toContain('"server":"http://localhost:4433"')
+    expect(response.text).toContain('"hash":"integration-test"')
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('serves rendered bundled assets through static middleware', async () => {
+    const context = createContext()
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+    const localAssets = collectLocalAssets(response.text)
+
+    for (const asset of localAssets) {
+      const assetResponse = await request(server.app).get(`/${asset}`)
+      expect(assetResponse.status).toBe(200)
+    }
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('serves secondary assets loaded by default optional plugins', async () => {
+    const context = createContext()
+    const server = new RevealServer(context)
+    const pluginAssets = [
+      '/libs/reveal.js/6.0.1/plugin/loadcontent/plugin.js',
+      '/libs/reveal.js/6.0.1/plugin/fullscreen/plugin.js',
+      '/libs/reveal.js/6.0.1/plugin/anything/d3/d3.v3.min.js',
+      '/libs/reveal.js/6.0.1/plugin/anything/d3.patch.js',
+      '/libs/reveal.js/6.0.1/plugin/anything/d3/queue.v1.min.js',
+      '/libs/reveal.js/6.0.1/plugin/anything/d3/topojson.v1.min.js',
+      '/libs/reveal.js/6.0.1/plugin/anything/function-plot.js',
+      '/libs/reveal.js/6.0.1/plugin/anything/plugin.js',
+      '/libs/reveal.js/6.0.1/plugin/chart/chart.min.js',
+      '/libs/reveal.js/6.0.1/plugin/chart/plugin.js',
+      '/libs/reveal.js/6.0.1/plugin/audio-slideshow/plugin.js',
+      '/libs/reveal.js/6.0.1/plugin/audio-slideshow/RecordRTC.js',
+      '/libs/reveal.js/6.0.1/plugin/audio-slideshow/recorder.js',
+      '/libs/reveal.js/6.0.1/plugin/seminar/plugin.js',
+      '/libs/reveal.js/6.0.1/plugin/poll/plugin.js',
+      '/libs/reveal.js/6.0.1/plugin/poll/style.css',
+      '/libs/reveal.js/6.0.1/plugin/questions/plugin.js',
+      '/libs/reveal.js/6.0.1/plugin/questions/style.css',
+      '/libs/reveal.js/6.0.1/plugin/animate/svg.min.js',
+      '/libs/reveal.js/6.0.1/plugin/animate/plugin.js',
+      '/libs/reveal.js/6.0.1/plugin/menu/menu.css',
+      '/libs/reveal.js/6.0.1/plugin/menu/font-awesome/css/all.css',
+      '/libs/reveal.js/6.0.1/plugin/chalkboard/img/blackboard.png',
+      '/libs/reveal.js/6.0.1/plugin/chalkboard/img/boardmarker-black.png',
+      '/libs/reveal.js/6.0.1/plugin/chalkboard/img/chalk-white.png',
+    ]
+
+    for (const asset of pluginAssets) {
+      const response = await request(server.app).get(asset)
+      expect(response.status).toBe(200)
+    }
 
     server.dispose()
     context.dispose()
