@@ -44,6 +44,16 @@ Since Reveal.js use marked to parse the markdown string you can use this in your
 - GitHub flavored markdown.
 - GFM tables
 
+Fragments can be authored directly in markdown with attributes (no raw HTML needed):
+
+```md
+- First point {.fragment}
+- Then emphasize this {.fragment .highlight-red}
+- Finally this one {.fragment data-fragment-index="2"}
+
+Paragraph shown later {.fragment .fade-up}
+```
+
 If you need a sample file you can get it here:
 https://raw.githubusercontent.com/evilz/vscode-reveal/master/sample.md
 

@@ -26,6 +26,16 @@ paragraph {data-toggle=modal}
 
 ![attributes](../assets/images/attributes.png)
 
+## Fragments in markdown (without HTML)
+
+```markdown
+- First point {.fragment}
+- Grow {.fragment .grow}
+- Highlight {.fragment .highlight-red data-fragment-index="2"}
+
+Reveal this paragraph later {.fragment .fade-up}
+```
+
 ## Abbreviation
 
 ```markdown
@@ -176,4 +186,3 @@ content
 ```
 
 ![Iframe](../assets/images/iframe.png)
-
