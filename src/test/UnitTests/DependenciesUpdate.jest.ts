@@ -149,7 +149,9 @@ test('Markdown-it attributes can be used for reveal.js fragments', () => {
   const listItemResult = md.render('- Step one {.fragment .fade-up data-fragment-index="2"}');
   expect(listItemResult).toContain('class="fragment fade-up"');
   expect(listItemResult).toContain('data-fragment-index="2"');
+  expect(listItemResult).not.toContain('{.fragment');
 
   const paragraphResult = md.render('Reveal later {.fragment}');
   expect(paragraphResult).toContain('<p class="fragment">Reveal later</p>');
+  expect(paragraphResult).not.toContain('{.fragment');
 });

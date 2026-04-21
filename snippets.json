@@ -44,7 +44,7 @@
     "Fragment list item with effect": {
         "prefix": "-frx",
         "body": [
-            "- ${1:text} {.fragment .${2|grow,shrink,fade-out,fade-right,fade-up,fade-down,fade-left,fade-in-then-out,fade-in-then-semi-out,highlight-red,highlight-green,highlight-blue,current-visible|}}"
+            "- ${1:text} {.fragment .${2|grow,shrink,fade-out,fade-right,fade-up,fade-down,fade-left,fade-in-then-out,fade-in-then-semi-out,highlight-red,highlight-green,highlight-blue,highlight-current-red,highlight-current-green,highlight-current-blue,current-visible|}}"
         ],
         "description": "Add fragment list item with reveal.js effect class"
     },
@@ -58,7 +58,7 @@
     "Fragment paragraph with effect": {
         "prefix": "fr-px",
         "body": [
-            "${1:text} {.fragment .${2|grow,shrink,fade-out,fade-right,fade-up,fade-down,fade-left,fade-in-then-out,fade-in-then-semi-out,highlight-red,highlight-green,highlight-blue,current-visible|}}"
+            "${1:text} {.fragment .${2|grow,shrink,fade-out,fade-right,fade-up,fade-down,fade-left,fade-in-then-out,fade-in-then-semi-out,highlight-red,highlight-green,highlight-blue,highlight-current-red,highlight-current-green,highlight-current-blue,current-visible|}}"
         ],
         "description": "Add fragment paragraph with reveal.js effect class"
     },
