@@ -139,3 +139,17 @@ test('Markdown-it plugins should work together', () => {
   const result4 = md.render('++inserted++');
   expect(result4).toContain('<ins>inserted</ins>');
 });
+
+test('Markdown-it attributes can be used for reveal.js fragments', () => {
+  const MarkdownIt = require('markdown-it');
+  const markdownItAttrs = require('markdown-it-attrs');
+
+  const md = new MarkdownIt().use(markdownItAttrs);
+
+  const listItemResult = md.render('- Step one {.fragment .fade-up data-fragment-index="2"}');
+  expect(listItemResult).toContain('class="fragment fade-up"');
+  expect(listItemResult).toContain('data-fragment-index="2"');
+
+  const paragraphResult = md.render('Reveal later {.fragment}');
+  expect(paragraphResult).toContain('<p class="fragment">Reveal later</p>');
+});

@@ -144,3 +144,13 @@ First Header | Second Header
 ------------ | -------------
 Content from cell 1 | Content from cell 2
 Content in the first column | Content in the second column
+
+---
+
+# Fragments
+
+- First appears {.fragment}
+- Then this grows {.fragment .grow}
+- Then this highlights {.fragment .highlight-blue data-fragment-index="2"}
+
+This paragraph fades up later {.fragment .fade-up}
