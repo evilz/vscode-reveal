@@ -34,6 +34,11 @@ jest.mock('../../utils', () => ({
 }))
 
 jest.mock('vscode', () => {
+  const workspace = {
+    workspaceFolders: undefined as unknown,
+    getWorkspaceFolder: jest.fn(),
+  }
+
   class Position {
     constructor(public line: number, public character: number) { }
     translate(deltaLine: number, deltaCharacter = 0) {
@@ -62,18 +67,19 @@ jest.mock('vscode', () => {
     dispose() { }
   }
 
-  return { Position, Range, Selection, EventEmitter }
+  return { Position, Range, Selection, EventEmitter, workspace }
 })
 
 import { defaultConfiguration } from '../../Configuration'
 import { LogLevel } from '../../Logger'
 import { RevealContext, RevealContexts } from '../../RevealContext'
+import { workspace } from 'vscode'
 
 describe('RevealContext', () => {
   const makeEditor = () => ({
     document: {
       fileName: '/workspace/slides/main.md',
-      uri: 'doc-uri',
+      uri: { scheme: 'file', toString: () => 'doc-uri' },
       getText: jest.fn(() => '# slide'),
     },
     revealRange: jest.fn(),
@@ -88,6 +94,8 @@ describe('RevealContext', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    ;(workspace as any).workspaceFolders = undefined
+    ;(workspace.getWorkspaceFolder as jest.Mock).mockReturnValue(undefined)
   })
 
   test('computes asset paths and uri helpers', () => {
@@ -123,6 +131,55 @@ describe('RevealContext', () => {
       path.resolve(slidesDir, 'styles', 'site.css'),
       path.resolve(slidesDir, 'a.css'),
     ])
+  })
+
+  test('uses workspace folder as base dir for untitled documents and tolerates unresolved virtual documents', () => {
+    const workspaceDir = path.join(path.sep, 'workspace', 'project-a')
+    ;(workspace as any).workspaceFolders = [{ uri: { fsPath: workspaceDir } }]
+
+    const untitledEditor = {
+      document: {
+        fileName: 'Untitled-1',
+        uri: { scheme: 'untitled' },
+        getText: jest.fn(() => '# slide'),
+      },
+      revealRange: jest.fn(),
+      selection: undefined,
+    }
+    const untitledContext = new RevealContext(
+      untitledEditor as any,
+      logger as any,
+      () => ({ ...defaultConfiguration, exportHTMLPath: 'dist' }),
+      '/ext',
+      () => false
+    )
+
+    expect(untitledContext.dirname).toBe(workspaceDir)
+    expect(untitledContext.exportPath).toBe(path.resolve(workspaceDir, 'dist'))
+    expect(untitledContext.resolveLocalAssetPath('styles/site.css')).toBe(path.resolve(workspaceDir, 'styles', 'site.css'))
+    expect(untitledContext.getReferencedAssetPaths()).toContain(path.join(workspaceDir, 'init.js'))
+
+    ;(workspace as any).workspaceFolders = undefined
+    const virtualEditor = {
+      document: {
+        fileName: 'generated',
+        uri: { scheme: 'git' },
+        getText: jest.fn(() => '# slide'),
+      },
+      revealRange: jest.fn(),
+      selection: undefined,
+    }
+    const virtualContext = new RevealContext(
+      virtualEditor as any,
+      logger as any,
+      () => ({ ...defaultConfiguration, exportHTMLPath: 'dist' }),
+      '/ext',
+      () => false
+    )
+
+    expect(virtualContext.dirname).toBeNull()
+    expect(virtualContext.resolveLocalAssetPath('styles/site.css')).toBeNull()
+    expect(virtualContext.getReferencedAssetPaths()).toEqual([])
   })
 
   test('refresh updates configuration, updates position, goToSlide and lifecycle methods', () => {
@@ -167,7 +224,7 @@ describe('RevealContext', () => {
     expect(editor.selection).toBeDefined()
     expect(editor.revealRange).toHaveBeenCalled()
 
-    expect(context.is({ uri: 'doc-uri' } as any)).toBe(true)
+    expect(context.is({ uri: editor.document.uri } as any)).toBe(true)
     expect(context.startServer()).toBe('http://localhost:1948/')
     context.stopServer()
     expect(serverStopMock).toHaveBeenCalled()
@@ -187,7 +244,7 @@ describe('RevealContexts', () => {
     const editor = {
       document: {
         fileName: '/workspace/slides/main.md',
-        uri: 'doc-uri',
+        uri: { scheme: 'file', toString: () => 'doc-uri' },
         getText: jest.fn(() => ''),
       },
       revealRange: jest.fn(),
@@ -197,7 +254,7 @@ describe('RevealContexts', () => {
     const sameContext = contexts.getOrAdd(editor as any)
     expect(context).toBe(sameContext)
 
-    contexts.remove('doc-uri' as any)
+    contexts.remove(editor.document.uri as any)
     expect(logger.info).toHaveBeenCalledWith('CONTEXT: doc-uri disposed')
 
     contexts.remove('unknown-uri' as any)
