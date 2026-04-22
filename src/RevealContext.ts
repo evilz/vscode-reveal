@@ -48,12 +48,16 @@ export class RevealContext extends Disposable {
   }
 
   public get dirname(): string | null {
-    const uri = this.editor.document.uri
-    if ((uri.scheme === 'file' || uri.scheme === 'vscode-remote') && this.editor.document.fileName) {
+    const uri = this.editor.document.uri as Uri | undefined
+    const uriScheme = uri && typeof uri === 'object' ? uri.scheme : undefined
+
+    if ((uriScheme === 'file' || uriScheme === 'vscode-remote' || !uriScheme) && this.editor.document.fileName) {
       return path.dirname(this.editor.document.fileName)
     }
 
-    const workspaceFolder = workspace.getWorkspaceFolder(uri) ?? workspace.workspaceFolders?.[0]
+    const workspaceFolder = uri && typeof uri === 'object'
+      ? workspace.getWorkspaceFolder(uri) ?? workspace.workspaceFolders?.[0]
+      : workspace.workspaceFolders?.[0]
     return workspaceFolder?.uri.fsPath ?? null
   }
 
