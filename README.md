@@ -13,6 +13,16 @@ This extension let you display a reveal.js presentation directly from an opened 
 
 > Full documentation [here](https://www.evilznet.com/vscode-reveal)
 
+
+## Liens vers d'autres fichiers
+
+- [DAY-002.md](./DAY-002.md)
+- [sample.md](./sample.md)
+- [sample2.md](./sample2.md)
+- [CHANGELOG.md](./CHANGELOG.md)
+- [Documentation rapide](./docs/quick-start.md)
+- [Accueil documentation](./docs/homepage.md)
+
 ## Development platform baseline
 
 The extension targets `engines.vscode: ^1.105.0` and keeps `@types/vscode` aligned to the same API generation.  
