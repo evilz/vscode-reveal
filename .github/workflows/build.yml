@@ -1,16 +1,20 @@
-name: continuous integration Build Matrix
+name: CI
 
 on:
   push:
   pull_request:
 
-jobs:
-  build:
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+permissions:
+  contents: read
 
+jobs:
+  validate:
+    name: Validate (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - name: Checkout repository
@@ -19,19 +23,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: .nvmrc
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Test
+      - name: Run tests with coverage
         run: npm run coverage
 
-      - name: Build project
+      - name: Build extension
         run: npm run vscode:prepublish
 
-      - name: Install vsce
-        run: npm install -g vsce
-
-      - name: Package extension smoke test
-        run: vsce package
+      - name: VSIX packaging smoke test
+        run: npx @vscode/vsce package --no-dependencies
