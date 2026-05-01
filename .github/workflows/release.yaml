@@ -78,7 +78,6 @@ jobs:
       - name: Fail if release tag already exists
         env:
           TAG: ${{ steps.meta.outputs.tag }}
-          GH_TOKEN: ${{ github.token }}
         run: |
           if git ls-remote --tags --exit-code origin "refs/tags/$TAG" >/dev/null 2>&1; then
             echo "Tag already exists: $TAG"
@@ -138,7 +137,7 @@ jobs:
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com
-          extensionFile: ${{ needs.validate.outputs.package_name }}
+          extensionFile: vsix-package/${{ needs.validate.outputs.package_name }}
 
   publishOVSX:
     name: Publish to OpenVSX
@@ -155,7 +154,7 @@ jobs:
         with:
           pat: ${{ secrets.OPEN_VSX_TOKEN }}
           registryUrl: https://open-vsx.org
-          extensionFile: ${{ needs.validate.outputs.package_name }}
+          extensionFile: vsix-package/${{ needs.validate.outputs.package_name }}
 
   publishGH:
     name: Publish to GitHub Releases
@@ -176,4 +175,4 @@ jobs:
           tag_name: ${{ needs.validate.outputs.tag }}
           name: Release ${{ needs.validate.outputs.version }}
           generate_release_notes: true
-          files: ${{ needs.validate.outputs.package_name }}
+          files: vsix-package/${{ needs.validate.outputs.package_name }}
