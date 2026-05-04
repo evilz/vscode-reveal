@@ -12,6 +12,9 @@ module.exports = {
   coverageDirectory: './coverage',
   //setupTestFrameworkScriptFile: '@alex_neo/jest-expect-message',
   setupFilesAfterEnv: ['@alex_neo/jest-expect-message'],
+  moduleNameMapper: {
+    '^open$': '<rootDir>/src/__mocks__/open.ts',
+  },
 }
 
 // "jest": {
