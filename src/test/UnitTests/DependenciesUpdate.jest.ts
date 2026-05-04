@@ -76,6 +76,7 @@ test('Open 11.0.0 should be installed', () => {
   const path = require('path');
   const fs = require('fs');
   const openPkgPath = path.join(process.cwd(), 'node_modules/open/package.json');
+  expect(fs.existsSync(openPkgPath)).toBe(true);
   const openPkg = JSON.parse(fs.readFileSync(openPkgPath, 'utf-8'));
   expect(openPkg.version).toMatch(/^11\./);
 });
