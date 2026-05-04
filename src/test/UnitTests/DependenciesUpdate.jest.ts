@@ -71,10 +71,14 @@ test('Morgan 1.10.1 should be importable and functional', () => {
   expect(typeof middleware).toBe('function');
 });
 
-test('Open 8.4.2 should be importable', () => {
-  const open = require('open');
-  expect(open).toBeDefined();
-  expect(typeof open).toBe('function');
+test('Open 11.0.0 should be installed', () => {
+  // open v11 is ESM-only; verify it is installed by checking package.json
+  const path = require('path');
+  const fs = require('fs');
+  const openPkgPath = path.join(process.cwd(), 'node_modules/open/package.json');
+  expect(fs.existsSync(openPkgPath)).toBe(true);
+  const openPkg = JSON.parse(fs.readFileSync(openPkgPath, 'utf-8'));
+  expect(openPkg.version).toMatch(/^11\./);
 });
 
 test('Supertest 7.1.4 should be importable', () => {
