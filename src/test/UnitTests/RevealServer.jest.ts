@@ -51,10 +51,35 @@ describe('RevealServer', () => {
     expect(server.isListening).toBeTruthy()
     expect(uri).toMatch(/^http:\/\/localhost:\d+\/$/)
     expect(uri).toBe(server.uri)
+    expect(server.port).toEqual(expect.any(Number))
 
     server.stop()
     expect(server.isListening).toBeFalsy()
     expect(server.uri).toBe('')
+    expect(server.port).toBeNull()
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('start logs the concrete server uri and port', () => {
+    const messages: string[] = []
+    const logger = new Logger((message) => messages.push(message), LogLevel.Info)
+    const context = new RevealContext(
+      { document: { fileName: path.join(os.tmpdir(), 'deck.md') } } as TextEditor,
+      logger,
+      () => defaultConfiguration,
+      process.cwd(),
+      () => false,
+      () => undefined,
+    )
+    const server = new RevealServer(context)
+
+    const uri = server.start()
+
+    expect(messages).toHaveLength(1)
+    expect(messages[0]).toContain(`SERVER started at ${uri}`)
+    expect(messages[0]).toContain(`(port ${server.port})`)
 
     server.dispose()
     context.dispose()

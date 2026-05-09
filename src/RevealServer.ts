@@ -30,7 +30,9 @@ export class RevealServer extends Disposable {
     try {
       if (!this.isListening) {
         this.server = this.app.listen(0)
-        this.context.logger.info(`SERVER started`)
+        const uri = this.uri
+        const port = this.port
+        this.context.logger.info(`SERVER started${uri ? ` at ${uri}` : ''}${port === null ? '' : ` (port ${port})`}`)
       }
     } catch (err) {
       const error = new Error(`Cannot start server: ${err}`)
@@ -53,20 +55,33 @@ export class RevealServer extends Disposable {
     }
   }
 
+  /** The current port for this server, null if not listening */
+  public get port() {
+    if (!this.isListening || this.server === null) {
+      return null
+    }
+
+    const addr = this.server.address()
+    if (typeof addr === 'string' || addr === null) {
+      return null
+    }
+
+    return addr.port
+  }
+
   /** Current uri for this server, empty is not listening */
   public get uri() {
     if (!this.isListening || this.server === null) {
       return ''
     }
 
-    const addr = this.server.address()
-    if (typeof addr === 'string') {
-      return addr
+    const port = this.port
+    if (port === null) {
+      const addr = this.server.address()
+      return typeof addr === 'string' ? addr : ''
     }
-    if (addr === null) {
-      return ''
-    }
-    return `http://${this.host}:${addr.port}/`
+
+    return `http://${this.host}:${port}/`
   }
 
   /** The function configures the express app to serve the presentation */
