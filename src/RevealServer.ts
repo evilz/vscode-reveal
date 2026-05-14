@@ -118,10 +118,16 @@ export class RevealServer extends Disposable {
         next()
       } else {
         let init: string | null = null
+        let htmlFragment: string | null = null
         if (context.dirname) {
           const initPath = path.join(context.dirname, 'init.js')
           if (fs.existsSync(initPath)) {
             init = fs.readFileSync(initPath, 'utf8')
+          }
+
+          const htmlFragmentPath = context.resolveLocalAssetPath(context.configuration.htmlFragment)
+          if (htmlFragmentPath && fs.existsSync(htmlFragmentPath)) {
+            htmlFragment = fs.readFileSync(htmlFragmentPath, 'utf8')
           }
         }
 
@@ -135,7 +141,7 @@ export class RevealServer extends Disposable {
           html: markdownit.render(s.text),
           children: s.verticalChildren.map((c) => ({ ...c, html: markdownit.render(c.text) })),
         }))
-        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init })
+        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init, htmlFragment })
       }
     })
 
