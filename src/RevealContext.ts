@@ -147,6 +147,14 @@ export class RevealContext extends Disposable {
     this.#server.stop()
   }
 
+  public get onDidStartServer() {
+    return this.#server.onDidStart
+  }
+
+  public get onDidStopServer() {
+    return this.#server.onDidStop
+  }
+
   private readonly _onDidDispose = this._register(new EventEmitter<void>())
   /**
    * Fired when the document is disposed of.
@@ -172,7 +180,9 @@ export class RevealContexts {
     private readonly getConfiguration: () => Configuration,
     private readonly extensionPath: string,
     private readonly isInExport: () => boolean,
-    private readonly onExportError: (error: unknown) => void
+    private readonly onExportError: (error: unknown) => void,
+    private readonly onServerStart: (uri: string, context: RevealContext) => void,
+    private readonly onServerStop: (context: RevealContext) => void
   ) {
     this.logger = logger
   }
@@ -182,6 +192,8 @@ export class RevealContexts {
     const context = new RevealContext(editor, this.logger, this.getConfiguration, this.extensionPath, this.isInExport, this.onExportError)
 
     context.onDidDispose(() => this.logger.info(`CONTEXT: ${editor.document.uri} disposed`))
+    context.onDidStartServer((uri) => this.onServerStart(uri, context))
+    context.onDidStopServer(() => this.onServerStop(context))
 
     this.innerMap.set(editor.document.uri, context)
     return context

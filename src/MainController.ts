@@ -74,6 +74,7 @@ export default class MainController {
   private OnEditorEvent(editor: TextEditor, newPosition: Position) {
     if (isMarkdownFile(editor.document)) {
       this.currentContext = this.revealContexts.getOrAdd(editor)
+      this.statusBarController.updateServerInfo(this.currentContext?.baseUri || null)
       this.updatePosition(newPosition)
       this.refresh()
     }
@@ -137,7 +138,17 @@ export default class MainController {
       () => this.config,
       extensionContext.extensionPath,
       this.isInExport,
-      this.onExportError
+      this.onExportError,
+      (uri, context) => {
+        if (this.currentContext === context) {
+          this.statusBarController.updateServerInfo(uri || null)
+        }
+      },
+      (context) => {
+        if (this.currentContext === context) {
+          this.statusBarController.updateServerInfo(null)
+        }
+      }
     )
     this.diagnostics = languages.createDiagnosticCollection('vscode-revealjs')
     this.configByKey = new Map(configDesc.map((d) => [d.label, d]))

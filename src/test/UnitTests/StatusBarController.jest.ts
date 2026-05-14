@@ -52,13 +52,14 @@ describe('StatusBarController', () => {
     expect(stopItem.show).toHaveBeenCalledTimes(1)
 
     controller.updateServerInfo('http://localhost:1948')
-    expect(addressItem.text).toBe('')
-    expect(addressItem.hide).toHaveBeenCalledTimes(2)
-    expect(stopItem.hide).toHaveBeenCalledTimes(2)
+    expect(addressItem.text).toBe('$(server) http://localhost:1948')
+    expect(addressItem.show).toHaveBeenCalledTimes(2)
+    expect(stopItem.show).toHaveBeenCalledTimes(2)
+    expect(addressItem.hide).toHaveBeenCalledTimes(1) // from constructor
 
     controller.updateServerInfo(null)
-    expect(addressItem.hide).toHaveBeenCalledTimes(3)
-    expect(stopItem.hide).toHaveBeenCalledTimes(3)
+    expect(addressItem.hide).toHaveBeenCalledTimes(2)
+    expect(stopItem.hide).toHaveBeenCalledTimes(2)
   })
 
   test('updateCount updates singular/plural and hides for invalid counts', () => {
