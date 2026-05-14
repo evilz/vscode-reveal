@@ -74,6 +74,7 @@ export default class MainController {
   private OnEditorEvent(editor: TextEditor, newPosition: Position) {
     if (isMarkdownFile(editor.document)) {
       this.currentContext = this.revealContexts.getOrAdd(editor)
+      this.statusBarController.updateServerInfo(this.currentContext?.baseUri || null)
       this.updatePosition(newPosition)
       this.refresh()
     }
@@ -137,7 +138,17 @@ export default class MainController {
       () => this.config,
       extensionContext.extensionPath,
       this.isInExport,
-      this.onExportError
+      this.onExportError,
+      (uri, context) => {
+        if (this.currentContext === context) {
+          this.statusBarController.updateServerInfo(uri || null)
+        }
+      },
+      (context) => {
+        if (this.currentContext === context) {
+          this.statusBarController.updateServerInfo(null)
+        }
+      }
     )
     this.diagnostics = languages.createDiagnosticCollection('vscode-revealjs')
     this.configByKey = new Map(configDesc.map((d) => [d.label, d]))
@@ -218,13 +229,9 @@ export default class MainController {
       const diagnostics = await collectDiagnostics(context, this.configByKey)
       this.diagnostics.set(context.editor.document.uri, diagnostics)
 
-      const hadOpenWebViewPane = !!this.webViewPane
       this.refreshWebViewPane()
       this.slidesExplorer.update()
       this.statusBarController.updateCount(slides.length)
-      if (!hadOpenWebViewPane) {
-        this.statusBarController.updateServerInfo(context.baseUri || null)
-      }
       this.textDecorator.update(context.editor)
       this.logger.info(`REFRESH DONE!`)
     }, wait)
@@ -322,18 +329,10 @@ export default class MainController {
   /** Start server on an available port */
   public startServer() {
     this.currentContext?.startServer()
-    this.statusBarController.updateServerInfo(this.currentContext?.baseUri || null)
   }
 
   /** Stop server from listening */
   public stopServer() {
-    const currentServerUri = this.currentContext?.baseUri || null
     this.currentContext?.stopServer()
-
-    if (currentServerUri) {
-      this.statusBarController.updateServerInfo(`__stopped__:${currentServerUri}`)
-    }
-
-    this.statusBarController.updateServerInfo(null)
   }
 }

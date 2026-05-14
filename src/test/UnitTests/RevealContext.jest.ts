@@ -17,6 +17,8 @@ jest.mock('../../RevealServer', () => ({
     uri: 'http://localhost:1948/',
     start: (...args: unknown[]) => (serverStartMock as any)(...args),
     stop: (...args: unknown[]) => (serverStopMock as any)(...args),
+    onDidStart: jest.fn(),
+    onDidStop: jest.fn(),
     dispose: jest.fn(),
   })),
 }))
@@ -182,7 +184,7 @@ describe('RevealContext', () => {
 describe('RevealContexts', () => {
   test('adds, reuses and removes contexts', () => {
     const logger = { info: jest.fn(), debug: jest.fn(), LogLevel: LogLevel.Error }
-    const contexts = new RevealContexts(logger as any, () => defaultConfiguration, '/ext', () => false, () => {})
+    const contexts = new RevealContexts(logger as any, () => defaultConfiguration, '/ext', () => false, () => {}, () => {}, () => {})
 
     const editor = {
       document: {

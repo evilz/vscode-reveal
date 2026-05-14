@@ -39,12 +39,15 @@ export class StatusBarController extends Disposable{
   }
 
   public updateServerInfo(serverUri: string | null) {
-    if (serverUri !== null && serverUri !== this.#currentServerUri) {
-      this.#currentServerUri = serverUri
-      this.#addressItem.text = `$(server) ${serverUri}`
+    if (serverUri !== null) {
+      if (serverUri !== this.#currentServerUri) {
+        this.#currentServerUri = serverUri
+        this.#addressItem.text = `$(server) ${serverUri}`
+      }
       this.#addressItem.show()
       this.#stopItem.show()
     } else {
+      this.#currentServerUri = null
       this.#addressItem.text = ''
       this.#addressItem.hide()
       this.#stopItem.hide()
