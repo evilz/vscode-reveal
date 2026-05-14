@@ -57,10 +57,13 @@ const valueType = (value: unknown): string => {
 }
 
 const acceptsType = (value: unknown, expectedType: ConfigurationDescription['type']) => {
-  if (expectedType === 'null') return value === null
-  if (expectedType === 'array') return Array.isArray(value)
-  if (expectedType === 'object') return typeof value === 'object' && value !== null && !Array.isArray(value)
-  return typeof value === expectedType
+  const types = Array.isArray(expectedType) ? expectedType : [expectedType]
+  return types.some(t => {
+    if (t === 'null') return value === null
+    if (t === 'array') return Array.isArray(value)
+    if (t === 'object') return typeof value === 'object' && value !== null && !Array.isArray(value)
+    return typeof value === t
+  })
 }
 
 const pathExists = async (fsPath: string) => {
@@ -108,7 +111,8 @@ export const collectDiagnostics = async (
     }
 
     if (!acceptsType(value, desc.type)) {
-      diagnostics.push(toDiagnostic(keyRange, `Invalid value type for "${key}". Expected ${desc.type}, found ${valueType(value)}.`))
+      const typeLabel = Array.isArray(desc.type) ? desc.type.join(' or ') : desc.type
+      diagnostics.push(toDiagnostic(keyRange, `Invalid value type for "${key}". Expected ${typeLabel}, found ${valueType(value)}.`))
       continue
     }
 

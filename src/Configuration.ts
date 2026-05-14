@@ -36,7 +36,7 @@ export interface IRevealOptions {
   customHighlightTheme: string | null
   controls: boolean
   progress: boolean
-  slideNumber: boolean
+  slideNumber: boolean | string
   history: boolean
   keyboard: boolean
   overview: boolean
@@ -58,6 +58,8 @@ export interface IRevealOptions {
   transition: transitions
   transitionSpeed: 'default' | 'fast' | 'slow'
   backgroundTransition: transitions
+  pdfMaxPagesPerSlide: number | null
+  pdfSeparateFragments: boolean
   viewDistance: number
 
   width: number | string,
@@ -148,6 +150,8 @@ export const defaultConfiguration: Configuration = {
   transition: 'slide',
   transitionSpeed: 'default',
   backgroundTransition: 'fade',
+  pdfMaxPagesPerSlide: null,
+  pdfSeparateFragments: true,
   viewDistance: 3,
 
   width: 960,
@@ -187,7 +191,7 @@ export interface ConfigurationDescription {
   label: string,
   detail: string,
   documentation: string,
-  type: ConfigurationDescriptionTypes,
+  type: ConfigurationDescriptionTypes | ConfigurationDescriptionTypes[],
   values?: string[],
   defaultValue?: unknown
 }
@@ -199,16 +203,13 @@ type RawConfigurationProperty = {
   enum?: string[]
 }
 
-const normalizeType = (type: string | string[]): ConfigurationDescriptionTypes => {
-  const types = (Array.isArray(type) ? type : [type]) as string[]
-  const typePriority: ConfigurationDescriptionTypes[] = ['string', 'number', 'boolean', 'array', 'object', 'null']
-
-  for (const candidate of typePriority) {
-    if (types.includes(candidate)) {
-      return candidate
-    }
-  }
-  return 'string'
+const collectTypes = (type: string | string[]): ConfigurationDescriptionTypes | ConfigurationDescriptionTypes[] => {
+  const knownTypes = new Set<string>(['string', 'boolean', 'number', 'array', 'object', 'null'])
+  const types = Array.isArray(type) ? type : [type]
+  const filtered = types.filter((t): t is ConfigurationDescriptionTypes => knownTypes.has(t))
+  if (filtered.length === 0) return 'string'
+  if (filtered.length === 1) return filtered[0]
+  return filtered
 }
 
 export const getConfigurationDescription = (properties: Record<string, RawConfigurationProperty>) => {
@@ -219,7 +220,7 @@ export const getConfigurationDescription = (properties: Record<string, RawConfig
         label: key.startsWith(`${configPrefix}.`) ? key.substring(configPrefix.length + 1) : key,
         detail: properties[key].description || properties[key].markdownDescription || '',
         documentation: properties[key].markdownDescription || properties[key].description || '',
-        type: normalizeType(properties[key].type),
+        type: collectTypes(properties[key].type),
         values: properties[key].enum,
         defaultValue: properties[key].default
       }))

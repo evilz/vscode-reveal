@@ -277,9 +277,12 @@
           "description": "Display a presentation progress bar"
         },
         "revealjs.slideNumber": {
-          "type": "boolean",
+          "type": [
+            "boolean",
+            "string"
+          ],
           "default": false,
-          "description": "Display the page number of the current slide"
+          "description": "Display the page number of the current slide. Use true/false or a Reveal.js slide number format such as \"h/v\"."
         },
         "revealjs.history": {
           "type": "boolean",
@@ -406,6 +409,19 @@
             "concave",
             "zoom"
           ]
+        },
+        "revealjs.pdfMaxPagesPerSlide": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "default": null,
+          "description": "Maximum number of pages a slide can expand onto when exporting to PDF. Null keeps Reveal.js default behavior."
+        },
+        "revealjs.pdfSeparateFragments": {
+          "type": "boolean",
+          "default": true,
+          "description": "Print each fragment step on a separate PDF page."
         },
         "revealjs.viewDistance": {
           "type": "number",
