@@ -327,7 +327,13 @@ export default class MainController {
 
   /** Stop server from listening */
   public stopServer() {
+    const currentServerUri = this.currentContext?.baseUri || null
     this.currentContext?.stopServer()
+
+    if (currentServerUri) {
+      this.statusBarController.updateServerInfo(`__stopped__:${currentServerUri}`)
+    }
+
     this.statusBarController.updateServerInfo(null)
   }
 }
