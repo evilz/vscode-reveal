@@ -218,10 +218,13 @@ export default class MainController {
       const diagnostics = await collectDiagnostics(context, this.configByKey)
       this.diagnostics.set(context.editor.document.uri, diagnostics)
 
+      const hadOpenWebViewPane = !!this.webViewPane
       this.refreshWebViewPane()
       this.slidesExplorer.update()
       this.statusBarController.updateCount(slides.length)
-      this.statusBarController.updateServerInfo(context.baseUri || null)
+      if (!hadOpenWebViewPane) {
+        this.statusBarController.updateServerInfo(context.baseUri || null)
+      }
       this.textDecorator.update(context.editor)
       this.logger.info(`REFRESH DONE!`)
     }, wait)
