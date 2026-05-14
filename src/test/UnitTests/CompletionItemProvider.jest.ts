@@ -96,6 +96,14 @@ test('Should handle boolean/string union type with only boolean enum provider', 
     expect(completionItems).toHaveLength(1)
     // boolean provider for true/false, no string enum provider (no values defined)
     expect(enumValueProviders).toHaveLength(1)
+
+    const document = {
+        lineAt: jest.fn(() => ({ text: 'slideNumber: ' })),
+    } as unknown as TextDocument
+    const token: CancellationToken = { isCancellationRequested: false, onCancellationRequested: jest.fn() }
+    const context: CompletionContext = { triggerKind: 0, triggerCharacter: undefined }
+    const boolItems = enumValueProviders[0].provideCompletionItems(document, new Position(0, 'slideNumber: '.length), token, context)
+    expect(boolItems).toStrictEqual([new CompletionItem('true'), new CompletionItem('false')])
 })
 
 test('Should handle boolean/string union type with both enum providers when values defined', () => {
@@ -111,6 +119,17 @@ test('Should handle boolean/string union type with both enum providers when valu
 
     // boolean provider + string enum provider
     expect(enumValueProviders).toHaveLength(2)
+
+    const document = {
+        lineAt: jest.fn(() => ({ text: 'unionOption: ' })),
+    } as unknown as TextDocument
+    const position = new Position(0, 'unionOption: '.length)
+    const token: CancellationToken = { isCancellationRequested: false, onCancellationRequested: jest.fn() }
+    const ctx: CompletionContext = { triggerKind: 0, triggerCharacter: undefined }
+    const boolItems = enumValueProviders[0].provideCompletionItems(document, position, token, ctx)
+    const strItems = enumValueProviders[1].provideCompletionItems(document, position, token, ctx)
+    expect(boolItems).toStrictEqual([new CompletionItem('true'), new CompletionItem('false')])
+    expect(strItems).toStrictEqual([new CompletionItem('h/v'), new CompletionItem('c/t')])
 })
 
 test('Should stringify complex default values in completion metadata', () => {
