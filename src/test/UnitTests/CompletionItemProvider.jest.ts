@@ -83,6 +83,36 @@ test('Should handle number type without enum provider', () => {
     expect(enumValueProviders).toHaveLength(0)
 })
 
+test('Should handle boolean/string union type with only boolean enum provider', () => {
+    const configDesc: ConfigurationDescription = {
+        label: 'slideNumber',
+        detail: 'slide number detail',
+        documentation: 'doc',
+        type: ['boolean', 'string']
+    }
+
+    const { completionItems, enumValueProviders } = createCompletionItems([configDesc])
+
+    expect(completionItems).toHaveLength(1)
+    // boolean provider for true/false, no string enum provider (no values defined)
+    expect(enumValueProviders).toHaveLength(1)
+})
+
+test('Should handle boolean/string union type with both enum providers when values defined', () => {
+    const configDesc: ConfigurationDescription = {
+        label: 'unionOption',
+        detail: '',
+        documentation: '',
+        type: ['boolean', 'string'],
+        values: ['h/v', 'c/t']
+    }
+
+    const { enumValueProviders } = createCompletionItems([configDesc])
+
+    // boolean provider + string enum provider
+    expect(enumValueProviders).toHaveLength(2)
+})
+
 test('Should stringify complex default values in completion metadata', () => {
     const configDesc: ConfigurationDescription = {
         label: 'obj_option',
