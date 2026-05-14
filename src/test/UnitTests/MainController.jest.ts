@@ -72,9 +72,11 @@ jest.mock('../../SlideExplorer', () => ({
 }))
 
 const statusBarUpdateCountMock = jest.fn()
+const statusBarUpdateServerInfoMock = jest.fn()
 jest.mock('../../StatusBarController', () => ({
   StatusBarController: jest.fn().mockImplementation(() => ({
     updateCount: statusBarUpdateCountMock,
+    updateServerInfo: statusBarUpdateServerInfoMock,
   })),
 }))
 

@@ -221,6 +221,7 @@ export default class MainController {
       this.refreshWebViewPane()
       this.slidesExplorer.update()
       this.statusBarController.updateCount(slides.length)
+      this.statusBarController.updateServerInfo(context.baseUri || null)
       this.textDecorator.update(context.editor)
       this.logger.info(`REFRESH DONE!`)
     }, wait)
@@ -318,10 +319,12 @@ export default class MainController {
   /** Start server on an available port */
   public startServer() {
     this.currentContext?.startServer()
+    this.statusBarController.updateServerInfo(this.currentContext?.baseUri || null)
   }
 
   /** Stop server from listening */
   public stopServer() {
     this.currentContext?.stopServer()
+    this.statusBarController.updateServerInfo(null)
   }
 }

@@ -30,7 +30,7 @@ export class RevealServer extends Disposable {
     try {
       if (!this.isListening) {
         this.server = this.app.listen(0)
-        this.context.logger.info(`SERVER started`)
+        this.context.logger.info(`SERVER started at ${this.uri}`)
       }
     } catch (err) {
       const error = new Error(`Cannot start server: ${err}`)
