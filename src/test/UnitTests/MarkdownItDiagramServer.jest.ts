@@ -34,4 +34,9 @@ describe('Markdown-it diagram server configuration', () => {
     expect(html).toContain('<p>Paragraph text</p>')
     expect(html).toContain('<aside class="notes"> this is speaker only</aside>')
   })
+
+  test('preserves escaped braces in inline LaTeX expressions', () => {
+    const html = markdownit.render('$\\{x\\}$')
+    expect(html).toContain('$\\{x\\}$')
+  })
 })
