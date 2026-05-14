@@ -81,6 +81,41 @@ const note = (markdown, config) => {
   }
 }
 
+const preserveInlineMath = (state, silent) => {
+  const start = state.pos
+  if (state.src.charCodeAt(start) !== 0x24 /* $ */) return false
+  if (state.src.charCodeAt(start + 1) === 0x24 /* $ */) return false
+
+  let match = start + 1
+  while ((match = state.src.indexOf('$', match)) !== -1) {
+    let backslashCount = 0
+    let pos = match - 1
+    while (pos >= 0 && state.src.charCodeAt(pos) === 0x5c /* \ */) {
+      backslashCount++
+      pos--
+    }
+    if (backslashCount % 2 === 1) {
+      match += 1
+      continue
+    }
+
+    if (match === start + 1) return false
+
+    if (!silent) {
+      const token = state.push('text', '', 0)
+      token.content = state.src.slice(start, match + 1)
+    }
+    state.pos = match + 1
+    return true
+  }
+
+  return false
+}
+
+const math = (markdown) => {
+  markdown.inline.ruler.before('escape', 'preserve_inline_math', preserveInlineMath)
+}
+
 
 const diagramTypes = [
   'blockdiag',
@@ -129,6 +164,7 @@ const markdown = md({
     .use(samp)
     .use(sub)
     .use(sup)
+    .use(math)
     .use(note, { notesSeparator })
 
 // add kroki
