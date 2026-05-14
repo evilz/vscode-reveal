@@ -287,9 +287,12 @@
           "description": "Push each slide change to the browser history"
         },
         "revealjs.keyboard": {
-          "type": "boolean",
+          "type": [
+            "boolean",
+            "object"
+          ],
           "default": true,
-          "description": "Enable keyboard shortcuts for navigation"
+          "description": "Enable keyboard shortcuts for navigation, or provide a Reveal.js keyboard mapping object"
         },
         "revealjs.overview": {
           "type": "boolean",

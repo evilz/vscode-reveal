@@ -51,7 +51,7 @@
       hash: true, //# hash: false,
       //# respondToHashChanges: true,
       //# history: false,
-      keyboard: <%= keyboard %>,
+      keyboard: <%- JSON.stringify(keyboard) %>,
       //#keyboardCondition: null,
       overview: <%= overview %>,
       center: <%= center %>,

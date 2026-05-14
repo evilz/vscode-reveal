@@ -38,7 +38,7 @@ export interface IRevealOptions {
   progress: boolean
   slideNumber: boolean
   history: boolean
-  keyboard: boolean
+  keyboard: boolean | Record<string, unknown>
   overview: boolean
   center: boolean
   touch: boolean
