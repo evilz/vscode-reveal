@@ -84,6 +84,9 @@ describe('RevealServer', () => {
 
     expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/markdown.js')
     expect(response.text).not.toContain('libs/reveal.js/6.0.1/plugin/markdown/markdown.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/menu/font-awesome/css/all.css')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/menu/font-awesome/css/v4-shims.min.css')
+    expect(response.text).not.toContain('maxcdn.bootstrapcdn.com/font-awesome')
     expect(missingAssets).toEqual([])
 
     server.dispose()
