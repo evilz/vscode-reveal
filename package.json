@@ -407,6 +407,24 @@
             "zoom"
           ]
         },
+        "revealjs.pdfMaxPagesPerSlide": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "default": null,
+          "description": "Number of PDF pages that a single slide may span when exporting or printing; use null for Reveal.js default infinity"
+        },
+        "revealjs.pdfSeparateFragments": {
+          "type": "boolean",
+          "default": true,
+          "description": "Print each fragment step on a separate PDF page"
+        },
+        "revealjs.pdfPageHeightOffset": {
+          "type": "number",
+          "default": -1,
+          "description": "Pixel offset applied to PDF page height calculations"
+        },
         "revealjs.viewDistance": {
           "type": "number",
           "default": 3,

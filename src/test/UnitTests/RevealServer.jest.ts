@@ -179,6 +179,26 @@ describe('RevealServer', () => {
     context.dispose()
   })
 
+  test('renders configured PDF export options in Reveal initialization', async () => {
+    const context = createContext({
+      configuration: {
+        pdfMaxPagesPerSlide: 1,
+        pdfSeparateFragments: false,
+        pdfPageHeightOffset: 12,
+      },
+    })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('pdfMaxPagesPerSlide: 1')
+    expect(response.text).toContain('pdfSeparateFragments: false')
+    expect(response.text).toContain('pdfPageHeightOffset: 12')
+
+    server.dispose()
+    context.dispose()
+  })
+
   test('serves rendered bundled assets through static middleware', async () => {
     const context = createContext()
     const server = new RevealServer(context)
