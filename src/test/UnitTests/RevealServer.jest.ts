@@ -179,6 +179,18 @@ describe('RevealServer', () => {
     context.dispose()
   })
 
+  test('renders slide number format strings as JavaScript strings', async () => {
+    const context = createContext({ configuration: { slideNumber: 'h/v' } })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('slideNumber: "h/v"')
+
+    server.dispose()
+    context.dispose()
+  })
+
   test('serves rendered bundled assets through static middleware', async () => {
     const context = createContext()
     const server = new RevealServer(context)

@@ -46,7 +46,7 @@
       controlsLayout: '<%= controlsLayout %>',
       controlsBackArrows: '<%= controlsBackArrows %>',
       progress: <%= progress %>,
-      slideNumber: <%= slideNumber %>,
+      slideNumber: <%- JSON.stringify(slideNumber) %>,
       //#showSlideNumber "all" "print" "speaker"
       hash: true, //# hash: false,
       //# respondToHashChanges: true,

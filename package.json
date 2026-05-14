@@ -277,9 +277,12 @@
           "description": "Display a presentation progress bar"
         },
         "revealjs.slideNumber": {
-          "type": "boolean",
+          "type": [
+            "boolean",
+            "string"
+          ],
           "default": false,
-          "description": "Display the page number of the current slide"
+          "description": "Display the page number of the current slide. Use a Reveal.js format string such as h/v, h.v, c, or c/t to control formatting."
         },
         "revealjs.history": {
           "type": "boolean",
