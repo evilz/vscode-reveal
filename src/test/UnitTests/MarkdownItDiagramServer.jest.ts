@@ -39,4 +39,14 @@ describe('Markdown-it diagram server configuration', () => {
     const html = markdownit.render('$\\{x\\}$')
     expect(html).toContain('$\\{x\\}$')
   })
+
+  test('preserves inline math spanning an escaped dollar sign', () => {
+    const html = markdownit.render('$a \\$ b$')
+    expect(html).toContain('$a \\$ b$')
+  })
+
+  test('preserves inline math when closing delimiter follows even number of backslashes', () => {
+    const html = markdownit.render('$x\\\\$')
+    expect(html).toContain('$x\\\\$')
+  })
 })

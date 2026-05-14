@@ -88,7 +88,13 @@ const preserveInlineMath = (state, silent) => {
 
   let match = start + 1
   while ((match = state.src.indexOf('$', match)) !== -1) {
-    if (state.src.charCodeAt(match - 1) === 0x5c /* \ */) {
+    let backslashCount = 0
+    let pos = match - 1
+    while (pos >= 0 && state.src.charCodeAt(pos) === 0x5c /* \ */) {
+      backslashCount++
+      pos--
+    }
+    if (backslashCount % 2 === 1) {
       match += 1
       continue
     }
