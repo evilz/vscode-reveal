@@ -36,7 +36,7 @@ export interface IRevealOptions {
   customHighlightTheme: string | null
   controls: boolean
   progress: boolean
-  slideNumber: boolean
+  slideNumber: boolean | string
   history: boolean
   keyboard: boolean
   overview: boolean
