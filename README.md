@@ -240,6 +240,9 @@ To export your presentation to pdf you can:
 This opens the print URL using the same browser resolution rules as above:
 - if `revealjs.browserPath` is set and valid, that executable is used
 - otherwise VS Code's native external URL API is used
+
+PDF export uses Reveal.js print settings. Set `revealjs.pdfSeparateFragments` to `false` to keep fragments on the same exported page, set `revealjs.pdfMaxPagesPerSlide` to cap slide overflow pages, and use `revealjs.slideNumber` formats such as `h/v` when you need formatted slide numbers.
+
 Be sure to set print setting correctly:
 - No margin
 - print background

@@ -36,7 +36,7 @@ export interface IRevealOptions {
   customHighlightTheme: string | null
   controls: boolean
   progress: boolean
-  slideNumber: boolean
+  slideNumber: boolean | string
   history: boolean
   keyboard: boolean
   overview: boolean
@@ -58,6 +58,8 @@ export interface IRevealOptions {
   transition: transitions
   transitionSpeed: 'default' | 'fast' | 'slow'
   backgroundTransition: transitions
+  pdfMaxPagesPerSlide: number | null
+  pdfSeparateFragments: boolean
   viewDistance: number
 
   width: number | string,
@@ -148,6 +150,8 @@ export const defaultConfiguration: Configuration = {
   transition: 'slide',
   transitionSpeed: 'default',
   backgroundTransition: 'fade',
+  pdfMaxPagesPerSlide: null,
+  pdfSeparateFragments: true,
   viewDistance: 3,
 
   width: 960,

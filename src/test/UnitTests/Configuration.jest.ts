@@ -3,6 +3,7 @@ import { defaultConfiguration, configPrefix, getConfigurationDescription } from 
 const packageJson = require('../../../package.json')
 
 type ContributedProperty = {
+  type?: unknown
   default?: unknown
 }
 
@@ -90,6 +91,12 @@ test('getConfigurationDescription should enforce scalar priority regardless of u
   const desc = getConfigurationDescription(props)
   expect(desc.find((x) => x.label === 'numberThenString')?.type).toBe('string')
   expect(desc.find((x) => x.label === 'booleanThenNumber')?.type).toBe('number')
+})
+
+test('contributed reveal config exposes slide-number formats and PDF export options', () => {
+  expect(contributedProperties['revealjs.slideNumber'].type).toEqual(['boolean', 'string'])
+  expect(contributedProperties['revealjs.pdfSeparateFragments'].default).toBe(true)
+  expect(contributedProperties['revealjs.pdfMaxPagesPerSlide'].type).toEqual(['number', 'null'])
 })
 
 test('getConfigurationDescription should keep markdown documentation when available', () => {

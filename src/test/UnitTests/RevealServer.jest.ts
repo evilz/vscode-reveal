@@ -84,7 +84,30 @@ describe('RevealServer', () => {
 
     expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/markdown.js')
     expect(response.text).not.toContain('libs/reveal.js/6.0.1/plugin/markdown/markdown.js')
+    expect(response.text).not.toContain('maxcdn.bootstrapcdn.com/font-awesome')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/menu/font-awesome/css/all.css')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/menu/font-awesome/css/v4-shims.min.css')
     expect(missingAssets).toEqual([])
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('renders formatted slide numbers and PDF export options into reveal config', async () => {
+    const context = createContext({
+      configuration: {
+        slideNumber: 'h/v',
+        pdfSeparateFragments: false,
+        pdfMaxPagesPerSlide: 1,
+      } as any,
+    })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('slideNumber: "h/v",')
+    expect(response.text).toContain('pdfMaxPagesPerSlide: 1,')
+    expect(response.text).toContain('pdfSeparateFragments: false,')
 
     server.dispose()
     context.dispose()
@@ -221,6 +244,7 @@ describe('RevealServer', () => {
       '/libs/reveal.js/6.0.1/plugin/animate/plugin.js',
       '/libs/reveal.js/6.0.1/plugin/menu/menu.css',
       '/libs/reveal.js/6.0.1/plugin/menu/font-awesome/css/all.css',
+      '/libs/reveal.js/6.0.1/plugin/menu/font-awesome/css/v4-shims.min.css',
       '/libs/reveal.js/6.0.1/plugin/chalkboard/img/blackboard.png',
       '/libs/reveal.js/6.0.1/plugin/chalkboard/img/boardmarker-black.png',
       '/libs/reveal.js/6.0.1/plugin/chalkboard/img/chalk-white.png',
