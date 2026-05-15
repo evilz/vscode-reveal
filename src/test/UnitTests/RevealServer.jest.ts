@@ -277,6 +277,24 @@ describe('RevealServer', () => {
     }
   })
 
+  test('injects configured local HTML fragment from markdown folder', async () => {
+    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), 'vscode-reveal-'))
+    const fragmentPath = path.join(dirname, 'fragment.html')
+    await fs.writeFile(fragmentPath, '<video id="background-video" src="intro.mp4"></video>')
+    const context = createContext({ dirname, configuration: { htmlFragment: 'fragment.html' } })
+    const server = new RevealServer(context)
+    try {
+      const response = await request(server.app).get('/')
+
+      expect(response.status).toEqual(200)
+      expect(response.text).toContain('<video id="background-video" src="intro.mp4"></video>')
+    } finally {
+      server.dispose()
+      context.dispose()
+      await fs.rm(dirname, { recursive: true, force: true })
+    }
+  })
+
   test('export middleware calls onExportError when exporter fails', async () => {
     const onExportError = jest.fn()
     const context = createContext({ inExport: true, onExportError })

@@ -90,6 +90,11 @@ export class RevealContext extends Disposable {
       paths.add(customThemePath)
     }
 
+    const htmlFragmentPath = this.resolveLocalAssetPath(this.configuration.htmlFragment)
+    if (htmlFragmentPath) {
+      paths.add(htmlFragmentPath)
+    }
+
     const cssAssetPaths = Array.isArray(this.configuration.css) ? this.configuration.css : []
     for (const cssAssetPath of cssAssetPaths) {
       const resolvedPath = this.resolveLocalAssetPath(cssAssetPath)
