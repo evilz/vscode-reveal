@@ -51,14 +51,20 @@ test('Markdown-it-attrs 4.3.1 should be importable and functional', () => {
   expect(result).toContain('id="custom-id"');
 });
 
-test('Prettier 3.6.2 should be importable', () => {
+test('Prettier should be importable', () => {
   // Prettier is an ES module, but we can verify it's installed correctly
   const fs = require('fs');
   const path = require('path');
+  const projectPackageJson = require('../../../package.json');
   const prettierPath = path.join(__dirname, '../../../node_modules/prettier/package.json');
+
   expect(fs.existsSync(prettierPath)).toBe(true);
+
   const prettierPkg = JSON.parse(fs.readFileSync(prettierPath, 'utf-8'));
-  expect(prettierPkg.version.startsWith('3.6')).toBe(true);
+  const expectedMajorVersion = String(projectPackageJson.dependencies.prettier).match(/\d+/)?.[0];
+
+  expect(expectedMajorVersion).toBeDefined();
+  expect(prettierPkg.version.split('.')[0]).toBe(expectedMajorVersion);
 });
 
 test('Morgan 1.10.1 should be importable and functional', () => {
