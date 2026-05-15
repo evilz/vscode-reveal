@@ -51,7 +51,7 @@ test('Markdown-it-attrs 4.3.1 should be importable and functional', () => {
   expect(result).toContain('id="custom-id"');
 });
 
-test('Prettier should be importable', () => {
+test('Prettier should be installed and match the declared major version', () => {
   // Prettier is an ES module, but we can verify it's installed correctly
   const fs = require('fs');
   const path = require('path');
