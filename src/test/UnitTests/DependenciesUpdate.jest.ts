@@ -61,10 +61,10 @@ test('Prettier should be importable', () => {
   expect(fs.existsSync(prettierPath)).toBe(true);
 
   const prettierPkg = JSON.parse(fs.readFileSync(prettierPath, 'utf-8'));
-  const expectedMajorVersion = String(projectPackageJson.dependencies.prettier).match(/\d+/)?.[0];
+  const expectedVersionMatch = String(projectPackageJson.dependencies.prettier).match(/^[^\d]*(\d+)/);
 
-  expect(expectedMajorVersion).toBeDefined();
-  expect(prettierPkg.version.split('.')[0]).toBe(expectedMajorVersion);
+  expect(expectedVersionMatch).not.toBeNull();
+  expect(prettierPkg.version.split('.')[0]).toBe(expectedVersionMatch?.[1]);
 });
 
 test('Morgan 1.10.1 should be importable and functional', () => {
