@@ -1,7 +1,7 @@
 import { FrontMatterResult } from 'front-matter'
 import path from 'path'
 import { isDeepStrictEqual } from 'util'
-import { EventEmitter, Position, Range, Selection, TextDocument, TextEditor, Uri } from 'vscode'
+import { EventEmitter, Position, Range, Selection, TextDocument, TextEditor, Uri, workspace } from 'vscode'
 import { Configuration, mergeConfig } from './Configuration'
 import { Disposable } from './dispose'
 import { ISlide } from './ISlide'
@@ -47,8 +47,18 @@ export class RevealContext extends Disposable {
     return this.editor.document.getText(range)
   }
 
-  public get dirname() {
-    return path.dirname(this.editor.document.fileName)
+  public get dirname(): string | null {
+    const uri = this.editor.document.uri as Uri | undefined
+    const uriScheme = uri && typeof uri === 'object' ? uri.scheme : undefined
+
+    if ((uriScheme === 'file' || uriScheme === 'vscode-remote' || !uriScheme) && this.editor.document.fileName) {
+      return path.dirname(this.editor.document.fileName)
+    }
+
+    const workspaceFolder = uri && typeof uri === 'object'
+      ? workspace.getWorkspaceFolder(uri) ?? workspace.workspaceFolders?.[0]
+      : workspace.workspaceFolders?.[0]
+    return workspaceFolder?.uri.fsPath ?? null
   }
 
   get uriWithPosition() {
@@ -63,7 +73,7 @@ export class RevealContext extends Disposable {
   public get exportPath(): string {
     return path.isAbsolute(this.configuration.exportHTMLPath)
       ? this.configuration.exportHTMLPath
-      : path.join(this.dirname, this.configuration.exportHTMLPath)
+      : path.resolve(this.dirname ?? process.cwd(), this.configuration.exportHTMLPath)
   }
 
   public resolveLocalAssetPath(assetPath: string | null | undefined, appendCssIfMissing = false): string | null {
@@ -74,7 +84,13 @@ export class RevealContext extends Disposable {
     if (/^(https?:)?\/\//i.test(trimmed) || /^data:/i.test(trimmed)) return null
 
     const [cleanedPath] = trimmed.split(/[?#]/)
-    const resolvedPath = path.isAbsolute(cleanedPath) ? cleanedPath : path.resolve(this.dirname, cleanedPath)
+    const baseDir = this.dirname
+    const resolvedPath = path.isAbsolute(cleanedPath)
+      ? cleanedPath
+      : baseDir
+        ? path.resolve(baseDir, cleanedPath)
+        : null
+    if (!resolvedPath) return null
     if (appendCssIfMissing && !path.extname(resolvedPath)) {
       return `${resolvedPath}.css`
     }
@@ -83,7 +99,10 @@ export class RevealContext extends Disposable {
 
   public getReferencedAssetPaths(): string[] {
     const paths = new Set<string>()
-    paths.add(path.join(this.dirname, 'init.js'))
+    const baseDir = this.dirname
+    if (baseDir) {
+      paths.add(path.join(baseDir, 'init.js'))
+    }
 
     const customThemePath = this.resolveLocalAssetPath(this.configuration.customTheme, true)
     if (customThemePath) {
