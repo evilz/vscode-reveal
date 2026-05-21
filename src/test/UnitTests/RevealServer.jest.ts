@@ -202,6 +202,25 @@ describe('RevealServer', () => {
     context.dispose()
   })
 
+  test('renders keyboard object configuration as JavaScript object', async () => {
+    const context = createContext({
+      configuration: {
+        keyboard: {
+          66: 'Reveal.togglePause',
+          191: null,
+        },
+      },
+    })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('keyboard: {"66":"Reveal.togglePause","191":null}')
+
+    server.dispose()
+    context.dispose()
+  })
+
   test('serves rendered bundled assets through static middleware', async () => {
     const context = createContext()
     const server = new RevealServer(context)
