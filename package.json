@@ -697,7 +697,7 @@
     "markdown-it-sub": "^2.0.0",
     "markdown-it-sup": "^2.0.0",
     "markdown-it-task-lists": "^2.1.1",
-    "morgan": "^1.10.1",
+    "morgan": "^1.11.0",
     "open": "^11.0.0",
     "pako": "^2.1.0",
     "prettier": "^3.6.2"
@@ -730,7 +730,7 @@
     "sonarqube-scanner": "^4.3.2",
     "source-map-support": "^0.5.21",
     "supertest": "^7.2.2",
-    "ts-jest": "^29.4.11",
+    "ts-jest": "^29.4.5",
     "typescript": "^5.9.3"
   }
 }
