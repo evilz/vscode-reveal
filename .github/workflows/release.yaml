@@ -3,6 +3,11 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
+      dryRun:
+        description: Build and verify the VSIX without publishing it
+        type: boolean
+        required: true
+        default: true
       publishMS:
         description: Publish to VS Marketplace
         type: boolean
@@ -116,6 +121,15 @@ jobs:
       - name: Create VSIX package
         run: npx @vscode/vsce package --no-dependencies --out "${{ needs.validate.outputs.package_name }}"
 
+      - name: Verify packaged extension contents
+        shell: bash
+        run: |
+          set -euo pipefail
+          unzip -l "${{ needs.validate.outputs.package_name }}" > vsix-contents.txt
+          grep -q 'extension/package.json' vsix-contents.txt
+          grep -q 'extension/dist/extension.js' vsix-contents.txt
+          grep -q 'extension/CHANGELOG.md' vsix-contents.txt
+
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v4
         with:
@@ -126,7 +140,7 @@ jobs:
     name: Publish to VS Marketplace
     runs-on: ubuntu-latest
     needs: [validate, package]
-    if: github.event.inputs.publishMS == 'true'
+    if: github.event.inputs.dryRun == 'false' && github.event.inputs.publishMS == 'true'
     environment: visual-studio-marketplace
     steps:
       - uses: actions/download-artifact@v4
@@ -143,7 +157,7 @@ jobs:
     name: Publish to OpenVSX
     runs-on: ubuntu-latest
     needs: [validate, package]
-    if: github.event.inputs.publishOVSX == 'true'
+    if: github.event.inputs.dryRun == 'false' && github.event.inputs.publishOVSX == 'true'
     environment: open-vsx
     steps:
       - uses: actions/download-artifact@v4
@@ -160,7 +174,7 @@ jobs:
     name: Publish to GitHub Releases
     runs-on: ubuntu-latest
     needs: [validate, package]
-    if: github.event.inputs.publishGH == 'true'
+    if: github.event.inputs.dryRun == 'false' && github.event.inputs.publishGH == 'true'
     environment: github-releases
     permissions:
       contents: write
