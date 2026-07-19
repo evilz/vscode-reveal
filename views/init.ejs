@@ -1,4 +1,6 @@
-<% if(init) { %>
+<% if(init && initModule) { %>
+<script type="module" src="<%= init %>"></script>
+<%}else if(init) { %>
 <script>
   <%- init %>
 </script>
