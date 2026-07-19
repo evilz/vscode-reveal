@@ -256,37 +256,62 @@ describe('RevealServer', () => {
 
   test('loads init.js content when present in markdown folder', async () => {
     const dirname = await fs.mkdtemp(path.join(os.tmpdir(), 'vscode-reveal-'))
-    const initPath = path.join(dirname, 'init.js')
-    await fs.writeFile(initPath, 'window.testInitLoaded = true;')
-    const context = createContext({ dirname })
-    const server = new RevealServer(context)
+    let context: RevealContext | undefined
+    let server: RevealServer | undefined
     try {
+      const initPath = path.join(dirname, 'init.js')
+      await fs.writeFile(initPath, 'window.testInitLoaded = true;')
+      context = createContext({ dirname })
+      server = new RevealServer(context)
       const response = await request(server.app).get('/')
 
       expect(response.status).toEqual(200)
       expect(response.text).toContain('window.testInitLoaded = true;')
     } finally {
-      server.dispose()
-      context.dispose()
+      server?.dispose()
+      context?.dispose()
       await fs.rm(dirname, { recursive: true, force: true })
     }
   })
 
   test('loads init.esm.js as a module when present in markdown folder', async () => {
     const dirname = await fs.mkdtemp(path.join(os.tmpdir(), 'vscode-reveal-'))
-    const initPath = path.join(dirname, 'init.esm.js')
-    await fs.writeFile(initPath, 'import "./plugin.js";')
-    const context = createContext({ dirname })
-    const server = new RevealServer(context)
+    let context: RevealContext | undefined
+    let server: RevealServer | undefined
     try {
+      const initPath = path.join(dirname, 'init.esm.js')
+      await fs.writeFile(initPath, 'import "./plugin.js";')
+      context = createContext({ dirname })
+      server = new RevealServer(context)
       const response = await request(server.app).get('/')
 
       expect(response.status).toEqual(200)
       expect(response.text).toContain('<script type="module" src="init.esm.js"></script>')
       expect(response.text).not.toContain('import "./plugin.js";')
     } finally {
-      server.dispose()
-      context.dispose()
+      server?.dispose()
+      context?.dispose()
+      await fs.rm(dirname, { recursive: true, force: true })
+    }
+  })
+
+  test('prefers init.esm.js over init.js when both are present', async () => {
+    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), 'vscode-reveal-'))
+    let context: RevealContext | undefined
+    let server: RevealServer | undefined
+    try {
+      await fs.writeFile(path.join(dirname, 'init.js'), 'window.legacyInitLoaded = true;')
+      await fs.writeFile(path.join(dirname, 'init.esm.js'), 'import "./plugin.js";')
+      context = createContext({ dirname })
+      server = new RevealServer(context)
+      const response = await request(server.app).get('/')
+
+      expect(response.status).toEqual(200)
+      expect(response.text).toContain('<script type="module" src="init.esm.js"></script>')
+      expect(response.text).not.toContain('window.legacyInitLoaded = true;')
+    } finally {
+      server?.dispose()
+      context?.dispose()
       await fs.rm(dirname, { recursive: true, force: true })
     }
   })

@@ -146,7 +146,7 @@ In this mode, diagram code blocks are kept as plain code blocks and no remote di
 
 ## Custom initialization
 
-Place an `init.js` file next to your markdown file to replace the default Reveal.js initialization script. If your initialization needs ECMAScript modules, use `init.esm.js` instead; it is loaded as `<script type="module">`, so it can use standard `import` statements for files served from the same folder. When both files exist, `init.esm.js` takes precedence.
+Place an `init.js` file next to your markdown file to replace the default Reveal.js initialization script. If your initialization needs ECMAScript modules, use `init.esm.js` instead; it is loaded as `<script type="module">`, so it can use standard `import` statements for files served from the same folder. When both files exist, `init.esm.js` takes precedence. `init.esm.js` must be a complete custom initialization script and initialize Reveal itself, just like `init.js`.
 
 ## <a id="options"></a> Reveal.js Options
 
