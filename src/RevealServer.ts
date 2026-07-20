@@ -1,7 +1,7 @@
 import * as http from 'http'
 import * as fs from 'fs'
 import express from 'express'
-import * as ejs from 'ejs'
+import ejs from 'ejs'
 import cors from 'cors'
 import morgan from 'morgan'
 import * as path from 'path'
@@ -9,10 +9,17 @@ import markdownit, { setDiagramRenderingConfig } from './Markdown-it'
 import { exportHTML, IExportOptions } from './ExportHTML'
 import { Disposable } from './dispose'
 import { RevealContext } from './RevealContext'
+import { EventEmitter } from 'vscode'
 
 /** Http server to serve reveal presentation */
 export class RevealServer extends Disposable {
   public readonly app = express()
+
+  private readonly _onDidStart = this._register(new EventEmitter<string>())
+  public readonly onDidStart = this._onDidStart.event
+
+  private readonly _onDidStop = this._register(new EventEmitter<void>())
+  public readonly onDidStop = this._onDidStop.event
 
   private server: http.Server | null = null
   private readonly host = 'localhost'
@@ -30,7 +37,10 @@ export class RevealServer extends Disposable {
     try {
       if (!this.isListening) {
         this.server = this.app.listen(0)
-        this.context.logger.info(`SERVER started`)
+        this.server?.on('listening', () => {
+          this.context.logger.info('SERVER started at ' + this.uri)
+          this._onDidStart.fire(this.uri)
+        })
       }
     } catch (err) {
       const error = new Error(`Cannot start server: ${err}`)
@@ -50,6 +60,7 @@ export class RevealServer extends Disposable {
     if (this.isListening && this.server) {
       this.server.close()
       this.context.logger.debug(`SERVER: stopped`)
+      this._onDidStop.fire()
     }
   }
 
@@ -107,9 +118,14 @@ export class RevealServer extends Disposable {
         next()
       } else {
         let init: string | null = null
+        let initModule = false
         if (context.dirname) {
+          const initModulePath = path.join(context.dirname, 'init.esm.js')
           const initPath = path.join(context.dirname, 'init.js')
-          if (fs.existsSync(initPath)) {
+          if (fs.existsSync(initModulePath)) {
+            init = 'init.esm.js'
+            initModule = true
+          } else if (fs.existsSync(initPath)) {
             init = fs.readFileSync(initPath, 'utf8')
           }
         }
@@ -124,7 +140,7 @@ export class RevealServer extends Disposable {
           html: markdownit.render(s.text),
           children: s.verticalChildren.map((c) => ({ ...c, html: markdownit.render(c.text) })),
         }))
-        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init })
+        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init, initModule })
       }
     })
 

@@ -17,6 +17,8 @@ jest.mock('../../RevealServer', () => ({
     uri: 'http://localhost:1948/',
     start: (...args: unknown[]) => (serverStartMock as any)(...args),
     stop: (...args: unknown[]) => (serverStopMock as any)(...args),
+    onDidStart: jest.fn(),
+    onDidStop: jest.fn(),
     dispose: jest.fn(),
   })),
 }))
@@ -35,18 +37,27 @@ jest.mock('../../utils', () => ({
 
 jest.mock('vscode', () => {
   class Position {
-    constructor(public line: number, public character: number) { }
+    constructor(
+      public line: number,
+      public character: number,
+    ) {}
     translate(deltaLine: number, deltaCharacter = 0) {
       return new Position(this.line + deltaLine, this.character + deltaCharacter)
     }
   }
 
   class Range {
-    constructor(public start: Position, public end: Position) { }
+    constructor(
+      public start: Position,
+      public end: Position,
+    ) {}
   }
 
   class Selection {
-    constructor(public anchor: Position, public active: Position) { }
+    constructor(
+      public anchor: Position,
+      public active: Position,
+    ) {}
   }
 
   class EventEmitter<T> {
@@ -59,7 +70,7 @@ jest.mock('vscode', () => {
     fire(event: T) {
       this.listener?.(event)
     }
-    dispose() { }
+    dispose() {}
   }
 
   return { Position, Range, Selection, EventEmitter }
@@ -92,7 +103,13 @@ describe('RevealContext', () => {
 
   test('computes asset paths and uri helpers', () => {
     const editor = makeEditor()
-    const context = new RevealContext(editor as any, logger as any, () => ({ ...defaultConfiguration, exportHTMLPath: 'dist' }), '/ext', () => false)
+    const context = new RevealContext(
+      editor as any,
+      logger as any,
+      () => ({ ...defaultConfiguration, exportHTMLPath: 'dist' }),
+      '/ext',
+      () => false,
+    )
     const slidesDir = path.dirname(editor.document.fileName)
 
     expect(context.dirname).toBe(slidesDir)
@@ -118,16 +135,18 @@ describe('RevealContext', () => {
       css: ['a.css', ' ', 'http://cdn/style.css', 'a.css', 'data:text/plain,hello'],
     }
 
-    expect(context.getReferencedAssetPaths()).toEqual([
-      path.join(slidesDir, 'init.js'),
-      path.resolve(slidesDir, 'styles', 'site.css'),
-      path.resolve(slidesDir, 'a.css'),
-    ])
+    expect(context.getReferencedAssetPaths()).toEqual([path.join(slidesDir, 'init.js'), path.join(slidesDir, 'init.esm.js'), path.resolve(slidesDir, 'styles', 'site.css'), path.resolve(slidesDir, 'a.css')])
   })
 
   test('refresh updates configuration, updates position, goToSlide and lifecycle methods', () => {
     const editor = makeEditor()
-    const context = new RevealContext(editor as any, logger as any, () => ({ ...defaultConfiguration, logLevel: LogLevel.Warning }), '/ext', () => false)
+    const context = new RevealContext(
+      editor as any,
+      logger as any,
+      () => ({ ...defaultConfiguration, logLevel: LogLevel.Warning }),
+      '/ext',
+      () => false,
+    )
 
     parseMock
       .mockReturnValueOnce({
@@ -182,7 +201,15 @@ describe('RevealContext', () => {
 describe('RevealContexts', () => {
   test('adds, reuses and removes contexts', () => {
     const logger = { info: jest.fn(), debug: jest.fn(), LogLevel: LogLevel.Error }
-    const contexts = new RevealContexts(logger as any, () => defaultConfiguration, '/ext', () => false, () => {})
+    const contexts = new RevealContexts(
+      logger as any,
+      () => defaultConfiguration,
+      '/ext',
+      () => false,
+      () => {},
+      () => {},
+      () => {},
+    )
 
     const editor = {
       document: {
