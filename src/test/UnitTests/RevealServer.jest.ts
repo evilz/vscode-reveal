@@ -11,6 +11,8 @@ import * as os from 'os'
 
 const localAssetPattern = /(?:href|src)="(libs\/[^"]+)"/g
 const collectLocalAssets = (html: string) => [...html.matchAll(localAssetPattern)].map((match) => match[1])
+const tempDirectoryPrefix = 'vscode-reveal-'
+const moduleInitSource = 'import "./plugin.js";'
 
 const createContext = (options?: { inExport?: boolean; dirname?: string; onExportError?: (error: unknown) => void; configuration?: Partial<Configuration> & Record<string, unknown> }) => {
   const logger = new Logger(() => undefined, LogLevel.Error)
@@ -94,7 +96,7 @@ describe('RevealServer', () => {
         slideNumber: 'h/v',
         pdfSeparateFragments: false,
         pdfMaxPagesPerSlide: 1,
-      } as any,
+      },
     })
     const server = new RevealServer(context)
 
@@ -276,7 +278,7 @@ describe('RevealServer', () => {
   })
 
   test('loads init.js content when present in markdown folder', async () => {
-    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), 'vscode-reveal-'))
+    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), tempDirectoryPrefix))
     let context: RevealContext | undefined
     let server: RevealServer | undefined
     try {
@@ -296,19 +298,19 @@ describe('RevealServer', () => {
   })
 
   test('loads init.esm.js as a module when present in markdown folder', async () => {
-    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), 'vscode-reveal-'))
+    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), tempDirectoryPrefix))
     let context: RevealContext | undefined
     let server: RevealServer | undefined
     try {
       const initPath = path.join(dirname, 'init.esm.js')
-      await fs.writeFile(initPath, 'import "./plugin.js";')
+      await fs.writeFile(initPath, moduleInitSource)
       context = createContext({ dirname })
       server = new RevealServer(context)
       const response = await request(server.app).get('/')
 
       expect(response.status).toEqual(200)
       expect(response.text).toContain('<script type="module" src="init.esm.js"></script>')
-      expect(response.text).not.toContain('import "./plugin.js";')
+      expect(response.text).not.toContain(moduleInitSource)
     } finally {
       server?.dispose()
       context?.dispose()
@@ -317,12 +319,12 @@ describe('RevealServer', () => {
   })
 
   test('prefers init.esm.js over init.js when both are present', async () => {
-    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), 'vscode-reveal-'))
+    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), tempDirectoryPrefix))
     let context: RevealContext | undefined
     let server: RevealServer | undefined
     try {
       await fs.writeFile(path.join(dirname, 'init.js'), 'window.legacyInitLoaded = true;')
-      await fs.writeFile(path.join(dirname, 'init.esm.js'), 'import "./plugin.js";')
+      await fs.writeFile(path.join(dirname, 'init.esm.js'), moduleInitSource)
       context = createContext({ dirname })
       server = new RevealServer(context)
       const response = await request(server.app).get('/')
@@ -344,17 +346,22 @@ describe('RevealServer', () => {
     const exporter = jest.fn(async () => {
       throw new Error('boom')
     })
-    const middleware = (server as any).exportMiddleware(exporter, () => true) as (req: any, res: any, next: () => void) => Promise<void>
+    type TestRequest = { originalUrl: string }
+    type TestResponse = { write: (chunk: string) => boolean; end: (chunk: string) => boolean | Promise<boolean> }
+    type ExportMiddleware = (req: TestRequest, res: TestResponse, next: () => void) => Promise<void>
+    const middleware = (server as unknown as {
+      exportMiddleware: (exportFn: typeof exporter, isInExport: () => boolean) => ExportMiddleware
+    }).exportMiddleware(exporter, () => true)
     const next = jest.fn()
     const req = { originalUrl: '/index.html?x=1' }
-    const res = {
-      write: jest.fn(() => true),
-      end: jest.fn(() => true),
+    const res: TestResponse = {
+      write: jest.fn((_chunk: string) => true),
+      end: jest.fn((_chunk: string) => true),
     }
 
     await middleware(req, res, next)
-    await (res.write as any)('<html>')
-    await (res.end as any)('</html>')
+    await res.write('<html>')
+    await res.end('</html>')
 
     expect(next).toHaveBeenCalledTimes(1)
     expect(exporter).toHaveBeenCalledTimes(1)
