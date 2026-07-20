@@ -683,7 +683,7 @@
     "markdown-it-attribution": "^0.1.4",
     "markdown-it-attrs": "^4.3.1",
     "markdown-it-block-embed": "0.0.3",
-    "markdown-it-deflist": "^3.0.0",
+    "markdown-it-deflist": "^3.0.1",
     "markdown-it-div": "^1.1.0",
     "markdown-it-fontawesome": "^0.3.0",
     "markdown-it-iframe": "^1.0.0",
@@ -697,7 +697,7 @@
     "markdown-it-sub": "^2.0.0",
     "markdown-it-sup": "^2.0.0",
     "markdown-it-task-lists": "^2.1.1",
-    "morgan": "^1.10.1",
+    "morgan": "^1.11.0",
     "open": "^11.0.0",
     "pako": "^2.1.0",
     "prettier": "^3.6.2"
