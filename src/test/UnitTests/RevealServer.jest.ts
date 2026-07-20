@@ -355,8 +355,8 @@ describe('RevealServer', () => {
     const next = jest.fn()
     const req = { originalUrl: '/index.html?x=1' }
     const res: TestResponse = {
-      write: jest.fn((_chunk: string) => true),
-      end: jest.fn((_chunk: string) => true),
+      write: jest.fn((chunk: string) => typeof chunk === 'string'),
+      end: jest.fn((chunk: string) => typeof chunk === 'string'),
     }
 
     await middleware(req, res, next)
