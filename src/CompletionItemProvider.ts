@@ -83,20 +83,12 @@ export const createCompletionItems = (configDesc: ConfigurationDescription[]) =>
       }
       completionItem.documentation = new MarkdownString(documentationLines.filter(Boolean).join('\n\n'))
 
-      switch (type) {
-        case 'string':
-          if (values && values.length > 0) {
-            enumValueProviders.push(enumValueProvider(label, values))
-          }
-          break
-        case 'boolean':
-          enumValueProviders.push(enumValueProvider(label, ['true', 'false']))
-          break
-        case 'number':
-        case 'array':
-        case 'object':
-        case 'null':
-          break
+      const types = Array.isArray(type) ? type : [type]
+      if (types.includes('boolean')) {
+        enumValueProviders.push(enumValueProvider(label, ['true', 'false']))
+      }
+      if (types.includes('string') && values && values.length > 0) {
+        enumValueProviders.push(enumValueProvider(label, values))
       }
 
       completionItem.commitCharacters = [' ']
