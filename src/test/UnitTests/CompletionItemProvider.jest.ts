@@ -1,5 +1,3 @@
-/* eslint-disable jest/no-export */
-/* eslint-disable @typescript-eslint/no-namespace */
 import { CancellationToken, CompletionContext, CompletionItem, EndOfLine, MarkdownString, Position, Range, TextDocument, TextLine, Uri } from "vscode";
 import completionProviderFactory, { createCompletionItems, createCompletionItemsProvider, enumValueProvider } from "../../CompletionItemProvider"
 import { ConfigurationDescription } from '../../Configuration'

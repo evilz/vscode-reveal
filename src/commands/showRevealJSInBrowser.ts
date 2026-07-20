@@ -9,7 +9,8 @@ export type SHOW_REVEALJS_PRESENTER_VIEW = typeof SHOW_REVEALJS_PRESENTER_VIEW
 export const toPresenterViewUrl = (uri: string) => {
   const [baseUri, hash = ''] = uri.split('#')
   const separator = baseUri.includes('?') ? '&' : '?'
-  return `${baseUri}${separator}notes=1${hash ? `#${hash}` : ''}`
+  const hashSuffix = hash ? `#${hash}` : ''
+  return `${baseUri}${separator}notes=1${hashSuffix}`
 }
 
 export const showRevealJSInBrowser = (getUri: () => string | undefined, getBrowserPath?: () => string | null | undefined) => async () => {
