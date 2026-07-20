@@ -294,6 +294,12 @@
             "boolean",
             "object"
           ],
+          "additionalProperties": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "default": true,
           "description": "Enable keyboard shortcuts for navigation, or provide a Reveal.js keyboard mapping object"
         },

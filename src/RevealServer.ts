@@ -11,6 +11,11 @@ import { Disposable } from './dispose'
 import { RevealContext } from './RevealContext'
 import { EventEmitter } from 'vscode'
 
+export const jsonForScript = (value: unknown): string => JSON.stringify(value)
+  .replace(/</g, '\\u003c')
+  .replace(/\u2028/g, '\\u2028')
+  .replace(/\u2029/g, '\\u2029')
+
 /** Http server to serve reveal presentation */
 export class RevealServer extends Disposable {
   public readonly app = express()
@@ -140,7 +145,7 @@ export class RevealServer extends Disposable {
           html: markdownit.render(s.text),
           children: s.verticalChildren.map((c) => ({ ...c, html: markdownit.render(c.text) })),
         }))
-        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init, initModule })
+        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init, initModule, jsonForScript })
       }
     })
 

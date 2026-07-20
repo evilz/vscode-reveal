@@ -201,8 +201,9 @@ describe('RevealServer', () => {
     const context = createContext({
       configuration: {
         keyboard: {
-          66: 'Reveal.togglePause',
+          66: 'togglePause',
           191: null,
+          192: '</script>\u2028\u2029',
         },
       },
     })
@@ -210,7 +211,8 @@ describe('RevealServer', () => {
 
     const response = await request(server.app).get('/')
 
-    expect(response.text).toContain('keyboard: {"66":"Reveal.togglePause","191":null}')
+    expect(response.text).toContain('keyboard: {"66":"togglePause","191":null,"192":"\\u003c/script>\\u2028\\u2029"}')
+    expect(response.text).not.toContain('"192":"</script>')
 
     server.dispose()
     context.dispose()
