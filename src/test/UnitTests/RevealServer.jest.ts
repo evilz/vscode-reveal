@@ -11,13 +11,10 @@ import * as os from 'os'
 
 const localAssetPattern = /(?:href|src)="(libs\/[^"]+)"/g
 const collectLocalAssets = (html: string) => [...html.matchAll(localAssetPattern)].map((match) => match[1])
+const tempDirectoryPrefix = 'vscode-reveal-'
+const moduleInitSource = 'import "./plugin.js";'
 
-const createContext = (options?: {
-  inExport?: boolean
-  dirname?: string
-  onExportError?: (error: unknown) => void
-  configuration?: Partial<Configuration> & Record<string, unknown>
-}) => {
+const createContext = (options?: { inExport?: boolean; dirname?: string; onExportError?: (error: unknown) => void; configuration?: Partial<Configuration> & Record<string, unknown> }) => {
   const logger = new Logger(() => undefined, LogLevel.Error)
   const inExport = options?.inExport ?? false
   const fileName = path.join(options?.dirname ?? os.tmpdir(), 'deck.md')
@@ -84,7 +81,30 @@ describe('RevealServer', () => {
 
     expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/markdown.js')
     expect(response.text).not.toContain('libs/reveal.js/6.0.1/plugin/markdown/markdown.js')
+    expect(response.text).not.toContain('maxcdn.bootstrapcdn.com/font-awesome')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/menu/font-awesome/css/all.css')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/menu/font-awesome/css/v4-shims.min.css')
     expect(missingAssets).toEqual([])
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('renders formatted slide numbers and PDF export options into reveal config', async () => {
+    const context = createContext({
+      configuration: {
+        slideNumber: 'h/v',
+        pdfSeparateFragments: false,
+        pdfMaxPagesPerSlide: 1,
+      },
+    })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('slideNumber: "h/v",')
+    expect(response.text).toContain('pdfMaxPagesPerSlide: 1,')
+    expect(response.text).toContain('pdfSeparateFragments: false,')
 
     server.dispose()
     context.dispose()
@@ -199,6 +219,61 @@ describe('RevealServer', () => {
     context.dispose()
   })
 
+  test('falls back safely for invalid PDF export option values', async () => {
+    const configuration = {
+      pdfMaxPagesPerSlide: '12px',
+      pdfSeparateFragments: 'false',
+      pdfPageHeightOffset: 'invalid',
+    } as unknown as Partial<Configuration> & Record<string, unknown>
+    const context = createContext({ configuration })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('pdfMaxPagesPerSlide: Number.POSITIVE_INFINITY')
+    expect(response.text).toContain('pdfSeparateFragments: false')
+    expect(response.text).toContain('pdfPageHeightOffset: -1')
+    expect(response.text).not.toContain('pdfMaxPagesPerSlide: 12px')
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('renders slide number format strings as script-safe JavaScript strings', async () => {
+    const context = createContext({ configuration: { slideNumber: 'h/v</script>\u2028\u2029' } })
+
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('slideNumber: "h/v\\u003c/script>\\u2028\\u2029"')
+    expect(response.text).not.toContain('slideNumber: "h/v</script>')
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('renders keyboard object configuration as JavaScript object', async () => {
+    const context = createContext({
+      configuration: {
+        keyboard: {
+          66: 'togglePause',
+          191: null,
+          192: '</script>\u2028\u2029',
+        },
+      },
+    })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('keyboard: {"66":"togglePause","191":null,"192":"\\u003c/script>\\u2028\\u2029"}')
+    expect(response.text).not.toContain('"192":"</script>')
+
+    server.dispose()
+    context.dispose()
+  })
+
   test('serves rendered bundled assets through static middleware', async () => {
     const context = createContext()
     const server = new RevealServer(context)
@@ -241,6 +316,7 @@ describe('RevealServer', () => {
       '/libs/reveal.js/6.0.1/plugin/animate/plugin.js',
       '/libs/reveal.js/6.0.1/plugin/menu/menu.css',
       '/libs/reveal.js/6.0.1/plugin/menu/font-awesome/css/all.css',
+      '/libs/reveal.js/6.0.1/plugin/menu/font-awesome/css/v4-shims.min.css',
       '/libs/reveal.js/6.0.1/plugin/chalkboard/img/blackboard.png',
       '/libs/reveal.js/6.0.1/plugin/chalkboard/img/boardmarker-black.png',
       '/libs/reveal.js/6.0.1/plugin/chalkboard/img/chalk-white.png',
@@ -256,19 +332,63 @@ describe('RevealServer', () => {
   })
 
   test('loads init.js content when present in markdown folder', async () => {
-    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), 'vscode-reveal-'))
-    const initPath = path.join(dirname, 'init.js')
-    await fs.writeFile(initPath, 'window.testInitLoaded = true;')
-    const context = createContext({ dirname })
-    const server = new RevealServer(context)
+    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), tempDirectoryPrefix))
+    let context: RevealContext | undefined
+    let server: RevealServer | undefined
     try {
+      const initPath = path.join(dirname, 'init.js')
+      await fs.writeFile(initPath, 'window.testInitLoaded = true;')
+      context = createContext({ dirname })
+      server = new RevealServer(context)
       const response = await request(server.app).get('/')
 
       expect(response.status).toEqual(200)
       expect(response.text).toContain('window.testInitLoaded = true;')
     } finally {
-      server.dispose()
-      context.dispose()
+      server?.dispose()
+      context?.dispose()
+      await fs.rm(dirname, { recursive: true, force: true })
+    }
+  })
+
+  test('loads init.esm.js as a module when present in markdown folder', async () => {
+    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), tempDirectoryPrefix))
+    let context: RevealContext | undefined
+    let server: RevealServer | undefined
+    try {
+      const initPath = path.join(dirname, 'init.esm.js')
+      await fs.writeFile(initPath, moduleInitSource)
+      context = createContext({ dirname })
+      server = new RevealServer(context)
+      const response = await request(server.app).get('/')
+
+      expect(response.status).toEqual(200)
+      expect(response.text).toContain('<script type="module" src="init.esm.js"></script>')
+      expect(response.text).not.toContain(moduleInitSource)
+    } finally {
+      server?.dispose()
+      context?.dispose()
+      await fs.rm(dirname, { recursive: true, force: true })
+    }
+  })
+
+  test('prefers init.esm.js over init.js when both are present', async () => {
+    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), tempDirectoryPrefix))
+    let context: RevealContext | undefined
+    let server: RevealServer | undefined
+    try {
+      await fs.writeFile(path.join(dirname, 'init.js'), 'window.legacyInitLoaded = true;')
+      await fs.writeFile(path.join(dirname, 'init.esm.js'), moduleInitSource)
+      context = createContext({ dirname })
+      server = new RevealServer(context)
+      const response = await request(server.app).get('/')
+
+      expect(response.status).toEqual(200)
+      expect(response.text).toContain('<script type="module" src="init.esm.js"></script>')
+      expect(response.text).not.toContain('window.legacyInitLoaded = true;')
+    } finally {
+      server?.dispose()
+      context?.dispose()
       await fs.rm(dirname, { recursive: true, force: true })
     }
   })
@@ -280,21 +400,22 @@ describe('RevealServer', () => {
     const exporter = jest.fn(async () => {
       throw new Error('boom')
     })
-    const middleware = (server as any).exportMiddleware(exporter, () => true) as (
-      req: any,
-      res: any,
-      next: () => void
-    ) => Promise<void>
+    type TestRequest = { originalUrl: string }
+    type TestResponse = { write: (chunk: string) => boolean; end: (chunk: string) => boolean | Promise<boolean> }
+    type ExportMiddleware = (req: TestRequest, res: TestResponse, next: () => void) => Promise<void>
+    const middleware = (server as unknown as {
+      exportMiddleware: (exportFn: typeof exporter, isInExport: () => boolean) => ExportMiddleware
+    }).exportMiddleware(exporter, () => true)
     const next = jest.fn()
     const req = { originalUrl: '/index.html?x=1' }
-    const res = {
-      write: jest.fn(() => true),
-      end: jest.fn(() => true),
+    const res: TestResponse = {
+      write: jest.fn((chunk: string) => typeof chunk === 'string'),
+      end: jest.fn((chunk: string) => typeof chunk === 'string'),
     }
 
     await middleware(req, res, next)
-    await (res.write as any)('<html>')
-    await (res.end as any)('</html>')
+    await res.write('<html>')
+    await res.end('</html>')
 
     expect(next).toHaveBeenCalledTimes(1)
     expect(exporter).toHaveBeenCalledTimes(1)
