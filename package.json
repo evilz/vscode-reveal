@@ -282,7 +282,7 @@
             "string"
           ],
           "default": false,
-          "description": "Display the page number of the current slide. Use true/false or a Reveal.js slide number format such as \"h/v\"."
+          "description": "Display the page number of the current slide. Use a Reveal.js format string such as h/v, h.v, c, or c/t to control formatting."
         },
         "revealjs.history": {
           "type": "boolean",
@@ -290,9 +290,18 @@
           "description": "Push each slide change to the browser history"
         },
         "revealjs.keyboard": {
-          "type": "boolean",
+          "type": [
+            "boolean",
+            "object"
+          ],
+          "additionalProperties": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
           "default": true,
-          "description": "Enable keyboard shortcuts for navigation"
+          "description": "Enable keyboard shortcuts for navigation, or provide a Reveal.js keyboard mapping object"
         },
         "revealjs.overview": {
           "type": "boolean",
@@ -423,6 +432,11 @@
           "default": true,
           "description": "Print each fragment step on a separate PDF page."
         },
+        "revealjs.pdfPageHeightOffset": {
+          "type": "number",
+          "default": -1,
+          "description": "Pixel offset applied to PDF page height calculations"
+        },
         "revealjs.viewDistance": {
           "type": "number",
           "default": 3,
@@ -522,6 +536,14 @@
           "type": "string",
           "default": "Reveal JS presentation",
           "description": "Title of your presentation"
+        },
+        "revealjs.htmlFragment": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "description": "Local HTML fragment file to inject into the rendered presentation body, resolved relative to the markdown file"
         },
         "revealjs.css": {
           "type": "array",
@@ -674,14 +696,14 @@
   },
   "dependencies": {
     "cors": "^2.8.6",
-    "ejs": "^5.0.2",
+    "ejs": "^6.0.1",
     "express": "^5.2.1",
     "front-matter": "4.0.2",
     "fs-jetpack": "^5.1.0",
     "markdown-it": "^14.2.0",
     "markdown-it-abbr": "^2.0.0",
     "markdown-it-attribution": "^0.1.4",
-    "markdown-it-attrs": "^4.3.1",
+    "markdown-it-attrs": "^5.0.0",
     "markdown-it-block-embed": "0.0.3",
     "markdown-it-deflist": "^3.0.1",
     "markdown-it-div": "^1.1.0",
@@ -700,7 +722,7 @@
     "morgan": "^1.11.0",
     "open": "^11.0.0",
     "pako": "^2.1.0",
-    "prettier": "^3.6.2"
+    "prettier": "^3.8.3"
   },
   "devDependencies": {
     "@alex_neo/jest-expect-message": "^1.0.5",
@@ -731,6 +753,6 @@
     "source-map-support": "^0.5.21",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.11",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   }
 }

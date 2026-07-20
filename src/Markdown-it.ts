@@ -1,6 +1,6 @@
 import attrs from 'markdown-it-attrs'
 import md from 'markdown-it'
-import type { Token } from 'markdown-it'
+import type Token from 'markdown-it/lib/token.mjs'
 import blockEmbed from 'markdown-it-block-embed'
 import multimdTable from 'markdown-it-multimd-table'
 import taskLists from 'markdown-it-task-lists'
