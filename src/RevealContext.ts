@@ -1,4 +1,5 @@
 import { FrontMatterResult } from 'front-matter'
+import fs from 'fs'
 import path from 'path'
 import { isDeepStrictEqual } from 'util'
 import { EventEmitter, Position, Range, Selection, TextDocument, TextEditor, Uri } from 'vscode'
@@ -79,6 +80,39 @@ export class RevealContext extends Disposable {
     return resolvedPath
   }
 
+  public resolvePresentationFilePath(filePath: string | null | undefined): string | null {
+    if (!filePath) return null
+
+    const trimmed = filePath.trim()
+    if (!trimmed || path.isAbsolute(trimmed)) return null
+
+    const basePath = path.resolve(this.dirname)
+    const resolvedPath = path.resolve(basePath, trimmed)
+    const relativePath = path.relative(basePath, resolvedPath)
+    if (relativePath === '..' || relativePath.startsWith(`..${path.sep}`) || path.isAbsolute(relativePath)) {
+      return null
+    }
+
+    try {
+      const realBasePath = fs.realpathSync(basePath)
+      let existingPath = resolvedPath
+      while (!fs.existsSync(existingPath)) {
+        const parentPath = path.dirname(existingPath)
+        if (parentPath === existingPath) return null
+        existingPath = parentPath
+      }
+
+      const realExistingPath = fs.realpathSync(existingPath)
+      const realRelativePath = path.relative(realBasePath, realExistingPath)
+      if (realRelativePath === '..' || realRelativePath.startsWith(`..${path.sep}`) || path.isAbsolute(realRelativePath)) {
+        return null
+      }
+      return path.resolve(realExistingPath, path.relative(existingPath, resolvedPath))
+    } catch {
+      return null
+    }
+  }
+
   public getReferencedAssetPaths(): string[] {
     const paths = new Set<string>()
     paths.add(path.join(this.dirname, 'init.js'))
@@ -87,6 +121,11 @@ export class RevealContext extends Disposable {
     const customThemePath = this.resolveLocalAssetPath(this.configuration.customTheme, true)
     if (customThemePath) {
       paths.add(customThemePath)
+    }
+
+    const htmlFragmentPath = this.resolvePresentationFilePath(this.configuration.htmlFragment)
+    if (htmlFragmentPath) {
+      paths.add(htmlFragmentPath)
     }
 
     const cssAssetPaths = Array.isArray(this.configuration.css) ? this.configuration.css : []

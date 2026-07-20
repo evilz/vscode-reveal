@@ -537,6 +537,14 @@
           "default": "Reveal JS presentation",
           "description": "Title of your presentation"
         },
+        "revealjs.htmlFragment": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "description": "Local HTML fragment file to inject into the rendered presentation body, resolved relative to the markdown file"
+        },
         "revealjs.css": {
           "type": "array",
           "default": [],

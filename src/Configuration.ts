@@ -79,6 +79,7 @@ export interface IRevealOptions {
   logoImg: string | null
   description: string
   author: string
+  htmlFragment: string | null
 
   enableMenu: boolean
   enableChalkboard: boolean
@@ -111,6 +112,7 @@ export const defaultConfiguration: Configuration = {
   logoImg: null,
   description: '',
   author: '',
+  htmlFragment: null,
   notesSeparator: 'note:',
   separator: '^\\r?\\n---\\r?\\n$',
   verticalSeparator: '^\\r?\\n--\\r?\\n$',

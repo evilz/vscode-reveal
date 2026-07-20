@@ -14,8 +14,8 @@ const collectLocalAssets = (html: string) => [...html.matchAll(localAssetPattern
 const tempDirectoryPrefix = 'vscode-reveal-'
 const moduleInitSource = 'import "./plugin.js";'
 
-const createContext = (options?: { inExport?: boolean; dirname?: string; onExportError?: (error: unknown) => void; configuration?: Partial<Configuration> & Record<string, unknown> }) => {
-  const logger = new Logger(() => undefined, LogLevel.Error)
+const createContext = (options?: { inExport?: boolean; dirname?: string; onExportError?: (error: unknown) => void; onLog?: (message: string) => void; configuration?: Partial<Configuration> & Record<string, unknown> }) => {
+  const logger = new Logger(options?.onLog ?? (() => undefined), LogLevel.Error)
   const inExport = options?.inExport ?? false
   const fileName = path.join(options?.dirname ?? os.tmpdir(), 'deck.md')
   return new RevealContext(
@@ -389,6 +389,71 @@ describe('RevealServer', () => {
     } finally {
       server?.dispose()
       context?.dispose()
+      await fs.rm(dirname, { recursive: true, force: true })
+    }
+  })
+
+  test('injects configured local HTML fragment from markdown folder', async () => {
+    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), tempDirectoryPrefix))
+    const fragmentPath = path.join(dirname, 'fragment.html')
+    await fs.writeFile(fragmentPath, '<video id="background-video" src="intro.mp4"></video>')
+    const context = createContext({ dirname, configuration: { htmlFragment: 'fragment.html' } })
+    const server = new RevealServer(context)
+    try {
+      const response = await request(server.app).get('/')
+
+      expect(response.status).toEqual(200)
+      expect(response.text).toContain('<video id="background-video" src="intro.mp4"></video>')
+    } finally {
+      server.dispose()
+      context.dispose()
+      await fs.rm(dirname, { recursive: true, force: true })
+    }
+  })
+
+  test('rejects HTML fragment paths outside the markdown folder', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), tempDirectoryPrefix))
+    const dirname = path.join(root, 'slides')
+    const secret = '<p>outside secret</p>'
+    const logs: string[] = []
+    await fs.mkdir(dirname)
+    await fs.writeFile(path.join(root, 'secret.html'), secret)
+    const context = createContext({
+      dirname,
+      configuration: { htmlFragment: '../secret.html' },
+      onLog: (message) => logs.push(message),
+    })
+    const server = new RevealServer(context)
+    try {
+      const response = await request(server.app).get('/')
+
+      expect(response.status).toEqual(200)
+      expect(response.text).not.toContain(secret)
+      expect(logs.some((message) => message.includes('HTML fragment path must stay inside the presentation directory'))).toBe(true)
+    } finally {
+      server.dispose()
+      context.dispose()
+      await fs.rm(root, { recursive: true, force: true })
+    }
+  })
+
+  test('logs a missing HTML fragment without failing the presentation', async () => {
+    const dirname = await fs.mkdtemp(path.join(os.tmpdir(), tempDirectoryPrefix))
+    const logs: string[] = []
+    const context = createContext({
+      dirname,
+      configuration: { htmlFragment: 'missing.html' },
+      onLog: (message) => logs.push(message),
+    })
+    const server = new RevealServer(context)
+    try {
+      const response = await request(server.app).get('/')
+
+      expect(response.status).toEqual(200)
+      expect(logs.some((message) => message.includes('HTML fragment file not found or unreadable'))).toBe(true)
+    } finally {
+      server.dispose()
+      context.dispose()
       await fs.rm(dirname, { recursive: true, force: true })
     }
   })
