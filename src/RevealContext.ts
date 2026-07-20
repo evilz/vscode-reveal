@@ -91,11 +91,10 @@ export class RevealContext extends Disposable {
 
     const [cleanedPath] = trimmed.split(/[?#]/)
     const baseDir = this.dirname
-    const resolvedPath = path.isAbsolute(cleanedPath)
-      ? cleanedPath
-      : baseDir
-        ? path.resolve(baseDir, cleanedPath)
-        : null
+    let resolvedPath: string | null = cleanedPath
+    if (!path.isAbsolute(cleanedPath)) {
+      resolvedPath = baseDir ? path.resolve(baseDir, cleanedPath) : null
+    }
     if (!resolvedPath) return null
     if (appendCssIfMissing && !path.extname(resolvedPath)) {
       return `${resolvedPath}.css`

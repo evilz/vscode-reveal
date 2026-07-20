@@ -726,6 +726,7 @@
   },
   "devDependencies": {
     "@alex_neo/jest-expect-message": "^1.0.5",
+    "@eslint/js": "^10.0.1",
     "@types/glob": "^9.0.0",
     "@types/jest": "^30.0.0",
     "@types/jest-expect-message": "^1.1.0",

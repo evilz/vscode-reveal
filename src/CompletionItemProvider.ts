@@ -51,7 +51,7 @@ export const createCompletionItems = (configDesc: ConfigurationDescription[]) =>
   const formatValue = (value: unknown) => {
     try {
       const jsonValue = JSON.stringify(value)
-      if (jsonValue !== undefined) {
+      if (typeof jsonValue === 'string') {
         return jsonValue
       }
     } catch {
