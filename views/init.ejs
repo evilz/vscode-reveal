@@ -1,4 +1,6 @@
-<% if(init) { %>
+<% if(init && initModule) { %>
+<script type="module" src="<%= init %>"></script>
+<%}else if(init) { %>
 <script>
   <%- init %>
 </script>
@@ -46,12 +48,12 @@
       controlsLayout: '<%= controlsLayout %>',
       controlsBackArrows: '<%= controlsBackArrows %>',
       progress: <%= progress %>,
-      slideNumber: <%- JSON.stringify(slideNumber) %>,
+      slideNumber: <%- jsonForScript(slideNumber) %>,
       //#showSlideNumber "all" "print" "speaker"
       hash: true, //# hash: false,
       //# respondToHashChanges: true,
       //# history: false,
-      keyboard: <%= keyboard %>,
+      keyboard: <%- jsonForScript(keyboard) %>,
       //#keyboardCondition: null,
       overview: <%= overview %>,
       center: <%= center %>,
@@ -86,9 +88,9 @@
       transition: '<%= transition %>',
       transitionSpeed: '<%= transitionSpeed %>',
       backgroundTransition: '<%= backgroundTransition %>',
-      pdfMaxPagesPerSlide: <%= pdfMaxPagesPerSlide === null || typeof pdfMaxPagesPerSlide === 'undefined' ? 'Number.POSITIVE_INFINITY' : pdfMaxPagesPerSlide %>,
-      pdfSeparateFragments: <%= pdfSeparateFragments %>,
-      //#pdfPageHeightOffset: -1,
+      pdfMaxPagesPerSlide: <%= pdfMaxPagesPerSlide === null || typeof pdfMaxPagesPerSlide === 'undefined' || !Number.isFinite(Number(pdfMaxPagesPerSlide)) ? 'Number.POSITIVE_INFINITY' : Number(pdfMaxPagesPerSlide) %>,
+      pdfSeparateFragments: <%= pdfSeparateFragments !== false && pdfSeparateFragments !== 'false' %>,
+      pdfPageHeightOffset: <%= pdfPageHeightOffset === null || typeof pdfPageHeightOffset === 'undefined' || !Number.isFinite(Number(pdfPageHeightOffset)) ? -1 : Number(pdfPageHeightOffset) %>,
       viewDistance: <%= viewDistance %>,
       //#mobileViewDistance: 2,
       display: '<%= display %>',

@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-empty-interface */
-/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-namespace */
 
 export enum CompletionItemKind {
@@ -159,7 +157,6 @@ export class EventEmitter<T> {
     };
   }
   fire(data: T) { this.#listener(data) }
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   dispose() { }
 }
 

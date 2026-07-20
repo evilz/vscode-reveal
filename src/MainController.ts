@@ -206,7 +206,11 @@ export default class MainController {
       this.exportState = { resolve, reject, path: exportPath }
     })
 
-    this.webViewPane ? this.refreshWebViewPane() : await commands.executeCommand(SHOW_REVEALJS)
+    if (this.webViewPane) {
+      this.refreshWebViewPane()
+    } else {
+      await commands.executeCommand(SHOW_REVEALJS)
+    }
 
     return promise
   }

@@ -38,7 +38,7 @@ export interface IRevealOptions {
   progress: boolean
   slideNumber: boolean | string
   history: boolean
-  keyboard: boolean
+  keyboard: boolean | Record<string, string | null>
   overview: boolean
   center: boolean
   touch: boolean
@@ -60,6 +60,7 @@ export interface IRevealOptions {
   backgroundTransition: transitions
   pdfMaxPagesPerSlide: number | null
   pdfSeparateFragments: boolean
+  pdfPageHeightOffset: number
   viewDistance: number
 
   width: number | string,
@@ -78,6 +79,7 @@ export interface IRevealOptions {
   logoImg: string | null
   description: string
   author: string
+  htmlFragment: string | null
 
   enableMenu: boolean
   enableChalkboard: boolean
@@ -110,6 +112,7 @@ export const defaultConfiguration: Configuration = {
   logoImg: null,
   description: '',
   author: '',
+  htmlFragment: null,
   notesSeparator: 'note:',
   separator: '^\\r?\\n---\\r?\\n$',
   verticalSeparator: '^\\r?\\n--\\r?\\n$',
@@ -152,6 +155,7 @@ export const defaultConfiguration: Configuration = {
   backgroundTransition: 'fade',
   pdfMaxPagesPerSlide: null,
   pdfSeparateFragments: true,
+  pdfPageHeightOffset: -1,
   viewDistance: 3,
 
   width: 960,
