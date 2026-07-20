@@ -86,12 +86,15 @@ export class RevealServer extends Disposable {
   }
 
   private loadInitScript(): { init: string | null; initModule: boolean } {
-    const initModulePath = path.join(this.context.dirname, 'init.esm.js')
+    const baseDir = this.context.dirname
+    if (!baseDir) return { init: null, initModule: false }
+
+    const initModulePath = path.join(baseDir, 'init.esm.js')
     if (fs.existsSync(initModulePath)) {
       return { init: 'init.esm.js', initModule: true }
     }
 
-    const initPath = path.join(this.context.dirname, 'init.js')
+    const initPath = path.join(baseDir, 'init.js')
     return fs.existsSync(initPath)
       ? { init: fs.readFileSync(initPath, 'utf8'), initModule: false }
       : { init: null, initModule: false }
@@ -183,10 +186,9 @@ export class RevealServer extends Disposable {
 
   /* A middleware function that is used to export the presentation to a folder. */
   private readonly exportMiddleware = (exportfn: (opts: IExportOptions) => Promise<void>, isInExport: () => boolean) => {
-    const { exportPath } = this.context
-
     return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       if (isInExport()) {
+        const { exportPath } = this.context
         this.context.logger.debug('in export')
         const oldWrite = res.write
         const oldEnd = res.end
