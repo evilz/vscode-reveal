@@ -199,6 +199,46 @@ describe('RevealServer', () => {
     context.dispose()
   })
 
+  test('renders configured PDF export options in Reveal initialization', async () => {
+    const context = createContext({
+      configuration: {
+        pdfMaxPagesPerSlide: 1,
+        pdfSeparateFragments: false,
+        pdfPageHeightOffset: 12,
+      },
+    })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('pdfMaxPagesPerSlide: 1')
+    expect(response.text).toContain('pdfSeparateFragments: false')
+    expect(response.text).toContain('pdfPageHeightOffset: 12')
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('falls back safely for invalid PDF export option values', async () => {
+    const configuration = {
+      pdfMaxPagesPerSlide: '12px',
+      pdfSeparateFragments: 'false',
+      pdfPageHeightOffset: 'invalid',
+    } as unknown as Partial<Configuration> & Record<string, unknown>
+    const context = createContext({ configuration })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('pdfMaxPagesPerSlide: Number.POSITIVE_INFINITY')
+    expect(response.text).toContain('pdfSeparateFragments: false')
+    expect(response.text).toContain('pdfPageHeightOffset: -1')
+    expect(response.text).not.toContain('pdfMaxPagesPerSlide: 12px')
+
+    server.dispose()
+    context.dispose()
+  })
+
   test('renders slide number format strings as script-safe JavaScript strings', async () => {
     const context = createContext({ configuration: { slideNumber: 'h/v</script>\u2028\u2029' } })
 

@@ -432,6 +432,11 @@
           "default": true,
           "description": "Print each fragment step on a separate PDF page."
         },
+        "revealjs.pdfPageHeightOffset": {
+          "type": "number",
+          "default": -1,
+          "description": "Pixel offset applied to PDF page height calculations"
+        },
         "revealjs.viewDistance": {
           "type": "number",
           "default": 3,
