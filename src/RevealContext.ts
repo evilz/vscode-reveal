@@ -30,7 +30,7 @@ export class RevealContext extends Disposable {
     public getConfiguration: () => Configuration,
     public extensionPath: string,
     public isInExport: () => boolean,
-    public onExportError: (error: unknown) => void = () => {}
+    public onExportError: (error: unknown) => void = () => {},
   ) {
     super()
     this.editor = editor
@@ -61,9 +61,7 @@ export class RevealContext extends Disposable {
   }
 
   public get exportPath(): string {
-    return path.isAbsolute(this.configuration.exportHTMLPath)
-      ? this.configuration.exportHTMLPath
-      : path.join(this.dirname, this.configuration.exportHTMLPath)
+    return path.isAbsolute(this.configuration.exportHTMLPath) ? this.configuration.exportHTMLPath : path.join(this.dirname, this.configuration.exportHTMLPath)
   }
 
   public resolveLocalAssetPath(assetPath: string | null | undefined, appendCssIfMissing = false): string | null {
@@ -84,6 +82,7 @@ export class RevealContext extends Disposable {
   public getReferencedAssetPaths(): string[] {
     const paths = new Set<string>()
     paths.add(path.join(this.dirname, 'init.js'))
+    paths.add(path.join(this.dirname, 'init.esm.js'))
 
     const customThemePath = this.resolveLocalAssetPath(this.configuration.customTheme, true)
     if (customThemePath) {
@@ -121,9 +120,7 @@ export class RevealContext extends Disposable {
     const { slides } = slideParser.parse(this.getText(range), this.configuration, false)
     const currentSlide = slides[slides.length - 1]
 
-    this.position = currentSlide.verticalChildren
-      ? { horizontal: slides.length - 1, vertical: currentSlide.verticalChildren.length }
-      : { horizontal: slides.length - 1, vertical: 0 }
+    this.position = currentSlide.verticalChildren ? { horizontal: slides.length - 1, vertical: currentSlide.verticalChildren.length } : { horizontal: slides.length - 1, vertical: 0 }
   }
 
   is(document: TextDocument) {
@@ -131,8 +128,7 @@ export class RevealContext extends Disposable {
   }
 
   goToSlide(topindex: number, verticalIndex: number) {
-    const linesCount =
-      countLinesToSlide(this.slides, topindex, verticalIndex) + (this.frontmatter?.frontmatter ? this.frontmatter.bodyBegin : 0)
+    const linesCount = countLinesToSlide(this.slides, topindex, verticalIndex) + (this.frontmatter?.frontmatter ? this.frontmatter.bodyBegin : 0)
 
     const position = new Position(linesCount, 0)
     this.editor.selection = new Selection(position, position) //selections = [new Selection(position, position)]
@@ -182,7 +178,7 @@ export class RevealContexts {
     private readonly isInExport: () => boolean,
     private readonly onExportError: (error: unknown) => void,
     private readonly onServerStart: (uri: string, context: RevealContext) => void,
-    private readonly onServerStop: (context: RevealContext) => void
+    private readonly onServerStop: (context: RevealContext) => void,
   ) {
     this.logger = logger
   }
