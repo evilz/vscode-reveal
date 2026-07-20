@@ -6,13 +6,12 @@ The release workflow publishes one VSIX artifact to GitHub Releases, the Visual 
 
 1. Triage or explicitly defer open security and compatibility pull requests.
 2. Move the relevant entries under `Unreleased` in `CHANGELOG.md` to a section matching the intended semantic version.
-3. Set the same version in `package.json` and `package-lock.json`.
+3. Run `npm version <version> --no-git-tag-version` to update the version in both `package.json` and `package-lock.json` consistently.
 4. Run:
 
    ```bash
    npm ci
    npm run coverage
-   npm run vscode:prepublish
    npx @vscode/vsce package --no-dependencies
    ```
 
