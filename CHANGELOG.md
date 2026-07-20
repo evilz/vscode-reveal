@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Release process
+- Added a safe-by-default release dry run, VSIX content verification, and a maintainer release checklist.
+
 ### Changed
 - Updated dependencies to latest compatible versions
   - Express 5.0.1 → 5.1.0
