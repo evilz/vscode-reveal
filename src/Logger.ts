@@ -50,7 +50,7 @@ export default class Logger {
     return this.logLevel
   }
   public set LogLevel(level: LogLevel) {
-    if (level !== null && this.logLevel !== level) {
+    if (this.logLevel !== level) {
       this.logLevel = level
       this.info(`log level changed to ${level} `)
     }

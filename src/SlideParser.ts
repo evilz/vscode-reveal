@@ -17,23 +17,27 @@ const trimFirstLastEmptyLine = (s: string): string => {
 
 
 const findSlideAttributes = (text: string) => {
-  const regex = /<!--[ ]*.slide:(.*)[ ]*-->/gm
-  const m = regex.exec(text)
-  return m === null
-    ? ''
-    : m[1].trim()
+  let commentStart = text.indexOf('<!--')
+  while (commentStart >= 0) {
+    const commentEnd = text.indexOf('-->', commentStart + 4)
+    if (commentEnd < 0) return ''
+
+    const comment = text.slice(commentStart + 4, commentEnd).trim()
+    if (comment.startsWith('.slide:')) {
+      return comment.slice('.slide:'.length).trim()
+    }
+    commentStart = text.indexOf('<!--', commentEnd + 3)
+  }
+  return ''
 }
 
 const findTitle = (text: string) => {
-  // Rem : ugly but not so bad ?
   const lines = text
-    .replace(/^[ ]*/gm, '') // trim space
-    .replace(/<!-- .slide:.* -->/gm, '') // remove slide property
-    .replace(/^#+/gm, '') // remove title markup
-    .replace(/\r\n/g, '\n') // nomalize line return
-    .replace(/^\s*\n/gm, '') // remove whitespace lines
-    .split('\n')
-  return lines[0].trim()
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(line => line && !/^<!-- +\.slide:.* -->$/.test(line))
+    .map(line => line.replace(/^#+/, '').trim())
+  return lines[0] ?? ''
 }
 
 export class SlideParser extends Disposable {
@@ -42,8 +46,7 @@ export class SlideParser extends Disposable {
     super()
   }
 
-  public parse(text: string, configuration: Configuration, partial = true): ParseResult {
-    void partial
+  public parse(text: string, configuration: Configuration, _partial = true): ParseResult {
     try {
       const result = frontmatter<Configuration>(text)
       const slides = this.#parseSlides(result.body, configuration.separator, configuration.verticalSeparator)

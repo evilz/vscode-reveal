@@ -726,6 +726,7 @@
   },
   "devDependencies": {
     "@alex_neo/jest-expect-message": "^1.0.5",
+    "@eslint/js": "^10.0.1",
     "@types/glob": "^9.0.0",
     "@types/jest": "^30.0.0",
     "@types/jest-expect-message": "^1.1.0",
@@ -739,7 +740,7 @@
     "@vscode/test-electron": "^2.5.2",
     "@vscode/test-web": "^0.0.80",
     "esbuild": "^0.28.0",
-    "eslint": "^10.3.0",
+    "eslint": "^10.4.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jest": "^29.15.2",
     "eslint-plugin-sonarjs": "^4.0.3",
