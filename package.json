@@ -282,7 +282,7 @@
             "string"
           ],
           "default": false,
-          "description": "Display the page number of the current slide. Use true/false or a Reveal.js slide number format such as \"h/v\"."
+          "description": "Display the page number of the current slide. Use a Reveal.js format string such as h/v, h.v, c, or c/t to control formatting."
         },
         "revealjs.history": {
           "type": "boolean",

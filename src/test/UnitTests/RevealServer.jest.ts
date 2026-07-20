@@ -199,6 +199,20 @@ describe('RevealServer', () => {
     context.dispose()
   })
 
+  test('renders slide number format strings as script-safe JavaScript strings', async () => {
+    const context = createContext({ configuration: { slideNumber: 'h/v</script>\u2028\u2029' } })
+
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('slideNumber: "h/v\\u003c/script>\\u2028\\u2029"')
+    expect(response.text).not.toContain('slideNumber: "h/v</script>')
+
+    server.dispose()
+    context.dispose()
+  })
+
   test('renders keyboard object configuration as JavaScript object', async () => {
     const context = createContext({
       configuration: {
