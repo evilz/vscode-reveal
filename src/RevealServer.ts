@@ -85,6 +85,40 @@ export class RevealServer extends Disposable {
     return `http://${this.host}:${addr.port}/`
   }
 
+  private loadInitScript(): { init: string | null; initModule: boolean } {
+    const initModulePath = path.join(this.context.dirname, 'init.esm.js')
+    if (fs.existsSync(initModulePath)) {
+      return { init: 'init.esm.js', initModule: true }
+    }
+
+    const initPath = path.join(this.context.dirname, 'init.js')
+    return fs.existsSync(initPath)
+      ? { init: fs.readFileSync(initPath, 'utf8'), initModule: false }
+      : { init: null, initModule: false }
+  }
+
+  private loadHtmlFragmentContent(): string | null {
+    const configuredFragmentPath = this.context.configuration.htmlFragment
+    if (!configuredFragmentPath) return null
+
+    const htmlFragmentPath = this.context.resolvePresentationFilePath(configuredFragmentPath)
+    if (!htmlFragmentPath) {
+      this.context.logger.error(`HTML fragment path must stay inside the presentation directory: ${configuredFragmentPath}`)
+      return null
+    }
+
+    try {
+      if (!fs.statSync(htmlFragmentPath).isFile()) {
+        this.context.logger.error(`HTML fragment path is not a regular file: ${htmlFragmentPath}`)
+        return null
+      }
+      return fs.readFileSync(htmlFragmentPath, 'utf8')
+    } catch {
+      this.context.logger.error(`HTML fragment file not found or unreadable: ${htmlFragmentPath}`)
+      return null
+    }
+  }
+
   /** The function configures the express app to serve the presentation */
   private configure() {
     const app = this.app
@@ -122,35 +156,8 @@ export class RevealServer extends Disposable {
       if (req.path !== '/') {
         next()
       } else {
-        let init: string | null = null
-        let initModule = false
-        let htmlFragmentContent: string | null = null
-        if (context.dirname) {
-          const initModulePath = path.join(context.dirname, 'init.esm.js')
-          const initPath = path.join(context.dirname, 'init.js')
-          if (fs.existsSync(initModulePath)) {
-            init = 'init.esm.js'
-            initModule = true
-          } else if (fs.existsSync(initPath)) {
-            init = fs.readFileSync(initPath, 'utf8')
-          }
-
-          const configuredFragmentPath = context.configuration.htmlFragment
-          const htmlFragmentPath = context.resolvePresentationFilePath(configuredFragmentPath)
-          if (configuredFragmentPath && !htmlFragmentPath) {
-            context.logger.error(`HTML fragment path must stay inside the presentation directory: ${configuredFragmentPath}`)
-          } else if (htmlFragmentPath) {
-            try {
-              if (!fs.statSync(htmlFragmentPath).isFile()) {
-                context.logger.error(`HTML fragment path is not a regular file: ${htmlFragmentPath}`)
-              } else {
-                htmlFragmentContent = fs.readFileSync(htmlFragmentPath, 'utf8')
-              }
-            } catch {
-              context.logger.error(`HTML fragment file not found or unreadable: ${htmlFragmentPath}`)
-            }
-          }
-        }
+        const { init, initModule } = this.loadInitScript()
+        const htmlFragmentContent = this.loadHtmlFragmentContent()
 
         setDiagramRenderingConfig({
           enabled: context.configuration.diagramServerEnabled,
