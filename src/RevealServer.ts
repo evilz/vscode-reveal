@@ -1,7 +1,7 @@
 import * as http from 'http'
 import * as fs from 'fs'
 import express from 'express'
-import * as ejs from 'ejs'
+import ejs from 'ejs'
 import cors from 'cors'
 import morgan from 'morgan'
 import * as path from 'path'
