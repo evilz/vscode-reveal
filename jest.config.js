@@ -16,24 +16,3 @@ module.exports = {
     '^open$': '<rootDir>/src/__mocks__/open.ts',
   },
 }
-
-// "jest": {
-//   "verbose": true,
-//   "preset": "ts-jest",
-//   "testMatch": [
-//     "**/*.jest.ts"
-//   ],
-//   "coverageReporters": [
-//     "lcov",
-//     "text"
-//   ],
-//   "collectCoverageFrom": [
-//     "**/src/**/*.ts",
-//     "!**/node_modules/**",
-//     "!**/vendor/**"
-//   ],
-//   "reporters": [
-//     "default",
-//     "jest-junit"
-//   ]
-// },

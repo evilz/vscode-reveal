@@ -34,4 +34,19 @@ describe('Markdown-it diagram server configuration', () => {
     expect(html).toContain('<p>Paragraph text</p>')
     expect(html).toContain('<aside class="notes"> this is speaker only</aside>')
   })
+
+  test('preserves escaped braces in inline LaTeX expressions', () => {
+    const html = markdownit.render('$\\{x\\}$')
+    expect(html).toContain('$\\{x\\}$')
+  })
+
+  test('preserves inline math spanning an escaped dollar sign', () => {
+    const html = markdownit.render('$a \\$ b$')
+    expect(html).toContain('$a \\$ b$')
+  })
+
+  test('preserves inline math when closing delimiter follows even number of backslashes', () => {
+    const html = markdownit.render('$x\\\\$')
+    expect(html).toContain('$x\\\\$')
+  })
 })
