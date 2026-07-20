@@ -674,16 +674,16 @@
   },
   "dependencies": {
     "cors": "^2.8.6",
-    "ejs": "^5.0.2",
+    "ejs": "^6.0.1",
     "express": "^5.2.1",
     "front-matter": "4.0.2",
     "fs-jetpack": "^5.1.0",
-    "markdown-it": "^14.1.1",
+    "markdown-it": "^14.2.0",
     "markdown-it-abbr": "^2.0.0",
     "markdown-it-attribution": "^0.1.4",
-    "markdown-it-attrs": "^4.3.1",
+    "markdown-it-attrs": "^5.0.0",
     "markdown-it-block-embed": "0.0.3",
-    "markdown-it-deflist": "^3.0.0",
+    "markdown-it-deflist": "^3.0.1",
     "markdown-it-div": "^1.1.0",
     "markdown-it-fontawesome": "^0.3.0",
     "markdown-it-iframe": "^1.0.0",
@@ -697,10 +697,10 @@
     "markdown-it-sub": "^2.0.0",
     "markdown-it-sup": "^2.0.0",
     "markdown-it-task-lists": "^2.1.1",
-    "morgan": "^1.10.1",
+    "morgan": "^1.11.0",
     "open": "^11.0.0",
     "pako": "^2.1.0",
-    "prettier": "^3.6.2"
+    "prettier": "^3.8.3"
   },
   "devDependencies": {
     "@alex_neo/jest-expect-message": "^1.0.5",
@@ -708,12 +708,12 @@
     "@types/jest": "^30.0.0",
     "@types/jest-expect-message": "^1.1.0",
     "@types/markdown-it": "14.1.2",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.9.1",
     "@types/plantuml-encoder": "^1.4.2",
     "@types/request": "^2.48.13",
     "@types/vscode": "^1.105.0",
     "@typescript-eslint/eslint-plugin": "^8.59.3",
-    "@typescript-eslint/parser": "^8.59.3",
+    "@typescript-eslint/parser": "^8.59.4",
     "@vscode/test-electron": "^2.5.2",
     "@vscode/test-web": "^0.0.80",
     "esbuild": "^0.28.0",
@@ -730,7 +730,7 @@
     "sonarqube-scanner": "^4.3.2",
     "source-map-support": "^0.5.21",
     "supertest": "^7.2.2",
-    "ts-jest": "^29.4.5",
+    "ts-jest": "^29.4.11",
     "typescript": "^6.0.3"
   }
 }
