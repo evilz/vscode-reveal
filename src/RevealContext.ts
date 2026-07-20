@@ -1,4 +1,5 @@
 import { FrontMatterResult } from 'front-matter'
+import fs from 'fs'
 import path from 'path'
 import { isDeepStrictEqual } from 'util'
 import { EventEmitter, Position, Range, Selection, TextDocument, TextEditor, Uri, workspace } from 'vscode'
@@ -30,7 +31,7 @@ export class RevealContext extends Disposable {
     public getConfiguration: () => Configuration,
     public extensionPath: string,
     public isInExport: () => boolean,
-    public onExportError: (error: unknown) => void = () => {}
+    public onExportError: (error: unknown) => void = () => {},
   ) {
     super()
     this.editor = editor
@@ -55,10 +56,12 @@ export class RevealContext extends Disposable {
       return path.dirname(this.editor.document.fileName)
     }
 
-    const workspaceFolder = uri && typeof uri === 'object'
-      ? workspace.getWorkspaceFolder(uri) ?? workspace.workspaceFolders?.[0]
-      : workspace.workspaceFolders?.[0]
-    return workspaceFolder?.uri.fsPath ?? null
+    if (uriScheme === 'untitled' && uri) {
+      const workspaceFolder = workspace.getWorkspaceFolder(uri) ?? workspace.workspaceFolders?.[0]
+      return workspaceFolder?.uri.fsPath ?? null
+    }
+
+    return null
   }
 
   get uriWithPosition() {
@@ -71,9 +74,12 @@ export class RevealContext extends Disposable {
   }
 
   public get exportPath(): string {
-    return path.isAbsolute(this.configuration.exportHTMLPath)
-      ? this.configuration.exportHTMLPath
-      : path.resolve(this.dirname ?? process.cwd(), this.configuration.exportHTMLPath)
+    if (path.isAbsolute(this.configuration.exportHTMLPath)) return this.configuration.exportHTMLPath
+    const baseDir = this.dirname
+    if (!baseDir) {
+      throw new Error('Cannot resolve a relative HTML export path for this virtual document. Configure an absolute revealjs.exportHTMLPath or save the document first.')
+    }
+    return path.resolve(baseDir, this.configuration.exportHTMLPath)
   }
 
   public resolveLocalAssetPath(assetPath: string | null | undefined, appendCssIfMissing = false): string | null {
@@ -97,16 +103,57 @@ export class RevealContext extends Disposable {
     return resolvedPath
   }
 
+  public resolvePresentationFilePath(filePath: string | null | undefined): string | null {
+    if (!filePath) return null
+
+    const trimmed = filePath.trim()
+    if (!trimmed || path.isAbsolute(trimmed)) return null
+
+    const baseDir = this.dirname
+    if (!baseDir) return null
+    const basePath = path.resolve(baseDir)
+    const resolvedPath = path.resolve(basePath, trimmed)
+    const relativePath = path.relative(basePath, resolvedPath)
+    if (relativePath === '..' || relativePath.startsWith(`..${path.sep}`) || path.isAbsolute(relativePath)) {
+      return null
+    }
+
+    try {
+      const realBasePath = fs.realpathSync(basePath)
+      let existingPath = resolvedPath
+      while (!fs.existsSync(existingPath)) {
+        const parentPath = path.dirname(existingPath)
+        if (parentPath === existingPath) return null
+        existingPath = parentPath
+      }
+
+      const realExistingPath = fs.realpathSync(existingPath)
+      const realRelativePath = path.relative(realBasePath, realExistingPath)
+      if (realRelativePath === '..' || realRelativePath.startsWith(`..${path.sep}`) || path.isAbsolute(realRelativePath)) {
+        return null
+      }
+      return path.resolve(realExistingPath, path.relative(existingPath, resolvedPath))
+    } catch {
+      return null
+    }
+  }
+
   public getReferencedAssetPaths(): string[] {
     const paths = new Set<string>()
     const baseDir = this.dirname
     if (baseDir) {
       paths.add(path.join(baseDir, 'init.js'))
+      paths.add(path.join(baseDir, 'init.esm.js'))
     }
 
     const customThemePath = this.resolveLocalAssetPath(this.configuration.customTheme, true)
     if (customThemePath) {
       paths.add(customThemePath)
+    }
+
+    const htmlFragmentPath = this.resolvePresentationFilePath(this.configuration.htmlFragment)
+    if (htmlFragmentPath) {
+      paths.add(htmlFragmentPath)
     }
 
     const cssAssetPaths = Array.isArray(this.configuration.css) ? this.configuration.css : []
@@ -140,9 +187,7 @@ export class RevealContext extends Disposable {
     const { slides } = slideParser.parse(this.getText(range), this.configuration, false)
     const currentSlide = slides[slides.length - 1]
 
-    this.position = currentSlide.verticalChildren
-      ? { horizontal: slides.length - 1, vertical: currentSlide.verticalChildren.length }
-      : { horizontal: slides.length - 1, vertical: 0 }
+    this.position = currentSlide.verticalChildren ? { horizontal: slides.length - 1, vertical: currentSlide.verticalChildren.length } : { horizontal: slides.length - 1, vertical: 0 }
   }
 
   is(document: TextDocument) {
@@ -150,8 +195,7 @@ export class RevealContext extends Disposable {
   }
 
   goToSlide(topindex: number, verticalIndex: number) {
-    const linesCount =
-      countLinesToSlide(this.slides, topindex, verticalIndex) + (this.frontmatter?.frontmatter ? this.frontmatter.bodyBegin : 0)
+    const linesCount = countLinesToSlide(this.slides, topindex, verticalIndex) + (this.frontmatter?.frontmatter ? this.frontmatter.bodyBegin : 0)
 
     const position = new Position(linesCount, 0)
     this.editor.selection = new Selection(position, position) //selections = [new Selection(position, position)]
@@ -164,6 +208,14 @@ export class RevealContext extends Disposable {
 
   stopServer() {
     this.#server.stop()
+  }
+
+  public get onDidStartServer() {
+    return this.#server.onDidStart
+  }
+
+  public get onDidStopServer() {
+    return this.#server.onDidStop
   }
 
   private readonly _onDidDispose = this._register(new EventEmitter<void>())
@@ -191,7 +243,9 @@ export class RevealContexts {
     private readonly getConfiguration: () => Configuration,
     private readonly extensionPath: string,
     private readonly isInExport: () => boolean,
-    private readonly onExportError: (error: unknown) => void
+    private readonly onExportError: (error: unknown) => void,
+    private readonly onServerStart: (uri: string, context: RevealContext) => void,
+    private readonly onServerStop: (context: RevealContext) => void,
   ) {
     this.logger = logger
   }
@@ -201,6 +255,8 @@ export class RevealContexts {
     const context = new RevealContext(editor, this.logger, this.getConfiguration, this.extensionPath, this.isInExport, this.onExportError)
 
     context.onDidDispose(() => this.logger.info(`CONTEXT: ${editor.document.uri} disposed`))
+    context.onDidStartServer((uri) => this.onServerStart(uri, context))
+    context.onDidStopServer(() => this.onServerStop(context))
 
     this.innerMap.set(editor.document.uri, context)
     return context

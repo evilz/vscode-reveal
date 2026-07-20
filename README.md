@@ -115,7 +115,7 @@ customTheme : "my-theme"
 Note that you can use both theme and custom theme at the same time. Your custom theme will be loaded after to override default reveal.js theme.
 
 Path resolution rules for local assets and export:
-- `customTheme`, `css`, and `init.js` are resolved from the markdown document folder when the document is saved (`file:` and remote `vscode-remote:` documents).
+- `customTheme`, `css`, `init.js`, and `init.esm.js` are resolved from the markdown document folder when the document is saved (`file:` and remote `vscode-remote:` documents).
 - For unsaved `untitled:` documents, relative paths resolve from the matching workspace folder (or the first workspace folder if no direct match exists).
 - For virtual/non-file documents without a workspace folder, relative local asset paths are ignored gracefully (remote URLs still work).
 - `revealjs.exportHTMLPath` keeps absolute paths as-is; relative export paths resolve from the same base folder rules above.
@@ -150,6 +150,10 @@ diagramServerEnabled: false
 ```
 
 In this mode, diagram code blocks are kept as plain code blocks and no remote diagram request is made.
+
+## Custom initialization
+
+Place an `init.js` file next to your markdown file to replace the default Reveal.js initialization script. If your initialization needs ECMAScript modules, use `init.esm.js` instead; it is loaded as `<script type="module">`, so it can use standard `import` statements for files served from the same folder. When both files exist, `init.esm.js` takes precedence. `init.esm.js` must be a complete custom initialization script and initialize Reveal itself, just like `init.js`.
 
 ## <a id="options"></a> Reveal.js Options
 
@@ -247,6 +251,9 @@ To export your presentation to pdf you can:
 This opens the print URL using the same browser resolution rules as above:
 - if `revealjs.browserPath` is set and valid, that executable is used
 - otherwise VS Code's native external URL API is used
+
+PDF export uses Reveal.js print settings. Set `revealjs.pdfSeparateFragments` to `false` to keep fragments on the same exported page, set `revealjs.pdfMaxPagesPerSlide` to cap slide overflow pages, and use `revealjs.slideNumber` formats such as `h/v` when you need formatted slide numbers.
+
 Be sure to set print setting correctly:
 - No margin
 - print background

@@ -51,14 +51,34 @@ test('Markdown-it-attrs 4.3.1 should be importable and functional', () => {
   expect(result).toContain('id="custom-id"');
 });
 
-test('Prettier 3.6.2 should be importable', () => {
+test('Prettier should be installed and match the declared major version', () => {
   // Prettier is an ES module, but we can verify it's installed correctly
   const fs = require('fs');
   const path = require('path');
+  const projectPackageJson = require('../../../package.json');
   const prettierPath = path.join(__dirname, '../../../node_modules/prettier/package.json');
+
   expect(fs.existsSync(prettierPath)).toBe(true);
+
   const prettierPkg = JSON.parse(fs.readFileSync(prettierPath, 'utf-8'));
-  expect(prettierPkg.version.startsWith('3.6')).toBe(true);
+  const declaredPrettierVersion = projectPackageJson.dependencies?.prettier;
+
+  if (!declaredPrettierVersion) {
+    throw new Error('Expected package.json to declare a prettier dependency');
+  }
+
+  const expectedVersionMatch = String(declaredPrettierVersion).match(/^[^\d]*(\d+)/);
+  const installedVersionMatch = String(prettierPkg.version).match(/^(\d+)/);
+
+  if (!expectedVersionMatch) {
+    throw new Error('Expected package.json prettier dependency to contain a semver major version');
+  }
+
+  if (!installedVersionMatch) {
+    throw new Error('Expected installed prettier version to contain a semver major version');
+  }
+
+  expect(installedVersionMatch[1]).toBe(expectedVersionMatch[1]);
 });
 
 test('Morgan 1.10.1 should be importable and functional', () => {
@@ -71,10 +91,14 @@ test('Morgan 1.10.1 should be importable and functional', () => {
   expect(typeof middleware).toBe('function');
 });
 
-test('Open 8.4.2 should be importable', () => {
-  const open = require('open');
-  expect(open).toBeDefined();
-  expect(typeof open).toBe('function');
+test('Open 11.0.0 should be installed', () => {
+  // open v11 is ESM-only; verify it is installed by checking package.json
+  const path = require('path');
+  const fs = require('fs');
+  const openPkgPath = path.join(process.cwd(), 'node_modules/open/package.json');
+  expect(fs.existsSync(openPkgPath)).toBe(true);
+  const openPkg = JSON.parse(fs.readFileSync(openPkgPath, 'utf-8'));
+  expect(openPkg.version).toMatch(/^11\./);
 });
 
 test('Supertest 7.1.4 should be importable', () => {

@@ -1,7 +1,7 @@
 import * as http from 'http'
 import * as fs from 'fs'
 import express from 'express'
-import * as ejs from 'ejs'
+import ejs from 'ejs'
 import cors from 'cors'
 import morgan from 'morgan'
 import * as path from 'path'
@@ -9,10 +9,22 @@ import markdownit, { setDiagramRenderingConfig } from './Markdown-it'
 import { exportHTML, IExportOptions } from './ExportHTML'
 import { Disposable } from './dispose'
 import { RevealContext } from './RevealContext'
+import { EventEmitter } from 'vscode'
+
+export const jsonForScript = (value: unknown): string => JSON.stringify(value)
+  .replace(/</g, '\\u003c')
+  .replace(/\u2028/g, '\\u2028')
+  .replace(/\u2029/g, '\\u2029')
 
 /** Http server to serve reveal presentation */
 export class RevealServer extends Disposable {
   public readonly app = express()
+
+  private readonly _onDidStart = this._register(new EventEmitter<string>())
+  public readonly onDidStart = this._onDidStart.event
+
+  private readonly _onDidStop = this._register(new EventEmitter<void>())
+  public readonly onDidStop = this._onDidStop.event
 
   private server: http.Server | null = null
   private readonly host = 'localhost'
@@ -30,7 +42,10 @@ export class RevealServer extends Disposable {
     try {
       if (!this.isListening) {
         this.server = this.app.listen(0)
-        this.context.logger.info(`SERVER started`)
+        this.server?.on('listening', () => {
+          this.context.logger.info('SERVER started at ' + this.uri)
+          this._onDidStart.fire(this.uri)
+        })
       }
     } catch (err) {
       const error = new Error(`Cannot start server: ${err}`)
@@ -50,6 +65,7 @@ export class RevealServer extends Disposable {
     if (this.isListening && this.server) {
       this.server.close()
       this.context.logger.debug(`SERVER: stopped`)
+      this._onDidStop.fire()
     }
   }
 
@@ -67,6 +83,43 @@ export class RevealServer extends Disposable {
       return ''
     }
     return `http://${this.host}:${addr.port}/`
+  }
+
+  private loadInitScript(): { init: string | null; initModule: boolean } {
+    const baseDir = this.context.dirname
+    if (!baseDir) return { init: null, initModule: false }
+
+    const initModulePath = path.join(baseDir, 'init.esm.js')
+    if (fs.existsSync(initModulePath)) {
+      return { init: 'init.esm.js', initModule: true }
+    }
+
+    const initPath = path.join(baseDir, 'init.js')
+    return fs.existsSync(initPath)
+      ? { init: fs.readFileSync(initPath, 'utf8'), initModule: false }
+      : { init: null, initModule: false }
+  }
+
+  private loadHtmlFragmentContent(): string | null {
+    const configuredFragmentPath = this.context.configuration.htmlFragment
+    if (!configuredFragmentPath) return null
+
+    const htmlFragmentPath = this.context.resolvePresentationFilePath(configuredFragmentPath)
+    if (!htmlFragmentPath) {
+      this.context.logger.error(`HTML fragment path must stay inside the presentation directory: ${configuredFragmentPath}`)
+      return null
+    }
+
+    try {
+      if (!fs.statSync(htmlFragmentPath).isFile()) {
+        this.context.logger.error(`HTML fragment path is not a regular file: ${htmlFragmentPath}`)
+        return null
+      }
+      return fs.readFileSync(htmlFragmentPath, 'utf8')
+    } catch {
+      this.context.logger.error(`HTML fragment file not found or unreadable: ${htmlFragmentPath}`)
+      return null
+    }
   }
 
   /** The function configures the express app to serve the presentation */
@@ -106,13 +159,8 @@ export class RevealServer extends Disposable {
       if (req.path !== '/') {
         next()
       } else {
-        let init: string | null = null
-        if (context.dirname) {
-          const initPath = path.join(context.dirname, 'init.js')
-          if (fs.existsSync(initPath)) {
-            init = fs.readFileSync(initPath, 'utf8')
-          }
-        }
+        const { init, initModule } = this.loadInitScript()
+        const htmlFragmentContent = this.loadHtmlFragmentContent()
 
         setDiagramRenderingConfig({
           enabled: context.configuration.diagramServerEnabled,
@@ -124,7 +172,7 @@ export class RevealServer extends Disposable {
           html: markdownit.render(s.text),
           children: s.verticalChildren.map((c) => ({ ...c, html: markdownit.render(c.text) })),
         }))
-        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init })
+        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init, initModule, jsonForScript, htmlFragmentContent })
       }
     })
 
@@ -138,10 +186,9 @@ export class RevealServer extends Disposable {
 
   /* A middleware function that is used to export the presentation to a folder. */
   private readonly exportMiddleware = (exportfn: (opts: IExportOptions) => Promise<void>, isInExport: () => boolean) => {
-    const { exportPath } = this.context
-
     return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
       if (isInExport()) {
+        const { exportPath } = this.context
         this.context.logger.debug('in export')
         const oldWrite = res.write
         const oldEnd = res.end

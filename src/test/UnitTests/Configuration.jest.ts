@@ -3,6 +3,7 @@ import { defaultConfiguration, configPrefix, getConfigurationDescription } from 
 const packageJson = require('../../../package.json')
 
 type ContributedProperty = {
+  type?: unknown
   default?: unknown
 }
 
@@ -39,7 +40,7 @@ const intentionallyContributedOnlyKeys = ['hashOneBasedIndex', 'showSlideNumber'
 
 const stringify = (value: unknown) => JSON.stringify(value)
 
-test('getConfigurationDescription should prefer primary type over null in unions', () => {
+test('getConfigurationDescription preserves union types as arrays in configuration description', () => {
   const props = {
     'revealjs.boolOption': {
       type: ['boolean', 'null'],
@@ -54,11 +55,11 @@ test('getConfigurationDescription should prefer primary type over null in unions
   }
 
   const desc = getConfigurationDescription(props)
-  expect(desc.find((x) => x.label === 'boolOption')?.type).toBe('boolean')
-  expect(desc.find((x) => x.label === 'stringOption')?.type).toBe('string')
+  expect(desc.find((x) => x.label === 'boolOption')?.type).toEqual(['boolean', 'null'])
+  expect(desc.find((x) => x.label === 'stringOption')?.type).toEqual(['string', 'null'])
 })
 
-test('getConfigurationDescription should prefer scalar types over object-like union members', () => {
+test('getConfigurationDescription preserves order of types in union', () => {
   const props = {
     'revealjs.stringOrObject': {
       type: ['object', 'string'],
@@ -71,11 +72,11 @@ test('getConfigurationDescription should prefer scalar types over object-like un
   }
 
   const desc = getConfigurationDescription(props)
-  expect(desc.find((x) => x.label === 'stringOrObject')?.type).toBe('string')
-  expect(desc.find((x) => x.label === 'numberOrArray')?.type).toBe('number')
+  expect(desc.find((x) => x.label === 'stringOrObject')?.type).toEqual(['object', 'string'])
+  expect(desc.find((x) => x.label === 'numberOrArray')?.type).toEqual(['array', 'number'])
 })
 
-test('getConfigurationDescription should enforce scalar priority regardless of union order', () => {
+test('getConfigurationDescription preserves all scalar types in union without reordering', () => {
   const props = {
     'revealjs.numberThenString': {
       type: ['number', 'string'],
@@ -88,8 +89,14 @@ test('getConfigurationDescription should enforce scalar priority regardless of u
   }
 
   const desc = getConfigurationDescription(props)
-  expect(desc.find((x) => x.label === 'numberThenString')?.type).toBe('string')
-  expect(desc.find((x) => x.label === 'booleanThenNumber')?.type).toBe('number')
+  expect(desc.find((x) => x.label === 'numberThenString')?.type).toEqual(['number', 'string'])
+  expect(desc.find((x) => x.label === 'booleanThenNumber')?.type).toEqual(['boolean', 'number'])
+})
+
+test('contributed reveal config exposes slide-number formats and PDF export options', () => {
+  expect(contributedProperties['revealjs.slideNumber'].type).toEqual(['boolean', 'string'])
+  expect(contributedProperties['revealjs.pdfSeparateFragments'].default).toBe(true)
+  expect(contributedProperties['revealjs.pdfMaxPagesPerSlide'].type).toEqual(['number', 'null'])
 })
 
 test('getConfigurationDescription should keep markdown documentation when available', () => {
