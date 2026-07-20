@@ -34,7 +34,6 @@ export class RevealContext extends Disposable {
     public onExportError: (error: unknown) => void = () => {},
   ) {
     super()
-    this.editor = editor
     this.configuration = getConfiguration()
     this.#server = new RevealServer(this)
     this._register(this.#server)
@@ -245,9 +244,7 @@ export class RevealContexts {
     private readonly onExportError: (error: unknown) => void,
     private readonly onServerStart: (uri: string, context: RevealContext) => void,
     private readonly onServerStop: (context: RevealContext) => void,
-  ) {
-    this.logger = logger
-  }
+  ) {}
 
   getOrAdd(editor: TextEditor) {
     if (this.innerMap.has(editor.document.uri)) return this.innerMap.get(editor.document.uri)
