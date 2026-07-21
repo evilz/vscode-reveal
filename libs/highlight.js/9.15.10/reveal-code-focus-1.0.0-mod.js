@@ -51,9 +51,9 @@
       }
 
       // Highlight code using highlight.js.
-      if (typeof hljs.highlightElement === 'function') {
+      if (!element.dataset.highlighted && hljs && typeof hljs.highlightElement === 'function') {
         hljs.highlightElement(element)
-      } else {
+      } else if (!element.dataset.highlighted && hljs) {
         hljs.highlightBlock(element)
       }
 
