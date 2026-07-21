@@ -700,7 +700,7 @@
     "express": "^5.2.1",
     "front-matter": "4.0.2",
     "fs-jetpack": "^5.1.0",
-    "markdown-it": "^14.2.0",
+    "markdown-it": "^14.3.0",
     "markdown-it-abbr": "^2.0.0",
     "markdown-it-attribution": "^0.1.4",
     "markdown-it-attrs": "^5.0.0",
