@@ -139,7 +139,8 @@ describe('RevealServer', () => {
   })
 
   test('treats non-boolean incremental settings as disabled', async () => {
-    const context = createContext({ configuration: { incremental: 'false;alert(1)//' } })
+    const configuration = { incremental: 'false;alert(1)//' } as unknown as Partial<Configuration> & Record<string, unknown>
+    const context = createContext({ configuration })
     const server = new RevealServer(context)
 
     const response = await request(server.app).get('/')
