@@ -51,7 +51,11 @@
       }
 
       // Highlight code using highlight.js.
-      hljs.highlightBlock(element)
+      if (!element.dataset.highlighted && hljs && typeof hljs.highlightElement === 'function') {
+        hljs.highlightElement(element)
+      } else if (!element.dataset.highlighted && hljs) {
+        hljs.highlightBlock(element)
+      }
 
       // Split highlighted code into lines.
       var openTags = [],
