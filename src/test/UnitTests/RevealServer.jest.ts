@@ -110,6 +110,20 @@ describe('RevealServer', () => {
     context.dispose()
   })
 
+  test('uses the configured MathJax 2 plugin when printing', async () => {
+    const context = createContext()
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+    const printPluginsBlock = response.text.match(/const printPlugins = \[([\s\S]*?)\]\.filter\(Boolean\);/)?.[1] ?? ''
+
+    expect(printPluginsBlock).toContain('window.RevealMath,')
+    expect(printPluginsBlock).not.toContain('window.RevealMath?.MathJax3')
+
+    server.dispose()
+    context.dispose()
+  })
+
   test('root request includes default-enabled optional plugin assets and registrations', async () => {
     const context = createContext()
     const server = new RevealServer(context)
