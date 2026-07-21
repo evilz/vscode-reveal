@@ -51,7 +51,11 @@
       }
 
       // Highlight code using highlight.js.
-      hljs.highlightBlock(element)
+      if (typeof hljs.highlightElement === 'function') {
+        hljs.highlightElement(element)
+      } else {
+        hljs.highlightBlock(element)
+      }
 
       // Split highlighted code into lines.
       var openTags = [],
