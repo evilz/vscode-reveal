@@ -131,7 +131,21 @@ describe('RevealServer', () => {
     const response = await request(server.app).get('/')
 
     expect(response.text).toContain('const incremental = true;')
-    expect(response.text).toContain("document.querySelectorAll('.slides li').forEach((item) => item.classList.add('fragment'));")
+    expect(response.text).toContain("document.querySelectorAll('.slides li')")
+    expect(response.text).toContain("item.classList.add('fragment')")
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('treats non-boolean incremental settings as disabled', async () => {
+    const context = createContext({ configuration: { incremental: 'false;alert(1)//' } })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('const incremental = false;')
+    expect(response.text).not.toContain('alert(1)')
 
     server.dispose()
     context.dispose()

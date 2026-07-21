@@ -8,7 +8,7 @@
 
 <script>
   const loadedPlugins = (...plugins) => [...new Set(plugins.filter(Boolean))];
-  const incremental = <%= incremental %>;
+  const incremental = <%- jsonForScript(incremental === true) %>;
   if (incremental) {
     document.querySelectorAll('.slides li').forEach((item) => item.classList.add('fragment'));
   }
