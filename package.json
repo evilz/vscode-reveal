@@ -731,7 +731,7 @@
     "@types/jest": "^30.0.0",
     "@types/jest-expect-message": "^1.1.0",
     "@types/markdown-it": "14.1.2",
-    "@types/node": "^25.9.1",
+    "@types/node": "^26.1.1",
     "@types/plantuml-encoder": "^1.4.2",
     "@types/request": "^2.48.13",
     "@types/vscode": "^1.105.0",
