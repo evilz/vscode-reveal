@@ -124,6 +124,19 @@ describe('RevealServer', () => {
     context.dispose()
   })
 
+  test('adds fragments to list items when incremental lists are enabled', async () => {
+    const context = createContext({ configuration: { incremental: true } })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('const incremental = true;')
+    expect(response.text).toContain("document.querySelectorAll('.slides li').forEach((item) => item.classList.add('fragment'));")
+
+    server.dispose()
+    context.dispose()
+  })
+
   test('root request includes default-enabled optional plugin assets and registrations', async () => {
     const context = createContext()
     const server = new RevealServer(context)

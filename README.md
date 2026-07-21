@@ -54,6 +54,8 @@ Fragments can be authored directly in markdown with attributes (no raw HTML need
 Paragraph shown later {.fragment .fade-up}
 ```
 
+To reveal every list item incrementally, set `revealjs.incremental` to `true` in VS Code settings or use `incremental: true` in a deck's front matter.
+
 If you need a sample file you can get it here:
 https://raw.githubusercontent.com/evilz/vscode-reveal/master/sample.md
 
