@@ -338,6 +338,11 @@
           "default": true,
           "description": "Turns fragments on and off globally"
         },
+        "revealjs.incremental": {
+          "type": "boolean",
+          "default": false,
+          "description": "Reveal list items one at a time as fragments"
+        },
         "revealjs.embedded": {
           "type": "boolean",
           "default": false,

@@ -46,6 +46,7 @@ export interface IRevealOptions {
   rtl: boolean
   shuffle: boolean
   fragments: boolean
+  incremental: boolean
   embedded: boolean
   help: boolean
   showNotes: boolean
@@ -141,6 +142,7 @@ export const defaultConfiguration: Configuration = {
   rtl: false,
   shuffle: false,
   fragments: true,
+  incremental: false,
   embedded: false,
   help: true,
   showNotes: false,

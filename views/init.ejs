@@ -8,6 +8,10 @@
 
 <script>
   const loadedPlugins = (...plugins) => [...new Set(plugins.filter(Boolean))];
+  const incremental = <%- jsonForScript(incremental === true) %>;
+  if (incremental) {
+    document.querySelectorAll('.slides li').forEach((item) => item.classList.add('fragment'));
+  }
   const hasSeminarConfig = <%= typeof seminar !== 'undefined' && seminar && seminar.server && seminar.hash ? 'true' : 'false' %>;
   const seminarPlugins = hasSeminarConfig
     ? loadedPlugins(window.RevealSeminar, window.RevealPoll, window.RevealQnA)
