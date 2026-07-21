@@ -115,9 +115,10 @@ describe('RevealServer', () => {
     const server = new RevealServer(context)
 
     const response = await request(server.app).get('/')
+    const printPluginsBlock = response.text.match(/const printPlugins = \[([\s\S]*?)\]\.filter\(Boolean\);/)?.[1] ?? ''
 
-    expect(response.text).toContain('window.RevealMath,')
-    expect(response.text).not.toContain('window.RevealMath?.MathJax3')
+    expect(printPluginsBlock).toContain('window.RevealMath,')
+    expect(printPluginsBlock).not.toContain('window.RevealMath?.MathJax3')
 
     server.dispose()
     context.dispose()
