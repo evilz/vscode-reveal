@@ -27,6 +27,7 @@ import {
   TextDocumentChangeEvent,
   TextEditor,
   TextEditorSelectionChangeEvent,
+  Uri,
   workspace,
   ViewColumn,
   window,
@@ -44,6 +45,7 @@ import TextDecorator from './TextDecorator'
 import { RevealContext, RevealContexts } from './RevealContext'
 import { configPrefix, Configuration, ConfigurationDescription, getConfig } from './Configuration'
 import { collectDiagnostics } from './FrontmatterDiagnostics'
+import { getBatchExportPath } from './commands/exportHTMLFolder'
 
 const isMarkdownFile = (d: TextDocument) => d.languageId === 'markdown'
 
@@ -57,6 +59,7 @@ export default class MainController {
   private readonly assetWatchers = new Map<string, FileSystemWatcher>()
   private readonly diagnostics: DiagnosticCollection
   private readonly configByKey: Map<string, ConfigurationDescription>
+  private readonly extensionPath: string
 
   get baseUri() {
     return this.currentContext?.baseUri
@@ -131,6 +134,7 @@ export default class MainController {
     private config: Configuration,
     currentEditor: TextEditor | undefined
   ) {
+    this.extensionPath = extensionContext.extensionPath
     this.statusBarController = new StatusBarController()
     this.textDecorator = new TextDecorator(configDesc)
     this.revealContexts = new RevealContexts(
@@ -213,6 +217,46 @@ export default class MainController {
     }
 
     return promise
+  }
+
+  public exportFolderAsync = async (folder: Uri, files: readonly Uri[]) => {
+    const originalContext = this.currentContext
+    const exported: string[] = []
+
+    try {
+      for (const uri of files) {
+        const document = await workspace.openTextDocument(uri)
+        const context = this.createExportContext(document)
+        try {
+          context.refresh()
+          context.configuration.exportHTMLPath = getBatchExportPath(
+            folder.fsPath,
+            context.configuration.exportHTMLPath,
+            document.fileName,
+          )
+          this.currentContext = context
+
+          await this.exportAsync()
+          exported.push(context.exportPath)
+        } finally {
+          context.dispose()
+        }
+      }
+      return exported
+    } finally {
+      this.currentContext = originalContext
+      if (this.webViewPane && originalContext) this.refreshWebViewPane()
+    }
+  }
+
+  private createExportContext(document: TextDocument) {
+    const editor = {
+      document,
+      selection: new Position(0, 0),
+      selections: [],
+      revealRange: () => {},
+    } as unknown as TextEditor
+    return new RevealContext(editor, this.logger, () => this.config, this.extensionPath, this.isInExport, this.onExportError)
   }
 
   // debounce parse and refresh
