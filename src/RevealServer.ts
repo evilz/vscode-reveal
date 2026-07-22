@@ -17,7 +17,7 @@ export const jsonForScript = (value: unknown): string => JSON.stringify(value)
   .replace(/\u2029/g, '\\u2029')
 
 const isOfflineMode = (value: unknown): boolean => value === true || value === 'true'
-const darkRevealThemes = new Set(['black', 'blood', 'moon', 'night'])
+const darkRevealThemes = new Set(['black', 'blood', 'league', 'moon', 'night'])
 const getMermaidTheme = (theme: string): 'dark' | null => darkRevealThemes.has(theme) ? 'dark' : null
 
 const imageSrcAssetPattern = /<img\b[^>]*\bsrc=["']([^"']+)["']/gi

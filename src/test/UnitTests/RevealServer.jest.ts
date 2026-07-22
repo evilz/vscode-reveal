@@ -192,6 +192,21 @@ describe('RevealServer', () => {
     context.dispose()
   })
 
+  test('uses Mermaid dark mode with the league Reveal theme', async () => {
+    const context = createContext({ configuration: { theme: 'league' } })
+    context.slides = [{ title: 'Diagram', index: 0, text: '```mermaid\nflowchart LR\nA-->B\n```', verticalChildren: [], attributes: '' }]
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+    const encoded = response.text.match(/mermaid\/svg\/([^"']+)/)?.[1]
+    const source = encoded ? Buffer.from(pako.inflate(Buffer.from(encoded.replace(/-/g, '+').replace(/_/g, '/'), 'base64'))).toString('utf8') : ''
+
+    expect(source).toContain("%%{init: {'theme':'dark'}}%%")
+
+    server.dispose()
+    context.dispose()
+  })
+
   test('treats a quoted false offline setting as online', async () => {
     const configuration = { offline: 'false' } as unknown as Partial<Configuration> & Record<string, unknown>
     const context = createContext({
