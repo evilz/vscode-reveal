@@ -266,6 +266,11 @@
           "default": "https://kroki.io",
           "description": "Base URL for the Kroki-compatible diagram server used to render supported diagram languages"
         },
+        "revealjs.offline": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable externally hosted extension resources, including MathJax, seminar sockets, and remote diagram rendering"
+        },
         "revealjs.controls": {
           "type": "boolean",
           "default": true,

@@ -163,7 +163,7 @@ export class RevealServer extends Disposable {
         const htmlFragmentContent = this.loadHtmlFragmentContent()
 
         setDiagramRenderingConfig({
-          enabled: context.configuration.diagramServerEnabled,
+          enabled: !context.configuration.offline && context.configuration.diagramServerEnabled,
           serverBaseUrl: context.configuration.diagramServerUrl,
         })
 
