@@ -18,16 +18,19 @@ export const jsonForScript = (value: unknown): string => JSON.stringify(value)
 
 const isOfflineMode = (value: unknown): boolean => value === true || value === 'true'
 
-const localImageAssetPattern = /(?:src|data-background-image)=["']([^"']+)["']/gi
+const imageSrcAssetPattern = /<img\b[^>]*\bsrc=["']([^"']+)["']/gi
+const backgroundImageAssetPattern = /\bdata-background-image=["']([^"']+)["']/gi
 const isExternalAsset = (asset: string): boolean => /^(?:[a-z][a-z\d+.-]*:|\/\/|#)/i.test(asset)
 
 const collectPreloadAssets = (slides: Array<{ html: string; attributes: string; children: Array<{ html: string; attributes: string }> }>): string[] => {
   const assets = new Set<string>()
   for (const slide of slides) {
     const markup = [slide.html, slide.attributes, ...slide.children.flatMap((child) => [child.html, child.attributes])].join('\n')
-    for (const match of markup.matchAll(localImageAssetPattern)) {
-      const asset = match[1]?.trim()
-      if (asset && !isExternalAsset(asset)) assets.add(asset)
+    for (const pattern of [imageSrcAssetPattern, backgroundImageAssetPattern]) {
+      for (const match of markup.matchAll(pattern)) {
+        const asset = match[1]?.trim()
+        if (asset && !isExternalAsset(asset)) assets.add(asset)
+      }
     }
   }
   return [...assets]
@@ -190,7 +193,7 @@ export class RevealServer extends Disposable {
           html: markdownit.render(s.text),
           children: s.verticalChildren.map((c) => ({ ...c, html: markdownit.render(c.text) })),
         }))
-        res.render('index', { slides: htmlSlides, preloadAssets: collectPreloadAssets(htmlSlides), ...context.configuration, offline, rootUrl: this.uri, init, initModule, jsonForScript, htmlFragmentContent })
+        res.render('index', { slides: htmlSlides, preloadAssets: context.isInExport() ? collectPreloadAssets(htmlSlides) : [], ...context.configuration, offline, rootUrl: this.uri, init, initModule, jsonForScript, htmlFragmentContent })
       }
     })
 
