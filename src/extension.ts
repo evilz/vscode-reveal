@@ -11,6 +11,7 @@
 
 import { commands, ExtensionContext, window, workspace } from 'vscode'
 import { EXPORT_HTML, exportHTML } from './commands/exportHTML'
+import { EXPORT_HTML_FOLDER, exportHTMLFolder } from './commands/exportHTMLFolder'
 import { EXPORT_PDF, exportPDF } from './commands/exportPDF'
 import { GO_TO_SLIDE } from './commands/goToSlide'
 import { SHOW_REVEALJS } from './commands/showRevealJS'
@@ -56,6 +57,7 @@ export function activate(context: ExtensionContext) {
     registerCmd(GO_TO_SLIDE, (arg) => main.goToSlide(arg.horizontal, arg.vertical)),
     registerCmd(EXPORT_PDF,exportPDF(() => main.currentContext?.startServer(), () => main.currentContext?.configuration.browserPath)),
     registerCmd(EXPORT_HTML,exportHTML(logger, main.exportAsync, main.shouldOpenFilemanagerAfterHTMLExport)),
+    registerCmd(EXPORT_HTML_FOLDER, exportHTMLFolder(logger, main.exportFolderAsync)),
 
     window.onDidChangeTextEditorSelection((e) => main.onDidChangeTextEditorSelection(e)),
     window.onDidChangeActiveTextEditor((e) => main.onDidChangeActiveTextEditor(e)),

@@ -95,6 +95,10 @@
         }
       },
       {
+        "command": "vscode-revealjs.exportHTMLFolder",
+        "title": "Revealjs: Export Markdown Folder to HTML"
+      },
+      {
         "command": "vscode-revealjs.showSample",
         "title": "Revealjs: Open a sample",
         "icon": {

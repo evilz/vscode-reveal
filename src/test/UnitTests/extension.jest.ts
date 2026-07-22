@@ -7,6 +7,7 @@ const NEW_PRESENTATION = 'test.newPresentation'
 const GO_TO_SLIDE = 'test.goToSlide'
 const EXPORT_PDF = 'test.exportPdf'
 const EXPORT_HTML = 'test.exportHtml'
+const EXPORT_HTML_FOLDER = 'test.exportHtmlFolder'
 
 const createOutputChannelMock = jest.fn(() => ({ appendLine: jest.fn() }))
 const executeCommandMock = jest.fn()
@@ -22,6 +23,7 @@ const showRevealJSInBrowserMock = jest.fn(() => jest.fn())
 const showRevealJSPresenterViewMock = jest.fn(() => jest.fn())
 const exportPDFMock = jest.fn(() => jest.fn())
 const exportHTMLMock = jest.fn(() => jest.fn())
+const exportHTMLFolderMock = jest.fn(() => jest.fn())
 const showSampleMock = jest.fn()
 const createPresentationFromTemplateMock = jest.fn()
 const languageCompletionMock = jest.fn(() => [{ dispose: jest.fn() }])
@@ -45,6 +47,7 @@ const mainControllerInstance = {
   onDidChangeConfiguration: jest.fn(),
   refresh: jest.fn(),
   exportAsync: jest.fn(),
+  exportFolderAsync: jest.fn(),
   shouldOpenFilemanagerAfterHTMLExport: jest.fn(() => true),
 }
 
@@ -96,6 +99,11 @@ jest.mock('../../commands/exportPDF', () => ({
 jest.mock('../../commands/exportHTML', () => ({
   EXPORT_HTML,
   exportHTML: (logger: unknown, exportAsync: unknown, shouldOpen: unknown) => (exportHTMLMock as any)(logger, exportAsync, shouldOpen),
+}))
+
+jest.mock('../../commands/exportHTMLFolder', () => ({
+  EXPORT_HTML_FOLDER,
+  exportHTMLFolder: (logger: unknown, exportFolder: unknown) => (exportHTMLFolderMock as any)(logger, exportFolder),
 }))
 
 jest.mock('../../commands/showSample', () => ({
@@ -164,6 +172,7 @@ describe('extension activate', () => {
     expect(registerCommandMock).toHaveBeenCalledWith(GO_TO_SLIDE, expect.any(Function))
     expect(registerCommandMock).toHaveBeenCalledWith(EXPORT_PDF, expect.any(Function))
     expect(registerCommandMock).toHaveBeenCalledWith(EXPORT_HTML, expect.any(Function))
+    expect(registerCommandMock).toHaveBeenCalledWith(EXPORT_HTML_FOLDER, expect.any(Function))
 
     jest.advanceTimersByTime(500)
     expect(mainControllerInstance.refresh).toHaveBeenCalledWith(0)
