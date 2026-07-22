@@ -128,11 +128,12 @@ describe('RevealServer', () => {
   })
 
   test('offline mode excludes extension-managed external resources and diagram requests', async () => {
+    const configuration = {
+      offline: 'true',
+      seminar: { server: 'http://localhost:4433', hash: 'integration-test' },
+    } as unknown as Partial<Configuration> & Record<string, unknown>
     const context = createContext({
-      configuration: {
-        offline: true,
-        seminar: { server: 'http://localhost:4433', hash: 'integration-test' },
-      },
+      configuration,
     })
     context.slides = [{ title: 'Diagram', index: 0, text: '```mermaid\nflowchart LR\nA-->B\n```', verticalChildren: [], attributes: '' }]
     const server = new RevealServer(context)
@@ -146,6 +147,22 @@ describe('RevealServer', () => {
     expect(response.text).toContain('!offlineMode && window.RevealMath,')
     expect(response.text).toContain('<pre><code class="language-mermaid">')
     expect(response.text).not.toContain('kroki.io/mermaid/svg/')
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('treats a quoted false offline setting as online', async () => {
+    const configuration = { offline: 'false' } as unknown as Partial<Configuration> & Record<string, unknown>
+    const context = createContext({
+      configuration,
+    })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('const offlineMode = false;')
+    expect(response.text).toContain('cdn.jsdelivr.net/gh/mathjax')
 
     server.dispose()
     context.dispose()

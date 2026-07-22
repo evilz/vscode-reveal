@@ -16,6 +16,8 @@ export const jsonForScript = (value: unknown): string => JSON.stringify(value)
   .replace(/\u2028/g, '\\u2028')
   .replace(/\u2029/g, '\\u2029')
 
+const isOfflineMode = (value: unknown): boolean => value === true || value === 'true'
+
 /** Http server to serve reveal presentation */
 export class RevealServer extends Disposable {
   public readonly app = express()
@@ -159,11 +161,12 @@ export class RevealServer extends Disposable {
       if (req.path !== '/') {
         next()
       } else {
+        const offline = isOfflineMode(context.configuration.offline)
         const { init, initModule } = this.loadInitScript()
         const htmlFragmentContent = this.loadHtmlFragmentContent()
 
         setDiagramRenderingConfig({
-          enabled: !context.configuration.offline && context.configuration.diagramServerEnabled,
+          enabled: !offline && context.configuration.diagramServerEnabled,
           serverBaseUrl: context.configuration.diagramServerUrl,
         })
 
@@ -172,7 +175,7 @@ export class RevealServer extends Disposable {
           html: markdownit.render(s.text),
           children: s.verticalChildren.map((c) => ({ ...c, html: markdownit.render(c.text) })),
         }))
-        res.render('index', { slides: htmlSlides, ...context.configuration, rootUrl: this.uri, init, initModule, jsonForScript, htmlFragmentContent })
+        res.render('index', { slides: htmlSlides, ...context.configuration, offline, rootUrl: this.uri, init, initModule, jsonForScript, htmlFragmentContent })
       }
     })
 
