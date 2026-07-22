@@ -2,6 +2,7 @@ import MainController from '../../MainController'
 import Logger, { LogLevel } from '../../Logger'
 import { defaultConfiguration } from '../../Configuration'
 import { SHOW_REVEALJS } from '../../commands/showRevealJS'
+import path from 'path'
 
 const executeCommandMock = jest.fn()
 const diagnosticDeleteMock = jest.fn()
@@ -25,12 +26,19 @@ const createFileSystemWatcherMock = jest.fn(() => {
   return w
 })
 const createWebviewPanelMock = jest.fn(() => ({}))
+const openTextDocumentMock = jest.fn()
 
 jest.mock('vscode', () => ({
   commands: { executeCommand: (...args: unknown[]) => (executeCommandMock as any)(...args) },
   languages: { createDiagnosticCollection: (name: unknown) => (createDiagnosticCollectionMock as any)(name) },
-  workspace: { createFileSystemWatcher: (pattern: unknown, a: unknown, b: unknown, c: unknown) => (createFileSystemWatcherMock as any)(pattern, a, b, c) },
+  workspace: {
+    createFileSystemWatcher: (pattern: unknown, a: unknown, b: unknown, c: unknown) => (createFileSystemWatcherMock as any)(pattern, a, b, c),
+    openTextDocument: (uri: unknown) => (openTextDocumentMock as any)(uri),
+  },
   window: { createWebviewPanel: (viewType: unknown, title: unknown, column: unknown, options: unknown) => (createWebviewPanelMock as any)(viewType, title, column, options) },
+  Position: class Position {
+    constructor(public line: number, public character: number) {}
+  },
   RelativePattern: class RelativePattern {
     constructor(public base: string, public pattern: string) { }
   },
@@ -88,7 +96,20 @@ jest.mock('../../TextDecorator', () => jest.fn().mockImplementation(() => ({
 const revealContextsGetOrAddMock = jest.fn()
 const revealContextsRemoveMock = jest.fn()
 const revealContextsCtorMock = jest.fn()
+const temporaryContexts: Array<{ configuration: typeof defaultConfiguration; refresh: jest.Mock; dispose: jest.Mock; exportPath: string }> = []
 jest.mock('../../RevealContext', () => ({
+  RevealContext: jest.fn().mockImplementation(() => {
+    const context = {
+      configuration: { ...defaultConfiguration },
+      refresh: jest.fn(),
+      dispose: jest.fn(),
+      get exportPath() {
+        return this.configuration.exportHTMLPath
+      },
+    }
+    temporaryContexts.push(context)
+    return context
+  }),
   RevealContexts: jest.fn().mockImplementation((...args: unknown[]) => {
     revealContextsCtorMock(...args)
     return {
@@ -157,6 +178,7 @@ describe('MainController coverage', () => {
     jest.useFakeTimers()
     jest.clearAllMocks()
     watchers.length = 0
+    temporaryContexts.length = 0
     receiveMessageListener = undefined
     disposeListener = undefined
   })
@@ -308,6 +330,32 @@ describe('MainController coverage', () => {
     expect(executeCommandMock).toHaveBeenCalledWith(SHOW_REVEALJS)
     ;(main as any).onExportError(new Error('fail'))
     await expect(promise).rejects.toThrow('HTML export failed: fail')
+  })
+
+  test('exports a folder sequentially and restores the active context', async () => {
+    const originalContext = makeContext()
+    revealContextsGetOrAddMock.mockReturnValue(originalContext)
+    const main = new MainController(logger, { extensionPath: '/ext' } as any, [], defaultConfiguration, editor as any)
+    const folderPath = path.resolve('songs')
+    const files = [
+      { fsPath: path.join(folderPath, 'one.md') },
+      { fsPath: path.join(folderPath, 'set', 'two.md') },
+    ]
+    openTextDocumentMock
+      .mockResolvedValueOnce({ fileName: files[0].fsPath })
+      .mockResolvedValueOnce({ fileName: files[1].fsPath })
+    const exportAsyncSpy = jest.spyOn(main, 'exportAsync').mockResolvedValue('/ignored')
+
+    const exported = await main.exportFolderAsync({ fsPath: folderPath } as any, files as any)
+
+    expect(exportAsyncSpy).toHaveBeenCalledTimes(2)
+    expect(exported).toEqual([
+      path.join(folderPath, 'export', 'one'),
+      path.join(folderPath, 'export', 'set', 'two'),
+    ])
+    expect(temporaryContexts).toHaveLength(2)
+    expect(temporaryContexts.every((context) => context.refresh.mock.calls.length === 1 && context.dispose.mock.calls.length === 1)).toBe(true)
+    expect(main.currentContext).toBe(originalContext)
   })
 
   test('change and save document refresh when context matches, plus tree callback logging path', async () => {

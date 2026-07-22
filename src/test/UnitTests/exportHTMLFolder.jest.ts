@@ -40,6 +40,7 @@ describe('exportHTMLFolder command', () => {
 
     expect(getBatchExportPath(folderPath, './export', path.join(folderPath, 'set-one', 'intro.md'))).toBe(path.join(folderPath, 'export', 'set-one', 'intro'))
     expect(getBatchExportPath(folderPath, absoluteOutputPath, path.join(folderPath, 'finale.md'))).toBe(path.join(absoluteOutputPath, 'finale'))
+    expect(() => getBatchExportPath(folderPath, './export', path.resolve(folderPath, '..', 'outside.md'))).toThrow('inside the selected export folder')
   })
 
   test('exports every Markdown file found below the selected folder', async () => {

@@ -10,6 +10,9 @@ export const getBatchExportPath = (folderPath: string, configuredOutputPath: str
     ? configuredOutputPath
     : path.resolve(folderPath, configuredOutputPath)
   const relativePath = path.relative(folderPath, markdownPath)
+  if (relativePath === '..' || relativePath.startsWith(`..${path.sep}`) || path.isAbsolute(relativePath)) {
+    throw new Error('Markdown file must be inside the selected export folder.')
+  }
   const presentationPath = relativePath.replace(/\.md$/i, '')
 
   return path.join(outputRoot, presentationPath)
