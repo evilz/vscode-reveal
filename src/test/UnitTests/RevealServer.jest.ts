@@ -71,6 +71,30 @@ describe('RevealServer', () => {
     context.dispose()
   })
 
+  test('preloads local slide images and backgrounds only while exporting', async () => {
+    const exportPath = await fs.mkdtemp(path.join(os.tmpdir(), tempDirectoryPrefix))
+    const context = createContext({ inExport: true, configuration: { exportHTMLPath: exportPath } })
+    context.slides = [{
+      title: 'Images',
+      index: 0,
+      text: '![Chart](images/chart.png)',
+      attributes: 'data-background-image="images/background.jpg"',
+      verticalChildren: [{ title: 'Child', index: 0, text: '![Remote](https://example.com/remote.png)', attributes: 'data-background-image="https://example.com/remote.jpg"', verticalChildren: [] }],
+    }]
+    const server = new RevealServer(context)
+    try {
+      const response = await request(server.app).get('/')
+
+      expect(response.text).toContain('<link rel="preload" as="image" href="images/chart.png">')
+      expect(response.text).toContain('<link rel="preload" as="image" href="images/background.jpg">')
+      expect(response.text).not.toContain('rel="preload" as="image" href="https://example.com')
+    } finally {
+      server.dispose()
+      context.dispose()
+      await fs.rm(exportPath, { recursive: true, force: true })
+    }
+  })
+
   test('root request references only bundled local assets', async () => {
     const context = createContext()
     const server = new RevealServer(context)
