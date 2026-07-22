@@ -15,4 +15,12 @@ describe('bundled CopyCode plugin', () => {
     expect(copyCode).toEqual(expect.any(Function))
     expect(copyCode?.().id).toBe('copycode')
   })
+
+  test('sets copy window titles as text rather than HTML', () => {
+    const source = fs.readFileSync(copyCodePath, 'utf8')
+
+    expect(source).toContain('class="cc-window-title"></div>')
+    expect(source).toContain('querySelector(".cc-window-title").textContent=d')
+    expect(source).not.toContain('class="cc-window-title">${d}</div>')
+  })
 })

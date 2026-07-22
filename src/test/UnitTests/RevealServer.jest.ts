@@ -290,6 +290,8 @@ describe('RevealServer', () => {
     expect(response.text).toContain('window.RevealAudioSlideshow')
     expect(response.text).toContain('window.RevealAudioRecorder')
     expect(response.text).toContain('window.CopyCode')
+    const pluginRegistration = response.text.slice(response.text.indexOf('const plugins = loadedPlugins('))
+    expect(pluginRegistration.indexOf('window.CopyCode')).toBeGreaterThan(pluginRegistration.indexOf('window.RevealMarkdown'))
     expect(response.text).toContain('window.RevealMenu')
     expect(response.text).toContain('window.RevealAnimate')
     expect(response.text).toContain('window.RevealChalkboard')
