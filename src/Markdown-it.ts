@@ -25,11 +25,13 @@ const DEFAULT_DIAGRAM_SERVER = 'https://kroki.io'
 interface IDiagramRenderingConfig {
   enabled: boolean
   serverBaseUrl: string
+  mermaidTheme: 'dark' | null
 }
 
 const diagramRenderingConfig: IDiagramRenderingConfig = {
   enabled: true,
   serverBaseUrl: DEFAULT_DIAGRAM_SERVER,
+  mermaidTheme: null,
 }
 
 export const setDiagramRenderingConfig = (config: Partial<IDiagramRenderingConfig>) => {
@@ -41,6 +43,15 @@ export const setDiagramRenderingConfig = (config: Partial<IDiagramRenderingConfi
     const trimmedServerBaseUrl = config.serverBaseUrl.trim().replace(/\/$/, '')
     diagramRenderingConfig.serverBaseUrl = trimmedServerBaseUrl || DEFAULT_DIAGRAM_SERVER
   }
+
+  if (config.mermaidTheme === 'dark' || config.mermaidTheme === null) {
+    diagramRenderingConfig.mermaidTheme = config.mermaidTheme
+  }
+}
+
+const withMermaidTheme = (code: string): string => {
+  if (diagramRenderingConfig.mermaidTheme !== 'dark' || code.trimStart().startsWith('%%{')) return code
+  return `%%{init: {'theme':'dark'}}%%\n${code}`
 }
 
 const note = (markdown, config) => {
@@ -175,7 +186,8 @@ const markdown = md({
         return `<pre><code class="language-${lang.toLowerCase()}">${markdown.utils.escapeHtml(code)}</code></pre>`
       }
 
-      const data = Buffer.from(code, 'utf8')
+      const diagramCode = lang.toLowerCase() === 'mermaid' ? withMermaidTheme(code) : code
+      const data = Buffer.from(diagramCode, 'utf8')
       const compressed = pako.deflate(data, { level: 9 })
       const result = Buffer.from(compressed).toString('base64').replace(/\+/g, '-').replace(/\//g, '_')
       return `<pre style="all:unset;"><div><img class="${lang.toLowerCase()}" src="${diagramRenderingConfig.serverBaseUrl}/${lang.toLowerCase()}/svg/${result}" /></div></pre>`

@@ -17,6 +17,8 @@ export const jsonForScript = (value: unknown): string => JSON.stringify(value)
   .replace(/\u2029/g, '\\u2029')
 
 const isOfflineMode = (value: unknown): boolean => value === true || value === 'true'
+const darkRevealThemes = new Set(['black', 'blood', 'moon', 'night'])
+const getMermaidTheme = (theme: string): 'dark' | null => darkRevealThemes.has(theme) ? 'dark' : null
 
 const imageSrcAssetPattern = /<img\b[^>]*\bsrc=["']([^"']+)["']/gi
 const backgroundImageAssetPattern = /\bdata-background-image=["']([^"']+)["']/gi
@@ -186,6 +188,7 @@ export class RevealServer extends Disposable {
         setDiagramRenderingConfig({
           enabled: !offline && context.configuration.diagramServerEnabled,
           serverBaseUrl: context.configuration.diagramServerUrl,
+          mermaidTheme: getMermaidTheme(context.configuration.theme),
         })
 
         const htmlSlides = context.slides.map((s) => ({
