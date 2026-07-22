@@ -8,6 +8,7 @@ import * as path from 'path'
 import * as fs from 'fs/promises'
 import * as fsSync from 'fs'
 import * as os from 'os'
+import pako from 'pako'
 
 const localAssetPattern = /(?:href|src)="(libs\/[^"]+)"/g
 const collectLocalAssets = (html: string) => [...html.matchAll(localAssetPattern)].map((match) => match[1])
@@ -171,6 +172,36 @@ describe('RevealServer', () => {
     expect(response.text).toContain('!offlineMode && window.RevealMath,')
     expect(response.text).toContain('<pre><code class="language-mermaid">')
     expect(response.text).not.toContain('kroki.io/mermaid/svg/')
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('uses Mermaid dark mode with the default black Reveal theme', async () => {
+    const context = createContext()
+    context.slides = [{ title: 'Diagram', index: 0, text: '```mermaid\nflowchart LR\nA-->B\n```', verticalChildren: [], attributes: '' }]
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+    const encoded = response.text.match(/mermaid\/svg\/([^"']+)/)?.[1]
+    const source = encoded ? Buffer.from(pako.inflate(Buffer.from(encoded.replace(/-/g, '+').replace(/_/g, '/'), 'base64'))).toString('utf8') : ''
+
+    expect(source).toContain("%%{init: {'theme':'dark'}}%%")
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('uses Mermaid dark mode with the league Reveal theme', async () => {
+    const context = createContext({ configuration: { theme: 'league' } })
+    context.slides = [{ title: 'Diagram', index: 0, text: '```mermaid\nflowchart LR\nA-->B\n```', verticalChildren: [], attributes: '' }]
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+    const encoded = response.text.match(/mermaid\/svg\/([^"']+)/)?.[1]
+    const source = encoded ? Buffer.from(pako.inflate(Buffer.from(encoded.replace(/-/g, '+').replace(/_/g, '/'), 'base64'))).toString('utf8') : ''
+
+    expect(source).toContain("%%{init: {'theme':'dark'}}%%")
 
     server.dispose()
     context.dispose()

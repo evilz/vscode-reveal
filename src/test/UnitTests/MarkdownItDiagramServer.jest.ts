@@ -1,8 +1,16 @@
 import markdownit, { setDiagramRenderingConfig } from '../../Markdown-it'
+import pako from 'pako'
+
+const getDiagramSource = (html: string): string => {
+  const encoded = html.match(/\/svg\/([^"']+)/)?.[1]
+  if (!encoded) throw new Error('Expected a Kroki diagram URL')
+  const compressed = Buffer.from(encoded.replace(/-/g, '+').replace(/_/g, '/'), 'base64')
+  return Buffer.from(pako.inflate(compressed)).toString('utf8')
+}
 
 describe('Markdown-it diagram server configuration', () => {
   afterEach(() => {
-    setDiagramRenderingConfig({ enabled: true, serverBaseUrl: 'https://kroki.io' })
+    setDiagramRenderingConfig({ enabled: true, serverBaseUrl: 'https://kroki.io', mermaidTheme: null })
   })
 
   test('uses the configured diagram server base URL', () => {
@@ -27,6 +35,16 @@ describe('Markdown-it diagram server configuration', () => {
     setDiagramRenderingConfig({ serverBaseUrl: '   ' })
     const html = markdownit.render('```mermaid\nflowchart LR\nA-->B\n```')
     expect(html).toContain('src="https://kroki.io/mermaid/svg/')
+  })
+
+  test('uses Mermaid dark mode for dark Reveal themes without overriding an author directive', () => {
+    setDiagramRenderingConfig({ mermaidTheme: 'dark' })
+
+    const themedHtml = markdownit.render('```mermaid\nflowchart LR\nA-->B\n```')
+    const explicitHtml = markdownit.render("```mermaid\n%%{init: {'theme':'forest'}}%%\nflowchart LR\nA-->B\n```")
+
+    expect(getDiagramSource(themedHtml)).toBe("%%{init: {'theme':'dark'}}%%\nflowchart LR\nA-->B\n")
+    expect(getDiagramSource(explicitHtml)).toBe("%%{init: {'theme':'forest'}}%%\nflowchart LR\nA-->B\n")
   })
 
   test('renders regular markdown syntax and speaker notes conversion', () => {
