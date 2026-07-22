@@ -80,6 +80,7 @@ describe('RevealServer', () => {
     const missingAssets = localAssets.filter((asset) => !fsSync.existsSync(path.join(process.cwd(), asset)))
 
     expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/markdown.js')
+    expect(response.text).toContain('libs/reveal.js/6.0.1/plugin/vscode-reveal-languages.js')
     expect(response.text).toContain('libs/highlight.js/9.15.10/reveal-code-focus-1.0.0-mod.js')
     expect(response.text).toContain('.then(() => window.RevealCodeFocus?.());')
     expect(response.text).not.toContain('libs/reveal.js/6.0.1/plugin/markdown/markdown.js')
@@ -342,6 +343,7 @@ describe('RevealServer', () => {
       '/libs/reveal.js/6.0.1/plugin/fullscreen/plugin.js',
       '/libs/reveal.js/6.0.1/plugin/anything/d3/d3.v3.min.js',
       '/libs/highlight.js/9.15.10/reveal-code-focus-1.0.0-mod.js',
+      '/libs/reveal.js/6.0.1/plugin/vscode-reveal-languages.js',
       '/libs/reveal.js/6.0.1/plugin/anything/d3.patch.js',
       '/libs/reveal.js/6.0.1/plugin/anything/d3/queue.v1.min.js',
       '/libs/reveal.js/6.0.1/plugin/anything/d3/topojson.v1.min.js',
