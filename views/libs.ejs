@@ -18,7 +18,7 @@
 <script src="libs/reveal.js/6.0.1/plugin/audio-slideshow/plugin.js"></script>
 <script src="libs/reveal.js/6.0.1/plugin/audio-slideshow/RecordRTC.js"></script>
 <script src="libs/reveal.js/6.0.1/plugin/audio-slideshow/recorder.js"></script>
-<% if (typeof seminar !== 'undefined' && seminar && seminar.server && seminar.hash) { %>
+<% if (!offline && typeof seminar !== 'undefined' && seminar && seminar.server && seminar.hash) { %>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
 <% } %>
 <script src="libs/reveal.js/6.0.1/plugin/seminar/plugin.js"></script>

@@ -9,10 +9,11 @@
 <script>
   const loadedPlugins = (...plugins) => [...new Set(plugins.filter(Boolean))];
   const incremental = <%- jsonForScript(incremental === true) %>;
+  const offlineMode = <%= offline === true ? 'true' : 'false' %>;
   if (incremental) {
     document.querySelectorAll('.slides li').forEach((item) => item.classList.add('fragment'));
   }
-  const hasSeminarConfig = <%= typeof seminar !== 'undefined' && seminar && seminar.server && seminar.hash ? 'true' : 'false' %>;
+  const hasSeminarConfig = !offlineMode && <%= typeof seminar !== 'undefined' && seminar && seminar.server && seminar.hash ? 'true' : 'false' %>;
   const seminarPlugins = hasSeminarConfig
     ? loadedPlugins(window.RevealSeminar, window.RevealPoll, window.RevealQnA)
     : [];
@@ -21,7 +22,7 @@
       window.RevealLoadContent,
       window.RevealNotes,
       window.RevealHighlight,
-      window.RevealMath,
+      !offlineMode && window.RevealMath,
       window.RevealAnimate,
       window.RevealChart,
       <% if(enableChalkboard) {%>window.RevealChalkboard,<%}%>
@@ -187,12 +188,12 @@
 					pie: { backgroundColor: [ ["rgba(0,0,0,.8)" , "rgba(220,20,20,.8)", "rgba(20,220,20,.8)", "rgba(220,220,20,.8)", "rgba(20,20,220,.8)"] ]},
 					radar: { borderColor: [ "rgba(20,220,220,.8)" , "rgba(220,120,120,.8)", "rgba(20,120,220,.8)" ]}, 
 			},
-			math: {
+			<% if (!offline) { %>math: {
 				mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
 				config: 'TeX-AMS_HTML-full',
 				// pass other options into `MathJax.Hub.Config()`
 				TeX: { Macros: { RR: "{\\bf R}" } }
-				},
+				},<% } %>
 				anything: [ 
 				{
 		className: "plot",

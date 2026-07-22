@@ -93,6 +93,7 @@ export interface IRevealOptions {
 
   diagramServerEnabled: boolean
   diagramServerUrl: string
+  offline: boolean
 }
 export interface IExtensionOptions {
   slideExplorerEnabled: boolean
@@ -188,7 +189,8 @@ export const defaultConfiguration: Configuration = {
   cssvariables: null,
 
   diagramServerEnabled: true,
-  diagramServerUrl: 'https://kroki.io'
+  diagramServerUrl: 'https://kroki.io',
+  offline: false
 }
 
 

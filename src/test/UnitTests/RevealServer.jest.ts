@@ -120,8 +120,49 @@ describe('RevealServer', () => {
     const response = await request(server.app).get('/')
     const printPluginsBlock = response.text.match(/const printPlugins = \[([\s\S]*?)\]\.filter\(Boolean\);/)?.[1] ?? ''
 
-    expect(printPluginsBlock).toContain('window.RevealMath,')
+    expect(printPluginsBlock).toContain('!offlineMode && window.RevealMath,')
     expect(printPluginsBlock).not.toContain('window.RevealMath?.MathJax3')
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('offline mode excludes extension-managed external resources and diagram requests', async () => {
+    const configuration = {
+      offline: 'true',
+      seminar: { server: 'http://localhost:4433', hash: 'integration-test' },
+    } as unknown as Partial<Configuration> & Record<string, unknown>
+    const context = createContext({
+      configuration,
+    })
+    context.slides = [{ title: 'Diagram', index: 0, text: '```mermaid\nflowchart LR\nA-->B\n```', verticalChildren: [], attributes: '' }]
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('const offlineMode = true;')
+    expect(response.text).toContain('const hasSeminarConfig = !offlineMode && true;')
+    expect(response.text).not.toContain('cdn.jsdelivr.net/gh/mathjax')
+    expect(response.text).not.toContain('cdnjs.cloudflare.com/ajax/libs/socket.io')
+    expect(response.text).toContain('!offlineMode && window.RevealMath,')
+    expect(response.text).toContain('<pre><code class="language-mermaid">')
+    expect(response.text).not.toContain('kroki.io/mermaid/svg/')
+
+    server.dispose()
+    context.dispose()
+  })
+
+  test('treats a quoted false offline setting as online', async () => {
+    const configuration = { offline: 'false' } as unknown as Partial<Configuration> & Record<string, unknown>
+    const context = createContext({
+      configuration,
+    })
+    const server = new RevealServer(context)
+
+    const response = await request(server.app).get('/')
+
+    expect(response.text).toContain('const offlineMode = false;')
+    expect(response.text).toContain('cdn.jsdelivr.net/gh/mathjax')
 
     server.dispose()
     context.dispose()
@@ -192,7 +233,7 @@ describe('RevealServer', () => {
     expect(response.text).toContain('window.RevealAnimate')
     expect(response.text).toContain('window.RevealChalkboard')
     expect(response.text).toContain('window.RevealCustomControls')
-    expect(response.text).toContain('const hasSeminarConfig = false;')
+    expect(response.text).toContain('const hasSeminarConfig = !offlineMode && false;')
     expect(response.text).not.toContain('cdnjs.cloudflare.com/ajax/libs/socket.io')
     expect(response.text).toContain('RevealChalkboard.toggleChalkboard();')
     expect(response.text).toContain('RevealChalkboard.toggleNotesCanvas();')
@@ -235,7 +276,7 @@ describe('RevealServer', () => {
     const response = await request(server.app).get('/')
 
     expect(response.text).toContain('cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js')
-    expect(response.text).toContain('const hasSeminarConfig = true;')
+    expect(response.text).toContain('const hasSeminarConfig = !offlineMode && true;')
     expect(response.text).toContain('window.RevealSeminar, window.RevealPoll, window.RevealQnA')
     expect(response.text).toContain('"server":"http://localhost:4433"')
     expect(response.text).toContain('"hash":"integration-test"')
