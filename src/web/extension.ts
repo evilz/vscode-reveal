@@ -2,6 +2,16 @@ import * as vscode from 'vscode'
 
 const SHOW_REVEALJS = 'vscode-revealjs.showRevealJS'
 const SHOW_REVEALJS_IN_BROWSER = 'vscode-revealjs.showRevealJSInBrowser'
+const unsupportedCommands = [
+  'vscode-revealjs.showRevealJSPresenterView',
+  'vscode-revealjs.stopRevealJSServer',
+  'vscode-revealjs.goToSlide',
+  'vscode-revealjs.exportPDF',
+  'vscode-revealjs.exportHTML',
+  'vscode-revealjs.exportHTMLFolder',
+  'vscode-revealjs.showSample',
+  'vscode-revealjs.newPresentation',
+]
 
 const escapeHtml = (value: string) => value
   .replace(/&/g, '&amp;')
@@ -23,7 +33,7 @@ const renderMarkdown = (markdown: string) => {
 
 export const renderSlides = (markdown: string) => markdown
   .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, '')
-  .split(/^---$/gm)
+  .split(/^---\r?$/gm)
   .map((slide) => `<section>${renderMarkdown(slide)}</section>`)
   .join('\n')
 
@@ -70,8 +80,12 @@ const showPresentation = (context: vscode.ExtensionContext) => {
 }
 
 export const activate = (context: vscode.ExtensionContext) => {
+  const unsupported = () => {
+    void vscode.window.showErrorMessage('This Reveal.js command is not available in the VS Code web editor.')
+  }
   context.subscriptions.push(
     vscode.commands.registerCommand(SHOW_REVEALJS, () => showPresentation(context)),
     vscode.commands.registerCommand(SHOW_REVEALJS_IN_BROWSER, () => showPresentation(context)),
+    ...unsupportedCommands.map((command) => vscode.commands.registerCommand(command, unsupported)),
   )
 }

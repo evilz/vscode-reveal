@@ -11,6 +11,14 @@ describe('web extension preview', () => {
     expect(slides).not.toContain('title: Demo')
   })
 
+  test('splits CRLF Markdown slide separators', () => {
+    const slides = renderSlides('# First\r\n---\r\n# Second')
+
+    expect(slides).toContain('<h1>First</h1>')
+    expect(slides).toContain('<h1>Second</h1>')
+    expect(slides.match(/<section>/g)).toHaveLength(2)
+  })
+
   test('uses supplied webview URIs for Reveal assets and local document references', () => {
     const html = createPresentationHtml('# Demo', (asset) => `webview://${asset}`, 'webview://workspace/slides')
 
