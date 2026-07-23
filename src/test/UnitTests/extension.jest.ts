@@ -9,7 +9,8 @@ const EXPORT_PDF = 'test.exportPdf'
 const EXPORT_HTML = 'test.exportHtml'
 const EXPORT_HTML_FOLDER = 'test.exportHtmlFolder'
 
-const createOutputChannelMock = jest.fn(() => ({ appendLine: jest.fn() }))
+const outputChannelDisposeMock = jest.fn()
+const createOutputChannelMock = jest.fn(() => ({ appendLine: jest.fn(), dispose: outputChannelDisposeMock }))
 const executeCommandMock = jest.fn()
 const registerCommandMock = jest.fn((name: string, callback: (...args: unknown[]) => unknown) => ({ name, callback, dispose: jest.fn() }))
 const onDidChangeTextEditorSelectionMock = jest.fn(() => ({ dispose: jest.fn() }))
@@ -49,6 +50,7 @@ const mainControllerInstance = {
   exportAsync: jest.fn(),
   exportFolderAsync: jest.fn(),
   shouldOpenFilemanagerAfterHTMLExport: jest.fn(() => true),
+  dispose: jest.fn(),
 }
 
 const MainControllerMock = jest.fn(() => mainControllerInstance)
@@ -177,5 +179,7 @@ describe('extension activate', () => {
     jest.advanceTimersByTime(500)
     expect(mainControllerInstance.refresh).toHaveBeenCalledWith(0)
     expect((context as any).subscriptions.length).toBeGreaterThan(0)
+    expect((context as any).subscriptions).toContain(mainControllerInstance)
+    expect((context as any).subscriptions).toContain(createOutputChannelMock.mock.results[0].value)
   })
 })

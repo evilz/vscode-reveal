@@ -233,7 +233,7 @@ export class RevealContext extends Disposable {
   }
 }
 
-export class RevealContexts {
+export class RevealContexts extends Disposable {
   private readonly innerMap = new Map<Uri, RevealContext>()
 
   constructor(
@@ -244,7 +244,9 @@ export class RevealContexts {
     private readonly onExportError: (error: unknown) => void,
     private readonly onServerStart: (uri: string, context: RevealContext) => void,
     private readonly onServerStop: (context: RevealContext) => void,
-  ) {}
+  ) {
+    super()
+  }
 
   getOrAdd(editor: TextEditor) {
     if (this.innerMap.has(editor.document.uri)) return this.innerMap.get(editor.document.uri)
@@ -264,5 +266,13 @@ export class RevealContexts {
       this.innerMap.delete(uri)
       context.dispose()
     }
+  }
+
+  dispose(): void {
+    for (const context of this.innerMap.values()) {
+      context.dispose()
+    }
+    this.innerMap.clear()
+    super.dispose()
   }
 }

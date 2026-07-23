@@ -302,4 +302,38 @@ describe('RevealContexts', () => {
 
     contexts.remove('unknown-uri' as unknown as Uri)
   })
+
+  test('disposes every retained context and clears the collection', () => {
+    const logger = { info: jest.fn(), debug: jest.fn(), LogLevel: LogLevel.Error }
+    const contexts = new RevealContexts(
+      logger as unknown as Logger,
+      () => defaultConfiguration,
+      '/ext',
+      () => false,
+      () => {},
+      () => {},
+      () => {},
+    )
+    const makeContextEditor = (uri: string) => ({
+      document: {
+        fileName: `/workspace/slides/${uri}.md`,
+        uri: { scheme: 'file', toString: () => uri },
+        getText: jest.fn(() => ''),
+      },
+      revealRange: jest.fn(),
+    }) as unknown as TextEditor
+    const firstEditor = makeContextEditor('first')
+    const secondEditor = makeContextEditor('second')
+    const first = contexts.getOrAdd(firstEditor)!
+    const second = contexts.getOrAdd(secondEditor)!
+    const firstDispose = jest.spyOn(first, 'dispose')
+    const secondDispose = jest.spyOn(second, 'dispose')
+
+    contexts.dispose()
+    contexts.dispose()
+
+    expect(firstDispose).toHaveBeenCalledTimes(1)
+    expect(secondDispose).toHaveBeenCalledTimes(1)
+    expect((contexts as any).innerMap.size).toBe(0)
+  })
 })

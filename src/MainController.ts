@@ -46,10 +46,11 @@ import { RevealContext, RevealContexts } from './RevealContext'
 import { configPrefix, Configuration, ConfigurationDescription, getConfig } from './Configuration'
 import { collectDiagnostics } from './FrontmatterDiagnostics'
 import { getBatchExportPath } from './commands/exportHTMLFolder'
+import { Disposable } from './dispose'
 
 const isMarkdownFile = (d: TextDocument) => d.languageId === 'markdown'
 
-export default class MainController {
+export default class MainController extends Disposable {
   private readonly statusBarController: StatusBarController
   private readonly slidesExplorer: SlideTreeProvider
   private readonly textDecorator: TextDecorator
@@ -108,13 +109,15 @@ export default class MainController {
   }
 
   public onDidCloseTextDocument(document: TextDocument) {
+    this.diagnostics.delete(document.uri)
+    this.revealContexts.remove(document.uri)
+
     if (this.currentContext?.is(document)) {
-      this.diagnostics.delete(document.uri)
       this.currentContext = undefined
-      this.revealContexts.remove(document.uri)
       this.syncAssetWatchers()
-      this.logger.debug(`onDidCloseTextDocument ${document.uri}`)
     }
+
+    this.logger.debug(`onDidCloseTextDocument ${document.uri}`)
   }
 
   public onDidChangeConfiguration(e: ConfigurationChangeEvent) {
@@ -134,10 +137,11 @@ export default class MainController {
     private config: Configuration,
     currentEditor: TextEditor | undefined
   ) {
+    super()
     this.extensionPath = extensionContext.extensionPath
-    this.statusBarController = new StatusBarController()
-    this.textDecorator = new TextDecorator(configDesc)
-    this.revealContexts = new RevealContexts(
+    this.statusBarController = this._register(new StatusBarController())
+    this.textDecorator = this._register(new TextDecorator(configDesc))
+    this.revealContexts = this._register(new RevealContexts(
       logger,
       () => this.config,
       extensionContext.extensionPath,
@@ -153,17 +157,17 @@ export default class MainController {
           this.statusBarController.updateServerInfo(null)
         }
       }
-    )
-    this.diagnostics = languages.createDiagnosticCollection('vscode-revealjs')
+    ))
+    this.diagnostics = this._register(languages.createDiagnosticCollection('vscode-revealjs'))
     this.configByKey = new Map(configDesc.map((d) => [d.label, d]))
 
     if (currentEditor && isMarkdownFile(currentEditor.document)) {
       this.currentContext = this.revealContexts.getOrAdd(currentEditor)
     }
 
-    this.slidesExplorer = new SlideTreeProvider(() => (this.currentContext ? this.currentContext.slides : []))
+    this.slidesExplorer = this._register(new SlideTreeProvider(() => (this.currentContext ? this.currentContext.slides : [])))
     this.slidesExplorer.register()
-    this.slidesExplorer.onDidChangeTreeData(() => this.logInfo(`SlideTreeProvider`, `updated`))
+    this._register(this.slidesExplorer.onDidChangeTreeData(() => this.logInfo(`SlideTreeProvider`, `updated`)))
   }
 
   //#region Log helpers
@@ -338,7 +342,7 @@ export default class MainController {
     } else {
       const webviewPanel = window.createWebviewPanel('RevealJS', 'Reveal JS presentation', ViewColumn.Beside, { enableScripts: true })
       this.webViewPane = new WebViewPane(webviewPanel)
-      this.webViewPane.onDidReceiveMessage((message) => {
+      this._register(this.webViewPane.onDidReceiveMessage((message) => {
         if (!message || typeof message !== 'object') return
 
         const command = 'command' in message ? message.command : undefined
@@ -356,11 +360,12 @@ export default class MainController {
         const vertical = 'vertical' in message ? Number(message.vertical) : Number.NaN
         if (!Number.isFinite(horizontal) || !Number.isFinite(vertical)) return
         this.goToSlide(horizontal, vertical)
-      })
-      this.webViewPane.onDidDispose(() => {
+      }))
+      this._register(this.webViewPane.onDidDispose(() => {
         this.logInfo('WebView', 'disposed')
         this.webViewPane = undefined
-      })
+      }))
+      this._register(this.webViewPane)
       this.refreshWebViewPane()
       return true
     }
@@ -382,5 +387,25 @@ export default class MainController {
   /** Stop server from listening */
   public stopServer() {
     this.currentContext?.stopServer()
+  }
+
+  public dispose() {
+    if (this.#refreshTimeout) {
+      clearTimeout(this.#refreshTimeout)
+      this.#refreshTimeout = null
+    }
+
+    for (const watcher of this.assetWatchers.values()) {
+      watcher.dispose()
+    }
+    this.assetWatchers.clear()
+
+    if (this.exportState) {
+      this.exportState.reject(new Error('HTML export was interrupted because the extension was disposed'))
+      this.exportState = null
+    }
+
+    this.currentContext = undefined
+    super.dispose()
   }
 }

@@ -8,7 +8,7 @@ import { ISlide } from './ISlide'
 export class SlideTreeProvider extends Disposable
   implements vscode.TreeDataProvider<SlideNode>
 {
-  private readonly _onDidChangeTreeData: vscode.EventEmitter<SlideNode | null> = new vscode.EventEmitter<SlideNode | null>()
+  private readonly _onDidChangeTreeData = this._register(new vscode.EventEmitter<SlideNode | null>())
 
   public readonly onDidChangeTreeData: vscode.Event<SlideNode | null> = this._onDidChangeTreeData.event
 
