@@ -341,7 +341,7 @@ export default class MainController extends Disposable {
       return false
     } else {
       const webviewPanel = window.createWebviewPanel('RevealJS', 'Reveal JS presentation', ViewColumn.Beside, { enableScripts: true })
-      this.webViewPane = this._register(new WebViewPane(webviewPanel))
+      this.webViewPane = new WebViewPane(webviewPanel)
       this._register(this.webViewPane.onDidReceiveMessage((message) => {
         if (!message || typeof message !== 'object') return
 
@@ -365,6 +365,7 @@ export default class MainController extends Disposable {
         this.logInfo('WebView', 'disposed')
         this.webViewPane = undefined
       }))
+      this._register(this.webViewPane)
       this.refreshWebViewPane()
       return true
     }

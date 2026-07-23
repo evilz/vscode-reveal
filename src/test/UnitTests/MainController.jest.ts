@@ -146,7 +146,10 @@ jest.mock('../../WebViewPane', () => ({
         disposeListener = cb
       },
       update: (uri: unknown, isExport: unknown) => (webViewPaneUpdateMock as any)(uri, isExport),
-      dispose: webViewPaneDisposeMock,
+      dispose: () => {
+        webViewPaneDisposeMock()
+        disposeListener?.()
+      },
     }
     webViewPaneCtorMock()
     return pane
@@ -287,6 +290,7 @@ describe('MainController coverage', () => {
     expect(statusBarDisposeMock).toHaveBeenCalledTimes(1)
     expect(textDecoratorDisposeMock).toHaveBeenCalledTimes(1)
     expect(webViewPaneDisposeMock).toHaveBeenCalledTimes(1)
+    expect((main as any).webViewPane).toBeUndefined()
     expect(main.currentContext).toBeUndefined()
     expect(context.refresh).not.toHaveBeenCalled()
   })
