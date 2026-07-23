@@ -33,6 +33,7 @@
     "onCommand:vscode-revealjs.newPresentation"
   ],
   "main": "./dist/extension.js",
+  "browser": "./dist/web/extension.js",
   "contributes": {
     "colors": [
       {
@@ -672,8 +673,9 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run -S esbuild-base -- --minify",
+    "vscode:prepublish": "npm run -S esbuild-base -- --minify && npm run -S esbuild-web -- --minify",
     "esbuild-base": "rimraf dist && esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild-web": "esbuild ./src/web/extension.ts --bundle --outfile=dist/web/extension.js --external:vscode --format=cjs --platform=browser --target=es2020",
     "build": "npm run -S esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "watch": "npm run -S esbuild-base -- --sourcemap --watch",
