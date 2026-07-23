@@ -711,6 +711,7 @@
     "all": true
   },
   "dependencies": {
+    "brace-expansion": "^2.1.2",
     "cors": "^2.8.6",
     "ejs": "^6.0.1",
     "express": "^5.2.1",
