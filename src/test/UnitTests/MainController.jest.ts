@@ -68,6 +68,7 @@ const slideExplorerUpdateMock = jest.fn()
 const slideExplorerRegisterMock = jest.fn()
 const slideExplorerOnDidChangeTreeDataMock = jest.fn()
 const slideExplorerSlidesGetterMock = jest.fn()
+const slideExplorerDisposeMock = jest.fn()
 jest.mock('../../SlideExplorer', () => ({
   SlideTreeProvider: jest.fn().mockImplementation((slidesGetter: () => unknown[]) => {
     slideExplorerSlidesGetterMock.mockImplementation(slidesGetter)
@@ -75,26 +76,32 @@ jest.mock('../../SlideExplorer', () => ({
       register: slideExplorerRegisterMock,
       onDidChangeTreeData: slideExplorerOnDidChangeTreeDataMock,
       update: slideExplorerUpdateMock,
+      dispose: slideExplorerDisposeMock,
     }
   }),
 }))
 
 const statusBarUpdateCountMock = jest.fn()
 const statusBarUpdateServerInfoMock = jest.fn()
+const statusBarDisposeMock = jest.fn()
 jest.mock('../../StatusBarController', () => ({
   StatusBarController: jest.fn().mockImplementation(() => ({
     updateCount: statusBarUpdateCountMock,
     updateServerInfo: statusBarUpdateServerInfoMock,
+    dispose: statusBarDisposeMock,
   })),
 }))
 
 const textDecoratorUpdateMock = jest.fn()
+const textDecoratorDisposeMock = jest.fn()
 jest.mock('../../TextDecorator', () => jest.fn().mockImplementation(() => ({
   update: textDecoratorUpdateMock,
+  dispose: textDecoratorDisposeMock,
 })))
 
 const revealContextsGetOrAddMock = jest.fn()
 const revealContextsRemoveMock = jest.fn()
+const revealContextsDisposeMock = jest.fn()
 const revealContextsCtorMock = jest.fn()
 const temporaryContexts: Array<{ configuration: typeof defaultConfiguration; refresh: jest.Mock; dispose: jest.Mock; exportPath: string }> = []
 jest.mock('../../RevealContext', () => ({
@@ -115,6 +122,7 @@ jest.mock('../../RevealContext', () => ({
     return {
       getOrAdd: (...getArgs: unknown[]) => (revealContextsGetOrAddMock as any)(...getArgs),
       remove: (...removeArgs: unknown[]) => (revealContextsRemoveMock as any)(...removeArgs),
+      dispose: revealContextsDisposeMock,
     }
   }),
 }))
@@ -124,6 +132,7 @@ let disposeListener: (() => void) | undefined
 const webViewPaneUpdateMock = jest.fn(() => Promise.resolve())
 const webViewPaneCtorMock = jest.fn()
 const goToSlideFromPaneMock = jest.fn()
+const webViewPaneDisposeMock = jest.fn()
 
 jest.mock('../../WebViewPane', () => ({
   __esModule: true,
@@ -137,6 +146,7 @@ jest.mock('../../WebViewPane', () => ({
         disposeListener = cb
       },
       update: (uri: unknown, isExport: unknown) => (webViewPaneUpdateMock as any)(uri, isExport),
+      dispose: webViewPaneDisposeMock,
     }
     webViewPaneCtorMock()
     return pane
@@ -243,6 +253,42 @@ describe('MainController coverage', () => {
     expect(revealContextsRemoveMock).toHaveBeenCalledWith('doc-uri')
     expect(watchers[0].dispose).toHaveBeenCalled()
     expect(main.currentContext).toBeUndefined()
+  })
+
+  test('closing a non-current document disposes its context without clearing active state', () => {
+    const context = makeContext()
+    context.is.mockReturnValue(false)
+    revealContextsGetOrAddMock.mockReturnValue(context)
+    const main = new MainController(logger, { extensionPath: '/ext' } as any, [], defaultConfiguration, editor as any)
+    const otherDocument = { uri: 'other-doc-uri' }
+
+    main.onDidCloseTextDocument(otherDocument as any)
+
+    expect(diagnosticDeleteMock).toHaveBeenCalledWith('other-doc-uri')
+    expect(revealContextsRemoveMock).toHaveBeenCalledWith('other-doc-uri')
+    expect(main.currentContext).toBe(context)
+  })
+
+  test('dispose releases controller-owned resources and is idempotent', () => {
+    const context = makeContext()
+    revealContextsGetOrAddMock.mockReturnValue(context)
+    const main = new MainController(logger, { extensionPath: '/ext' } as any, [], defaultConfiguration, editor as any)
+
+    ;(main as any).syncAssetWatchers()
+    main.showWebViewPane()
+    main.refresh()
+    main.dispose()
+    main.dispose()
+
+    expect(watchers[0].dispose).toHaveBeenCalledTimes(1)
+    expect(revealContextsDisposeMock).toHaveBeenCalledTimes(1)
+    expect(createDiagnosticCollectionMock.mock.results[0].value.dispose).toHaveBeenCalledTimes(1)
+    expect(slideExplorerDisposeMock).toHaveBeenCalledTimes(1)
+    expect(statusBarDisposeMock).toHaveBeenCalledTimes(1)
+    expect(textDecoratorDisposeMock).toHaveBeenCalledTimes(1)
+    expect(webViewPaneDisposeMock).toHaveBeenCalledTimes(1)
+    expect(main.currentContext).toBeUndefined()
+    expect(context.refresh).not.toHaveBeenCalled()
   })
 
   test('showWebViewPane handles panel reuse and message events', async () => {

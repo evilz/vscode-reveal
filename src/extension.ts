@@ -48,6 +48,8 @@ export function activate(context: ExtensionContext) {
   }
 
   context.subscriptions.push(
+    main,
+    outputChannel,
     registerCmd(SHOW_REVEALJS, () => main.showWebViewPane()  ),
     registerCmd(SHOW_REVEALJS_IN_BROWSER, showRevealJSInBrowser(() => main.currentContext?.startServer(), () => main.currentContext?.configuration.browserPath )),
     registerCmd(SHOW_REVEALJS_PRESENTER_VIEW, showRevealJSPresenterView(() => main.currentContext?.startServer(), () => main.currentContext?.configuration.browserPath)),
@@ -70,7 +72,8 @@ export function activate(context: ExtensionContext) {
   );
 
 
-  setTimeout(() => main.refresh(0),500)
+  const refreshTimer = setTimeout(() => main.refresh(0),500)
+  context.subscriptions.push({ dispose: () => clearTimeout(refreshTimer) })
 
 }
 

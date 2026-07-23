@@ -1,20 +1,21 @@
-import {DecorationOptions, MarkdownString, Range, TextEditor, ThemeColor, window} from 'vscode';
+import {DecorationOptions, MarkdownString, Range, TextEditor, TextEditorDecorationType, ThemeColor, window} from 'vscode';
 import { ConfigurationDescription } from './Configuration';
+import { Disposable } from './dispose';
 
 
 // styles for known options in the frontmatter
-const revealjsConfigKeyForeground = window.createTextEditorDecorationType({
-    fontWeight: 'bold',
-    fontStyle: 'italic',
-    color: new ThemeColor('revealjs.configKeyForeground'),
-  })
-  
-export default class TextDecorator {
+export default class TextDecorator extends Disposable {
 
     #propertiesRegex: RegExp
+    readonly #decorationType: TextEditorDecorationType
    
     constructor(private configDesc:ConfigurationDescription[] ) {
-        
+        super()
+        this.#decorationType = this._register(window.createTextEditorDecorationType({
+            fontWeight: 'bold',
+            fontStyle: 'italic',
+            color: new ThemeColor('revealjs.configKeyForeground'),
+        }))
         const allProps = configDesc.map(x => x.label).join('|')
         this.#propertiesRegex = new RegExp(`^(${allProps}):.*$`, 'gm');
     }
@@ -38,7 +39,7 @@ export default class TextDecorator {
 			decorations.push(decoration);
 		}
 
-        editor.setDecorations(revealjsConfigKeyForeground, decorations);
+        editor.setDecorations(this.#decorationType, decorations);
     }
 
 }
