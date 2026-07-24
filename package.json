@@ -527,6 +527,11 @@
           "default": true,
           "description": "Open the file manager after HTML export"
         },
+        "revealjs.selfContained": {
+          "type": "boolean",
+          "default": false,
+          "description": "Inline local export assets so HTML export produces one self-contained index.html file"
+        },
         "revealjs.enableMenu": {
           "type": "boolean",
           "default": true,
