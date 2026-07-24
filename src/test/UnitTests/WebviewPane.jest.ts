@@ -71,6 +71,8 @@ test('Update injects bridge script for slide sync and preserves hash with query 
   expect(asWebviewUri).toHaveBeenCalled()
   expect(webviewPanel.webview.html).toContain('<base href="vscode-webview://remote/http://localhost:1234/?print-pdf">')
   expect(webviewPanel.webview.html).toContain("command: 'slideChanged'")
+  expect(webviewPanel.webview.html).toContain("command: 'executeCodeBlock'")
+  expect(webviewPanel.webview.html).toContain("event.metaKey || event.ctrlKey")
   expect(webviewPanel.webview.html).toContain("message.command === 'setSlide'")
   expect(webviewPanel.webview.html).toContain('window.location.hash = initialHash')
   expect(webviewPanel.webview.html).toContain("command: 'exportComplete'")

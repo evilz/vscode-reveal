@@ -180,6 +180,17 @@ export default class MainController extends Disposable {
   }
   //#endregion
 
+  private executeCodeBlockInActiveTerminal(code: string) {
+    const terminal = window.activeTerminal
+    if (!terminal) {
+      void window.showWarningMessage('Open a terminal to execute code blocks from the Reveal presentation.')
+      return
+    }
+
+    terminal.show(true)
+    terminal.sendText(code, true)
+  }
+
   private exportState: {
     resolve: (path: string) => void
     reject: (error: Error) => void
@@ -350,6 +361,12 @@ export default class MainController extends Disposable {
         const command = 'command' in message ? message.command : undefined
         if (command === 'exportComplete') {
           void this.completeExport()
+          return
+        }
+
+        if (command === 'executeCodeBlock') {
+          const code = 'text' in message ? message.text : undefined
+          if (typeof code === 'string' && code.trim()) this.executeCodeBlockInActiveTerminal(code)
           return
         }
 

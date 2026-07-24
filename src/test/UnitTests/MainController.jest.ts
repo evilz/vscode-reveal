@@ -27,6 +27,10 @@ const createFileSystemWatcherMock = jest.fn(() => {
 })
 const createWebviewPanelMock = jest.fn(() => ({}))
 const openTextDocumentMock = jest.fn()
+const showWarningMessageMock = jest.fn()
+const terminalShowMock = jest.fn()
+const terminalSendTextMock = jest.fn()
+let activeTerminalMock: { show: jest.Mock; sendText: jest.Mock } | undefined
 
 jest.mock('vscode', () => ({
   commands: { executeCommand: (...args: unknown[]) => (executeCommandMock as any)(...args) },
@@ -35,7 +39,13 @@ jest.mock('vscode', () => ({
     createFileSystemWatcher: (pattern: unknown, a: unknown, b: unknown, c: unknown) => (createFileSystemWatcherMock as any)(pattern, a, b, c),
     openTextDocument: (uri: unknown) => (openTextDocumentMock as any)(uri),
   },
-  window: { createWebviewPanel: (viewType: unknown, title: unknown, column: unknown, options: unknown) => (createWebviewPanelMock as any)(viewType, title, column, options) },
+  window: {
+    createWebviewPanel: (viewType: unknown, title: unknown, column: unknown, options: unknown) => (createWebviewPanelMock as any)(viewType, title, column, options),
+    get activeTerminal() {
+      return activeTerminalMock
+    },
+    showWarningMessage: (...args: unknown[]) => (showWarningMessageMock as any)(...args),
+  },
   Position: class Position {
     constructor(public line: number, public character: number) {}
   },
@@ -192,6 +202,7 @@ describe('MainController coverage', () => {
     jest.clearAllMocks()
     watchers.length = 0
     temporaryContexts.length = 0
+    activeTerminalMock = { show: terminalShowMock, sendText: terminalSendTextMock }
     receiveMessageListener = undefined
     disposeListener = undefined
   })
@@ -308,7 +319,10 @@ describe('MainController coverage', () => {
     receiveMessageListener?.({ command: 'noop' })
     receiveMessageListener?.({ command: 'slideChanged', horizontal: 'x', vertical: 1 })
     receiveMessageListener?.({ command: 'slideChanged', horizontal: 2, vertical: 1 })
+    receiveMessageListener?.({ command: 'executeCodeBlock', text: 'echo hello' })
     expect(goToSlideFromPaneMock).toHaveBeenCalledWith(2, 1)
+    expect(terminalShowMock).toHaveBeenCalledWith(true)
+    expect(terminalSendTextMock).toHaveBeenCalledWith('echo hello', true)
 
     const exportPromise = main.exportAsync()
     await flush()
@@ -450,8 +464,23 @@ describe('MainController coverage', () => {
     activeMain.showWebViewPane()
     receiveMessageListener?.({})
     receiveMessageListener?.({ command: 'exportComplete' })
+    receiveMessageListener?.({ command: 'executeCodeBlock' })
+    receiveMessageListener?.({ command: 'executeCodeBlock', text: '   ' })
     receiveMessageListener?.({ command: 'slideChanged', vertical: 1 })
     receiveMessageListener?.({ command: 'slideChanged', horizontal: 1 })
     disposeListener?.()
+  })
+
+  test('warns when executing a code block without an active terminal', () => {
+    const context = makeContext()
+    revealContextsGetOrAddMock.mockReturnValue(context)
+    const main = new MainController(logger, { extensionPath: '/ext' } as any, [], defaultConfiguration, editor as any)
+    activeTerminalMock = undefined
+
+    main.showWebViewPane()
+    receiveMessageListener?.({ command: 'executeCodeBlock', text: 'echo warning' })
+
+    expect(showWarningMessageMock).toHaveBeenCalledWith('Open a terminal to execute code blocks from the Reveal presentation.')
+    expect(terminalSendTextMock).not.toHaveBeenCalled()
   })
 })

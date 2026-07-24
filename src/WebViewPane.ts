@@ -64,6 +64,7 @@ export default class WebviewPane
         (function () {
           const vscode = acquireVsCodeApi();
           const initialHash = ${JSON.stringify(slideHash)};
+          let activeCodeBlock = null;
 
           const postCurrentSlide = () => {
             const match = window.location.hash.match(/#\\/(\\d+)\\/(\\d+)/);
@@ -76,7 +77,39 @@ export default class WebviewPane
             });
           };
 
+          const findCodeBlock = (target) => {
+            if (!(target instanceof Element)) return null;
+            return target.closest('.codeblock, pre');
+          };
+
+          const getCurrentCodeBlock = () => {
+            if (activeCodeBlock instanceof Element && document.contains(activeCodeBlock)) {
+              return activeCodeBlock;
+            }
+            return document.querySelector('.slides section.present .codeblock, .slides section.present pre');
+          };
+
+          const executeCurrentCodeBlock = () => {
+            const codeBlock = getCurrentCodeBlock();
+            const code = codeBlock?.querySelector('code');
+            const text = code?.textContent?.trim();
+            if (!text) return;
+            vscode.postMessage({
+              command: 'executeCodeBlock',
+              text,
+            });
+          };
+
           window.addEventListener('hashchange', postCurrentSlide);
+          document.addEventListener('pointerdown', (event) => {
+            activeCodeBlock = findCodeBlock(event.target);
+          }, true);
+          document.addEventListener('keydown', (event) => {
+            if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+              executeCurrentCodeBlock();
+              event.preventDefault();
+            }
+          });
 
           if (window.Reveal && typeof window.Reveal.on === 'function') {
             window.Reveal.on('slidechanged', postCurrentSlide);
