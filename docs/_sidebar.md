@@ -6,46 +6,46 @@
 - CONTENT
   - [Basic Markdown Syntax](markdown/basic-syntax.md)
   - [Extended Syntax](markdown/extended-syntax.md)
-  - Backgrounds
-  - Media
+  - [Backgrounds](https://revealjs.com/backgrounds/)
+  - [Media](https://revealjs.com/media/)
   - [Code](markdown/code.md)
-  - Math
-  - Fragments
-  - Links
-  - Iframe
-  - Diagram
-  - Layout
-  - Slide Visibility
+  - [Math](https://revealjs.com/math/)
+  - [Fragments](https://revealjs.com/fragments/)
+  - [Links](https://revealjs.com/links/)
+  - [Iframe](markdown/extended-syntax.md#iframe)
+  - [Diagram](https://kroki.io/)
+  - [Layout](https://revealjs.com/layout/)
+  - [Slide Visibility](https://revealjs.com/markup/#slide-visibility)
 
 - CUSTOMIZATION
-  - Themes
-  - Transitions
-  - Config Options
-  - Presentation Size
+  - [Themes](https://revealjs.com/themes/)
+  - [Transitions](https://revealjs.com/transitions/)
+  - [Configuration Options](https://revealjs.com/config/)
+  - [Presentation Size](https://revealjs.com/presentation-size/)
 
 - FEATURES
-  - Vertical Slides
-  - Auto-Animate
-  - Auto-Slide
-  - Speaker View
-  - Slide Numbers
-  - Touch Navigation
-  - PDF Export
-  - Overview Mode
-  - Fullscreen Mode
-  - Menu
-  - Zoom
-  - Chalkboard
-  - Search
+  - [Vertical Slides](https://revealjs.com/vertical-slides/)
+  - [Auto-Animate](https://revealjs.com/auto-animate/)
+  - [Auto-Slide](https://revealjs.com/auto-slide/)
+  - [Speaker View](https://revealjs.com/speaker-view/)
+  - [Slide Numbers](https://revealjs.com/slide-numbers/)
+  - [Touch Navigation](https://revealjs.com/touch-navigation/)
+  - [PDF Export](https://revealjs.com/pdf-export/)
+  - [Overview Mode](https://revealjs.com/overview/)
+  - [Fullscreen Mode](https://revealjs.com/fullscreen/)
+  - [Menu](https://github.com/denehyg/reveal.js-menu)
+  - [Zoom](https://revealjs.com/zoom/)
+  - [Chalkboard](https://github.com/rajgoel/reveal.js-plugins/tree/master/chalkboard)
+  - [Search](https://revealjs.com/search/)
 
 
 - CONFIGURATION
-  - Overview
-  - Reference
+  - [Overview](https://revealjs.com/config/)
+  - [Reference](https://revealjs.com/config/)
 
 - Reference
 
-  - [API](api.md)
-  - [Configuration](configuration.md)
+  - [Reveal.js API](https://revealjs.com/api/)
+  - [Reveal.js Configuration](https://revealjs.com/config/)
 
 - [Contributing](CONTRIBUTING.md)
