@@ -4,7 +4,7 @@ jest.mock('../../commands/openExternal', () => ({
   openInBrowser: (...args: unknown[]) => openInBrowserMock(...args),
 }))
 
-import { exportPDF } from '../../commands/exportPDF'
+import { exportPDF, toPrintPdfUrl } from '../../commands/exportPDF'
 
 describe('exportPDF command', () => {
   beforeEach(() => {
@@ -33,5 +33,17 @@ describe('exportPDF command', () => {
     await command()
 
     expect(openInBrowserMock).toHaveBeenCalledWith('http://localhost:1948?print-pdf-now', undefined)
+  })
+
+  test('waits for a remote URL before opening the print view', async () => {
+    const command = exportPDF(async () => 'https://forwarded.example.test')
+
+    await command()
+
+    expect(openInBrowserMock).toHaveBeenCalledWith('https://forwarded.example.test?print-pdf-now', undefined)
+  })
+
+  test('adds the print flag to a forwarded URL before its slide fragment', () => {
+    expect(toPrintPdfUrl('https://forwarded.example.test/?token=abc#/2/1')).toBe('https://forwarded.example.test/?token=abc&print-pdf-now#/2/1')
   })
 })

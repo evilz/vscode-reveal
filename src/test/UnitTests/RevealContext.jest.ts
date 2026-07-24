@@ -10,6 +10,9 @@ const countLinesToSlideMock = jest.fn((...args: unknown[]) => {
 
 const serverStartMock = jest.fn(() => serverUri)
 const serverStopMock = jest.fn()
+const asExternalUriMock = jest.fn(async (uri: { toString(): string }) => ({
+  toString: () => `https://remote.example.test/${encodeURIComponent(uri.toString())}`,
+}))
 
 jest.mock('../../SlideParser', () => ({
   __esModule: true,
@@ -82,7 +85,15 @@ jest.mock('vscode', () => {
     dispose() {}
   }
 
-  return { Position, Range, Selection, EventEmitter, workspace }
+  return {
+    Position,
+    Range,
+    Selection,
+    EventEmitter,
+    Uri: { parse: (value: string) => ({ toString: () => value }) },
+    env: { asExternalUri: (uri: { toString(): string }) => asExternalUriMock(uri) },
+    workspace,
+  }
 })
 
 import type { FrontMatterResult } from 'front-matter'
@@ -121,7 +132,7 @@ describe('RevealContext', () => {
     workspaceMock.getWorkspaceFolder.mockReturnValue(undefined)
   })
 
-  test('computes asset paths and uri helpers', () => {
+  test('computes asset paths and uri helpers', async () => {
     const editor = makeEditor()
     const context = new RevealContext(
       editor as unknown as TextEditor,
@@ -135,6 +146,8 @@ describe('RevealContext', () => {
     expect(context.dirname).toBe(slidesDir)
     expect(context.exportPath).toBe(path.resolve(slidesDir, 'dist'))
     expect(context.baseUri).toBe(serverUri)
+    await expect(context.getExternalUri()).resolves.toBe(`https://remote.example.test/${encodeURIComponent(serverUri)}`)
+    expect(asExternalUriMock).toHaveBeenCalled()
 
     const cssPath = context.resolveLocalAssetPath('styles/custom', true)
     const absoluteCssPath = path.join(path.sep, 'tmp', 'file.css')

@@ -2,7 +2,7 @@ import { FrontMatterResult } from 'front-matter'
 import fs from 'fs'
 import path from 'path'
 import { isDeepStrictEqual } from 'util'
-import { EventEmitter, Position, Range, Selection, TextDocument, TextEditor, Uri, workspace } from 'vscode'
+import { env, EventEmitter, Position, Range, Selection, TextDocument, TextEditor, Uri, workspace } from 'vscode'
 import { Configuration, mergeConfig } from './Configuration'
 import { Disposable } from './dispose'
 import { ISlide } from './ISlide'
@@ -202,6 +202,15 @@ export class RevealContext extends Disposable {
 
   startServer() {
     return this.#server.start()
+  }
+
+  /**
+   * Resolve the local preview URL to one reachable from the client. In a remote
+   * VS Code workspace this creates the appropriate port-forwarded URL.
+   */
+  async getExternalUri() {
+    const serverUri = this.startServer()
+    return (await env.asExternalUri(Uri.parse(serverUri))).toString()
   }
 
   stopServer() {

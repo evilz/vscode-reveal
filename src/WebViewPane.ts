@@ -1,4 +1,4 @@
-import { EventEmitter, WebviewPanel } from "vscode";
+import { EventEmitter, Uri, WebviewPanel } from "vscode";
 import { Disposable } from "./dispose";
 
 export default class WebviewPane
@@ -43,7 +43,8 @@ export default class WebviewPane
 
         const response = await fetch(parsedUrl.toString())
         const html = await response.text()
-        const htmlWithBase = this.injectBaseHref(html, parsedUrl.toString())
+        const webviewUri = this.webviewPanel.webview.asWebviewUri(Uri.parse(parsedUrl.toString())).toString()
+        const htmlWithBase = this.injectBaseHref(html, webviewUri)
         this.webviewPanel.webview.html = this.injectBridgeScript(htmlWithBase, slideHash, sendExportSignal)
         this.#onDidUpdate.fire()
     }
