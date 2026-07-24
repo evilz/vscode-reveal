@@ -47,6 +47,7 @@ import { configPrefix, Configuration, ConfigurationDescription, getConfig } from
 import { collectDiagnostics } from './FrontmatterDiagnostics'
 import { getBatchExportPath } from './commands/exportHTMLFolder'
 import { Disposable } from './dispose'
+import { createSelfContainedExport } from './ExportHTML'
 
 const isMarkdownFile = (d: TextDocument) => d.languageId === 'markdown'
 
@@ -183,6 +184,7 @@ export default class MainController extends Disposable {
     resolve: (path: string) => void
     reject: (error: Error) => void
     path: string
+    selfContained: boolean
   } | null = null
   public isInExport = () => this.exportState !== null
 
@@ -211,7 +213,7 @@ export default class MainController extends Disposable {
     const exportPath = this.currentContext.exportPath
 
     const promise = new Promise<string>((resolve, reject) => {
-      this.exportState = { resolve, reject, path: exportPath }
+      this.exportState = { resolve, reject, path: exportPath, selfContained: this.currentContext!.configuration.selfContained }
     })
 
     if (this.webViewPane) {
@@ -347,10 +349,7 @@ export default class MainController extends Disposable {
 
         const command = 'command' in message ? message.command : undefined
         if (command === 'exportComplete') {
-          if (this.exportState) {
-            this.exportState.resolve(this.exportState.path)
-            this.exportState = null
-          }
+          void this.completeExport()
           return
         }
 
@@ -368,6 +367,19 @@ export default class MainController extends Disposable {
       this._register(this.webViewPane)
       this.refreshWebViewPane()
       return true
+    }
+  }
+
+  private async completeExport() {
+    const exportState = this.exportState
+    if (!exportState) return
+    try {
+      if (exportState.selfContained) await createSelfContainedExport(exportState.path)
+      exportState.resolve(exportState.path)
+    } catch (error) {
+      exportState.reject(new Error(`HTML export failed: ${error instanceof Error ? error.message : String(error)}`))
+    } finally {
+      if (this.exportState === exportState) this.exportState = null
     }
   }
 

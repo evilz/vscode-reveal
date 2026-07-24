@@ -100,6 +100,7 @@ export interface IExtensionOptions {
   browserPath: string | null
   exportHTMLPath: string
   openFilemanagerAfterHTMLExport: boolean
+  selfContained: boolean
   logLevel: LogLevel
 }
 
@@ -177,6 +178,7 @@ export const defaultConfiguration: Configuration = {
   browserPath: null,
   exportHTMLPath: `./export`,
   openFilemanagerAfterHTMLExport: true,
+  selfContained: false,
   logLevel: LogLevel.Error,
 
   enableMenu: true,
