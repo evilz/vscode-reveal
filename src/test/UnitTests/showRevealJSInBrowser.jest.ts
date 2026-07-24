@@ -28,6 +28,14 @@ describe('showRevealJSInBrowser commands', () => {
     expect(openInBrowserMock).toHaveBeenCalledWith('http://localhost:1948/#/1/0', '/browser')
   })
 
+  test('showRevealJSInBrowser waits for a remote URL', async () => {
+    const run = showRevealJSInBrowser(async () => 'https://forwarded.example.test/#/1/0', () => '/browser')
+
+    await run()
+
+    expect(openInBrowserMock).toHaveBeenCalledWith('https://forwarded.example.test/#/1/0', '/browser')
+  })
+
   test('showRevealJSPresenterView opens notes-enabled url', async () => {
     const run = showRevealJSPresenterView(() => 'http://localhost:1948/#/1/0', () => '/browser')
 

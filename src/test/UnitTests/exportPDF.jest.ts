@@ -34,4 +34,12 @@ describe('exportPDF command', () => {
 
     expect(openInBrowserMock).toHaveBeenCalledWith('http://localhost:1948?print-pdf-now', undefined)
   })
+
+  test('waits for a remote URL before opening the print view', async () => {
+    const command = exportPDF(async () => 'https://forwarded.example.test')
+
+    await command()
+
+    expect(openInBrowserMock).toHaveBeenCalledWith('https://forwarded.example.test?print-pdf-now', undefined)
+  })
 })
