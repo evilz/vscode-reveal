@@ -32,7 +32,7 @@
   - [Touch Navigation](https://revealjs.com/touch-navigation/)
   - [PDF Export](https://revealjs.com/pdf-export/)
   - [Overview Mode](https://revealjs.com/overview/)
-  - [Fullscreen Mode](https://revealjs.com/overview/)
+  - [Fullscreen Mode](https://revealjs.com/fullscreen/)
   - [Menu](https://github.com/denehyg/reveal.js-menu)
   - [Zoom](https://revealjs.com/zoom/)
   - [Chalkboard](https://github.com/rajgoel/reveal.js-plugins/tree/master/chalkboard)
