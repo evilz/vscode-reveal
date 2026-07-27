@@ -182,6 +182,31 @@ test('Persists explicitly marked slide data-state through following and vertical
   expect(slides[3].attributes).toBe('data-state="section-blue"')
 })
 
+test('Does not propagate an unmarked data-state and removes disabled persistence markers', () => {
+  const content = `<!-- .slide: data-state="one" -->
+# One
+
+---
+
+# Default
+
+---
+
+<!-- .slide: data-state="two" data-state-persistent = "false" -->
+# Two
+
+---
+
+# Also default`
+
+  const { slides } = parser.parse(content, defaultConfiguration)
+
+  expect(slides[0].attributes).toBe('data-state="one"')
+  expect(slides[1].attributes).toBe('')
+  expect(slides[2].attributes).toBe('data-state="two"')
+  expect(slides[3].attributes).toBe('')
+})
+
 test('Malformed front matter still returns parsed slides and parser location', () => {
   const malformedFrontMatter = `---
 foo: [

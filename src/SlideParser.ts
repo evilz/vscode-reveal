@@ -40,13 +40,15 @@ const findTitle = (text: string) => {
   return lines[0] ?? ''
 }
 
-const persistentDataStateMarker = /\s*data-state-persistent(?:=(?:"true"|'true'|true))?/i
-const dataStateAttribute = /\bdata-state\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/i
+const persistentDataStateMarker = /(?:^|\s)data-state-persistent(?:\s*=\s*(\S+))?(?=\s|$)/i
+const dataStateAttribute = /(?:^|\s)data-state\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)(?=\s|$)/i
 
 const applyPersistentDataState = (slides: ISlide[]) => {
   let persistentState: string | null = null
   for (const slide of slides.flatMap((slide) => [slide, ...slide.verticalChildren])) {
-    const isPersistent = persistentDataStateMarker.test(slide.attributes)
+    const marker = persistentDataStateMarker.exec(slide.attributes)
+    const markerValue = marker?.[1]?.replace(/^['"]|['"]$/g, '').toLowerCase()
+    const isPersistent = Boolean(marker) && markerValue !== 'false'
     slide.attributes = slide.attributes.replace(persistentDataStateMarker, '').trim()
     const state = dataStateAttribute.exec(slide.attributes)?.[0] ?? null
     if (state && isPersistent) {
