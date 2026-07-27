@@ -40,6 +40,25 @@ const findTitle = (text: string) => {
   return lines[0] ?? ''
 }
 
+const persistentDataStateMarker = /\s*data-state-persistent(?:=(?:"true"|'true'|true))?/i
+const dataStateAttribute = /\bdata-state\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/i
+
+const applyPersistentDataState = (slides: ISlide[]) => {
+  let persistentState: string | null = null
+  for (const slide of slides.flatMap((slide) => [slide, ...slide.verticalChildren])) {
+    const isPersistent = persistentDataStateMarker.test(slide.attributes)
+    slide.attributes = slide.attributes.replace(persistentDataStateMarker, '').trim()
+    const state = dataStateAttribute.exec(slide.attributes)?.[0] ?? null
+    if (state && isPersistent) {
+      persistentState = state
+    } else if (state) {
+      persistentState = null
+    } else if (persistentState) {
+      slide.attributes = `${slide.attributes} ${persistentState}`.trim()
+    }
+  }
+}
+
 export class SlideParser extends Disposable {
 
   constructor() {
@@ -76,11 +95,13 @@ export class SlideParser extends Disposable {
   #parseSlides = (slideContent: string, separator: string, verticalSeparator: string): ISlide[] => {
     const regex = new RegExp(separator, 'gm')
     const slides = slideContent.split(regex)
-    return slides.map((s, i) => {
+    const parsedSlides = slides.map((s, i) => {
 
       return this.#parseSlide(trimFirstLastEmptyLine(s), i, verticalSeparator)
 
     })
+    applyPersistentDataState(parsedSlides)
+    return parsedSlides
   }
 
 
