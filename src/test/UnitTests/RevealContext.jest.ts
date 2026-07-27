@@ -250,6 +250,11 @@ describe('RevealContext', () => {
         slides: [{}, { verticalChildren: [1, 2] }],
         parseError: undefined,
       })
+      .mockReturnValueOnce({
+        frontmatter: undefined,
+        slides: [{}, { verticalChildren: [1, 2] }],
+        parseError: undefined,
+      })
 
     const refreshed = context.refresh()
     expect(refreshed.slides).toHaveLength(2)
@@ -258,6 +263,9 @@ describe('RevealContext', () => {
 
     context.refresh()
     expect(mergeConfigMock).toHaveBeenCalledTimes(1)
+
+    context.refresh(true)
+    expect(mergeConfigMock).toHaveBeenCalledTimes(2)
 
     context.updatePosition(new Position(2, 1))
 
@@ -348,5 +356,21 @@ describe('RevealContexts', () => {
     expect(firstDispose).toHaveBeenCalledTimes(1)
     expect(secondDispose).toHaveBeenCalledTimes(1)
     expect((contexts as any).innerMap.size).toBe(0)
+  })
+
+  test('recomputes configuration for every retained context', () => {
+    const logger = { info: jest.fn(), debug: jest.fn(), LogLevel: LogLevel.Error }
+    const contexts = new RevealContexts(logger as unknown as Logger, () => defaultConfiguration, '/ext', () => false, () => {}, () => {}, () => {})
+    const editor = {
+      document: { fileName: '/workspace/slides/main.md', uri: { scheme: 'file', toString: () => 'context' }, getText: jest.fn(() => '# slide') },
+      revealRange: jest.fn(),
+    } as unknown as TextEditor
+    const context = contexts.getOrAdd(editor)!
+    const refresh = jest.spyOn(context, 'refresh')
+    parseMock.mockReturnValue({ frontmatter: undefined, slides: [], parseError: undefined })
+
+    contexts.refreshConfiguration()
+
+    expect(refresh).toHaveBeenCalledWith(true)
   })
 })

@@ -165,11 +165,11 @@ export class RevealContext extends Disposable {
     return [...paths]
   }
 
-  public refresh() {
+  public refresh(recomputeConfiguration = false) {
     const { frontmatter, slides, parseError } = slideParser.parse(this.getText(), this.configuration)
     this.slides = slides
     this.parseError = parseError
-    if (!isDeepStrictEqual(frontmatter, this.frontmatter)) {
+    if (recomputeConfiguration || !isDeepStrictEqual(frontmatter, this.frontmatter)) {
       this.frontmatter = frontmatter
       this.configuration = mergeConfig(this.getConfiguration(), frontmatter?.attributes)
       this.logger.LogLevel = this.configuration.logLevel
@@ -274,6 +274,12 @@ export class RevealContexts extends Disposable {
     if (context) {
       this.innerMap.delete(uri)
       context.dispose()
+    }
+  }
+
+  refreshConfiguration() {
+    for (const context of this.innerMap.values()) {
+      context.refresh(true)
     }
   }
 

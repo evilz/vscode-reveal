@@ -126,6 +126,11 @@ export default class MainController extends Disposable {
       return
     }
     this.config = getConfig()
+    this.revealContexts.refreshConfiguration()
+    void commands.executeCommand('setContext', 'slideExplorerEnabled', this.config.slideExplorerEnabled)
+    this.syncAssetWatchers()
+    this.slidesExplorer.update()
+    this.refreshWebViewPane()
   }
 
   //#endregion
