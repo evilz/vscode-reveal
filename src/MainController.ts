@@ -126,8 +126,20 @@ export default class MainController extends Disposable {
       return
     }
     this.config = getConfig()
-    this.revealContexts.refreshConfiguration()
     void commands.executeCommand('setContext', 'slideExplorerEnabled', this.config.slideExplorerEnabled)
+    if (this.exportState) {
+      this.configurationRefreshPending = true
+      return
+    }
+    this.applyConfigurationChanges()
+  }
+
+  private applyConfigurationChanges() {
+    const contexts = this.revealContexts.refreshConfiguration() ?? []
+    if (this.currentContext) this.currentContext.logger.LogLevel = this.currentContext.configuration.logLevel
+    void Promise.all(contexts.map(async (context) => {
+      this.diagnostics.set(context.editor.document.uri, await collectDiagnostics(context, this.configByKey))
+    }))
     this.syncAssetWatchers()
     this.slidesExplorer.update()
     this.refreshWebViewPane()
@@ -202,6 +214,7 @@ export default class MainController extends Disposable {
     path: string
     selfContained: boolean
   } | null = null
+  private configurationRefreshPending = false
   public isInExport = () => this.exportState !== null
 
   private readonly onExportError = (error: unknown) => {
@@ -402,6 +415,10 @@ export default class MainController extends Disposable {
       exportState.reject(new Error(`HTML export failed: ${error instanceof Error ? error.message : String(error)}`))
     } finally {
       if (this.exportState === exportState) this.exportState = null
+      if (this.configurationRefreshPending) {
+        this.configurationRefreshPending = false
+        this.applyConfigurationChanges()
+      }
     }
   }
 

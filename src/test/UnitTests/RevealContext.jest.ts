@@ -371,6 +371,6 @@ describe('RevealContexts', () => {
 
     contexts.refreshConfiguration()
 
-    expect(refresh).toHaveBeenCalledWith(true)
+    expect(refresh).toHaveBeenCalledWith(true, false)
   })
 })
