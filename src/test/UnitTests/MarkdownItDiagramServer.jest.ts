@@ -1,4 +1,4 @@
-import markdownit, { setDiagramRenderingConfig } from '../../Markdown-it'
+import markdownit, { createMarkdownIt } from '../../Markdown-it'
 import pako from 'pako'
 
 const getDiagramSource = (html: string): string => {
@@ -9,12 +9,8 @@ const getDiagramSource = (html: string): string => {
 }
 
 describe('Markdown-it diagram server configuration', () => {
-  afterEach(() => {
-    setDiagramRenderingConfig({ enabled: true, serverBaseUrl: 'https://kroki.io', mermaidTheme: null })
-  })
-
   test('uses the configured diagram server base URL', () => {
-    setDiagramRenderingConfig({ serverBaseUrl: 'http://localhost:8000/' })
+    const markdownit = createMarkdownIt({ serverBaseUrl: 'http://localhost:8000/' })
 
     const html = markdownit.render('```mermaid\nflowchart LR\nA-->B\n```')
 
@@ -22,7 +18,7 @@ describe('Markdown-it diagram server configuration', () => {
   })
 
   test('falls back to a local code block when diagram rendering is disabled', () => {
-    setDiagramRenderingConfig({ enabled: false })
+    const markdownit = createMarkdownIt({ enabled: false })
 
     const html = markdownit.render('```plantuml\nAlice -> Bob: hello\n```')
 
@@ -32,19 +28,35 @@ describe('Markdown-it diagram server configuration', () => {
   })
 
   test('trims server base URL and falls back to default when empty', () => {
-    setDiagramRenderingConfig({ serverBaseUrl: '   ' })
+    const markdownit = createMarkdownIt({ serverBaseUrl: '   ' })
     const html = markdownit.render('```mermaid\nflowchart LR\nA-->B\n```')
     expect(html).toContain('src="https://kroki.io/mermaid/svg/')
   })
 
   test('uses Mermaid dark mode for dark Reveal themes without overriding an author directive', () => {
-    setDiagramRenderingConfig({ mermaidTheme: 'dark' })
+    const markdownit = createMarkdownIt({ mermaidTheme: 'dark' })
 
     const themedHtml = markdownit.render('```mermaid\nflowchart LR\nA-->B\n```')
     const explicitHtml = markdownit.render("```mermaid\n%%{init: {'theme':'forest'}}%%\nflowchart LR\nA-->B\n```")
 
     expect(getDiagramSource(themedHtml)).toBe("%%{init: {'theme':'dark'}}%%\nflowchart LR\nA-->B\n")
     expect(getDiagramSource(explicitHtml)).toBe("%%{init: {'theme':'forest'}}%%\nflowchart LR\nA-->B\n")
+  })
+
+  test('keeps diagram rendering configuration isolated between renderers', async () => {
+    const darkRenderer = createMarkdownIt({ serverBaseUrl: 'https://dark.example', mermaidTheme: 'dark' })
+    const disabledRenderer = createMarkdownIt({ enabled: false, serverBaseUrl: 'https://disabled.example' })
+    const source = '```mermaid\nflowchart LR\nA-->B\n```'
+
+    const [darkHtml, disabledHtml] = await Promise.all([
+      Promise.resolve().then(() => darkRenderer.render(source)),
+      Promise.resolve().then(() => disabledRenderer.render(source)),
+    ])
+
+    expect(darkHtml).toContain('src="https://dark.example/mermaid/svg/')
+    expect(getDiagramSource(darkHtml)).toBe("%%{init: {'theme':'dark'}}%%\nflowchart LR\nA-->B\n")
+    expect(disabledHtml).toContain('<pre><code class="language-mermaid">')
+    expect(disabledHtml).not.toContain('dark.example')
   })
 
   test('renders regular markdown syntax and speaker notes conversion', () => {

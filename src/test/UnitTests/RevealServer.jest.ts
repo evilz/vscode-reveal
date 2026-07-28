@@ -180,6 +180,32 @@ describe('RevealServer', () => {
     context.dispose()
   })
 
+  test('keeps diagram configuration isolated when document servers render concurrently', async () => {
+    const diagramSlide = [{ title: 'Diagram', index: 0, text: '```mermaid\nflowchart LR\nA-->B\n```', verticalChildren: [], attributes: '' }]
+    const onlineContext = createContext({ configuration: { diagramServerUrl: 'https://online.example' } })
+    const offlineContext = createContext({ configuration: { offline: true } })
+    onlineContext.slides = diagramSlide
+    offlineContext.slides = diagramSlide
+    const onlineServer = new RevealServer(onlineContext)
+    const offlineServer = new RevealServer(offlineContext)
+
+    try {
+      const [onlineResponse, offlineResponse] = await Promise.all([
+        request(onlineServer.app).get('/'),
+        request(offlineServer.app).get('/'),
+      ])
+
+      expect(onlineResponse.text).toContain('src="https://online.example/mermaid/svg/')
+      expect(offlineResponse.text).toContain('<pre><code class="language-mermaid">')
+      expect(offlineResponse.text).not.toContain('online.example')
+    } finally {
+      onlineServer.dispose()
+      offlineServer.dispose()
+      onlineContext.dispose()
+      offlineContext.dispose()
+    }
+  })
+
   test('uses Mermaid dark mode with the default black Reveal theme', async () => {
     const context = createContext()
     context.slides = [{ title: 'Diagram', index: 0, text: '```mermaid\nflowchart LR\nA-->B\n```', verticalChildren: [], attributes: '' }]

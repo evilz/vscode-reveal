@@ -5,7 +5,7 @@ import ejs from 'ejs'
 import cors from 'cors'
 import morgan from 'morgan'
 import * as path from 'path'
-import markdownit, { setDiagramRenderingConfig } from './Markdown-it'
+import { createMarkdownIt } from './Markdown-it'
 import { exportHTML, IExportOptions } from './ExportHTML'
 import { Disposable } from './dispose'
 import { RevealContext } from './RevealContext'
@@ -185,7 +185,7 @@ export class RevealServer extends Disposable {
         const { init, initModule } = this.loadInitScript()
         const htmlFragmentContent = this.loadHtmlFragmentContent()
 
-        setDiagramRenderingConfig({
+        const markdownit = createMarkdownIt({
           enabled: !offline && context.configuration.diagramServerEnabled,
           serverBaseUrl: context.configuration.diagramServerUrl,
           mermaidTheme: getMermaidTheme(context.configuration.theme),
