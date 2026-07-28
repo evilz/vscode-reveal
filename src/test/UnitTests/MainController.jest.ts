@@ -168,7 +168,8 @@ jest.mock('../../WebViewPane', () => ({
   }),
 }))
 
-const logger = new Logger(jest.fn(), LogLevel.Debug)
+const loggerAppendMock = jest.fn()
+const logger = new Logger(loggerAppendMock, LogLevel.Debug)
 
 const editor = {
   document: { languageId: 'markdown', fileName: 'slides.md', uri: 'doc-uri' },
@@ -199,9 +200,12 @@ describe('MainController coverage', () => {
     await Promise.resolve()
   }
 
+  const currentExportId = () => (webViewPaneUpdateMock.mock.calls as unknown[][])[webViewPaneUpdateMock.mock.calls.length - 1]?.[1]
+
   beforeEach(() => {
     jest.useFakeTimers()
     jest.clearAllMocks()
+    loggerAppendMock.mockClear()
     watchers.length = 0
     temporaryContexts.length = 0
     activeTerminalMock = { show: terminalShowMock, sendText: terminalSendTextMock }
@@ -330,7 +334,7 @@ describe('MainController coverage', () => {
 
     const exportPromise = main.exportAsync()
     await flush()
-    receiveMessageListener?.({ command: 'exportComplete' })
+    receiveMessageListener?.({ command: 'exportComplete', exportId: currentExportId() })
     await expect(exportPromise).resolves.toBe('/tmp/export')
 
     disposeListener?.()
@@ -362,6 +366,62 @@ describe('MainController coverage', () => {
     expect(noContextMain.shouldOpenFilemanagerAfterHTMLExport()).toBe(false)
     ;(noContextMain as any).onExportError(new Error('ignored'))
     await expect(noContextMain.exportAsync()).rejects.toThrow('No active markdown context to export')
+  })
+
+  test('ignores an export completion message from a superseded webview page', async () => {
+    const context = makeContext()
+    revealContextsGetOrAddMock.mockReturnValue(context)
+    const main = new MainController(logger, { extensionPath: '/ext' } as any, [], defaultConfiguration, editor as any)
+    main.showWebViewPane()
+
+    const firstExport = main.exportAsync()
+    await flush()
+    const firstExportId = currentExportId()
+    const secondExport = main.exportAsync()
+    await flush()
+    const secondExportId = currentExportId()
+
+    await expect(firstExport).rejects.toThrow('interrupted by a new export request')
+    receiveMessageListener?.({ command: 'exportComplete', exportId: firstExportId })
+    ;(main as any).onExportError(new Error('old export failed'), context, firstExportId)
+    await flush()
+
+    let completed = false
+    void secondExport.then(() => { completed = true })
+    await flush()
+    expect(completed).toBe(false)
+
+    receiveMessageListener?.({ command: 'exportComplete', exportId: secondExportId })
+    await expect(secondExport).resolves.toBe('/tmp/export')
+  })
+
+  test('interrupts an export when the active document changes', async () => {
+    const firstContext = makeContext()
+    const secondContext = makeContext()
+    revealContextsGetOrAddMock.mockReturnValueOnce(firstContext).mockReturnValue(secondContext)
+    const main = new MainController(logger, { extensionPath: '/ext' } as any, [], defaultConfiguration, editor as any)
+    main.showWebViewPane()
+
+    const exportPromise = main.exportAsync()
+    await flush()
+    main.onDidChangeActiveTextEditor({
+      ...editor,
+      document: { ...editor.document, fileName: 'second.md', uri: 'second-doc-uri' },
+    } as any)
+
+    await expect(exportPromise).rejects.toThrow('active document changed')
+  })
+
+  test('handles webview refresh failures without leaving an unhandled promise', async () => {
+    const context = makeContext()
+    revealContextsGetOrAddMock.mockReturnValue(context)
+    webViewPaneUpdateMock.mockRejectedValueOnce(new Error('server unavailable'))
+    const main = new MainController(logger, { extensionPath: '/ext' } as any, [], defaultConfiguration, editor as any)
+
+    main.showWebViewPane()
+    await flush()
+
+    expect(loggerAppendMock).toHaveBeenCalledWith(expect.stringContaining('WebView refresh failed: server unavailable'))
   })
 
   test('asset watcher callbacks trigger quick refresh and goToSlide/updatePosition no-op when context missing', () => {

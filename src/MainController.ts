@@ -79,6 +79,11 @@ export default class MainController extends Disposable {
   private OnEditorEvent(editor: TextEditor, newPosition: Position) {
     if (isMarkdownFile(editor.document)) {
       this.currentContext = this.revealContexts.getOrAdd(editor)
+      if (this.exportState && this.exportState.context !== this.currentContext) {
+        const exportState = this.exportState
+        exportState.reject(new Error('HTML export was interrupted because the active document changed'))
+        this.clearExportState(exportState)
+      }
       this.statusBarController.updateServerInfo(this.currentContext?.baseUri || null)
       this.updatePosition(newPosition)
       this.refresh()
@@ -114,7 +119,13 @@ export default class MainController extends Disposable {
     this.revealContexts.remove(document.uri)
 
     if (this.currentContext?.is(document)) {
+      const context = this.currentContext
       this.currentContext = undefined
+      if (this.exportState?.context === context) {
+        const exportState = this.exportState
+        exportState.reject(new Error('HTML export was interrupted because its document was closed'))
+        this.clearExportState(exportState)
+      }
       this.syncAssetWatchers()
     }
 
@@ -209,40 +220,58 @@ export default class MainController extends Disposable {
   }
 
   private exportState: {
+    id: number
+    context: RevealContext
     resolve: (path: string) => void
     reject: (error: Error) => void
     path: string
     selfContained: boolean
   } | null = null
+  private nextExportId = 0
   private configurationRefreshPending = false
-  public isInExport = () => this.exportState !== null
+  public isInExport = (exportId?: number) => this.exportState !== null && (exportId === undefined || this.exportState.id === exportId)
 
-  private readonly onExportError = (error: unknown) => {
-    if (!this.exportState) return
+  private readonly onExportError = (error: unknown, context?: RevealContext, exportId?: number) => {
+    const exportState = this.exportState
+    if (!exportState || (context && exportState.context !== context) || (exportId !== undefined && exportState.id !== exportId)) return
 
     const normalizedError = error instanceof Error ? error : new Error(String(error))
-    this.exportState.reject(new Error(`HTML export failed: ${normalizedError.message}`))
+    exportState.reject(new Error(`HTML export failed: ${normalizedError.message}`))
+    this.clearExportState(exportState)
+  }
+
+  private clearExportState(exportState: NonNullable<MainController['exportState']>, applyPendingConfiguration = true) {
+    if (this.exportState !== exportState) return
     this.exportState = null
+    if (applyPendingConfiguration && this.configurationRefreshPending) {
+      this.configurationRefreshPending = false
+      this.applyConfigurationChanges()
+    }
   }
 
   public shouldOpenFilemanagerAfterHTMLExport = () => this.currentContext?.configuration.openFilemanagerAfterHTMLExport ?? false
 
 
   public exportAsync = async () => {
-    if (!this.currentContext) {
+    const context = this.currentContext
+    if (!context) {
       throw new Error('No active markdown context to export')
     }
 
     if (this.exportState) {
-      this.exportState.reject(new Error('A previous HTML export was interrupted by a new export request'))
-      this.exportState = null
+      const previousExport = this.exportState
+      previousExport.reject(new Error('A previous HTML export was interrupted by a new export request'))
+      this.clearExportState(previousExport)
     }
 
-    await jetpack.removeAsync(this.currentContext.exportPath)
-    const exportPath = this.currentContext.exportPath
+    await jetpack.removeAsync(context.exportPath)
+    if (this.currentContext !== context) {
+      throw new Error('HTML export was interrupted because the active document changed')
+    }
+    const exportPath = context.exportPath
 
     const promise = new Promise<string>((resolve, reject) => {
-      this.exportState = { resolve, reject, path: exportPath, selfContained: this.currentContext!.configuration.selfContained }
+      this.exportState = { id: ++this.nextExportId, context, resolve, reject, path: exportPath, selfContained: context.configuration.selfContained }
     })
 
     if (this.webViewPane) {
@@ -378,7 +407,8 @@ export default class MainController extends Disposable {
 
         const command = 'command' in message ? message.command : undefined
         if (command === 'exportComplete') {
-          void this.completeExport()
+          const exportId = 'exportId' in message ? Number(message.exportId) : Number.NaN
+          void this.completeExport(exportId)
           return
         }
 
@@ -405,28 +435,32 @@ export default class MainController extends Disposable {
     }
   }
 
-  private async completeExport() {
+  private async completeExport(exportId: number) {
     const exportState = this.exportState
-    if (!exportState) return
+    if (!exportState || exportState.id !== exportId) return
     try {
       if (exportState.selfContained) await createSelfContainedExport(exportState.path)
       exportState.resolve(exportState.path)
     } catch (error) {
       exportState.reject(new Error(`HTML export failed: ${error instanceof Error ? error.message : String(error)}`))
     } finally {
-      if (this.exportState === exportState) this.exportState = null
-      if (this.configurationRefreshPending) {
-        this.configurationRefreshPending = false
-        this.applyConfigurationChanges()
-      }
+      this.clearExportState(exportState)
     }
   }
 
   private refreshWebViewPane() {
     if (this.webViewPane && this.currentContext) {
-      this.startServer()
-      this.webViewPane.title = this.currentContext.configuration.title
-      void this.webViewPane.update(this.currentContext.uriWithPosition, this.isInExport())
+      const context = this.currentContext
+      const webViewPane = this.webViewPane
+      const exportState = this.exportState?.context === context ? this.exportState : null
+      const uri = new URL(context.uriWithPosition)
+      if (exportState) uri.searchParams.set('exportId', String(exportState.id))
+      context.startServer()
+      webViewPane.title = context.configuration.title
+      void webViewPane.update(uri.toString(), exportState?.id).catch((error) => {
+        this.logger.error(`WebView refresh failed: ${error instanceof Error ? error.message : String(error)}`)
+        if (exportState) this.onExportError(error, context, exportState.id)
+      })
     }
   }
 
@@ -452,8 +486,9 @@ export default class MainController extends Disposable {
     this.assetWatchers.clear()
 
     if (this.exportState) {
-      this.exportState.reject(new Error('HTML export was interrupted because the extension was disposed'))
-      this.exportState = null
+      const exportState = this.exportState
+      exportState.reject(new Error('HTML export was interrupted because the extension was disposed'))
+      this.clearExportState(exportState, false)
     }
 
     this.currentContext = undefined

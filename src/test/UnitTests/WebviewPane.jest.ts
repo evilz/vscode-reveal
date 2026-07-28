@@ -66,7 +66,7 @@ test('Update injects bridge script for slide sync and preserves hash with query 
 
   mockFetch('<html><head></head><body><div>hello</div></body></html>')
 
-  await pane.update('http://localhost:1234/?print-pdf#/2/1', true)
+  await pane.update('http://localhost:1234/?print-pdf#/2/1', 42)
 
   expect(asWebviewUri).toHaveBeenCalled()
   expect(webviewPanel.webview.html).toContain('<base href="vscode-webview://remote/http://localhost:1234/?print-pdf">')
@@ -76,4 +76,27 @@ test('Update injects bridge script for slide sync and preserves hash with query 
   expect(webviewPanel.webview.html).toContain("message.command === 'setSlide'")
   expect(webviewPanel.webview.html).toContain('window.location.hash = initialHash')
   expect(webviewPanel.webview.html).toContain("command: 'exportComplete'")
+  expect(webviewPanel.webview.html).toContain('exportId: 42')
+})
+
+test('Update ignores a superseded fetch that completes after a newer refresh', async () => {
+  const onDidDispose = jest.fn() as Event<void>
+  const onDidReceiveMessage = jest.fn() as Event<unknown>
+  const webviewPanel = { title: 'test', onDidDispose, webview: { html: '', onDidReceiveMessage, asWebviewUri: (uri: { toString(): string }) => uri } } as unknown as WebviewPanel
+  const pane = new WebviewPane(webviewPanel)
+  let resolveFirst: (response: Response) => void = () => undefined
+  let resolveSecond: (response: Response) => void = () => undefined
+  const firstResponse = new Promise<Response>((resolve) => { resolveFirst = resolve })
+  const secondResponse = new Promise<Response>((resolve) => { resolveSecond = resolve })
+  jest.spyOn(global, 'fetch').mockImplementationOnce(() => firstResponse).mockImplementationOnce(() => secondResponse)
+
+  const firstUpdate = pane.update('http://localhost:1234/#/1')
+  const secondUpdate = pane.update('http://localhost:1234/#/2')
+  resolveSecond({ text: async () => '<html><head></head><body>new</body></html>' } as Response)
+  await expect(secondUpdate).resolves.toBe(true)
+  resolveFirst({ text: async () => '<html><head></head><body>old</body></html>' } as Response)
+  await expect(firstUpdate).resolves.toBe(false)
+
+  expect(webviewPanel.webview.html).toContain('new')
+  expect(webviewPanel.webview.html).not.toContain('old')
 })

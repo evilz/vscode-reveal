@@ -30,8 +30,8 @@ export class RevealContext extends Disposable {
     public logger: Logger,
     public getConfiguration: () => Configuration,
     public extensionPath: string,
-    public isInExport: () => boolean,
-    public onExportError: (error: unknown) => void = () => {},
+    public isInExport: (exportId?: number) => boolean,
+    public onExportError: (error: unknown, context?: RevealContext, exportId?: number) => void = () => {},
   ) {
     super()
     this.configuration = getConfiguration()

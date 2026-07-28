@@ -644,14 +644,14 @@ describe('RevealServer', () => {
     const exporter = jest.fn(async () => {
       throw new Error('boom')
     })
-    type TestRequest = { originalUrl: string }
+    type TestRequest = { originalUrl: string; query: { exportId: string } }
     type TestResponse = { write: (chunk: string) => boolean; end: (chunk: string) => boolean | Promise<boolean> }
     type ExportMiddleware = (req: TestRequest, res: TestResponse, next: () => void) => Promise<void>
     const middleware = (server as unknown as {
-      exportMiddleware: (exportFn: typeof exporter, isInExport: () => boolean) => ExportMiddleware
+      exportMiddleware: (exportFn: typeof exporter, isInExport: (exportId?: number) => boolean) => ExportMiddleware
     }).exportMiddleware(exporter, () => true)
     const next = jest.fn()
-    const req = { originalUrl: '/index.html?x=1' }
+    const req = { originalUrl: '/index.html?exportId=1', query: { exportId: '1' } }
     const res: TestResponse = {
       write: jest.fn((chunk: string) => typeof chunk === 'string'),
       end: jest.fn((chunk: string) => typeof chunk === 'string'),
