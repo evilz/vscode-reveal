@@ -28,29 +28,14 @@ interface IDiagramRenderingConfig {
   mermaidTheme: 'dark' | null
 }
 
-const diagramRenderingConfig: IDiagramRenderingConfig = {
-  enabled: true,
-  serverBaseUrl: DEFAULT_DIAGRAM_SERVER,
-  mermaidTheme: null,
-}
+const normalizeDiagramConfig = (config: Partial<IDiagramRenderingConfig> = {}): IDiagramRenderingConfig => ({
+  enabled: typeof config.enabled === 'boolean' ? config.enabled : true,
+  serverBaseUrl: typeof config.serverBaseUrl === 'string' ? config.serverBaseUrl.trim().replace(/\/$/, '') || DEFAULT_DIAGRAM_SERVER : DEFAULT_DIAGRAM_SERVER,
+  mermaidTheme: config.mermaidTheme === 'dark' ? 'dark' : null,
+})
 
-export const setDiagramRenderingConfig = (config: Partial<IDiagramRenderingConfig>) => {
-  if (typeof config.enabled === 'boolean') {
-    diagramRenderingConfig.enabled = config.enabled
-  }
-
-  if (typeof config.serverBaseUrl === 'string') {
-    const trimmedServerBaseUrl = config.serverBaseUrl.trim().replace(/\/$/, '')
-    diagramRenderingConfig.serverBaseUrl = trimmedServerBaseUrl || DEFAULT_DIAGRAM_SERVER
-  }
-
-  if (config.mermaidTheme === 'dark' || config.mermaidTheme === null) {
-    diagramRenderingConfig.mermaidTheme = config.mermaidTheme
-  }
-}
-
-const withMermaidTheme = (code: string): string => {
-  if (diagramRenderingConfig.mermaidTheme !== 'dark' || code.trimStart().startsWith('%%{')) return code
+const withMermaidTheme = (code: string, config: IDiagramRenderingConfig): string => {
+  if (config.mermaidTheme !== 'dark' || code.trimStart().startsWith('%%{')) return code
   return `%%{init: {'theme':'dark'}}%%\n${code}`
 }
 
@@ -153,7 +138,9 @@ const diagramTypes = [
 ]
 
 
-const markdown = md({
+export const createMarkdownIt = (diagramConfig: Partial<IDiagramRenderingConfig> = {}) => {
+  const renderingConfig = normalizeDiagramConfig(diagramConfig)
+  const markdown = md({
     html: true,
     linkify: true,
     typographer: true,
@@ -182,15 +169,15 @@ const markdown = md({
   const highlight = markdown.options.highlight
   markdown.options.highlight = (code, lang, attr) => {
     if (lang && diagramTypes.indexOf(lang.toLowerCase()) >= 0) {
-      if (!diagramRenderingConfig.enabled) {
+      if (!renderingConfig.enabled) {
         return `<pre><code class="language-${lang.toLowerCase()}">${markdown.utils.escapeHtml(code)}</code></pre>`
       }
 
-      const diagramCode = lang.toLowerCase() === 'mermaid' ? withMermaidTheme(code) : code
+      const diagramCode = lang.toLowerCase() === 'mermaid' ? withMermaidTheme(code, renderingConfig) : code
       const data = Buffer.from(diagramCode, 'utf8')
       const compressed = pako.deflate(data, { level: 9 })
       const result = Buffer.from(compressed).toString('base64').replace(/\+/g, '-').replace(/\//g, '_')
-      return `<pre style="all:unset;"><div><img class="${lang.toLowerCase()}" src="${diagramRenderingConfig.serverBaseUrl}/${lang.toLowerCase()}/svg/${result}" /></div></pre>`
+      return `<pre style="all:unset;"><div><img class="${lang.toLowerCase()}" src="${renderingConfig.serverBaseUrl}/${lang.toLowerCase()}/svg/${result}" /></div></pre>`
     }
     if (highlight !== null && highlight !== undefined) {
       return highlight(code, lang, attr)
@@ -198,5 +185,7 @@ const markdown = md({
 
     return ''
   }
+  return markdown
+}
 
-export default markdown
+export default createMarkdownIt()
