@@ -111,6 +111,7 @@ jest.mock('../../TextDecorator', () => jest.fn().mockImplementation(() => ({
 
 const revealContextsGetOrAddMock = jest.fn()
 const revealContextsRemoveMock = jest.fn()
+const revealContextsRefreshConfigurationMock = jest.fn()
 const revealContextsDisposeMock = jest.fn()
 const revealContextsCtorMock = jest.fn()
 const temporaryContexts: Array<{ configuration: typeof defaultConfiguration; refresh: jest.Mock; dispose: jest.Mock; exportPath: string }> = []
@@ -132,6 +133,7 @@ jest.mock('../../RevealContext', () => ({
     return {
       getOrAdd: (...getArgs: unknown[]) => (revealContextsGetOrAddMock as any)(...getArgs),
       remove: (...removeArgs: unknown[]) => (revealContextsRemoveMock as any)(...removeArgs),
+      refreshConfiguration: revealContextsRefreshConfigurationMock,
       dispose: revealContextsDisposeMock,
     }
   }),
@@ -250,6 +252,8 @@ describe('MainController coverage', () => {
     main.onDidChangeConfiguration({ affectsConfiguration: () => false } as any)
     main.onDidChangeConfiguration({ affectsConfiguration: () => true } as any)
     expect(getConfigMock).toHaveBeenCalledTimes(1)
+    expect(revealContextsRefreshConfigurationMock).toHaveBeenCalledTimes(1)
+    expect(executeCommandMock).toHaveBeenCalledWith('setContext', 'slideExplorerEnabled', defaultConfiguration.slideExplorerEnabled)
   })
 
   test('closing active document clears state and watchers', () => {
