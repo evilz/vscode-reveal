@@ -208,9 +208,10 @@ export class RevealServer extends Disposable {
   }
 
   /* A middleware function that is used to export the presentation to a folder. */
-  private readonly exportMiddleware = (exportfn: (opts: IExportOptions) => Promise<void>, isInExport: () => boolean) => {
+  private readonly exportMiddleware = (exportfn: (opts: IExportOptions) => Promise<void>, isInExport: (exportId?: number) => boolean) => {
     return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      if (isInExport()) {
+      const exportId = typeof req.query.exportId === 'string' ? Number(req.query.exportId) : Number.NaN
+      if (Number.isSafeInteger(exportId) && isInExport(exportId)) {
         const { exportPath } = this.context
         this.context.logger.debug('in export')
         const oldWrite = res.write
@@ -249,7 +250,7 @@ export class RevealServer extends Disposable {
             await exportfn(opts)
           } catch (error) {
             this.context.logger.error(`Export error: ${error}`)
-            this.context.onExportError(error)
+            this.context.onExportError(error, this.context, exportId)
           }
 
           // @ts-ignore

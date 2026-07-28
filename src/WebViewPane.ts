@@ -4,6 +4,9 @@ import { Disposable } from "./dispose";
 export default class WebviewPane
     extends Disposable {
 
+    #updateAbortController: AbortController | undefined
+    #updateGeneration = 0
+
     constructor(private webviewPanel:WebviewPanel) {
         super()
         this.webviewPanel.onDidDispose(() => { this.dispose() })
@@ -36,17 +39,31 @@ export default class WebviewPane
         this.webviewPanel.title = title;
     }
     
-    public async update(url:string, sendExportSignal = false) {
+    public async update(url:string, exportId?: number): Promise<boolean> {
+        this.#updateAbortController?.abort()
+        const abortController = new AbortController()
+        this.#updateAbortController = abortController
+        const generation = ++this.#updateGeneration
         const parsedUrl = new URL(url)
         const slideHash = parsedUrl.hash || '#/'
         parsedUrl.hash = ''
 
-        const response = await fetch(parsedUrl.toString())
-        const html = await response.text()
-        const webviewUri = this.webviewPanel.webview.asWebviewUri(Uri.parse(parsedUrl.toString())).toString()
-        const htmlWithBase = this.injectBaseHref(html, webviewUri)
-        this.webviewPanel.webview.html = this.injectBridgeScript(htmlWithBase, slideHash, sendExportSignal)
-        this.#onDidUpdate.fire()
+        try {
+          const response = await fetch(parsedUrl.toString(), { signal: abortController.signal })
+          const html = await response.text()
+          if (abortController.signal.aborted || generation !== this.#updateGeneration) return false
+
+          const webviewUri = this.webviewPanel.webview.asWebviewUri(Uri.parse(parsedUrl.toString())).toString()
+          const htmlWithBase = this.injectBaseHref(html, webviewUri)
+          this.webviewPanel.webview.html = this.injectBridgeScript(htmlWithBase, slideHash, exportId)
+          this.#onDidUpdate.fire()
+          return true
+        } catch (error) {
+          if (abortController.signal.aborted || generation !== this.#updateGeneration) return false
+          throw error
+        } finally {
+          if (this.#updateAbortController === abortController) this.#updateAbortController = undefined
+        }
     }
 
     private injectBaseHref(html: string, baseUrl: string) {
@@ -58,7 +75,7 @@ export default class WebviewPane
       return `${baseTag}${html}`
     }
 
-    private injectBridgeScript(html: string, slideHash: string, sendExportSignal: boolean) {
+    private injectBridgeScript(html: string, slideHash: string, exportId?: number) {
       const script = `
       <script>
         (function () {
@@ -128,9 +145,9 @@ export default class WebviewPane
 
           setTimeout(postCurrentSlide, 0);
 
-          if (${sendExportSignal}) {
+          if (${typeof exportId === 'number'}) {
             const postExportComplete = () => {
-              vscode.postMessage({ command: 'exportComplete' });
+              vscode.postMessage({ command: 'exportComplete', exportId: ${JSON.stringify(exportId)} });
             };
 
             if (document.readyState === 'complete') {
@@ -150,6 +167,7 @@ export default class WebviewPane
     }
   
     public dispose() {
+        this.#updateAbortController?.abort()
         this.#onDidDispose.fire();
         super.dispose();
     }
