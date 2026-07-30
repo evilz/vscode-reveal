@@ -11,15 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updated dependencies to latest compatible versions
-  - Express 5.0.1 → 5.1.0
-  - markdown-it-attrs 4.2.0 → 4.3.1
-  - morgan 1.10.0 → 1.10.1
-  - open 8.4.0 → 8.4.2
-  - prettier 3.3.3 → 3.6.2
+  - Express 5.0.1 → 5.2.1
+  - EJS 3.1.10 → 6.0.1
+  - markdown-it-attrs 4.2.0 → 5.0.1
+  - morgan 1.10.0 → 1.11.0
+  - open 8.4.0 → 11.0.0
+  - prettier 3.3.3 → 3.9.6
   - @types/vscode 1.95.0 → 1.105.0
-  - eslint 8.18.0 → 8.57.1
-  - esbuild 0.24.0 → 0.24.2
-  - supertest 7.0.0 → 7.1.4
+  - eslint 8.18.0 → 10.8.0
+  - esbuild 0.24.0 → 0.28.1
+  - supertest 7.0.0 → 7.2.2
+  - typescript 4.9.5 → 6.0.3
   - And several other development dependencies
 
 ### Fixed

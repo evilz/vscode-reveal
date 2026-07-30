@@ -3,7 +3,7 @@
  */
 
 // Test updated dependencies
-test('Express 5.1.0 should be importable and functional', () => {
+test('Express 5.2.1 should be importable and functional', () => {
   const express = require('express');
   expect(express).toBeDefined();
   expect(typeof express).toBe('function');
@@ -15,7 +15,7 @@ test('Express 5.1.0 should be importable and functional', () => {
   expect(typeof app.use).toBe('function');
 });
 
-test('EJS 3.1.10 should be importable and functional', () => {
+test('EJS 6.0.1 should be importable and functional', () => {
   const ejs = require('ejs');
   expect(ejs).toBeDefined();
   expect(typeof ejs.render).toBe('function');
@@ -25,7 +25,7 @@ test('EJS 3.1.10 should be importable and functional', () => {
   expect(result).toBe('<p>Hello World</p>');
 });
 
-test('Markdown-it 14.1.0 should be importable and functional', () => {
+test('Markdown-it 14.3.0 should be importable and functional', () => {
   const MarkdownIt = require('markdown-it');
   expect(MarkdownIt).toBeDefined();
   
@@ -37,7 +37,7 @@ test('Markdown-it 14.1.0 should be importable and functional', () => {
   expect(result).toContain('<h1>Heading</h1>');
 });
 
-test('Markdown-it-attrs 4.3.1 should be importable and functional', () => {
+test('Markdown-it-attrs 5.0.1 should be importable and functional', () => {
   const MarkdownIt = require('markdown-it');
   const markdownItAttrs = require('markdown-it-attrs');
   
@@ -81,7 +81,7 @@ test('Prettier should be installed and match the declared major version', () => 
   expect(installedVersionMatch[1]).toBe(expectedVersionMatch[1]);
 });
 
-test('Morgan 1.10.1 should be importable and functional', () => {
+test('Morgan 1.11.0 should be importable and functional', () => {
   const morgan = require('morgan');
   expect(morgan).toBeDefined();
   expect(typeof morgan).toBe('function');
@@ -101,21 +101,21 @@ test('Open 11.0.0 should be installed', () => {
   expect(openPkg.version).toMatch(/^11\./);
 });
 
-test('Supertest 7.1.4 should be importable', () => {
+test('Supertest 7.2.2 should be importable', () => {
   const request = require('supertest');
   expect(request).toBeDefined();
   expect(typeof request).toBe('function');
   // Supertest is already tested in RevealServer.jest.ts
 });
 
-test('Esbuild 0.24.2 should be importable', () => {
+test('Esbuild 0.28.1 should be importable', () => {
   const esbuild = require('esbuild');
   expect(esbuild).toBeDefined();
   expect(typeof esbuild.build).toBe('function');
   expect(typeof esbuild.transform).toBe('function');
 });
 
-test('TypeScript 4.9.5 should be functional', () => {
+test('TypeScript 6.0.3 should be functional', () => {
   const ts = require('typescript');
   expect(ts).toBeDefined();
   expect(ts.version).toBeDefined();
