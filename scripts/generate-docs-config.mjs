@@ -14,7 +14,7 @@ const describe = (value) => {
 }
 
 const rows = Object.entries(properties).map(([name, setting]) => {
-  const type = Array.isArray(setting.type) ? setting.type.join(' | ') : (setting.type ?? '')
+  const type = Array.isArray(setting.type) ? setting.type.join(', ') : (setting.type ?? '')
   const values = setting.enum?.map((value) => `\`${value}\``).join(', ') ?? ''
   const notes = [setting.description ?? '', values ? `Values: ${values}` : ''].filter(Boolean).join(' ')
   return `| \`${name}\` | ${describe(setting.default)} | ${type} | ${notes.replaceAll('|', '\\|')} |`
