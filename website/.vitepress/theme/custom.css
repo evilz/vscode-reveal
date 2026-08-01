@@ -1,0 +1,8 @@
+:root { --vp-c-brand-1: #007acc; --vp-c-brand-2: #168bd0; --vp-c-brand-3: #005a9e; }
+.home-preview, .example-frame { margin: 2rem 0; }
+.home-preview iframe, .example-frame iframe { width: 100%; min-height: 360px; border: 1px solid var(--vp-c-divider); border-radius: 12px; background: #0d1117; }
+.home-preview p { text-align: center; }
+.home-cta { margin-top: 2rem; }
+.parameter-preview { width: 100%; min-height: 560px; border: 1px solid var(--vp-c-divider); border-radius: 12px; background: #0d1117; margin: 1rem 0 2rem; }
+.vp-doc table { display: table; width: 100%; }
+.vp-doc th, .vp-doc td { white-space: normal; }

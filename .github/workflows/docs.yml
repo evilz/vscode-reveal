@@ -1,0 +1,58 @@
+name: Documentation
+
+on:
+  pull_request:
+    paths:
+      - 'website/**'
+      - 'scripts/generate-docs-config.mjs'
+      - 'scripts/restore-agent-docs.mjs'
+      - 'scripts/check-docs-examples.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/docs.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'website/**'
+      - 'scripts/generate-docs-config.mjs'
+      - 'scripts/restore-agent-docs.mjs'
+      - 'scripts/check-docs-examples.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/docs.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build documentation
+        run: npm run docs:build
+
+      - name: Commit generated GitHub Pages site
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          if git diff --quiet -- docs; then
+            echo "Generated site is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git commit -m "docs: rebuild GitHub Pages site [skip ci]"
+          git push
