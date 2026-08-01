@@ -690,7 +690,7 @@
     "test": "jest",
     "coverage": "jest --coverage",
     "unittest-dev": "cd out && mocha",
-    "lint": "eslint",
+    "lint": "node -r ./eslint-ts6-compat.cjs ./node_modules/eslint/bin/eslint.js",
     "sonar:PR": "sonar-scanner -Dsonar.projectKey=evilz_vscode-reveal -Dsonar.organization=evilz-github -Dsonar.sources=./src -Dsonar.host.url=https://sonarcloud.io -Dsonar.testExecutionReportPaths=test-report.xml -Dsonar.pullrequest.base=master -Dsonar.pullrequest.provider=GitHub -Dsonar.pullrequest.github.repository=evilz/vscode-reveal",
     "sonar": "sonar-scanner -Dsonar.projectKey=evilz_vscode-reveal -Dsonar.organization=evilz-github -Dsonar.sources=./src -Dsonar.host.url=https://sonarcloud.io -Dsonar.testExecutionReportPaths=test-report.xml",
     "sonar2": "jest --coverage && sonar-scanner -Dsonar.projectKey=evilz_vscode-reveal -Dsonar.organization=evilz-github -Dsonar.sources=./src -Dsonar.host.url=https://sonarcloud.io -Dsonar.testExecutionReportPaths=test-report.xml",
@@ -776,6 +776,7 @@
     "supertest": "^7.2.2",
     "@swc/core": "^1.15.47",
     "@swc/jest": "^0.2.39",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "typescript6": "npm:typescript@^6.0.3"
   }
 }

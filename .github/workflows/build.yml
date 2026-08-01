@@ -32,6 +32,9 @@ jobs:
       - name: Run tests with coverage
         run: npm run coverage
 
+      - name: Run TypeScript compile check
+        run: npm run test-compile
+
       - name: Build extension
         run: npm run vscode:prepublish
 

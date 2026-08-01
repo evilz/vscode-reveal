@@ -116,12 +116,16 @@ test('Esbuild 0.24.2 should be importable', () => {
 });
 
 test('TypeScript 7 should be importable', () => {
+  const path = require('path');
+  const fs = require('fs');
   const ts = require('typescript');
   expect(ts).toBeDefined();
   expect(ts.version).toBeDefined();
   expect(ts.version).toMatch(/^7\./);
   expect(ts.versionMajorMinor).toBeDefined();
   expect(ts.versionMajorMinor).toMatch(/^7\./);
+  const tscPath = path.join(process.cwd(), 'node_modules/typescript/bin/tsc');
+  expect(fs.existsSync(tscPath)).toBe(true);
 });
 
 test('Markdown-it plugins should work together', () => {
