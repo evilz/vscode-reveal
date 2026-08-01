@@ -115,18 +115,17 @@ test('Esbuild 0.24.2 should be importable', () => {
   expect(typeof esbuild.transform).toBe('function');
 });
 
-test('TypeScript 4.9.5 should be functional', () => {
+test('TypeScript 7 should be importable', () => {
+  const path = require('path');
+  const fs = require('fs');
   const ts = require('typescript');
   expect(ts).toBeDefined();
   expect(ts.version).toBeDefined();
-  expect(typeof ts.transpileModule).toBe('function');
-  
-  // Test basic transpilation
-  const result = ts.transpileModule('const x: number = 42;', {
-    compilerOptions: { module: ts.ModuleKind.CommonJS }
-  });
-  expect(result.outputText).toBeDefined();
-  expect(result.outputText).toContain('42');
+  expect(ts.version).toMatch(/^7\./);
+  expect(ts.versionMajorMinor).toBeDefined();
+  expect(ts.versionMajorMinor).toMatch(/^7\./);
+  const tscPath = path.join(process.cwd(), 'node_modules/typescript/bin/tsc');
+  expect(fs.existsSync(tscPath)).toBe(true);
 });
 
 test('Markdown-it plugins should work together', () => {

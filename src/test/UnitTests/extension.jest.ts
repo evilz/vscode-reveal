@@ -75,46 +75,46 @@ jest.mock('vscode', () => ({
 }))
 
 jest.mock('../../commands/showRevealJS', () => ({
-  SHOW_REVEALJS,
+  SHOW_REVEALJS: 'test.showRevealJS',
 }))
 
 jest.mock('../../commands/showRevealJSInBrowser', () => ({
-  SHOW_REVEALJS_IN_BROWSER,
-  SHOW_REVEALJS_PRESENTER_VIEW,
+  SHOW_REVEALJS_IN_BROWSER: 'test.showInBrowser',
+  SHOW_REVEALJS_PRESENTER_VIEW: 'test.presenterView',
   showRevealJSInBrowser: (startServer: unknown, getBrowserPath: unknown) => (showRevealJSInBrowserMock as any)(startServer, getBrowserPath),
   showRevealJSPresenterView: (startServer: unknown, getBrowserPath: unknown) => (showRevealJSPresenterViewMock as any)(startServer, getBrowserPath),
 }))
 
 jest.mock('../../commands/stopRevealJSServer', () => ({
-  STOP_REVEALJS_SERVER,
+  STOP_REVEALJS_SERVER: 'test.stopServer',
 }))
 
 jest.mock('../../commands/goToSlide', () => ({
-  GO_TO_SLIDE,
+  GO_TO_SLIDE: 'test.goToSlide',
 }))
 
 jest.mock('../../commands/exportPDF', () => ({
-  EXPORT_PDF,
+  EXPORT_PDF: 'test.exportPdf',
   exportPDF: (startServer: unknown, getBrowserPath: unknown) => (exportPDFMock as any)(startServer, getBrowserPath),
 }))
 
 jest.mock('../../commands/exportHTML', () => ({
-  EXPORT_HTML,
+  EXPORT_HTML: 'test.exportHtml',
   exportHTML: (logger: unknown, exportAsync: unknown, shouldOpen: unknown) => (exportHTMLMock as any)(logger, exportAsync, shouldOpen),
 }))
 
 jest.mock('../../commands/exportHTMLFolder', () => ({
-  EXPORT_HTML_FOLDER,
+  EXPORT_HTML_FOLDER: 'test.exportHtmlFolder',
   exportHTMLFolder: (logger: unknown, exportFolder: unknown) => (exportHTMLFolderMock as any)(logger, exportFolder),
 }))
 
 jest.mock('../../commands/showSample', () => ({
-  SHOW_SAMPLE,
+  SHOW_SAMPLE: 'test.showSample',
   showSample: (...args: unknown[]) => showSampleMock(...args),
 }))
 
 jest.mock('../../commands/newPresentation', () => ({
-  NEW_PRESENTATION,
+  NEW_PRESENTATION: 'test.newPresentation',
   createPresentationFromTemplate: (...args: unknown[]) => createPresentationFromTemplateMock(...args),
 }))
 

@@ -1,7 +1,6 @@
 /* eslint-env node */
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+/** @type {import('jest').Config} */
 module.exports = {
-  preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: ['**/*.jest.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
@@ -14,5 +13,13 @@ module.exports = {
   setupFilesAfterEnv: ['@alex_neo/jest-expect-message'],
   moduleNameMapper: {
     '^open$': '<rootDir>/src/__mocks__/open.ts',
+  },
+  transform: {
+    '^.+\\.tsx?$': ['@swc/jest', {
+      jsc: {
+        parser: { syntax: 'typescript' },
+        target: 'es2020',
+      },
+    }],
   },
 }
