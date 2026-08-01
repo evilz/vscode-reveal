@@ -16,9 +16,9 @@ VS Code Reveal contributes settings under the `revealjs.*` namespace. This table
 | `revealjs.offline` | `false` | boolean | Disable externally hosted extension resources, including MathJax, seminar sockets, and remote diagram rendering |
 | `revealjs.controls` | `true` | boolean | Display controls in the bottom right corner |
 | `revealjs.progress` | `true` | boolean | Display a presentation progress bar |
-| `revealjs.slideNumber` | `false` | boolean | string | Display the page number of the current slide. Use a Reveal.js format string such as h/v, h.v, c, or c/t to control formatting. |
+| `revealjs.slideNumber` | `false` | boolean, string | Display the page number of the current slide. Use a Reveal.js format string such as h/v, h.v, c, or c/t to control formatting. |
 | `revealjs.history` | `true` | boolean | Push each slide change to the browser history |
-| `revealjs.keyboard` | `true` | boolean | object | Enable keyboard shortcuts for navigation, or provide a Reveal.js keyboard mapping object |
+| `revealjs.keyboard` | `true` | boolean, object | Enable keyboard shortcuts for navigation, or provide a Reveal.js keyboard mapping object |
 | `revealjs.overview` | `true` | boolean | Enable the slide overview mode |
 | `revealjs.center` | `true` | boolean | Vertical centering of slides |
 | `revealjs.touch` | `true` | boolean | Enables touch navigation on devices with touch input |
@@ -39,7 +39,7 @@ VS Code Reveal contributes settings under the `revealjs.*` namespace. This table
 | `revealjs.transition` | `slide` | string | Transition style Values: `none`, `fade`, `slide`, `convex`, `concave`, `zoom` |
 | `revealjs.transitionSpeed` | `default` | string | Transition speed Values: `default`, `fast`, `slow` |
 | `revealjs.backgroundTransition` | `fade` | string | Transition style for full page slide backgrounds (none/fade/slide/convex/concave/zoom) Values: `none`, `fade`, `slide`, `convex`, `concave`, `zoom` |
-| `revealjs.pdfMaxPagesPerSlide` | `null` | number | null | Maximum number of pages a slide can expand onto when exporting to PDF. Null keeps Reveal.js default behavior. |
+| `revealjs.pdfMaxPagesPerSlide` | `null` | number, null | Maximum number of pages a slide can expand onto when exporting to PDF. Null keeps Reveal.js default behavior. |
 | `revealjs.pdfSeparateFragments` | `true` | boolean | Print each fragment step on a separate PDF page. |
 | `revealjs.pdfPageHeightOffset` | `-1` | number | Pixel offset applied to PDF page height calculations |
 | `revealjs.viewDistance` | `3` | number | Number of slides away from the current that are visible |
@@ -63,6 +63,6 @@ VS Code Reveal contributes settings under the `revealjs.*` namespace. This table
 | `revealjs.enableZoom` | `true` | boolean | Enable the zoom plugin |
 | `revealjs.enableSearch` | `true` | boolean | Enable the search in slides |
 | `revealjs.title` | `Reveal JS presentation` | string | Title of your presentation |
-| `revealjs.htmlFragment` | `null` | string | null | Local HTML fragment file to inject into the rendered presentation body, resolved relative to the markdown file |
+| `revealjs.htmlFragment` | `null` | string, null | Local HTML fragment file to inject into the rendered presentation body, resolved relative to the markdown file |
 | `revealjs.css` | `[]` | array | External css file to use |
-| `revealjs.cssvariables` | `null` | object | null | Css variable to add see https://github.com/hakimel/reveal.js/blob/master/css/theme/template/exposer.scss |
+| `revealjs.cssvariables` | `null` | object, null | Css variable to add see https://github.com/hakimel/reveal.js/blob/master/css/theme/template/exposer.scss |

@@ -33,3 +33,5 @@ jest.config.js
 sourceMap
 .ionide/**
 docs/**
+website/**
+scripts/**

@@ -47,7 +47,7 @@ jobs:
         if: github.event_name == 'push'
         shell: bash
         run: |
-          if git diff --quiet -- docs; then
+          if [[ -z "$(git status --porcelain -- docs)" ]]; then
             echo "Generated site is already up to date."
             exit 0
           fi
