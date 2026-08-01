@@ -31,6 +31,7 @@ const languageCompletionMock = jest.fn(() => [{ dispose: jest.fn() }])
 
 const getConfigMock = jest.fn(() => ({ logLevel: 2, slideExplorerEnabled: true }))
 const getConfigurationDescriptionMock = jest.fn(() => ['config-desc'])
+const getFrontMatterConfigurationPropertiesMock = jest.fn((properties: unknown) => properties)
 
 const mainControllerInstance = {
   currentContext: {
@@ -132,6 +133,7 @@ jest.mock('../../MainController', () => ({
 
 jest.mock('../../Configuration', () => ({
   getConfig: () => (getConfigMock as any)(),
+  getFrontMatterConfigurationProperties: (properties: unknown) => (getFrontMatterConfigurationPropertiesMock as any)(properties),
   getConfigurationDescription: (properties: unknown) => (getConfigurationDescriptionMock as any)(properties),
 }))
 
@@ -164,6 +166,7 @@ describe('extension activate', () => {
     expect(createOutputChannelMock).toHaveBeenCalledWith('RevealJS')
     expect(MainControllerMock).toHaveBeenCalled()
     expect(executeCommandMock).toHaveBeenCalledWith('setContext', 'slideExplorerEnabled', true)
+    expect(getFrontMatterConfigurationPropertiesMock).toHaveBeenCalledWith({})
 
     expect(registerCommandMock).toHaveBeenCalledWith(SHOW_REVEALJS, expect.any(Function))
     expect(registerCommandMock).toHaveBeenCalledWith(SHOW_REVEALJS_IN_BROWSER, expect.any(Function))

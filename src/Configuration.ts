@@ -202,15 +202,34 @@ export interface ConfigurationDescription {
   detail: string,
   documentation: string,
   type: ConfigurationDescriptionTypes | ConfigurationDescriptionTypes[],
-  values?: string[],
+  values?: Array<string | number | boolean | null>,
   defaultValue?: unknown
 }
-type RawConfigurationProperty = {
+export type RawConfigurationProperty = {
   type: string | string[]
   default?: unknown
   description?: string
   markdownDescription?: string
-  enum?: string[]
+  enum?: Array<string | number | boolean | null>
+}
+
+export const frontMatterExcludedProperties = ['hashOneBasedIndex', 'showSlideNumber']
+
+export const frontMatterOnlyProperties: Record<string, RawConfigurationProperty> = {
+  author: { type: 'string', default: '', description: 'Presentation author metadata.' },
+  autoPlayMedia: { type: 'boolean', default: false, description: 'Automatically start embedded media.' },
+  customHighlightTheme: { type: ['string', 'null'], default: null, description: 'Path or URL to a custom highlight theme file.' },
+  customTheme: { type: ['string', 'null'], default: null, description: 'Path or URL to a custom Reveal.js theme file.' },
+  defaultTiming: { type: 'number', default: 120, description: 'Default pacing for presentations that use timing features.' },
+  description: { type: 'string', default: '', description: 'Presentation description metadata.' },
+  display: { type: 'string', default: 'block', description: 'Reveal.js display mode.', enum: ['block'] },
+  enableTitleFooter: { type: 'boolean', default: true, description: 'Enable the title footer plugin.' },
+  fragmentInURL: { type: 'boolean', default: false, description: 'Include the current fragment in the URL.' },
+  logLevel: { type: 'number', default: LogLevel.Error, description: 'Extension log verbosity.', enum: [LogLevel.Debug, LogLevel.Info, LogLevel.Warning, LogLevel.Error, LogLevel.None] },
+  logoImg: { type: ['string', 'null'], default: null, description: 'Path or URL to a logo image.' },
+  notesSeparator: { type: 'string', default: 'note:', description: 'Revealjs markdown note delimiter' },
+  separator: { type: 'string', default: '^\\r?\\n---\\r?\\n$', description: 'Revealjs markdown slide separator' },
+  verticalSeparator: { type: 'string', default: '^\\r?\\n--\\r?\\n$', description: 'Revealjs markdown vertical separator' }
 }
 
 const collectTypes = (type: string | string[]): ConfigurationDescriptionTypes | ConfigurationDescriptionTypes[] => {
@@ -237,6 +256,16 @@ export const getConfigurationDescription = (properties: Record<string, RawConfig
 
   return allProps
 }
+
+export const getFrontMatterConfigurationProperties = (properties: Record<string, RawConfigurationProperty>) => (
+  {
+    ...Object.fromEntries(
+      Object.entries(properties)
+        .filter(([key]) => key.startsWith(`${configPrefix}.`) && !frontMatterExcludedProperties.includes(key.substring(configPrefix.length + 1)))
+    ),
+    ...frontMatterOnlyProperties
+  }
+)
 
 export const getConfig = () => {
   const workspaceConfig = workspace.getConfiguration(configPrefix) as unknown as Configuration
