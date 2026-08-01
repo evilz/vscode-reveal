@@ -697,6 +697,11 @@
     "dev": "vite",
     "build-vite": "tsc && vite build",
     "preview": "vite preview",
+    "docs:dev": "vitepress dev website",
+    "docs:generate-config": "node scripts/generate-docs-config.mjs",
+    "docs:check-examples": "node scripts/check-docs-examples.mjs",
+    "docs:build": "npm run docs:generate-config && vitepress build website --outDir docs && node scripts/restore-agent-docs.mjs && npm run docs:check-examples",
+    "docs:preview": "vitepress preview docs",
     "compile": "tsc -p ./",
     "ui-test": "node ./dist/test/runTest.js"
   },
@@ -748,6 +753,8 @@
   "devDependencies": {
     "@alex_neo/jest-expect-message": "^1.0.5",
     "@eslint/js": "^10.0.1",
+    "@swc/core": "^1.15.47",
+    "@swc/jest": "^0.2.39",
     "@types/glob": "^9.0.0",
     "@types/jest": "^30.0.0",
     "@types/jest-expect-message": "^1.1.0",
@@ -774,9 +781,8 @@
     "sonarqube-scanner": "^5.0.0",
     "source-map-support": "^0.5.21",
     "supertest": "^7.2.2",
-    "@swc/core": "^1.15.47",
-    "@swc/jest": "^0.2.39",
     "typescript": "^7.0.2",
-    "typescript6": "npm:typescript@^6.0.3"
+    "typescript6": "npm:typescript@^6.0.3",
+    "vitepress": "^1.6.4"
   }
 }

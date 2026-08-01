@@ -20,6 +20,9 @@
 	"exclude": [
 		"node_modules",
 		".vscode-test",
-		"libs"
+		"libs",
+		"docs",
+		"website",
+		"examples-runtime"
 	]
 }

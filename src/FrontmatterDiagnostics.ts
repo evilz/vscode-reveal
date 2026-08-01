@@ -116,8 +116,8 @@ export const collectDiagnostics = async (
       continue
     }
 
-    if (desc.values && typeof value === 'string' && !desc.values.includes(value)) {
-      diagnostics.push(toDiagnostic(keyRange, `Invalid value "${value}" for "${key}". Allowed values: ${desc.values.join(', ')}.`))
+    if (desc.values && !desc.values.some((allowedValue) => Object.is(allowedValue, value))) {
+      diagnostics.push(toDiagnostic(keyRange, `Invalid value "${String(value)}" for "${key}". Allowed values: ${desc.values.join(', ')}.`))
     }
   }
 

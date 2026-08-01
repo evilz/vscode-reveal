@@ -22,7 +22,7 @@ import { STOP_REVEALJS_SERVER } from './commands/stopRevealJSServer'
 import languageCompletion from './CompletionItemProvider'
 import MainController from './MainController'
 import Logger from './Logger'
-import {getConfigurationDescription, getConfig} from './Configuration'
+import {getConfigurationDescription, getConfig, getFrontMatterConfigurationProperties} from './Configuration'
 
 export function activate(context: ExtensionContext) {
   const config = getConfig()
@@ -32,7 +32,7 @@ export function activate(context: ExtensionContext) {
   //logger.onDidLevelChanged(level => logger.info(`log level changed to ${level} `))
   logger.info('"vscode-reveal" is now active')
 
-  const configDesc = getConfigurationDescription(context.extension.packageJSON.contributes.configuration.properties)
+  const configDesc = getConfigurationDescription(getFrontMatterConfigurationProperties(context.extension.packageJSON.contributes.configuration.properties))
 
   const main = new MainController(logger, context, configDesc, config, window.activeTextEditor)
 

@@ -1,10 +1,13 @@
-import { defaultConfiguration, configPrefix, getConfigurationDescription } from '../../Configuration'
+import { defaultConfiguration, configPrefix, getConfigurationDescription, getFrontMatterConfigurationProperties, RawConfigurationProperty } from '../../Configuration'
 
 const packageJson = require('../../../package.json')
 
 type ContributedProperty = {
-  type?: unknown
+  type?: string | string[]
   default?: unknown
+  description?: string
+  markdownDescription?: string
+  enum?: RawConfigurationProperty['enum']
 }
 
 const contributedProperties = packageJson.contributes.configuration.properties as Record<string, ContributedProperty>
@@ -113,6 +116,18 @@ test('getConfigurationDescription should keep markdown documentation when availa
   expect(desc.label).toBe('richDoc')
   expect(desc.detail).toBe('Plain text')
   expect(desc.documentation).toBe('**Rich** text')
+})
+
+test('front matter configuration properties include runtime-only keys and exclude editor-only keys', () => {
+  const frontMatterProperties = getFrontMatterConfigurationProperties(contributedProperties as Record<string, RawConfigurationProperty>)
+  const frontMatterDesc = getConfigurationDescription(frontMatterProperties)
+  const frontMatterLabels = frontMatterDesc.map((item) => item.label)
+
+  expect(frontMatterLabels).toContain('author')
+  expect(frontMatterLabels).toContain('separator')
+  expect(frontMatterLabels).toContain('customTheme')
+  expect(frontMatterLabels).not.toContain('showSlideNumber')
+  expect(frontMatterLabels).not.toContain('hashOneBasedIndex')
 })
 
 describe('configuration contract tests', () => {

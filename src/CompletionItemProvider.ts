@@ -88,7 +88,10 @@ export const createCompletionItems = (configDesc: ConfigurationDescription[]) =>
         enumValueProviders.push(enumValueProvider(label, ['true', 'false']))
       }
       if (types.includes('string') && values && values.length > 0) {
-        enumValueProviders.push(enumValueProvider(label, values))
+        const stringValues = values.filter((value): value is string => typeof value === 'string')
+        if (stringValues.length > 0) {
+          enumValueProviders.push(enumValueProvider(label, stringValues))
+        }
       }
 
       completionItem.commitCharacters = [' ']
