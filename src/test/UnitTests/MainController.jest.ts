@@ -142,6 +142,7 @@ jest.mock('../../RevealContext', () => ({
 let receiveMessageListener: ((message: unknown) => void) | undefined
 let disposeListener: (() => void) | undefined
 const webViewPaneUpdateMock = jest.fn(() => Promise.resolve())
+const webViewPaneSetPositionMock = jest.fn(() => Promise.resolve(true))
 const webViewPaneCtorMock = jest.fn()
 const goToSlideFromPaneMock = jest.fn()
 const webViewPaneDisposeMock = jest.fn()
@@ -158,6 +159,7 @@ jest.mock('../../WebViewPane', () => ({
         disposeListener = cb
       },
       update: (uri: unknown, isExport: unknown) => (webViewPaneUpdateMock as any)(uri, isExport),
+      setPosition: (position: unknown) => (webViewPaneSetPositionMock as any)(position),
       dispose: () => {
         webViewPaneDisposeMock()
         disposeListener?.()
@@ -177,22 +179,29 @@ const editor = {
   selections: [],
 }
 
-const makeContext = () => ({
-  baseUri: '/base',
-  exportPath: '/tmp/export',
-  configuration: { ...defaultConfiguration, title: 'Deck', openFilemanagerAfterHTMLExport: true },
-  uriWithPosition: 'http://localhost:1948/#/1',
-  editor,
-  slides: [{}, {}],
-  frontmatter: {},
-  is: jest.fn(() => true),
-  refresh: jest.fn(() => ({ slides: [{}, {}] })),
-  getReferencedAssetPaths: jest.fn(() => ['/assets/a.png']),
-  updatePosition: jest.fn(),
-  goToSlide: goToSlideFromPaneMock,
-  startServer: jest.fn(),
-  stopServer: jest.fn(),
-})
+const makeContext = () => {
+  let previewPosition = { horizontal: 1, vertical: 0, fragment: -1 }
+  return {
+    baseUri: '/base',
+    exportPath: '/tmp/export',
+    configuration: { ...defaultConfiguration, title: 'Deck', openFilemanagerAfterHTMLExport: true },
+    uriWithPosition: 'http://localhost:1948/#/1/0',
+    get previewPosition() { return previewPosition },
+    editor,
+    slides: [{}, {}],
+    frontmatter: {},
+    is: jest.fn(() => true),
+    refresh: jest.fn(() => ({ slides: [{}, {}], didUpdate: true })),
+    getReferencedAssetPaths: jest.fn(() => ['/assets/a.png']),
+    updatePosition: jest.fn(() => true),
+    setPreviewPosition: jest.fn((horizontal: number, vertical: number, fragment: number) => {
+      previewPosition = { horizontal, vertical, fragment }
+    }),
+    goToSlide: goToSlideFromPaneMock,
+    startServer: jest.fn(),
+    stopServer: jest.fn(),
+  }
+}
 
 describe('MainController coverage', () => {
   const flush = async () => {
@@ -339,6 +348,52 @@ describe('MainController coverage', () => {
 
     disposeListener?.()
     expect((main as any).webViewPane).toBeUndefined()
+  })
+
+  test('editor selection only navigates the preview and preview initialization never moves the cursor', async () => {
+    const context = makeContext()
+    revealContextsGetOrAddMock.mockReturnValue(context)
+    const main = new MainController(logger, { extensionPath: '/ext' } as any, [], defaultConfiguration, editor as any)
+
+    main.showWebViewPane()
+    context.refresh.mockClear()
+    webViewPaneUpdateMock.mockClear()
+    goToSlideFromPaneMock.mockClear()
+
+    main.onDidChangeTextEditorSelection({ textEditor: editor, selections: [{ active: { line: 3, character: 1 } }] } as any)
+    jest.runOnlyPendingTimers()
+    await flush()
+
+    expect(context.updatePosition).toHaveBeenCalledWith({ line: 3, character: 1 })
+    expect(context.refresh).not.toHaveBeenCalled()
+    expect(webViewPaneUpdateMock).not.toHaveBeenCalled()
+
+    receiveMessageListener?.({ command: 'slideChanged', origin: 'initialization', horizontal: 1, vertical: 0, fragment: -1 })
+    expect(goToSlideFromPaneMock).not.toHaveBeenCalled()
+
+    receiveMessageListener?.({ command: 'slideChanged', origin: 'automatic', horizontal: 2, vertical: 0, fragment: -1 })
+    expect(goToSlideFromPaneMock).not.toHaveBeenCalled()
+
+    receiveMessageListener?.({ command: 'slideChanged', origin: 'user', horizontal: 3, vertical: 0, fragment: -1 })
+    expect(goToSlideFromPaneMock).toHaveBeenCalledWith(3, 0)
+  })
+
+  test('invalid front matter keeps the existing webview until a later valid render', async () => {
+    const context = makeContext()
+    revealContextsGetOrAddMock.mockReturnValue(context)
+    const main = new MainController(logger, { extensionPath: '/ext' } as any, [], defaultConfiguration, editor as any)
+    main.showWebViewPane()
+    webViewPaneUpdateMock.mockClear()
+    context.refresh.mockReturnValueOnce({ slides: context.slides, didUpdate: false } as any)
+
+    main.onDidChangeTextDocument({ document: editor.document } as any)
+    jest.advanceTimersByTime(199)
+    expect(context.refresh).not.toHaveBeenCalled()
+    jest.advanceTimersByTime(1)
+    await flush()
+
+    expect(context.refresh).toHaveBeenCalledTimes(1)
+    expect(webViewPaneUpdateMock).not.toHaveBeenCalled()
   })
 
   test('does not throw when a refresh runs while the preview server has no URL', () => {

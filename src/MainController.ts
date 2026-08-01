@@ -44,7 +44,7 @@ import WebViewPane from './WebViewPane'
 import TextDecorator from './TextDecorator'
 import { RevealContext, RevealContexts } from './RevealContext'
 import { configPrefix, Configuration, ConfigurationDescription, getConfig } from './Configuration'
-import { collectDiagnostics } from './FrontmatterDiagnostics'
+import { collectDiagnostics, isFrontmatterConfigurationValid } from './FrontmatterDiagnostics'
 import { getBatchExportPath } from './commands/exportHTMLFolder'
 import { Disposable } from './dispose'
 import { createSelfContainedExport } from './ExportHTML'
@@ -72,7 +72,9 @@ export default class MainController extends Disposable {
   public onDidChangeTextEditorSelection(event: TextEditorSelectionChangeEvent) {
     if (this.currentContext?.is(event.textEditor.document)) {
       const selection = event.selections.length > 0 ? event.selections[0] : event.textEditor.selection
-      this.OnEditorEvent(event.textEditor, selection.active)
+      if (this.currentContext.updatePosition(selection.active)) {
+        void this.webViewPane?.setPosition(this.currentContext.previewPosition)
+      }
     }
   }
 
@@ -168,6 +170,7 @@ export default class MainController extends Disposable {
   ) {
     super()
     this.extensionPath = extensionContext.extensionPath
+    this.configByKey = new Map(configDesc.map((d) => [d.label, d]))
     this.statusBarController = this._register(new StatusBarController())
     this.textDecorator = this._register(new TextDecorator(configDesc))
     this.revealContexts = this._register(new RevealContexts(
@@ -185,10 +188,10 @@ export default class MainController extends Disposable {
         if (this.currentContext === context) {
           this.statusBarController.updateServerInfo(null)
         }
-      }
+      },
+      (attributes) => isFrontmatterConfigurationValid(attributes, this.configByKey),
     ))
     this.diagnostics = this._register(languages.createDiagnosticCollection('vscode-revealjs'))
-    this.configByKey = new Map(configDesc.map((d) => [d.label, d]))
 
     if (currentEditor && isMarkdownFile(currentEditor.document)) {
       this.currentContext = this.revealContexts.getOrAdd(currentEditor)
@@ -320,12 +323,20 @@ export default class MainController extends Disposable {
       selections: [],
       revealRange: () => {},
     } as unknown as TextEditor
-    return new RevealContext(editor, this.logger, () => this.config, this.extensionPath, this.isInExport, this.onExportError)
+    return new RevealContext(
+      editor,
+      this.logger,
+      () => this.config,
+      this.extensionPath,
+      this.isInExport,
+      this.onExportError,
+      (attributes) => isFrontmatterConfigurationValid(attributes, this.configByKey),
+    )
   }
 
   // debounce parse and refresh
   #refreshTimeout: NodeJS.Timeout | null = null
-  refresh(wait = 500) {
+  refresh(wait = 200) {
     if (!this.currentContext) return
 
     if (this.#refreshTimeout) {
@@ -336,12 +347,15 @@ export default class MainController extends Disposable {
       if (!context) return
 
       this.logger.info(`REFRESH START!`)
-      const { slides } = context.refresh()
+      const { slides, didUpdate } = context.refresh()
       this.syncAssetWatchers()
       const diagnostics = await collectDiagnostics(context, this.configByKey)
       this.diagnostics.set(context.editor.document.uri, diagnostics)
 
-      this.refreshWebViewPane()
+      if (didUpdate) {
+        context.updatePosition(context.editor.selection.active)
+        this.refreshWebViewPane()
+      }
       this.slidesExplorer.update()
       this.statusBarController.updateCount(slides.length)
       this.textDecorator.update(context.editor)
@@ -391,6 +405,40 @@ export default class MainController extends Disposable {
     if (this.currentContext) this.currentContext.goToSlide(topindex, verticalIndex)
   }
 
+  private readonly handleSlideChangedMessage = (message: object) => {
+    const horizontal = 'horizontal' in message ? Number(message.horizontal) : Number.NaN
+    const vertical = 'vertical' in message ? Number(message.vertical) : Number.NaN
+    if (!Number.isFinite(horizontal) || !Number.isFinite(vertical)) return
+
+    const fragmentValue = 'fragment' in message ? Number(message.fragment) : -1
+    const fragment = Number.isFinite(fragmentValue) ? fragmentValue : -1
+    const origin = 'origin' in message && typeof message.origin === 'string' ? message.origin : 'user'
+    const previousPosition = this.currentContext?.previewPosition
+    this.currentContext?.setPreviewPosition(horizontal, vertical, fragment)
+    if (origin === 'user' && (previousPosition?.horizontal !== horizontal || previousPosition?.vertical !== vertical)) {
+      this.goToSlide(horizontal, vertical)
+    }
+  }
+
+  private readonly handleWebViewMessage = (message: unknown) => {
+    if (!message || typeof message !== 'object') return
+
+    const command = 'command' in message ? message.command : undefined
+    if (command === 'exportComplete') {
+      const exportId = 'exportId' in message ? Number(message.exportId) : Number.NaN
+      void this.completeExport(exportId)
+      return
+    }
+
+    if (command === 'executeCodeBlock') {
+      const code = 'text' in message ? message.text : undefined
+      if (typeof code === 'string' && code.trim()) this.executeCodeBlockInActiveTerminal(code)
+      return
+    }
+
+    if (command === 'slideChanged') this.handleSlideChangedMessage(message)
+  }
+
   /**
    * Create Web view pane if not exists
    * @returns return false if pane already exists
@@ -402,29 +450,7 @@ export default class MainController extends Disposable {
     } else {
       const webviewPanel = window.createWebviewPanel('RevealJS', 'Reveal JS presentation', ViewColumn.Beside, { enableScripts: true })
       this.webViewPane = new WebViewPane(webviewPanel)
-      this._register(this.webViewPane.onDidReceiveMessage((message) => {
-        if (!message || typeof message !== 'object') return
-
-        const command = 'command' in message ? message.command : undefined
-        if (command === 'exportComplete') {
-          const exportId = 'exportId' in message ? Number(message.exportId) : Number.NaN
-          void this.completeExport(exportId)
-          return
-        }
-
-        if (command === 'executeCodeBlock') {
-          const code = 'text' in message ? message.text : undefined
-          if (typeof code === 'string' && code.trim()) this.executeCodeBlockInActiveTerminal(code)
-          return
-        }
-
-        if (command !== 'slideChanged') return
-
-        const horizontal = 'horizontal' in message ? Number(message.horizontal) : Number.NaN
-        const vertical = 'vertical' in message ? Number(message.vertical) : Number.NaN
-        if (!Number.isFinite(horizontal) || !Number.isFinite(vertical)) return
-        this.goToSlide(horizontal, vertical)
-      }))
+      this._register(this.webViewPane.onDidReceiveMessage(this.handleWebViewMessage))
       this._register(this.webViewPane.onDidDispose(() => {
         this.logInfo('WebView', 'disposed')
         this.webViewPane = undefined

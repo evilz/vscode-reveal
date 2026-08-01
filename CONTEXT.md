@@ -12,9 +12,29 @@ _Avoid_: Deck when referring to the source document itself.
 One navigable unit inside a presentation, separated from neighboring slides by the presentation's Markdown separator.
 _Avoid_: Page when discussing the interactive presentation.
 
+**Front matter**:
+Presentation-wide metadata at the beginning of the Markdown source, outside the navigable content of every slide.
+_Avoid_: First slide or slide content.
+
 **Live preview**:
 The continuously refreshed presentation view opened from VS Code while a Markdown presentation is being edited.
 _Avoid_: Export when the view is still connected to the source document.
+
+**Authoring synchronization**:
+The live preview following the authoring position while Markdown is being edited, with the editor remaining authoritative and preview refreshes leaving the editor selection unchanged.
+_Avoid_: Two-way synchronization, which conflates authoring with deliberate preview navigation.
+
+**Preview navigation**:
+A deliberate navigation action inside the live preview that selects a slide and may move the editor to that slide.
+_Avoid_: Preview refresh, initialization, or other automatic presentation changes.
+
+**Last valid preview**:
+The most recent live preview produced successfully from a presentation; it remains visible while a later edit or render is temporarily invalid.
+_Avoid_: Best-effort preview that exposes invalid source as slide content, or a broken error page.
+
+**Presentation refresh**:
+An update of the live preview's rendered content after the presentation source changes, preserving the authoring position and current slide.
+_Avoid_: Preview navigation or cursor synchronization.
 
 **Feature example**:
 A small, copyable Markdown sample paired with the rendered result of a VS Code Reveal capability.

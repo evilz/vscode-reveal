@@ -269,9 +269,7 @@ describe('RevealContext', () => {
 
     context.updatePosition(new Position(2, 1))
 
-    const nowSpy = jest.spyOn(Date, 'now').mockReturnValue(12345)
-    expect(context.uriWithPosition).toBe(`${serverUri}#/1/2/12345`)
-    nowSpy.mockRestore()
+    expect(context.uriWithPosition).toBe(`${serverUri}#/1/2`)
 
     context.slides = [{}, {}] as unknown as ISlide[]
     context.frontmatter = { frontmatter: true, bodyBegin: 4 } as unknown as FrontMatterResult<Configuration>
@@ -289,6 +287,114 @@ describe('RevealContext', () => {
     context.onDidDispose(onDispose)
     context.dispose()
     expect(onDispose).toHaveBeenCalled()
+  })
+
+  test('keeps the last valid presentation when front matter is temporarily invalid', () => {
+    const editor = makeEditor()
+    const context = new RevealContext(
+      editor as unknown as TextEditor,
+      logger as unknown as Logger,
+      () => ({ ...defaultConfiguration, theme: 'black' }),
+      '/ext',
+      () => false,
+    )
+    const validSlides = [{ index: 0, text: '# Valid', verticalChildren: [] }]
+    const validFrontmatter = {
+      attributes: { theme: 'white' },
+      frontmatter: 'theme: white',
+      body: '# Valid',
+      bodyBegin: 3,
+    }
+    parseMock
+      .mockReturnValueOnce({ frontmatter: validFrontmatter, slides: validSlides, parseError: undefined })
+      .mockReturnValueOnce({
+        frontmatter: undefined,
+        slides: [{ index: 0, text: 'theme: [', verticalChildren: [] }],
+        parseError: { message: 'unexpected end of flow collection', line: 1, column: 8 },
+      })
+
+    context.refresh()
+    const invalidRefresh = context.refresh()
+
+    expect(context.slides).toBe(validSlides)
+    expect(context.frontmatter).toBe(validFrontmatter)
+    expect(context.configuration.theme).toBe('white')
+    expect(context.parseError).toEqual(expect.objectContaining({ message: 'unexpected end of flow collection' }))
+    expect(invalidRefresh.slides).toBe(validSlides)
+  })
+
+  test('does not publish syntactically valid front matter with invalid property values', () => {
+    const editor = makeEditor()
+    const validateFrontmatter = jest.fn((attributes: Record<string, unknown> | undefined) => attributes?.theme !== null)
+    const context = new RevealContext(
+      editor as unknown as TextEditor,
+      logger as unknown as Logger,
+      () => ({ ...defaultConfiguration, theme: 'black' }),
+      '/ext',
+      () => false,
+      () => {},
+      validateFrontmatter,
+    )
+    const validSlides = [{ index: 0, text: '# Valid', verticalChildren: [] }]
+    parseMock
+      .mockReturnValueOnce({
+        frontmatter: { attributes: { theme: 'white' }, frontmatter: 'theme: white', body: '# Valid', bodyBegin: 3 },
+        slides: validSlides,
+      })
+      .mockReturnValueOnce({
+        frontmatter: { attributes: { theme: null }, frontmatter: 'theme:', body: '# Valid', bodyBegin: 3 },
+        slides: [{ index: 0, text: '# Valid but invalid config', verticalChildren: [] }],
+      })
+
+    context.refresh()
+    const invalidRefresh = context.refresh()
+
+    expect(validateFrontmatter).toHaveBeenLastCalledWith({ theme: null })
+    expect(invalidRefresh.didUpdate).toBe(false)
+    expect(context.slides).toBe(validSlides)
+    expect(context.configuration.theme).toBe('white')
+  })
+
+  test('keeps preview position while the cursor is in front matter', () => {
+    const editor = makeEditor()
+    editor.document.getText.mockReturnValue(`---
+theme: white
+---
+# Slide`)
+    const context = new RevealContext(
+      editor as unknown as TextEditor,
+      logger as unknown as Logger,
+      () => defaultConfiguration,
+      '/ext',
+      () => false,
+    )
+    context.setPreviewPosition(2, 1, 3)
+    parseMock.mockClear()
+
+    expect(context.updatePosition(new Position(1, 5))).toBe(false)
+    expect(context.previewPosition).toEqual({ horizontal: 2, vertical: 1, fragment: 3 })
+    expect(parseMock).not.toHaveBeenCalled()
+  })
+
+  test('preserves fragments on the same slide and resets them when the editor enters another slide', () => {
+    const editor = makeEditor()
+    const context = new RevealContext(
+      editor as unknown as TextEditor,
+      logger as unknown as Logger,
+      () => defaultConfiguration,
+      '/ext',
+      () => false,
+    )
+    context.setPreviewPosition(1, 0, 2)
+    parseMock
+      .mockReturnValueOnce({ slides: [{}, { verticalChildren: [] }] })
+      .mockReturnValueOnce({ slides: [{}, { verticalChildren: [] }, { verticalChildren: [] }] })
+
+    expect(context.updatePosition(new Position(5, 0))).toBe(true)
+    expect(context.previewPosition).toEqual({ horizontal: 1, vertical: 0, fragment: 2 })
+
+    expect(context.updatePosition(new Position(10, 0))).toBe(true)
+    expect(context.previewPosition).toEqual({ horizontal: 2, vertical: 0, fragment: -1 })
   })
 })
 

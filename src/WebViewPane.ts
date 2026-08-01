@@ -1,5 +1,6 @@
 import { EventEmitter, Uri, WebviewPanel } from "vscode";
 import { Disposable } from "./dispose";
+import type { ISlidePosition } from "./RevealContext";
 
 export default class WebviewPane
     extends Disposable {
@@ -38,6 +39,15 @@ export default class WebviewPane
     public set title(title:string) {
         this.webviewPanel.title = title;
     }
+
+    public setPosition(position: Readonly<ISlidePosition>) {
+        return this.webviewPanel.webview.postMessage({
+          command: 'setSlide',
+          horizontal: position.horizontal,
+          vertical: position.vertical,
+          fragment: position.fragment,
+        })
+    }
     
     public async update(url:string, exportId?: number): Promise<boolean> {
         this.#updateAbortController?.abort()
@@ -50,6 +60,9 @@ export default class WebviewPane
 
         try {
           const response = await fetch(parsedUrl.toString(), { signal: abortController.signal })
+          if (response.ok === false) {
+            throw new Error(`Preview server returned ${response.status} ${response.statusText}`.trim())
+          }
           const html = await response.text()
           if (abortController.signal.aborted || generation !== this.#updateGeneration) return false
 
@@ -79,20 +92,52 @@ export default class WebviewPane
       const script = `
       <script>
         (function () {
-          const vscode = acquireVsCodeApi();
-          const initialHash = ${JSON.stringify(slideHash)};
-          let activeCodeBlock = null;
+           const vscode = acquireVsCodeApi();
+           const initialHash = ${JSON.stringify(slideHash)};
+           let activeCodeBlock = null;
+           let initializing = true;
+           let requestedPosition = null;
+           let userInteractionUntil = 0;
 
-          const postCurrentSlide = () => {
-            const match = window.location.hash.match(/#\\/(\\d+)\\/(\\d+)/);
-            if (!match) return;
-            vscode.postMessage({
-              command: 'slideChanged',
-              horizontal: Number(match[1]),
-              vertical: Number(match[2]),
-              hash: window.location.hash,
-            });
-          };
+           const readPosition = () => {
+             if (window.Reveal && typeof window.Reveal.getIndices === 'function') {
+               const indices = window.Reveal.getIndices();
+               return {
+                 horizontal: Number(indices.h || 0),
+                 vertical: Number(indices.v || 0),
+                 fragment: Number.isFinite(indices.f) ? Number(indices.f) : -1,
+               };
+             }
+
+             const match = window.location.hash.match(/#\\/(\\d+)(?:\\/(\\d+))?(?:\\/(-?\\d+))?/);
+             if (!match) return null;
+             return {
+               horizontal: Number(match[1]),
+               vertical: Number(match[2] || 0),
+               fragment: match[3] === undefined ? -1 : Number(match[3]),
+             };
+           };
+
+           const markUserInteraction = () => {
+             userInteractionUntil = performance.now() + 1000;
+           };
+
+           const postCurrentSlide = () => {
+             const position = readPosition();
+             if (!position) return;
+             const matchesRequest = requestedPosition
+               && requestedPosition.horizontal === position.horizontal
+               && requestedPosition.vertical === position.vertical
+               && (requestedPosition.fragment < 0 || requestedPosition.fragment === position.fragment);
+             const origin = initializing ? 'initialization' : matchesRequest ? 'editor' : performance.now() <= userInteractionUntil ? 'user' : 'automatic';
+             if (matchesRequest) requestedPosition = null;
+             vscode.postMessage({
+               command: 'slideChanged',
+               ...position,
+               origin,
+               hash: window.location.hash,
+             });
+           };
 
           const findCodeBlock = (target) => {
             if (!(target instanceof Element)) return null;
@@ -117,33 +162,48 @@ export default class WebviewPane
             });
           };
 
-          window.addEventListener('hashchange', postCurrentSlide);
-          document.addEventListener('pointerdown', (event) => {
-            activeCodeBlock = findCodeBlock(event.target);
-          }, true);
-          document.addEventListener('keydown', (event) => {
-            if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+           window.addEventListener('hashchange', postCurrentSlide);
+           document.addEventListener('pointerdown', (event) => {
+             markUserInteraction();
+             activeCodeBlock = findCodeBlock(event.target);
+           }, true);
+           document.addEventListener('keydown', (event) => {
+             markUserInteraction();
+             if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
               executeCurrentCodeBlock();
               event.preventDefault();
-            }
-          });
+             }
+           });
+           document.addEventListener('wheel', markUserInteraction, { capture: true, passive: true });
+           document.addEventListener('touchstart', markUserInteraction, { capture: true, passive: true });
 
-          if (window.Reveal && typeof window.Reveal.on === 'function') {
-            window.Reveal.on('slidechanged', postCurrentSlide);
-          }
+           if (window.Reveal && typeof window.Reveal.on === 'function') {
+             window.Reveal.on('slidechanged', postCurrentSlide);
+             window.Reveal.on('fragmentshown', postCurrentSlide);
+             window.Reveal.on('fragmenthidden', postCurrentSlide);
+           }
 
           window.addEventListener('message', (event) => {
             const message = event.data;
-            if (message && message.command === 'setSlide' && typeof message.hash === 'string') {
-              window.location.hash = message.hash;
-            }
-          });
+             if (message && message.command === 'setSlide') {
+               requestedPosition = {
+                 horizontal: Number(message.horizontal || 0),
+                 vertical: Number(message.vertical || 0),
+                 fragment: Number.isFinite(message.fragment) ? Number(message.fragment) : -1,
+               };
+               const fragmentHash = requestedPosition.fragment >= 0 ? '/' + requestedPosition.fragment : '';
+               window.location.hash = '#/' + requestedPosition.horizontal + '/' + requestedPosition.vertical + fragmentHash;
+             }
+           });
 
           if (initialHash) {
             window.location.hash = initialHash;
           }
 
-          setTimeout(postCurrentSlide, 0);
+           setTimeout(() => {
+             postCurrentSlide();
+             initializing = false;
+           }, 0);
 
           if (${typeof exportId === 'number'}) {
             const postExportComplete = () => {

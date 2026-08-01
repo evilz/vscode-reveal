@@ -66,6 +66,15 @@ const acceptsType = (value: unknown, expectedType: ConfigurationDescription['typ
   })
 }
 
+export const isFrontmatterConfigurationValid = (
+  attributes: Record<string, unknown> | undefined,
+  configByKey: Map<string, ConfigurationDescription>,
+) => Object.entries(attributes ?? {}).every(([key, value]) => {
+  const desc = configByKey.get(key)
+  if (!desc || !acceptsType(value, desc.type)) return false
+  return !desc.values || desc.values.some((allowedValue) => Object.is(allowedValue, value))
+})
+
 const pathExists = async (fsPath: string) => {
   try {
     await workspace.fs.stat(Uri.file(fsPath))
@@ -101,7 +110,7 @@ export const collectDiagnostics = async (
     return diagnostics
   }
 
-  const attrs = context.frontmatter?.attributes ?? {}
+  const attrs = (context.parsedFrontmatter ?? context.frontmatter)?.attributes ?? {}
   for (const [key, value] of Object.entries(attrs)) {
     const keyRange = keyRanges.get(key) ?? fullFrontmatterRange
     const desc = configByKey.get(key)

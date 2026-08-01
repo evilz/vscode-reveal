@@ -11,9 +11,19 @@ import { RevealServer } from './RevealServer'
 import slideParser, { SlideParserError } from './SlideParser'
 import { countLinesToSlide } from './utils'
 
-interface ISlidePosition {
+export interface ISlidePosition {
   horizontal: number
   vertical: number
+  fragment: number
+}
+
+const frontmatterBodyStartLine = (text: string, previouslyHadFrontmatter: boolean): number | null => {
+  const lines = text.split(/\r?\n/)
+  if (lines[0]?.trim() !== '---') return 0
+
+  const closingDelimiter = lines.findIndex((line, index) => index > 0 && line.trim() === '---')
+  if (closingDelimiter < 0) return previouslyHadFrontmatter ? null : 0
+  return closingDelimiter + 1
 }
 
 export class RevealContext extends Disposable {
@@ -21,9 +31,10 @@ export class RevealContext extends Disposable {
 
   public slides: ISlide[] = []
   public frontmatter?: FrontMatterResult<Configuration>
+  public parsedFrontmatter?: FrontMatterResult<Configuration>
   public parseError?: SlideParserError
   public configuration: Configuration
-  private position: ISlidePosition = { horizontal: 0, vertical: 0 }
+  private position: ISlidePosition = { horizontal: 0, vertical: 0, fragment: -1 }
 
   constructor(
     public editor: TextEditor,
@@ -32,6 +43,7 @@ export class RevealContext extends Disposable {
     public extensionPath: string,
     public isInExport: (exportId?: number) => boolean,
     public onExportError: (error: unknown, context?: RevealContext, exportId?: number) => void = () => {},
+    public isFrontmatterValid: (attributes: Record<string, unknown> | undefined) => boolean = () => true,
   ) {
     super()
     this.configuration = getConfiguration()
@@ -64,8 +76,13 @@ export class RevealContext extends Disposable {
   }
 
   get uriWithPosition() {
-    const { horizontal, vertical } = this.position
-    return `${this.#server.uri}#/${horizontal}/${vertical}/${Date.now()}`
+    const { horizontal, vertical, fragment } = this.position
+    const fragmentHash = fragment >= 0 ? `/${fragment}` : ''
+    return `${this.#server.uri}#/${horizontal}/${vertical}${fragmentHash}`
+  }
+
+  get previewPosition(): Readonly<ISlidePosition> {
+    return { ...this.position }
   }
 
   get baseUri() {
@@ -167,8 +184,18 @@ export class RevealContext extends Disposable {
 
   public refresh(recomputeConfiguration = false, updateLoggerLevel = true) {
     const { frontmatter, slides, parseError } = slideParser.parse(this.getText(), this.configuration)
-    this.slides = slides
     this.parseError = parseError
+    this.parsedFrontmatter = frontmatter
+    if (parseError) {
+      this.logger.debug(`CONTEXT: ${this.docUri} - Keeping last valid preview after parse error`)
+      return { frontmatter: this.frontmatter, slides: this.slides, parseError, didUpdate: false }
+    }
+    if (!this.isFrontmatterValid(frontmatter?.attributes as Record<string, unknown> | undefined)) {
+      this.logger.debug(`CONTEXT: ${this.docUri} - Keeping last valid preview after front matter validation error`)
+      return { frontmatter: this.frontmatter, slides: this.slides, parseError, didUpdate: false }
+    }
+
+    this.slides = slides
     if (recomputeConfiguration || !isDeepStrictEqual(frontmatter, this.frontmatter)) {
       this.frontmatter = frontmatter
       this.configuration = mergeConfig(this.getConfiguration(), frontmatter?.attributes)
@@ -176,16 +203,29 @@ export class RevealContext extends Disposable {
     }
 
     this.logger.debug(`CONTEXT: ${this.docUri} - Refreshed`)
-    return { frontmatter, slides, parseError }
+    return { frontmatter, slides, parseError, didUpdate: true }
   }
 
   updatePosition(cursorPosition: Position) {
-    const start = new Position(0, 0)
+    const bodyStartLine = frontmatterBodyStartLine(this.getText(), Boolean(this.frontmatter?.frontmatter))
+    if (bodyStartLine === null || cursorPosition.line < bodyStartLine) return false
+
+    const start = new Position(bodyStartLine, 0)
     const range = new Range(start, cursorPosition)
     const { slides } = slideParser.parse(this.getText(range), this.configuration, false)
     const currentSlide = slides[slides.length - 1]
+    if (!currentSlide) return false
 
-    this.position = currentSlide.verticalChildren ? { horizontal: slides.length - 1, vertical: currentSlide.verticalChildren.length } : { horizontal: slides.length - 1, vertical: 0 }
+    const nextPosition = currentSlide.verticalChildren
+      ? { horizontal: slides.length - 1, vertical: currentSlide.verticalChildren.length }
+      : { horizontal: slides.length - 1, vertical: 0 }
+    const changedSlide = nextPosition.horizontal !== this.position.horizontal || nextPosition.vertical !== this.position.vertical
+    this.position = { ...nextPosition, fragment: changedSlide ? -1 : this.position.fragment }
+    return true
+  }
+
+  setPreviewPosition(horizontal: number, vertical: number, fragment = -1) {
+    this.position = { horizontal, vertical, fragment }
   }
 
   is(document: TextDocument) {
@@ -253,13 +293,14 @@ export class RevealContexts extends Disposable {
     private readonly onExportError: (error: unknown) => void,
     private readonly onServerStart: (uri: string, context: RevealContext) => void,
     private readonly onServerStop: (context: RevealContext) => void,
+    private readonly isFrontmatterValid: (attributes: Record<string, unknown> | undefined) => boolean = () => true,
   ) {
     super()
   }
 
   getOrAdd(editor: TextEditor) {
     if (this.innerMap.has(editor.document.uri)) return this.innerMap.get(editor.document.uri)
-    const context = new RevealContext(editor, this.logger, this.getConfiguration, this.extensionPath, this.isInExport, this.onExportError)
+    const context = new RevealContext(editor, this.logger, this.getConfiguration, this.extensionPath, this.isInExport, this.onExportError, this.isFrontmatterValid)
 
     context.onDidDispose(() => this.logger.info(`CONTEXT: ${editor.document.uri} disposed`))
     context.onDidStartServer((uri) => this.onServerStart(uri, context))
