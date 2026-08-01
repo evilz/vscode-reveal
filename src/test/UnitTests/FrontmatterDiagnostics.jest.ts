@@ -119,3 +119,22 @@ test('collectDiagnostics accepts null and number for pdfMaxPagesPerSlide union t
   expect(strDiag).toHaveLength(1)
   expect(strDiag[0].message).toContain('Expected number or null')
 })
+
+test('collectDiagnostics validates numeric enum values', async () => {
+  const enumConfigDesc: ConfigurationDescription[] = [
+    { label: 'logLevel', detail: '', documentation: '', type: 'number', values: [0, 1, 2, 3, 4] },
+  ]
+  const configByKey = new Map(enumConfigDesc.map((d) => [d.label, d]))
+
+  const validContext = createContext('---\nlogLevel: 3\n---\n# Slide', {
+    frontmatter: { attributes: { logLevel: 3 } }
+  })
+  expect(await collectDiagnostics(validContext, configByKey)).toHaveLength(0)
+
+  const invalidContext = createContext('---\nlogLevel: 99\n---\n# Slide', {
+    frontmatter: { attributes: { logLevel: 99 } }
+  })
+  const diagnostics = await collectDiagnostics(invalidContext, configByKey)
+  expect(diagnostics).toHaveLength(1)
+  expect(diagnostics[0].message).toContain('Invalid value "99"')
+})
