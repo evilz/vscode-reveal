@@ -24,4 +24,16 @@ Glycolysis | 2 ATP ||
     expect(rendered).toContain('<td style="text-align:right" rowspan="2">Glycolysis</td>')
     expect(rendered).not.toContain('^^')
   })
+
+  test('renders tables without a header row', () => {
+    const markdown = createMarkdownIt()
+
+    const rendered = markdown.render(`|--|--|--|--|--|--|--|--|
+|♜|  |♝|♛|♚|♝|♞|♜|
+|  |♟|♟|♟|  |♟|♟|♟|`)
+
+    expect(rendered).toContain('<td>♜</td>')
+    expect(rendered).toContain('<td>♟</td>')
+    expect(rendered).not.toContain('<th>')
+  })
 })
