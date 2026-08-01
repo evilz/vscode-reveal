@@ -148,7 +148,7 @@ export const createMarkdownIt = (diagramConfig: Partial<IDiagramRenderingConfig>
     linkify: true,
     typographer: true,
   })
-    .use(multimdTable, { enableMultilineRows: true, enableRowspan: true })
+    .use(multimdTable, { multiline: true, rowspan: true })
     .use(attrs)
     .use(attrs, { leftDelimiter: '<!-- .element:', rightDelimiter: '-->' })
     .use(taskLists, { label: true, labelAfter: true })
