@@ -17,6 +17,15 @@ describe('Markdown-it diagram server configuration', () => {
     expect(html).toContain('src="http://localhost:8000/mermaid/svg/')
   })
 
+  test('maps dot fences to Kroki Graphviz diagrams', () => {
+    const markdownit = createMarkdownIt({ serverBaseUrl: 'https://kroki.example' })
+
+    const html = markdownit.render('```dot\ndigraph example { A -> B }\n```')
+
+    expect(html).toContain('class="dot"')
+    expect(html).toContain('src="https://kroki.example/graphviz/svg/')
+  })
+
   test('falls back to a local code block when diagram rendering is disabled', () => {
     const markdownit = createMarkdownIt({ enabled: false })
 

@@ -341,6 +341,17 @@ describe('MainController coverage', () => {
     expect((main as any).webViewPane).toBeUndefined()
   })
 
+  test('does not throw when a refresh runs while the preview server has no URL', () => {
+    const context = makeContext()
+    context.uriWithPosition = ''
+    revealContextsGetOrAddMock.mockReturnValue(context)
+    const main = new MainController(logger, { extensionPath: '/ext' } as any, [], defaultConfiguration, editor as any)
+
+    expect(() => main.showWebViewPane()).not.toThrow()
+    expect(context.startServer).toHaveBeenCalled()
+    expect(webViewPaneUpdateMock).not.toHaveBeenCalled()
+  })
+
   test('exportAsync error and interruption paths, plus helper methods', async () => {
     const context = makeContext()
     revealContextsGetOrAddMock.mockReturnValue(context)

@@ -125,6 +125,7 @@ const diagramTypes = [
   'ditaa',
   'erd',
   'excalidraw',
+  'dot',
   'graphviz',
   'mermaid',
   'nomnoml',
@@ -136,6 +137,8 @@ const diagramTypes = [
   'vega-lite',
   'wavedrom',
 ]
+
+const diagramServerType = (language: string): string => language === 'dot' ? 'graphviz' : language
 
 
 export const createMarkdownIt = (diagramConfig: Partial<IDiagramRenderingConfig> = {}) => {
@@ -177,7 +180,8 @@ export const createMarkdownIt = (diagramConfig: Partial<IDiagramRenderingConfig>
       const data = Buffer.from(diagramCode, 'utf8')
       const compressed = pako.deflate(data, { level: 9 })
       const result = Buffer.from(compressed).toString('base64').replace(/\+/g, '-').replace(/\//g, '_')
-      return `<pre style="all:unset;"><div><img class="${lang.toLowerCase()}" src="${renderingConfig.serverBaseUrl}/${lang.toLowerCase()}/svg/${result}" /></div></pre>`
+      const serverType = diagramServerType(lang.toLowerCase())
+      return `<pre style="all:unset;"><div><img class="${lang.toLowerCase()}" src="${renderingConfig.serverBaseUrl}/${serverType}/svg/${result}" /></div></pre>`
     }
     if (highlight !== null && highlight !== undefined) {
       return highlight(code, lang, attr)

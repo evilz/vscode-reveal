@@ -1,4 +1,9 @@
-# Planuml
+---
+diagramServerEnabled: true
+offline: false
+---
+
+# PlantUML
 
 ```plantuml
 Bob -> Alice : hello
@@ -6,7 +11,7 @@ Bob -> Alice : hello
 
 ---
 
-# dot
+# DOT / Graphviz
 
 ```dot
 digraph example1 {

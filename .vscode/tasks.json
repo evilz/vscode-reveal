@@ -5,16 +5,37 @@
     "tasks": [
         {
             "type": "npm",
+            "script": "build:debug",
+            "label": "npm: build:debug",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "clear": true
+            }
+        },
+        {
+            "type": "npm",
             "script": "watch",
             "isBackground": true,
+            "problemMatcher": {
+                "owner": "esbuild",
+                "fileLocation": "absolute",
+                "pattern": { "regexp": "^(.*)$" },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "^.*$",
+                    "endsPattern": "^.*watching for changes.*$"
+                }
+            },
             "presentation": {
                 "reveal": "never",
                 "group": "watchers"
             },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "group": "build"
         },
         {
             "type": "npm",

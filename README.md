@@ -18,6 +18,16 @@ This extension let you display a reveal.js presentation directly from an opened 
 The extension targets `engines.vscode: ^1.105.0` and keeps `@types/vscode` aligned to the same API generation.  
 This baseline matches the current stable extension platform while still allowing patch/minor compatibility updates for contributors and CI.
 
+## Debugging in VS Code
+
+Open the repository in VS Code and press **F5**. The workspace will:
+
+1. Build the Node and web extension bundles with source maps.
+2. Open a separate Extension Development Host window.
+3. Map breakpoints in `src/**/*.ts` back to the generated bundle.
+
+Use the **Run Extension (F5)** launch configuration. The existing watch tasks remain available when you want automatic rebuilds while editing.
+
 ## Features
 
 - [Markdown](#markdown)

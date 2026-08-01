@@ -682,6 +682,7 @@
     "esbuild-base": "rimraf dist && esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild-web": "esbuild ./src/web/extension.ts --bundle --outfile=dist/web/extension.js --external:vscode --format=cjs --platform=browser --target=es2020",
     "build": "npm run -S esbuild-base -- --sourcemap",
+    "build:debug": "npm run -S esbuild-base -- --sourcemap --sources-content=true && npm run -S esbuild-web -- --sourcemap --sources-content=true",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "watch": "npm run -S esbuild-base -- --sourcemap --watch",
     "fmt": "prettier --write \"src/**/*.ts\"&& npm run test -- --fix",

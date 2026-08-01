@@ -1,22 +1,26 @@
-// A launch configuration that compiles the extension and then opens it inside a new window
-// Use IntelliSense to learn about possible attributes.
-// Hover to view descriptions of existing attributes.
-// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+// F5 builds the extension with source maps and opens an Extension Development Host.
 {
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Extension",
+            "name": "Run Extension (F5)",
             "type": "extensionHost",
             "request": "launch",
             "args": [
                 "--extensionDevelopmentPath=${workspaceFolder}"
             ],
+            "cwd": "${workspaceFolder}",
             "env": { "DEBUG": "express:*" },
+            "sourceMaps": true,
+            "smartStep": true,
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/dist/**/*.js",
+                "!**/node_modules/**"
+            ],
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
             ],
-            "preLaunchTask": "${defaultBuildTask}"
+            "preLaunchTask": "npm: build:debug"
         },
         {
             "name": "Extension Tests",

@@ -453,9 +453,20 @@ export default class MainController extends Disposable {
       const context = this.currentContext
       const webViewPane = this.webViewPane
       const exportState = this.exportState?.context === context ? this.exportState : null
-      const uri = new URL(context.uriWithPosition)
-      if (exportState) uri.searchParams.set('exportId', String(exportState.id))
       context.startServer()
+
+      let uri: URL
+      try {
+        uri = new URL(context.uriWithPosition)
+      } catch {
+        // The server can be between stop/start while the webview is closing.
+        // Ignore that refresh; the next refresh after the server is listening
+        // will provide the webview with a valid URL.
+        this.logger.debug('Skipping webview refresh because the preview server URL is not available')
+        return
+      }
+
+      if (exportState) uri.searchParams.set('exportId', String(exportState.id))
       webViewPane.title = context.configuration.title
       void webViewPane.update(uri.toString(), exportState?.id).catch((error) => {
         this.logger.error(`WebView refresh failed: ${error instanceof Error ? error.message : String(error)}`)
