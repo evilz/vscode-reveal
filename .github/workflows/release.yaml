@@ -136,6 +136,7 @@ jobs:
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 7
           name: vsix-package
           path: ${{ needs.validate.outputs.package_name }}
 
